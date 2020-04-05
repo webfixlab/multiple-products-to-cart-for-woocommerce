@@ -1,9 +1,9 @@
 === Multiple Products to Cart - WooCommerce Product Table ===
 Contributors: smshahriar, aikya, webfixlab
 Tags: product table,products table,woocommerce product table,wc product table,multiple products
-Requires at least: 4.0
-Tested up to: 5.3.2
-Stable tag: 2.1
+Requires at least: 4.4
+Tested up to: 5.4
+Stable tag: 2.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,10 +18,10 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 
 **FEATURES**
 
-* **NEW!** Modify the product table from your theme 
+* **NEW!** Modify the product table from your theme
 * Simple and **Variable** both products type supported
 * Show any specific products using product ID
-* Show any specific category items using category ID 
+* Show any specific category items using category ID
 * Fully responsive to all modern devices
 * Only in stock products will be listed
 * Extremely fast to show a lot of products in a single page

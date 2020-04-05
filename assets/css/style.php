@@ -28,6 +28,9 @@
     table.mpc-wrap img {
         border-radius: 0;
     }
+    table.mpc-wrap img:hover {
+        cursor: pointer;
+    }
     .mpc-wrap .variation-group {
         margin-bottom: .75em;
     }
@@ -60,7 +63,62 @@
 	    border: 1px solid #f00;
 	    background: #cc3e3e;
     }
+    .mpcpopimg{
+        display: none;
+    }
+    #mpcpop {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
+    #mpcpop:hover {opacity: 1;}
+
+    /* The Modal (background) */
+    #mpcpop {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 999; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (image) */
+    #mpcpop img {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    /* Add Animation */
+    #mpcpop img {
+      -webkit-animation-name: zoom;
+      -webkit-animation-duration: 0.6s;
+      animation-name: zoom;
+      animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+      from {-webkit-transform:scale(0)}
+      to {-webkit-transform:scale(1)}
+    }
+
+    @keyframes zoom {
+      from {transform:scale(0)}
+      to {transform:scale(1)}
+    }
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+    }
     /* Mobile CSS */
     @media screen and (max-width: 767px) {
         table.mpc-wrap thead, tr.cart_item.simple td.product-variation {
@@ -96,6 +154,9 @@
         }
         .mpc-wrap .variation-group {
             margin-bottom: 5px;
+        }
+        #mpcpop img {
+            width: 100%;
         }
     }
 </style>
