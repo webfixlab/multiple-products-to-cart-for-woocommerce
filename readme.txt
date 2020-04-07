@@ -3,7 +3,7 @@ Contributors: smshahriar, aikya, webfixlab
 Tags: product table,products table,woocommerce product table,wc product table,multiple products
 Requires at least: 4.4
 Tested up to: 5.4
-Stable tag: 2.2
+Stable tag: 2.2.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
