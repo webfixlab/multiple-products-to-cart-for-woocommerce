@@ -16,6 +16,8 @@ Super FAST WooCommerce product table solution to add multiple products to cart a
 
 A truly lightweight and simple yet powerful plugin without any unnecessary features, no huss fuss or no low page speed score!
 
+[Demo](https://demo.webfixlab.com/multiple-products-to-cart/) | [Documentation](https://webfixlab.com/woocommerce-multiple-products-to-cart/) | [Support](https://webfixlab.com/#contact-us)
+
 **FEATURES**
 
 * **NEW!** Modify the product table from your theme
