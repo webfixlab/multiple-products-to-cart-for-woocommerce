@@ -68,6 +68,69 @@ function wmc_admin_options( $settings, $current_section ) {
 *
 * @return product objects based on the attributes supplied.
 */
+if( !function_exists( 'mpc_get_query_ids' ) ) {
+	function mpc_get_query_ids( $args, $status = '', $type = '' ){
+		$ids = array();
+		$posts = new WP_Query( $args );
+		while ( $posts->have_posts() ) {
+  		    $posts->the_post();
+  		    if( $status == 'woo' && $type != '' ){
+  		    	if( in_array( $type, array( 'simple', 'variable' ) ) ){
+  		    		$id = get_the_ID();
+  		    		$product = wc_get_product( $id );
+  		    		if( isset( $product ) && $product->is_type( $type ) ){
+  		    			array_push( $ids, $id );
+  		    		}
+  		    	}
+  		    }else{
+	  		    array_push( $ids, get_the_ID() );
+  		    }
+		}
+		wp_reset_postdata();
+		return $ids;
+	}
+}
+if( !function_exists( 'mpc_get_validated_ids' ) ) {
+	function mpc_get_validated_ids( $uids, $type = 'post' ){
+		$ids = array();
+		if( isset( $uids ) && count( $uids ) > 0 ){
+			foreach( $uids as $id ){
+				if( $type == 'post' ){
+					$post = get_post( $id );
+					if( isset( $post ) ){
+						array_push( $ids, $id );
+					}
+				}elseif( $type == 'term' ){
+					//
+				}
+			}
+		}
+		return $ids;
+	}
+}
+if( !function_exists( 'mpc_get_sorted_ids' ) ) {
+	function mpc_get_sorted_ids( $all_posts, $validated ){
+		$sorted = array();
+		if(
+			isset( $all_posts ) && count( $all_posts ) > 0 &&
+			isset( $validated ) && count( $validated ) > 0
+		){
+			foreach( $validated as $termid ){
+				foreach( $all_posts as $id ){
+					$terms = get_the_terms( $id, 'product_cat' );
+					if( isset( $terms ) ){
+						foreach( $terms as $term ){
+							if( $term->term_id == $termid && !in_array( $id, $sorted ) ){
+								array_push( $sorted, $id );
+							}
+						}
+					}
+				}
+			}
+		}
+		return $sorted;
+	}
+}
 if( !function_exists( 'mpc_extract_atts' ) ) {
 	function mpc_extract_atts( $atts ){
 		$atts = shortcode_atts(
@@ -103,25 +166,11 @@ if( !function_exists( 'mpc_extract_atts' ) ) {
 	  		$ids = explode( ',', str_replace( ' ', '', $atts['ids'] ) );
 	    	if( $atts['orderby'] != '' || $atts['order'] != '' ){
 	    		$args['post__in'] = $ids;
-	    		$all_posts = array();
-	    		$posts = new WP_Query( $args );
-	    		while ( $posts->have_posts() ) {
-		  		    $posts->the_post();
-		  		    array_push( $all_posts, get_the_ID() );
-	    		}
-	    		wp_reset_postdata();
+	    		$all_posts = mpc_get_query_ids( $args );
 	    		return $all_posts;
 	    	}else{
-	    		$validated = array();
-	    		if( isset( $ids ) && count( $ids ) > 0 ){
-	    			foreach( $ids as $id ){
-	    				$post = get_post( $id );
-	    				if( isset( $post ) ){
-	    					array_push( $validated, $id );
-	    				}
-	    			}
-	    		}
-	      	return $validated;
+	    		$validated = mpc_get_validated_ids( $ids );
+		      	return $validated;
 	    	}
 	    }
 	    elseif( $atts['ids'] != '' && $atts['cats'] != '' && $atts['type'] == 'all' ){
@@ -137,27 +186,13 @@ if( !function_exists( 'mpc_extract_atts' ) ) {
 					'terms'     => $termids,
 		        )
 		    );
-		    $all_posts = array();
-		    $posts = new WP_Query( $args );
-		    while ( $posts->have_posts() ) {
-		        $posts->the_post();
-		        array_push( $all_posts, get_the_ID() );
-		    }
-		    wp_reset_postdata();
+		    $all_posts = mpc_get_query_ids( $args );
 		    return $all_posts;
 	    }
 	    elseif( $atts['ids'] == '' && $atts['cats'] != '' && $atts['type'] == 'all' ){
 	    	//validate
 	    	$termids = explode(',', str_replace( ' ', '', $atts['cats'] ) );
-	    	$validated = array();
-	    	if( isset( $termids ) && count( $termids ) > 0 ){
-	    		foreach( $termids as $id ){
-	    			$term = get_term( $id );
-	    			if( isset( $term ) ){
-	    				array_push( $validated, $id );
-	    			}
-	    		}
-	    	}
+	    	$validated = mpc_get_validated_ids( $termids, 'term' );
 		    $args['tax_query'] = array(
 		        array(
 					'taxonomy' => 'product_cat',
@@ -168,58 +203,18 @@ if( !function_exists( 'mpc_extract_atts' ) ) {
 		        )
 		    );
 	    	//show posts from each category sequentially
-	    	$all_posts = array();
-	    	$posts = new WP_Query( $args );
-	    	while ( $posts->have_posts() ) {
-		  	    $posts->the_post();
-		  	    array_push( $all_posts, get_the_ID() );
-	    	}
-	    	wp_reset_postdata();
+	    	$all_posts = mpc_get_query_ids( $args );
 	    	//rearrange posts
-	    	$sorted = array();
-	    	if( isset( $all_posts ) && count( $all_posts ) > 0 ){
-	    		foreach( $validated as $termid ){
-	    			foreach( $all_posts as $id ){
-	    				$terms = get_the_terms( $id, 'product_cat' );
-	    				if( isset( $terms ) ){
-	    					foreach( $terms as $term ){
-	    						if( $term->term_id == $termid && !in_array( $id, $sorted ) ){
-	    							array_push( $sorted, $id );
-	    						}
-	    					}
-	    				}
-	    			}
-	    		}
-	    	}
+	    	$sorted = mpc_get_sorted_ids( $all_posts, $validated );
 	    	return $sorted;
 	    }
 	    elseif( $atts['ids'] == '' && $atts['cats'] == '' && $atts['type'] != 'all' ){
-	    	$ids = array();
-	    	if( in_array( $atts['type'], array( 'simple', 'variable' ) ) ){
-	    		$posts = new WP_Query( $args );
-		  	    while( $posts->have_posts() ){
-		  	    	$posts->the_post();
-			        $id = get_the_ID();
-			        $_product = wc_get_product( $id );
-			        if( isset( $_product ) && $_product->is_type( $atts['type'] ) ){
-			        	array_push( $ids, $id );
-			        }
-		  	    }
-	    	}
-	    	wp_reset_postdata();
+	    	$ids = mpc_get_query_ids( $args, 'woo', $atts['type'] );
 	    	return $ids;
 	    }
 	    elseif( $atts['ids'] == '' && $atts['cats'] != '' && $atts['type'] != 'all' ){
 	    	$termids = explode(',', str_replace( ' ', '', $atts['cats'] ) );
-	    	$validated = array();
-	    	if( isset( $termids ) && count( $termids ) > 0 ){
-	    		foreach( $termids as $id ){
-	    			$term = get_term( $id );
-	    			if( isset( $term ) ){
-	    				array_push( $validated, $id );
-	    			}
-	    		}
-	    	}
+	    	$validated = mpc_get_validated_ids( $termids, 'term' );
 	    	$args['tax_query'] = array(
 		  	    array(
 					'taxonomy' 		=> 'product_cat',
@@ -229,31 +224,8 @@ if( !function_exists( 'mpc_extract_atts' ) ) {
 					'terms' 	  	=> $validated,
 		  	    )
 	    	);
-	    	$all_posts = array();
-	    	$posts = new WP_Query( $args );
-	    	while ( $posts->have_posts() ) {
-		  	    $posts->the_post();
-		  	    $_product = wc_get_product( get_the_ID() );
-		  	    if( isset( $_product ) && $_product->is_type( $atts['type'] ) ){
-		  	    	array_push( $all_posts, get_the_ID() );
-		  	    }
-	    	}
-	    	wp_reset_postdata();
-	    	$sorted = array();
-	    	if( isset( $all_posts ) && count( $all_posts ) > 0 ){
-	    		foreach( $validated as $termid ){
-	    			foreach( $all_posts as $id ){
-	    				$terms = get_the_terms( $id, 'product_cat' );
-	    				if( isset( $terms ) ){
-	    					foreach( $terms as $term ){
-	    						if( $term->term_id == $termid && !in_array( $id, $sorted ) ){
-	    							array_push( $sorted, $id );
-	    						}
-	    					}
-	    				}
-	    			}
-	    		}
-	    	}
+	    	$all_posts = mpc_get_query_ids( $args, 'woo', $atts['type'] );
+	    	$sorted = mpc_get_sorted_ids( $all_posts, $validated );
 	    	return $sorted;
 	    }
 	    elseif( $atts['ids'] != '' && $atts['cats'] != '' && $atts['type'] != 'all' ){
@@ -261,33 +233,18 @@ if( !function_exists( 'mpc_extract_atts' ) ) {
 	    	$termids = explode(',', str_replace( ' ', '', $atts['cats'] ) );
 	    	$args['post__in'] = $ids;
 		    $args['tax_query'] = array(
-	        array(
-				'taxonomy' 	=> 'product_cat',
-				'field' 	=> 'term_id',
-				// 'field' 	=> 'slug',
-				// 'terms' 	=> 'white-wines'
-				'terms' 	=> $termids,
-	        )
+		        array(
+					'taxonomy' 	=> 'product_cat',
+					'field' 	=> 'term_id',
+					// 'field' 	=> 'slug',
+					// 'terms' 	=> 'white-wines'
+					'terms' 	=> $termids,
+		        )
 		    );
-		    $all_posts = array();
-		    $posts = new WP_Query( $args );
-		    while ( $posts->have_posts() ) {
-		        $posts->the_post();
-		        $_product = wc_get_product( get_the_ID() );
-		        if( isset( $_product ) && $_product->is_type( $atts['type'] ) ){
-		        	array_push( $all_posts, get_the_ID() );
-		        }
-		    }
-		    wp_reset_postdata();
+		    $all_posts = mpc_get_query_ids( $args, 'woo', $atts['type'] );
 		    return $all_posts;
 	    }else{
-	    	$ids = array();
-	    	$posts = new WP_Query( $args );
-	    	while ( $posts->have_posts() ) {
-		  	    $posts->the_post();
-		  	    array_push( $ids, get_the_ID() );
-	    	}
-	    	wp_reset_postdata();
+	    	$ids = mpc_get_query_ids( $args );
 	    	return $ids;
 	    }
 	}
@@ -377,6 +334,16 @@ function mpc_get_variation_id( $at_key, $pid ){
 	}
 	return $variation_id;
 }
+if( !function_exists( 'mpc_check_valid_variations' ) ) {
+	function mpc_check_valid_variations( $v ){
+		$check = 0;
+		foreach( $v as $key => $value ){
+			if( !empty( $value ) ) $check++;
+		}
+		if( $check == count( $v ) ) return true;
+		else return false;
+	}
+}
 /**
 * Add all checked products with variations to cart.
 */
@@ -394,17 +361,18 @@ function woocommerce_maybe_add_multiple_products_to_cart() {
 			exit();
 		}
 		remove_action( 'wp_loaded', array( 'WC_Form_Handler', 'add_to_cart_action' ), 20 );
-		$success = 0;
 		$titles = array();
-		$count  = 0;
 		foreach( $product_ids as $pid ){
+			$status = 0;
 			$quantity = ( isset( $_REQUEST[ 'quantity' . $pid ] ) ? intval( $_REQUEST[ 'quantity' . $pid ] ) : 1);
 			$_product = wc_get_product( $pid );
 			if( $_product->is_type( 'simple' ) ){
-				if ( false !== WC()->cart->add_to_cart( $pid, $quantity ) ) $success++;
+				$status++;
+				if( false === WC()->cart->add_to_cart( $pid, $quantity ) ){
+					$status = 0;
+					mpc_go_to_designated_page();
+				}
 			}elseif( $_product->is_type( 'variable' ) ){
-				$saved = false;
-				$att_key_val = '';
 				$at_key = array();
 				$variations = array();
 				foreach ( $_product->get_attributes() as $attribute ) {
@@ -416,34 +384,24 @@ function woocommerce_maybe_add_multiple_products_to_cart() {
 					}
 				}
 				$variation_id = mpc_get_variation_id( $at_key, $pid );
-				// t
-				// echo '<pre>'; print_r( $at_key ); echo '</pre>';
-				// echo 'Variation id = ' . $variation_id .' / for product ( id = ' . $pid . ')';
-				// echo '<pre>'; print_r( array() ); echo $_product->get_children()[0] . '</pre>';
-				// wp_die();
-				// t
-				if( $variation_id != 0 && !empty( $variations ) ){
-					if ( false !== WC()->cart->add_to_cart( $pid, $quantity, $variation_id, $variations ) ) {
-						$success++; $saved = true;
-					}
-				}
-				// t
 				if( $variation_id == 0 ){
 					$variation_id = $_product->get_children()[0];
-					if ( false !== WC()->cart->add_to_cart( $pid, $quantity, $variation_id, $variations ) ) {
-						$success++; $saved = true;
+				}
+				if( mpc_check_valid_variations( $variations ) ){
+					$status++;
+					if ( false === WC()->cart->add_to_cart( $pid, $quantity, $variation_id, $variations ) ) {
+						$status = 0;
+						mpc_go_to_designated_page();
 					}
 				}
-				// t
-				if( $saved == false ){
-					mpc_go_to_designated_page();
-				}
 			}
-			$titles[] = apply_filters( 'woocommerce_add_to_cart_qty_html', ( $quantity > 1 ? absint( $quantity ) . ' &times; ' : '' ), $pid ) . apply_filters( 'woocommerce_add_to_cart_item_name_in_quotes', sprintf( _x( '&ldquo;%s&rdquo;', 'Item name in quotes', 'mpc' ), strip_tags( get_the_title( $pid ) ) ), $pid );
+			if( $status != 0 ){
+				$titles[] = apply_filters( 'woocommerce_add_to_cart_qty_html', ( $quantity > 1 ? absint( $quantity ) . ' &times; ' : '' ), $pid ) . apply_filters( 'woocommerce_add_to_cart_item_name_in_quotes', sprintf( _x( '&ldquo;%s&rdquo;', 'Item name in quotes', 'mpc' ), strip_tags( get_the_title( $pid ) ) ), $pid );
+			}
 		}
-		if( count( $product_ids ) == $success && $success != 0 ){
+		if( count( $titles ) > 0 ){
 			$titles = array_filter( $titles );
-			$added_text = sprintf( _n( '%s has been added to your cart.', '%s have been added to your cart.', $count, 'mpc' ), wc_format_list_of_items( $titles ) );
+			$added_text = sprintf( _n( '%s has been added to your cart.', '%s have been added to your cart.', count( $product_ids ), 'mpc' ), wc_format_list_of_items( $titles ) );
 			$message = sprintf( '<a href="%s" tabindex="1" class="button wc-forward">%s</a> %s', esc_url( wc_get_page_permalink( 'cart' ) ), __( 'View cart', 'mpc' ), esc_html( $added_text ) );
 			wc_add_notice( $message );
 			// wc_add_to_cart_message( $product_ids, true );

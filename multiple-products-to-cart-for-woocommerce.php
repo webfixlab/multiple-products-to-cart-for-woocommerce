@@ -5,7 +5,7 @@ Plugin URI: https://webfixlab.com/woocommerce-multiple-products-to-cart
 Description: A truly lightweight plugin to add multiple products to cart at once.
 Author: WebFix Lab
 Author URI: https://webfixlab.com/
-Version: 2.2.1
+Version: 2.2.2
 Requires at least: 4.4
 Tested up to: 5.4
 WC requires at least: 3.0
