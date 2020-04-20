@@ -101,7 +101,10 @@ if( !function_exists( 'mpc_get_validated_ids' ) ) {
 						array_push( $ids, $id );
 					}
 				}elseif( $type == 'term' ){
-					//
+					$trm = get_term_by( 'id', $id );
+					if( isset( $trm ) ){
+						array_push( $ids, $id );
+					}
 				}
 			}
 		}
