@@ -3,7 +3,7 @@ Contributors: smshahriar, aikya, webfixlab
 Tags: product table, woocommerce product table,wc product table,products table,woocommerce table
 Requires at least: 4.9
 Tested up to: 6.5.5
-Stable tag: 7.1.1
+Stable tag: 7.2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,9 +20,11 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 
 **FEATURES**
 
-* NEW! Skip products
-* NEW! Groups product supported
-* NEW! Details Documentation Available
+* NEW! Select columns for each table
+* NEW! Better mobile friendly table 
+* Skip products
+* Groups product supported
+* Details Documentation Available
 * Improved mobile view
 * Simple and Variable product types supported
 * Works with MULTISITE

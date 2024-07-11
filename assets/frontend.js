@@ -406,17 +406,6 @@
 			mpop.find( 'img' ).attr( 'src', image_src );
 		}
 
-		var title = row.find( '.mpc-popup-title' ).html();
-		var price = row.find( '.mpc-range' ).html();
-
-		if( typeof price === 'undefined' ){
-			mpop.find( 'p.mpcpop-price' ).hide();
-		}else{
-			mpop.find( 'p.mpcpop-price' ).html( price ).show();
-		}
-
-		mpop.find( 'h4.mpcpop-title' ).html( title );
-
 		// handle gallery.
 		mpc_render_gallery( item );
 
@@ -525,6 +514,8 @@
 
 		// select all handler.
 		mpc_init_select_all( wrapper );
+
+		mobile();
 	}
 
 	// AJAX table loader.
@@ -663,7 +654,7 @@
 						data[id]['attributes'][ $( this ).attr( 'data-attribute_name' ) ] = $( this ).find( 'option:selected' ).val();
 					});
 				} else {
-					mpc_notify( row.closest( '.mpc-container' ), 'error', mpc_frontend.missed_option );
+					// mpc_notify( row.closest( '.mpc-container' ), 'error', mpc_frontend.missed_option );
 					return false;
 				}
 			}
@@ -1058,4 +1049,18 @@
 			$( '#mpcpop' ).hide();
 		}
 	});
+
+
+
+	// New approach for mobile view, July 2024
+	function mobile(){
+		$( 'table.mpc-wrap' ).removeClass( 'collapsed' );
+		if( $(window).width() < 700 ){
+			$( 'table.mpc-wrap' ).addClass( 'collapsed' );
+		}
+	}
+	$(window).on('resize', function() {
+		mobile();
+	});
+	mobile();
 })( jQuery );

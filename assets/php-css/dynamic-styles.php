@@ -39,8 +39,8 @@ $image_size = ! empty( $image_size ) ? $image_size : '72';
 		<?php printf( 'background: %s;', esc_html( $btn_background ) ); ?>
 		<?php printf( 'color: %s;', esc_html( $btn_color ) ); ?>
 	}
-	.mpcp-gallery, table.mpc-wrap img{
-		max-width: <?php echo esc_attr( $image_size ); ?>px;
+	td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
+		width: <?php echo esc_attr( $image_size ); ?>px;
 	}
 	<?php if ( isset( $title_color ) ) : ?>
 	.mpc-product-title a{
@@ -73,14 +73,6 @@ $image_size = ! empty( $image_size ) ? $image_size : '72';
 				echo esc_html( 'text-decoration: none;' );
 			}
 		?>
-	}
-	@media screen and ( max-width: 767px ){
-		td.mpc-product-select:before {
-			content: "<?php echo esc_html( $mpctable__['labels']['wmc_ct_buy'] ); ?>";
-			position: relative;
-			top: 1px;
-			right: 5px;
-		}
 	}
 	<?php do_action( 'mpc_dynamic_css' ); ?>
 </style>

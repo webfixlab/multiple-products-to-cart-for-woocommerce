@@ -111,9 +111,6 @@ select:-moz-focusring {
 .clear-button a.reset_variations {
 	margin: 0;
 }
-table.mpc-wrap .mpc-product-name {
-	max-width: 300px;
-}
 .total-row {
 	font-size: 18px;
 	font-weight: bold;
@@ -184,25 +181,15 @@ span.mpc-total {
 }
 /* The Modal (background) */
 .mpc-popup {
-    transition: 0.3s;
-    display: none;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    background: #000000e8;
-    text-align: center;
-    z-index: 999999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-	flex-direction: column;
-}
-.mpc-popup  .image-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	background: #000000e8;
+	text-align: center;
+	z-index: 999999;
 }
 .admin-bar .mpc-popup {
 	top: 32px;
@@ -214,12 +201,6 @@ span.mpc-total {
 	max-height: 75vh;
 }
 /* Add Animation */
-#mpcpop img {
-	-webkit-animation-name: zoom;
-	-webkit-animation-duration: 0.6s;
-	animation-name: zoom;
-	animation-duration: 0.6s;
-}
 h4.mpcpop-title {
 	color: #fff;
 	margin-top: 5px;
@@ -458,10 +439,21 @@ table.mpc-wrap tbody tr td {
 	float: left;
 	margin-right: 10px;
 }
+#mpcpop .mpc-gallery img:last-child {
+	margin-right: 0;
+}
 #mpcpop .mpc-gallery {
+	position: fixed;
+    left: 50%;
+    bottom: -40px;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+    background: #a2a2a26b;
+    padding: 10px;
+	border-radius: 5px;
 }
 .mpc-gallery img.mpcgi-selected {
-	border: 4px solid #2199c5;
+	border: 4px solid #aa0000;
 }
 /* floating total */
 .mpc-floating-total {
@@ -516,11 +508,16 @@ table.mpc-wrap tbody tr td {
 	width: 26px;
 	margin: -5px 15px;
 }
+.mpc-product-variation .clear-button {
+    text-align: center;
+}
+span.mpc-search-empty {
+    display: block;
+    background: #ffdbdb;
+    padding: 20px 25px;
+}
 /* Mobile CSS */
 @media screen and (max-width: 767px) {
-	.mpcp-gallery .gallery-item {
-		width: 50%;
-	}
 	.mpc-range span.woocommerce-Price-amount.amount {
 		font-weight: bold;
 	}
@@ -529,12 +526,6 @@ table.mpc-wrap tbody tr td {
 	}
 	table.mpc-wrap {
 		margin-bottom: 0;
-	}
-	table.mpc-wrap thead, tr.cart_item.simple td.mpc-product-variation {
-		display: none;
-	}
-	table.mpc-wrap tbody tr, table.mpc-wrap tbody td {
-		display: block;
 	}
 	table.mpc-wrap tbody tr {
 		position: relative;
@@ -550,10 +541,6 @@ table.mpc-wrap tbody tr td {
 		display: table;
 		clear: both;
 	}
-	table.mpc-wrap tbody tr td.mpc-product-name {
-		padding-top: 0;
-		max-width: 100%;
-	}
 	table.mpc-wrap.mpc-no-image tbody tr td.mpc-product-name {
 		margin-right: 80px;
 	}
@@ -561,22 +548,8 @@ table.mpc-wrap tbody tr td {
 		position: static;
 		margin-top: 0.5em;
 	}
-	table.mpc-wrap.mpc-no-image tbody td.mpc-product-select {
-		position: absolute;
-		top: 4px;
-		right: 10px;
-	}
-	table.mpc-wrap tbody tr td {
-		padding: 0;
-		text-align: right;
-	}
 	table.mpc-wrap.mpc-no-image tbody tr td {
 		text-align: left;
-	}
-	table.mpc-wrap tbody tr td.mpc-product-image {
-		width: 110px;
-		float: left;
-		margin-right: 5px;
 	}
 	table.mpc-wrap tbody td.mpc-product-quantity {
 		margin-top: .5em;
@@ -610,7 +583,7 @@ table.mpc-wrap tbody tr td {
 		margin-bottom: 5px;
 	}
 	#mpcpop img {
-		width: 75%;
+		width: 90%;
 		margin-top: 32px;
 	}
 	.mpc-sort, .mpcp-cat-filter, .mpc-asearch {
@@ -635,14 +608,27 @@ table.mpc-wrap tbody tr td {
 		width: 24px;
 		height: 24px;
 	}
-}
 
-/* New approach - June, 2024 */
-@media screen and (max-width: 767px) {
-	/* table.mpc-wrap thead, tr.cart_item.simple td.mpc-product-variation{
-		display: table-caption;
+
+
+	/* New approach - July, 2024 */
+	table.mpc-wrap.collapsed{
+		display: block;
+		max-width: -moz-fit-content;
+		max-width: fit-content;
+		margin: 0 auto;
+		overflow-x: auto;
+		white-space: nowrap;
 	}
-	table.mpc-wrap thead th{
-		padding: 10px;
-	} */
+	#mpcpop .mpc-gallery{
+		bottom: auto;
+	}
+	#mpcpop .mpc-gallery img {
+		width: 35px;
+		margin-right: 5px;
+		margin-top: 0px;
+	}
+	.admin-bar .mpc-popup{
+		top: 0;
+	}
 }

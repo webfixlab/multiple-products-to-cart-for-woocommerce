@@ -94,8 +94,6 @@ if ( ! class_exists( 'MPCTemplate' ) ) {
 				<div class="image-wrap">
 					<span class="dashicons dashicons-dismiss mpcpop-close"></span>
 					<img src="">
-					<h4 class="mpcpop-title"></h4>
-					<p class="mpcpop-price"><?php $this->total_price(); ?></p>
 				</div>
 			</div>
 			<?php
@@ -241,6 +239,11 @@ if ( ! class_exists( 'MPCTemplate' ) ) {
 				return;
 			}
 
+			// if no buy column exists, hide.
+			if( ! in_array( 'wmc_ct_buy', $this->data['columns_list'], true ) ){
+				return;
+			}
+			
 			?>
 			<div class="mpc-all-select">
 				<label><?php echo esc_html( $this->data['labels']['wmc_select_all_text'] ); ?></label>
@@ -319,8 +322,6 @@ if ( ! class_exists( 'MPCTemplate' ) ) {
 						</span>
 					<?php endif; ?>
 					<img src="<?php echo esc_url( $prod['images'][ $thumb ] ); ?>" class="mpc-product-image attachment-<?php echo esc_attr( $thumb ); ?> size-<?php echo esc_attr( $thumb ); ?>" alt="" data-fullimage="<?php echo esc_url( $prod['images'][ $full ] ); ?>">
-					<div class="mpc-popup-title" style="display: none;"><?php echo esc_html( $prod['title'] ); ?></div>
-					<div class="mpc-popup-price" style="display: none;"><?php echo isset( $prod['price'] ) && ! empty( $prod['price'] ) ? wp_kses_post( $prod['price'] ) : ''; ?></div>
 				</div>
 				<?php do_action( 'init_mpc_gallery' ); ?>
 			</td>
