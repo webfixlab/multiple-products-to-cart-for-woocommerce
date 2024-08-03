@@ -315,7 +315,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 			wp_send_json(
 				array(
-					'mpc_fragments' => $response
+					'mpc_fragments' => $response,
 				)
 			);
 		}
@@ -396,7 +396,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param int   $paged paged variable.
 		 */
 		public function get_wp_query( $atts, $paged ) {
-
 			$args = array(
 				'post_type'      => 'product',
 				'post_status'    => 'publish',
@@ -482,37 +481,62 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				'terms'    => $types,
 			);
 
-			if ( isset( $atts['cats'] ) && '' !== $atts['cats'] ) {
-				$tids = array();
+			$term_ids = $this->get_term_ids( $atts['cats'], 'product_cat' );
+			if( false !== $term_ids ){
+				$args['tax_query'][] = $term_ids;
+			}
 
-				if ( ! is_array( $atts['cats'] ) ) {
-					$atts['cats'] = explode( ',', str_replace( ' ', '', $atts['cats'] ) );
-				}
-
-				foreach ( $atts['cats'] as $tid ) {
-
-					$catobj = get_term_by( 'id', $tid, 'product_cat' );
-					if ( ! empty( $catobj ) && isset( $catobj->term_id ) ) {
-						$tids[] = $catobj->term_id;
-					} else {
-						$catobj = get_term_by( 'slug', $tid, 'product_cat' );
-						if ( ! empty( $catobj ) && isset( $catobj->term_id ) ) {
-							$tids[] = $catobj->term_id;
-						}
-					}
-				}
-
-				// check if integer ids provided.
-				if ( ! empty( $tids ) ) {
-					$args['tax_query'][] = array(
-						'taxonomy' => 'product_cat',
-						'field'    => 'term_id',
-						'terms'    => $tids,
-					);
-				}
+			$term_ids = $this->get_term_ids( $atts['tags'], 'product_tag' );
+			if( false !== $term_ids ){
+				$args['tax_query'][] = $term_ids;
 			}
 
 			return apply_filters( 'mpc_modify_query', $args, $atts );
+		}
+
+		/**
+		 * Get term ids after checking either id or slug from given attribute
+		 *
+		 * @param array  $atts     shortcode attributes.
+		 * @param string $taxonomy in which taxonomy the term ids belong to.
+		 */
+		public function get_term_ids( $atts, $taxonomy ){
+			if( ! isset( $atts ) || '' === $atts ) {
+				return false;
+			}
+
+			if ( ! is_array( $atts ) ) {
+				$atts = explode( ',', str_replace( ' ', '', $atts ) );
+			}
+			
+			if( ! is_array( $atts ) || empty( $atts ) ) {
+				return false;
+			}
+			
+			// terms can either be id or slug.
+			$extracted_term_ids = array();
+			foreach ( $atts as $term_id ) {
+				$term = get_term_by( 'id', $term_id, $taxonomy );
+
+				if ( ! empty( $term ) && isset( $term->term_id ) ) {
+					$extracted_term_ids[] = $term->term_id;
+				} else {
+					$term = get_term_by( 'slug', $term_id, $taxonomy );
+					if ( ! empty( $term ) && isset( $term->term_id ) ) {
+						$extracted_term_ids[] = $term->term_id;
+					}
+				}
+			}
+
+			if ( empty( $extracted_term_ids ) ) {
+				return false;
+			}
+
+			return array(
+				'taxonomy' => $taxonomy,
+				'field'    => 'term_id',
+				'terms'    => $extracted_term_ids,
+			);
 		}
 
 		/**
@@ -974,6 +998,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 					'mpc_show_new_quantity_box'   => '',
 					'mpc_show_ajax_search'        => '',
 					'mpc_show_ajax_cat_filter'    => '',
+					'mpc_show_ajax_tag_filter'    => '',
 					'mpc_show_stock_out'          => '',
 					'mpc_show_total_price'        => '',
 					'mpc_show_add_to_cart_button' => '',
@@ -1103,6 +1128,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				'ids'           => '',
 				'skip_products' => '',
 				'cats'          => '',
+				'tags'          => '',
 				'type'          => 'all',
 				'link'          => 'true',
 				'description'   => 'false',
@@ -1118,7 +1144,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$atts = $this->sanitize_boolean( $atts );
 
 			// comma separated attributes.
-			$cs_atts = array( 'selected', 'ids', 'skip_products', 'cats', 'type', 'columns' );
+			$cs_atts = array( 'selected', 'ids', 'skip_products', 'cats', 'tags', 'type', 'columns' );
 
 			foreach ( $cs_atts as $type ) {
 
@@ -1128,14 +1154,12 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 
 				if ( isset( $atts[ $type ] ) && '' !== $atts[ $type ] ) {
-
 					$tmp   = str_replace( ' ', '', $atts[ $type ] );
 					$tmp   = explode( ',', $tmp );
 					$tmp_a = array();
 
 					foreach ( $tmp as $a ) {
 						if ( false === in_array( $a, $tmp_a, true ) ) {
-
 							if ( 'type' === $type || 'columns' === $type ) {
 								array_push( $tmp_a, $a );
 							} else {

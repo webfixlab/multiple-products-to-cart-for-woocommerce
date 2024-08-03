@@ -42,7 +42,7 @@ $image_size = ! empty( $image_size ) ? $image_size : '72';
 	td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 		width: <?php echo esc_attr( $image_size ); ?>px;
 	}
-	<?php if ( isset( $title_color ) ) : ?>
+	<?php if ( isset( $title_color ) && ! empty( $title_color ) ) : ?>
 	.mpc-product-title a{
 		color: <?php echo esc_html( $title_color ); ?>;
 	}
@@ -75,4 +75,15 @@ $image_size = ! empty( $image_size ) ? $image_size : '72';
 		?>
 	}
 	<?php do_action( 'mpc_dynamic_css' ); ?>
+	@media screen and (max-width: 767px) {
+		table.mpc-wrap tbody tr{
+			min-height: <?php echo $image_size + ceil( ( $image_size * 20 ) / 100 ); ?>px;
+		}
+		table.mpc-wrap tbody tr:has(.gallery-item){
+			min-height: <?php echo $image_size + ceil( ( $image_size * 45 ) / 100 ) + 45; ?>px;
+		}
+		table.mpc-wrap tbody tr td{
+			padding-left: <?php echo $image_size + 13; ?>px;
+		}
+	}
 </style>

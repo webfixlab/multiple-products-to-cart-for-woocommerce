@@ -239,15 +239,15 @@ if ( ! class_exists( 'MPCTemplate' ) ) {
 				return;
 			}
 
-			// if no buy column exists, hide.
+			$checked_n_disabled = ''; // whether the checkbox is checked and isn't editable.
 			if( ! in_array( 'wmc_ct_buy', $this->data['columns_list'], true ) ){
-				return;
+				$checked_n_disabled = 'checked disabled';
 			}
 			
 			?>
 			<div class="mpc-all-select">
 				<label><?php echo esc_html( $this->data['labels']['wmc_select_all_text'] ); ?></label>
-				<input type="checkbox" class="mpc-check-all">
+				<input type="checkbox" class="mpc-check-all" <?php echo esc_html( $checked_n_disabled ); ?>>
 			</div>
 			<?php
 
@@ -338,7 +338,7 @@ if ( ! class_exists( 'MPCTemplate' ) ) {
 			$html = '';
 
 			// display extra stuff before product title.
-			if( isset( $prod['parent'] ) ){
+			if( isset( $prod['parent'] ) && ! empty( $prod['parent']) ){
 				$title = $prod['parent']['title'];
 
 				if( $this->data['attributes']['link'] ){

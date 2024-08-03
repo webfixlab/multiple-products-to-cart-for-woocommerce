@@ -22,7 +22,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 * Dsiplay admin settings page menu
 		 */
 		public function menu() {
-
 			$tab = $this->get_tab();
 
 			$menus = array(
@@ -81,7 +80,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			$page = admin_url( 'admin.php?page=mpc-settings' );
 
 			foreach ( $navs as $nav ) {
-
 				$nav_ = sanitize_title( $nav['tab'] );
 				$url  = $page . '&tab=' . $nav_ . '&nonce=' . $nonce;
 
@@ -94,7 +92,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				$is_active = $nav_ === $tab ? 'active' : '';
 
 				if ( 'new-table' === $tab && $nav_ === $tab && true === $edit_flag ) {
-
 					?>
 					<a href="javaScript:void(0)">
 						<div class="mpcdp_settings_tab_control active" data-tab="edit-table">
@@ -103,7 +100,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 						</div>
 					</a>
 					<?php
-
 					$is_active = '';
 				}
 
@@ -117,7 +113,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					</div>
 				</a>
 				<?php
-
+				
 			}
 		}
 
@@ -166,9 +162,13 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 
 			$tab = $this->get_tab();
 
+			$notice = '';
+			if ( isset( $_POST['mpc_admin_settings'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
+				$notice = __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' );
+			}
+
 			if ( 'new-table' !== $tab && 'all-tables' !== $tab ) {
 				// show saved settings notice.
-				$this->notice( __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' ) );
 			}
 
 			if ( in_array( $tab, array( 'new-table', 'all-tables', 'column-sorting' ), true ) ) {
@@ -186,14 +186,30 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				return;
 			}
 
-			global $mpc__;
-
 			if ( ! isset( $mpc__['fields'][ $tab ] ) || ! isset( $mpc__['fields'][ $tab ] ) ) {
 				return;
 			}
 
-			foreach ( $mpc__['fields'][ $tab ] as $section ) {
+			if( ! empty( $notice ) ){
+				?>
+				<div class="mpcdp_settings_section">
+					<div class="mpc-notice mpcdp_settings_section">
+						<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
+							<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
+								<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
+									<span class="theme_customizer_icon dashicons dashicons-saved"></span>
+									<div class="mpcdp_settings_option_description">
+										<div class="mpcdp_option_label"><?php echo esc_html( $notice ); ?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
 
+			foreach ( $mpc__['fields'][ $tab ] as $section ) {
 				echo '<div class="mpcdp_settings_section">';
 
 				printf(
@@ -202,11 +218,8 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				);
 
 				foreach ( $section['fields'] as $fld ) {
-
 					$this->saving_field( $fld );
-
 					$this->field_settings( $fld );
-
 				}
 
 				echo '</div>';
@@ -218,7 +231,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 */
 		public function sidebar(){
 			$path = MPC_PATH . 'templates/admin/sidebar.php';
-
 			$path = apply_filters( 'mpc_settings_sidebar', $path );
 
 			if( file_exists( $path ) ){
@@ -339,7 +351,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 
 			$display = 'none';
 			if ( isset( $fld['followup_depends'] ) && ! empty( $fld['followup_depends'] ) ) {
-
 				$value = get_option( $fld['key'] );
 
 				if ( ! empty( $value ) && $value === $fld['followup_depends'] ) {
@@ -348,7 +359,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			}
 
 			foreach ( $fld['followup'] as $sfld ) :
-
 				$name        = isset( $sfld['key'] ) ? $sfld['key'] : '';
 				$label       = isset( $sfld['label'] ) ? $sfld['label'] : '';
 				$desc        = isset( $sfld['desc'] ) ? $sfld['desc'] : '';
@@ -383,6 +393,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 * @param array $fld settings field data.
 		 */
 		public function pro_ribbon( $fld ) {
+			global $mpc__;
 
 			// if not pro field, skip.
 			if ( ! isset( $fld['pro'] ) || empty( $fld['pro'] ) ) {
@@ -390,7 +401,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			}
 
 			// if pro enabled, skip.
-			global $mpc__;
 			if ( isset( $mpc__['has_pro'] ) && true === $mpc__['has_pro'] ) {
 				return;
 			}
@@ -428,12 +438,10 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			$pro_label = empty( $pro_label ) ? $fld['label'] : $pro_label;
 
 			if ( 'radio' === $fld['type'] && isset( $fld['options'] ) ) {
-
 				echo '<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6"><div class="switch-field">';
 
 				foreach ( $fld['options'] as $v => $lbl ) {
 					$id = $fld['key'] . '_' . $v;
-
 					$is_checked = $value === $v ? 'checked' : '';
 
 					if ( 'wmc_redirect' === $fld['key'] && 'custom' === $v && false === $mpc__['has_pro'] ) {
@@ -453,9 +461,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				}
 
 				echo '</div></div>';
-
 			} elseif ( 'text' === $fld['type'] ) {
-
 				echo '<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">';
 
 				printf(
@@ -470,9 +476,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				);
 
 				echo '</div>';
-
 			} elseif ( 'checkbox' === $fld['type'] ) {
-
 				echo '<div class="input-field" style="display: none;">';
 
 				$is_checked = ! empty( $value ) && 'on' === $value ? 'checked' : '';
@@ -489,7 +493,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				);
 
 				echo '</div>';
-
 			} elseif ( 'color' === $fld['type'] ) {
 				echo '<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">';
 
@@ -503,7 +506,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				echo '</div>';
 				echo '</div>';
 			} elseif ( 'number' === $fld['type'] ) {
-
 				echo '<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">';
 
 				printf(
@@ -520,7 +522,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				);
 
 				echo '</div>';
-
 			}
 
 			$this->switch_box( $fld, $value );
@@ -561,6 +562,8 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 * Get settings tab
 		 */
 		public function get_tab() {
+			global $mpc__;
+
 			$tab = 'new-table';
 
 			if ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) {
@@ -569,8 +572,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					$tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
 				}
 			}
-
-			global $mpc__;
 
 			if ( isset( $mpc__['settings_tab'] ) && ! empty( $mpc__['settings_tab'] ) ) {
 				$tab = sanitize_title( $mpc__['settings_tab'] );
@@ -585,7 +586,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 * @param string $msg message to display.
 		 */
 		public function notice( $msg ) {
-
 			if ( ! isset( $_POST['mpc_opt_sc'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_opt_sc'] ) ), 'mpc_opt_sc_save' ) ) {
 				return;
 			}
@@ -616,7 +616,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 * Save global table columns settings
 		 */
 		public function save_sorted_columns() {
-
 			if ( ! isset( $_POST['mpc_col_sort'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_col_sort'] ) ), 'mpc_col_sort_save' ) ) {
 				return;
 			}

@@ -263,7 +263,7 @@
 				}
 
 				// handle sku.
-				if ( typeof row.find( '.mpc-sku' ) != 'undefined' && typeof data[variation_id]['sku'] != 'undefined' ) {
+				if ( typeof row.find( '.mpc-product-sku' ) != 'undefined' && typeof data[variation_id]['sku'] != 'undefined' ) {
 					row.find( '.mpc-def-sku' ).hide();
 					row.find( '.mpc-var-sku' ).html( data[variation_id]['sku'] );
 				}
@@ -280,7 +280,7 @@
 				mpc_row_price_handler( row, '' );
 
 				// sku.
-				if ( typeof row.find( '.mpc-sku' ) != 'undefined' ) {
+				if ( typeof row.find( '.mpc-product-sku' ) != 'undefined' ) {
 					row.find( '.mpc-def-sku' ).show();
 					row.find( '.mpc-var-sku' ).html( '' );
 				}
@@ -425,12 +425,14 @@
 			}
 		});
 
-		if ( selected == 0 && wrap.find( '.mpc-check-all' ).is( ':checked' ) ) {
+		if ( selected == 0 && total > 0 && wrap.find( '.mpc-check-all' ).is( ':checked' ) ) {
+			console.log( 'selected 0 and checked, uncheck' );
 			wrap.find( '.mpc-check-all' ).prop( 'checked', false );
 			wrap.find( '.mpc-check-all' ).attr( 'data-state', 'not' );
 		}
 
 		if ( total == selected && selected > 0 ) {
+			console.log( 'total = selected and selected > 0. so checking' );
 			// check select all checkbox.
 			wrap.find( '.mpc-check-all' ).prop( 'checked', true );
 			wrap.find( '.mpc-check-all' ).attr( 'data-state', 'checked' );
@@ -514,16 +516,10 @@
 
 		// select all handler.
 		mpc_init_select_all( wrapper );
-
-		mobile();
 	}
 
-	// AJAX table loader.
-	function mpc_table_loader_request(page, wrapper) {
-		mpc_loading_animation('load', wrapper);
-
-		var atts = mpc_get_atts(wrapper);
-
+	// AJAX table loader
+	function ajax_table_loader( atts, page, wrapper ){
 		$.ajax({
 			method: "POST",
 			url: mpc_frontend.ajaxurl,
@@ -550,6 +546,14 @@
 				console.log(errorThrown);
 			}
 		});
+	}
+	// AJAX table loader pre processing.
+	function mpc_table_loader_request(page, wrapper) {
+		mpc_loading_animation('load', wrapper);
+
+		var atts = mpc_get_atts(wrapper);
+
+		ajax_table_loader( atts, page, wrapper );
 	}
 
 	// mpc pagination loader.
@@ -806,16 +810,17 @@
 
 	// single add to cart.
 	$( 'body' ).on( 'click', '.mpce-single-add', function(e){
+		e.preventDefault();
 		var row  = $( this ).closest( 'tr.cart_item' );
 		var wrap = $( this ).closest( '.mpc-container' );
 
 		var data = mpc_get_add_to_cart_row_data( row, true );
 		if ( ! data || ( typeof data == 'object' && $.isEmptyObject( data ) ) ) {
 			mpc_notify( wrap, 'error', mpc_frontend.blank_submit );
+		}else{
+			mpc_request_ajax_add_to_cart( wrap, data );
 		}
-		e.preventDefault();
 
-		mpc_request_ajax_add_to_cart( wrap, data );
 	});
 
 	// ajax search.
@@ -866,13 +871,13 @@
 			$( '#mpcpop .mpc-gallery img' ).removeClass( 'mpcgi-selected' );
 			$( e.target ).addClass( 'mpcgi-selected' );
 		} else {
-			$( '#mpcpop' ).hide( 'slow' );
+			$( '#mpcpop' ).hide()
 		}
 	});
 
 	// on close button of popup box clicked, hide it.
 	$( 'body' ).on( 'click', 'span.mpcpop-close', function(){
-		$( '#mpcpop' ).hide( 'slow' );
+		$( '#mpcpop' ).hide();
 	});
 
 	// variation option clear button handler.
@@ -1050,17 +1055,29 @@
 		}
 	});
 
+	// on category clicked, filter that category products instead of going to archive page
+	function table_loader_by_tag( id, type, wrapper ){
+		var atts = mpc_get_atts( wrapper );
+		atts[type] = id;
 
-
-	// New approach for mobile view, July 2024
-	function mobile(){
-		$( 'table.mpc-wrap' ).removeClass( 'collapsed' );
-		if( $(window).width() < 700 ){
-			$( 'table.mpc-wrap' ).addClass( 'collapsed' );
-		}
+		ajax_table_loader( atts, 1, wrapper );
 	}
-	$(window).on('resize', function() {
-		mobile();
+	$(document).on( 'click', '.mpc-product-category a, .mpc-product-tag a', function(e){
+		e.preventDefault();
+		var id      = parseInt( $(this).data( 'id' ) );
+		var wrapper = $(this).closest( '.mpc-container' );
+
+		var type   = $(this).closest( 'td' ).hasClass( 'mpc-product-category' ) ? 'cats' : 'tags';
+		var select = 'cats' === type ? wrapper.find( '.mpc-cat-filter' ) : wrapper.find( '.mpc-tag-filter' );
+		if( typeof select !== 'undefined' && select.length > 0 ){
+			select.val( id ).trigger( 'change' );
+			return;
+		}
+
+		table_loader_by_tag( id, type, wrapper );
 	});
-	mobile();
+
+	$( 'body' ).on( 'change', '.mpcp-tag-filter select', function(){
+		table_loader_by_tag( parseInt( $(this).find( 'option:selected' ).val() ), 'tags', $(this).closest( '.mpc-container' ) );
+	});
 })( jQuery );

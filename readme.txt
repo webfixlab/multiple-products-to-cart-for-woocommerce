@@ -1,5 +1,5 @@
 === Product Table for WooCommerce - Multiple Products to Cart ===
-Contributors: smshahriar, aikya, webfixlab
+Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table,wc product table,products table,woocommerce table
 Requires at least: 4.9
 Tested up to: 6.5.5
@@ -21,6 +21,7 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 **FEATURES**
 
 * NEW! Select columns for each table
+* NEW! Sort table by categories and tags on clicking them
 * NEW! Better mobile friendly table 
 * Skip products
 * Groups product supported

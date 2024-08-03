@@ -15,7 +15,7 @@ $mpc__           = array(
 	'has_pro'       => false,
 	'prostate'      => 'none',
 	'prolink'       => 'https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/',
-	'activate_link' => 'admin.php?page=mpc-shortcode-pricing',
+	'activate_link' => 'admin.php?page=mpc-shortcodes-pricing',
 	'plugin'        => array(
 		'page_limit'      => 10,
 		'screen'          => array(
@@ -196,6 +196,17 @@ $mpc__['fields'] = array(
 					'type'        => 'checkbox',
 					'label'       => __( 'Category Filter Dropdown', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => __( 'Choose if a Category Filter dropdown should be displayed on the product table.', 'multiple-products-to-cart-for-woocommerce' ),
+					'switch_text' => array(
+						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
+					),
+					'pro'         => true,
+				),
+				array(
+					'key'         => 'mpc_show_ajax_tag_filter',
+					'type'        => 'checkbox',
+					'label'       => __( 'Tags Filter Dropdown', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose if a Tags Filter dropdown should be displayed on the product table.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
