@@ -498,7 +498,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 
 				echo '<div class="mpc-colorp">';
 				printf(
-					'<input name="%s" type="text" class="mpc-colorpicker" value="%s" data-default-color="#ffffff">',
+					'<input name="%s" type="text" class="mpc-colorpicker" value="%s" data-default-color="">',
 					esc_attr( $fld['key'] ),
 					esc_html( $value )
 				);

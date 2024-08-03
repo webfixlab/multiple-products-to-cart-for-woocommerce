@@ -12,12 +12,12 @@ defined( 'ABSPATH' ) || exit;
 global $mpctable__;
 
 // add to cart button color and background color.
-$btn_color      = ( get_option( 'mpc_button_text_color' ) ? get_option( 'mpc_button_text_color' ) : '#fff' );
-$btn_background = ( get_option( 'wmc_button_color' ) ? get_option( 'wmc_button_color' ) : '#000' );
+$btn_color      = ( get_option( 'mpc_button_text_color' ) ? get_option( 'mpc_button_text_color' ) : '#353535' );
+$btn_background = ( get_option( 'wmc_button_color' ) ? get_option( 'wmc_button_color' ) : '#d3d3d3' );
 
 // header and pagination color and background color.
-$hnp_color      = ( get_option( 'mpc_head_text_color' ) ? get_option( 'mpc_head_text_color' ) : '#fff' );
-$hnp_background = ( get_option( 'wmc_thead_back_color' ) ? get_option( 'wmc_thead_back_color' ) : '#000' );
+$hnp_color      = ( get_option( 'mpc_head_text_color' ) ? get_option( 'mpc_head_text_color' ) : '#ffffff' );
+$hnp_background = ( get_option( 'wmc_thead_back_color' ) ? get_option( 'wmc_thead_back_color' ) : '#535353' );
 
 // product title color, font size, whether to bold it and also underline it.
 $title_color     = get_option( 'mpc_protitle_color' );

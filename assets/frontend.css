@@ -152,7 +152,7 @@ span.mpc-total {
 	line-height: 1;
 }
 .mpc-button button, .mpc-button input.mpc-reset {
-	background-color: #d5d5d5;
+	background-color: #f3f3f3;
 	border-color: #d5d5d5;
 	color: #333333;
 	margin-right: 5px;
@@ -173,7 +173,7 @@ span.mpc-total {
 }
 .wfl-sale {
     color: #fff;
-    background: #222;
+    background: #00000061;
     line-height: 1;
     display: inline-block;
     padding: 4px 8px;
@@ -181,8 +181,6 @@ span.mpc-total {
     font-size: 12px;
     position: absolute;
     overflow: hidden;
-	top: -10px;
-	left: -11px;
 }
 /* The Modal (background) */
 .mpc-popup {
@@ -539,7 +537,7 @@ span.mpc-mobile-only {
 	}
 	table.mpc-wrap tbody tr {
 		position: relative;
-		margin-bottom: 30px;
+		margin-bottom: 25px;
 		padding: 1em;
 		box-shadow: 0 0 5px rgba(0,0,0,.2);
 	}
@@ -550,10 +548,6 @@ span.mpc-mobile-only {
 		content: "";
 		display: table;
 		clear: both;
-	}
-	table.mpc-wrap tbody tr td.mpc-product-name {
-		padding-top: 0;
-		max-width: 100%;
 	}
 	table.mpc-wrap.mpc-no-image tbody tr td.mpc-product-name {
 		margin-right: 80px;
@@ -599,7 +593,7 @@ span.mpc-mobile-only {
 		display: initial;
 	}
 	.mpc-wrap .variation-group {
-		margin-bottom: 5px;
+		margin-bottom: 15px;
 	}
 	#mpcpop img {
 		margin-top: 32px;
@@ -675,7 +669,7 @@ span.mpc-mobile-only {
 	.admin-bar .mpc-popup{
 		top: 0;
 	}
-	td.mpc-product-quantity {
-		margin-bottom: 5px;
+	table.mpc-wrap tbody tr td{
+		margin-bottom: 10px;
 	}
 }
