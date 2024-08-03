@@ -335,6 +335,17 @@
 	padding-bottom:40px;
 	position:relative
 }
+.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option:first-child{
+	padding-top:40px
+}
+.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option:last-child{
+	padding-bottom:40px
+}
+/* Special for labels and appearence settings tabs */
+#labels .mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option,
+#appearence .mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option{
+	padding: 10px 20px;
+}
 #mpcdp_settings .mpcdp_settings_toggle .mpcdp_separator:after{
 	content:"";
 	height:1px;
@@ -359,12 +370,6 @@
 #mpcdp_settings .mpcdp_settings_option[data-field-id=hamburger_animation_styles],#mpcdp_settings .mpcdp_settings_option[data-field-id=menu_button_text],#mpcdp_settings .mpcdp_settings_option[data-field-id=custom_preloader_homepage],#mpcdp_settings .mpcdp_settings_option[data-field-id=btt_link],#mpcdp_settings .mpcdp_settings_option[data-field-id=btt_custom_link],#mpcdp_settings .mpcdp_settings_option[data-field-id=menu_button],#mpcdp_settings .mpcdp_settings_option[data-field-id=custom_preloader_transition],#mpcdp_settings .mpcdp_settings_option[data-field-id=fontawesome]{
 	padding-top:40px;
 	padding-bottom:15px
-}
-.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option:first-child{
-	padding-top:40px
-}
-.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option:last-child{
-	padding-bottom:40px
 }
 .mpcdp_settings_section .mpcdp_settings_toggle:not(:last-of-type){
 	margin-bottom:25px
@@ -1277,8 +1282,8 @@ a.mpcasc-reset span.button-secondary {
 	}
 }
 @media screen and (max-width: 767px){
-	.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option{
-		padding:40px 20px
+	.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option {
+		padding: 20px 20px;
 	}
 	.mpcdp_row{
 		display:inherit
@@ -1359,9 +1364,6 @@ a.mpcasc-reset span.button-secondary {
 /* Switch */
 .switch-field {
 	display: flex;
-	margin-bottom: 36px;
-	overflow: hidden;
-	padding: 0 5px;
 }
 .switch-field input {
 	position: absolute !important;
@@ -1675,9 +1677,6 @@ a .mpcasc-reset .button-secondary{
 .mpcdp_settings_option .mpcdp_row.row-column-sorting{
 	align-items: normal;
 }
-ul.ui-sortable.empty-cols {
-    height: 665px;
-}
 @media screen and (max-width: 767px){
 	.mpcdp_row .col-md-9 {
 	    width: calc(100% - 70px);
@@ -1689,19 +1688,37 @@ ul.ui-sortable.empty-cols {
 		width: 70px;
 	}
 	#mpcdp_settings {
-		margin: 0;
+		margin: 10px 0 0 0;
 		max-width: 97% !important;
 	}
 	.mpcdp_settings_section_title {
 		margin-top: 18px;
-	}
-	.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option {
-		padding: 20px 20px;
 	}
 	.mpcdp_settings_option_field .choices {
 	    margin-bottom: 0;
 	}
 	.mpcdp_sidebar_tabs.is-affixed {
 	    width: 70px;
+	}
+
+	/* Settings page mobile view update | August 03, 2024 */
+	#right-side{
+		display: none;
+	}
+	#middle-content{
+		width: 85%;
+	}
+	.mpca-sorted-options ul {
+		min-height: 55px;
+	}
+	textarea.mpc-opt-sc {
+		height: auto;
+		margin-bottom: 15px;
+	}
+	.mpc-opt-sc-btn {
+		margin: 15px 5px 0 0;
+	}
+	.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option:first-child{
+		padding-top: 20px;
 	}
 }

@@ -36,6 +36,20 @@
 			// color picker.
 			$( '.mpc-colorpicker' ).wpColorPicker();
 
+			// set min height of sortable columns.
+			function setMinHeight( from, to ){
+				from = typeof from === 'undefined' ? $( '#' ) : from;
+				fo   = typeof fo === 'undefined' ? $( '#' ) : fo;
+
+				var height = to.find( 'li' )[0].offsetHeight;
+
+				var fromMinHeight = from.find( 'li' ) ? ( from.find( 'li' ).length + 1 ) * height : height;
+				var toMinHeight = to.find( 'li' ) ? ( to.find( 'li' ).length + 1 ) * height : height;
+
+				from.css({ 'min-height' : fromMinHeight + 'px' });
+				to.css({ 'min-height' : toMinHeight + 'px' });
+			}
+
 			// column sortable.
 			var has_colsort = $( 'body' ).find( '#active-mpc-columns' );
 			if ( typeof has_colsort != 'undefined' && has_colsort.length > 0 ) {
@@ -46,12 +60,10 @@
 							return false;
 						}
 
-						var wrap = ui.item.closest( 'ul' );
-						if( wrap.find( 'li' ).length === 0 ){
-							wrap.addClass( 'empty-cols' );
-						}else{
-							wrap.removeClass( 'empty-cols' );
-						}
+						var itemTo = ui.item.closest( 'ul' );
+						var itemFrom = $( event.target );
+						
+						setMinHeight( itemFrom, itemTo );
 					}
 				});
 			}

@@ -45,7 +45,7 @@ $mpc__['fields'] = array(
 					'key'              => 'wmc_redirect',
 					'type'             => 'radio',
 					'options'          => array(
-						'ajax'   => __( 'No-redirect', 'multiple-products-to-cart-for-woocommerce' ),
+						'ajax'   => __( 'None', 'multiple-products-to-cart-for-woocommerce' ),
 						'cart'   => __( 'Cart', 'multiple-products-to-cart-for-woocommerce' ),
 						'custom' => __( 'Custom', 'multiple-products-to-cart-for-woocommerce' ),
 					),

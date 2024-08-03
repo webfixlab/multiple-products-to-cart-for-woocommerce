@@ -14,6 +14,8 @@ global $MPCSettings;
 
 $MPCSettings = new MPCSettings();
 
+$tab = $MPCSettings->get_tab();
+
 ?>
 <form method="post" action="" id="mpcdp_settings_form">
 	<div id="mpcdp_settings" class="mpcdp_container">
@@ -42,8 +44,15 @@ $MPCSettings = new MPCSettings();
 			</div>
 			<div class="col-md-6" id="middle-content">
 				<div class="mpcdp_settings_content">
-					<div id="general" class="hidden mpcdp_settings_tab active" data-tab="general" style="display: block;">
-						<?php $MPCSettings->settings(); ?>
+					<?php
+						echo sprintf(
+							'<div id="%s" class="hidden mpcdp_settings_tab active" data-tab="%s" style="display: block;">',
+							esc_attr( $tab ),
+							esc_attr( $tab )
+						);
+
+						$MPCSettings->settings();
+					?>
 					</div>
 				</div>
 			</div>
