@@ -2,8 +2,8 @@
 Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table,wc product table,products table,woocommerce table
 Requires at least: 4.9
-Tested up to: 6.5.5
-Stable tag: 7.2.0
+Tested up to: 6.7.1
+Stable tag: 7.4.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,18 +16,17 @@ EASY to use and super FAST WooCommerce product table solution to add multiple pr
 
 A truly lightweight and simple yet powerful plugin without any unnecessary features, no huss fuss or no low page speed score!
 
-[Demo](http://demo.webfixlab.com/multiple-products-to-cart/) | [Get PRO](https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/) | [Documentation](https://docs.webfixlab.com/kb/multiple-products-to-cart/) | [Bug Report](https://wordpress.org/support/plugin/multiple-products-to-cart-for-woocommerce/)
+[Demo](http://demo.webfixlab.com/multiple-products-to-cart/) | [Get PRO](https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/) | [Bug Report](https://wordpress.org/support/plugin/multiple-products-to-cart-for-woocommerce/)
 
 **FEATURES**
 
-* NEW! Select columns for each table
-* NEW! Sort table by categories and tags on clicking them
-* NEW! Better mobile friendly table 
+* NEW! Better mobile view
+* NEW! Fixed total and filter bar
+* Import and export tables and settings
+* Select columns for each table
+* Sort table by categories and tags on clicking them
 * Skip products
-* Groups product supported
-* Details Documentation Available
-* Improved mobile view
-* Simple and Variable product types supported
+* Simple, Variable and Grouped product types supported
 * Works with MULTISITE
 * AJAX & non-ajax add to cart method
 * Truly lightweight and extremely fast, almost no impact on page speed
@@ -99,4 +98,5 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 1. Front-end View
 2. Settings
-3. Add Product Table
+3. Add custom columns on each table
+4. Import and export tables and settings

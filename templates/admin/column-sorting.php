@@ -13,12 +13,13 @@ $cls = new MPCSettings();
 $cls->save_sorted_columns();
 
 $helper_cls = new MPCAdminHelper();
-$value = get_option( 'wmc_sorted_columns' );
+$value      = get_option( 'wmc_sorted_columns' );
 
 ?>
 <div class="mpcdp_settings_section">
 	<div class="mpcdp_settings_section_title"><?php echo esc_html__( 'Column Sorting', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-	<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
+	<?php $cls->show_notice(); ?>
+	<div class="mpc-banner mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
 		<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
 			<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
 				<span class="theme_customizer_icon dashicons dashicons-list-view"></span>

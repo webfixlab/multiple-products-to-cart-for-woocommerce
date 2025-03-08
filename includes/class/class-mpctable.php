@@ -65,7 +65,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * Ajax add to cart handler
 		 */
 		public function add_to_cart_ajax() {
-
 			if ( ! isset( $_POST['cart_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cart_nonce'] ) ), 'cart_nonce_ref' ) ) {
 				return;
 			}
@@ -76,7 +75,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			}
 
 			// unslash and sanitize array data.
-			$this->do_add_to_cart( wp_unslash( $_POST['mpca_cart_data'] ), 'ajax' );
+			$this->do_add_to_cart( wp_unslash( $_POST['mpca_cart_data'] ), 'ajax' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
 		/**
@@ -97,7 +96,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				$flag = false;
 				$key  = '';
 
-				if( 'grouped' === $product['type'] ){
+				if ( 'grouped' === $product['type'] ) {
 					continue;
 				}
 
@@ -230,7 +229,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 */
 		public function product_table_ajax() {
 			global $mpctable__;
-			global $MPCTemplate;
+			global $mpc_template__;
 
 			$response = array( 'status' => '' );
 
@@ -260,7 +259,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 							array(
 								'key' => 'table.mpc-wrap',
 								'val' => sprintf(
-									'<table class="mpc-wrap"><tr><td><span class="mpc-search-empty">%s</span></td></tr></table>',
+									'<table class="mpc-wrap"><tr class="mpc-search-empty"><td><span>%s</span></td></tr></table>',
 									esc_html__( 'Sorry! No products found!', 'multiple-products-to-cart-for-woocommerce' )
 								),
 							),
@@ -296,7 +295,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			);
 
 			ob_start();
-			$MPCTemplate->display_table_pagination_range();
+			$mpc_template__->display_table_pagination_range();
 			$response[] = array(
 				'key'         => '.mpc-product-range',
 				'parent'      => '.mpc-button', // if key element not found add to parent.
@@ -305,7 +304,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			);
 
 			ob_start();
-			$MPCTemplate->numbered_pagination();
+			$mpc_template__->numbered_pagination();
 			$response[] = array(
 				'key'         => '.mpc-pagenumbers',
 				'parent'      => '.mpc-inner-pagination',
@@ -366,6 +365,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			// remove hooks for nuiscense.
 			remove_all_filters( 'pre_get_posts' );
 			remove_all_filters( 'posts_orderby' );
+
+			$query = new WP_Query( $args );
 
 			// get products from query.
 			$products = new WP_Query( $args );
@@ -462,14 +463,24 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			// product type(s).
 			$att_types = isset( $atts['type'] ) ? $atts['type'] : array( 'simple', 'variable' );
 			$supported = apply_filters( 'mpc_change_product_types', array( 'simple', 'variable' ) );
-			
+
 			// sanitize types.
-			$types     = array_map( function( $val ){ return sanitize_title( $val ); }, $att_types );
-			$supported = array_map( function( $val ){ return sanitize_title( $val ); }, $supported );
-			
+			$types     = array_map(
+				function ( $val ) {
+					return sanitize_title( $val );
+				},
+				$att_types
+			);
+			$supported = array_map(
+				function ( $val ) {
+					return sanitize_title( $val );
+				},
+				$supported
+			);
+
 			// filter appropriate types.
-			$types     = in_array( 'all', $types, true ) ? $supported : array_intersect( $types, $supported );
-			if( empty( $types ) ){
+			$types = in_array( 'all', $types, true ) ? $supported : array_intersect( $types, $supported );
+			if ( empty( $types ) ) {
 				$types = array( 'simple', 'variable' );
 			}
 
@@ -482,12 +493,12 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			);
 
 			$term_ids = $this->get_term_ids( $atts['cats'], 'product_cat' );
-			if( false !== $term_ids ){
+			if ( false !== $term_ids ) {
 				$args['tax_query'][] = $term_ids;
 			}
 
 			$term_ids = $this->get_term_ids( $atts['tags'], 'product_tag' );
-			if( false !== $term_ids ){
+			if ( false !== $term_ids ) {
 				$args['tax_query'][] = $term_ids;
 			}
 
@@ -500,19 +511,19 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param array  $atts     shortcode attributes.
 		 * @param string $taxonomy in which taxonomy the term ids belong to.
 		 */
-		public function get_term_ids( $atts, $taxonomy ){
-			if( ! isset( $atts ) || '' === $atts ) {
+		public function get_term_ids( $atts, $taxonomy ) {
+			if ( ! isset( $atts ) || '' === $atts ) {
 				return false;
 			}
 
 			if ( ! is_array( $atts ) ) {
 				$atts = explode( ',', str_replace( ' ', '', $atts ) );
 			}
-			
-			if( ! is_array( $atts ) || empty( $atts ) ) {
+
+			if ( ! is_array( $atts ) || empty( $atts ) ) {
 				return false;
 			}
-			
+
 			// terms can either be id or slug.
 			$extracted_term_ids = array();
 			foreach ( $atts as $term_id ) {
@@ -562,7 +573,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 
 				$product_data = $this->product_data( $id, $product );
-				if( false === $product_data || empty( $product_data ) ){
+				if ( false === $product_data || empty( $product_data ) ) {
 					continue;
 				}
 
@@ -582,7 +593,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param int    $id      product id.
 		 * @param object $product product object.
 		 */
-		public function product_data( $id, $product ){
+		public function product_data( $id, $product ) {
 			global $mpctable__;
 			$data = array();
 
@@ -600,9 +611,15 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				'on_sale'           => $product->is_on_sale(),
 			);
 
+			if ( 100 < strlen( $data['desc'] ) ) {
+				$data['desc'] = substr( $data['desc'], 0, 100 ) . '...';
+			}
+
 			$backorder = $product->get_backorders();
-			if( 'yes' === $backorder || 'notify' === $backorder ){
+			if ( 'yes' === $backorder || 'notify' === $backorder ) {
 				$data['stock'] = '';
+			} elseif ( 0 > $data['stock'] ) {
+				$data['stock'] = 0;
 			}
 
 			// category.
@@ -676,8 +693,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				foreach ( $attributes as $name => $options ) {
 
 					// Sanitize name.
-					$name_   = sanitize_title( $name );
-					$options = $this->sort_variation_options( $options, $product, $name_ );
+					$name_ = sanitize_title( $name );
+					// $options = $this->sort_variation_options( $options, $product, $name_ );
 
 					// Modified options variable - for storing additional data.
 					$options_ = array();
@@ -728,9 +745,9 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				if ( $attributes_ ) {
 					$data['attributes'] = $attributes_;
 				}
-			} else {
+			} elseif ( 'grouped' !== $data['type'] ) {
 				// Pure price.
-				$data['price_'] = $product->get_price();
+				$data['price_'] = $this->extract_price_from_html( $data['price'] );
 
 				if ( strpos( $data['type'], 'subscription' ) !== false ) {
 					// get sign up fee - subscription product type.
@@ -742,6 +759,42 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			}
 
 			return $data;
+		}
+
+		/**
+		 * Extract float price from html price
+		 *
+		 * @param string $price_html Price html in string format.
+		 */
+		public function extract_price_from_html( $price_html ) {
+			$plain_text         = wp_strip_all_tags( $price_html );
+			$decimal_separator  = get_option( 'woocommerce_price_decimal_sep', '.' );
+			$thousand_separator = get_option( 'woocommerce_price_thousand_sep', ',' );
+
+			// preg_match_all( '/\d{1,3}(?:' . preg_quote( $thousand_separator ) . '\d{3})*(?:' . preg_quote( $decimal_separator ) . '\d+)?/', $plain_text, $matches );
+
+			preg_match_all(
+				'/\d{1,3}(?:' . preg_quote( $thousand_separator, '/' ) . '\d{3})*(?:' . preg_quote( $decimal_separator, '/' ) . '\d+)?/',
+				$plain_text,
+				$matches
+			);
+
+			if ( ! empty( $matches[0] ) ) {
+				$prices = array_map(
+					function ( $price ) use ( $thousand_separator, $decimal_separator ) {
+						$price = str_replace( $thousand_separator, '', $price );
+						$price = str_replace( $decimal_separator, '.', $price );
+						return (float) $price;
+					},
+					$matches[0]
+				);
+
+				$prices = array_filter( $prices, fn( $p ) => $p > 0 ); // Remove zero values.
+
+				return ! empty( $prices ) ? min( $prices ) : 0; // Return the smallest valid price.
+			}
+
+			return 0;
 		}
 
 		/**
@@ -822,10 +875,10 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				// stock.
 				$c['stock_status'] = $variation->get_stock_status();
 				$c['stock']        = $variation->get_stock_quantity();
-				if ( empty( $c['stock'] ) || '' === $c['stock'] ) {
+				if ( empty( $c['stock'] ) || '' === $c['stock'] || 0 > $c['stock'] ) {
 					$c['stock'] = __( 'In stock', 'multiple-products-to-cart-for-woocommerce' );
 				} else {
-					$c['stock'] .= __( ' in stocks', 'multiple-products-to-cart-for-woocommerce' );
+					$c['stock'] .= __( ' in stock', 'multiple-products-to-cart-for-woocommerce' );
 				}
 
 				// variation short description.
@@ -932,9 +985,9 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				return $is_in_stock;
 			}
 		}
-		
 
-		
+
+
 		/**
 		 * Initialize product table data
 		 */
@@ -1098,7 +1151,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			if ( empty( $code ) ) {
 				return; // given table returned nothing.
 			}
-			
+
 			$code = str_replace( '[', '', $code );
 			$code = str_replace( ']', '', $code );
 			$code = str_replace( 'woo-multi-cart', '', $code );

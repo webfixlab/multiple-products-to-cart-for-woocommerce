@@ -14,21 +14,22 @@ global $mpc__;
 ?>
 <div id="mpcpop" class="mpc-popup">
 	<div class="image-wrap">
-		<span class="mpcpop-close"><?php echo esc_html__( 'X', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+		<span class="mpcpop-close dashicons dashicons-dismiss"></span>
+		<div class="mpc-pro-tag">PRO</div>
 		<div class="mpc-focus">
-			<span></span> <?php echo esc_html__( 'is a PRO feature.', 'multiple-products-to-cart-for-woocommerce' ); ?><br>
-			<a href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo esc_html__( 'Upgrade Now', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+			<?php
+				echo wp_kses_post(
+					sprintf(
+						// translators: %1$s: pro fiture name.
+						__( 'Please upgrade to get %1$s and other advanced features.', 'multiple-products-to-cart-for-woocommerce' ),
+						wp_kses_post( '<span></span>' )
+					)
+				);
+				?>
 		</div>
 		<div class="mpcex-features">
-			<h4><?php echo esc_html__( 'More PRO features:', 'multiple-products-to-cart-for-woocommerce' ); ?></h4>
-			<ul>
-				<li><?php echo esc_html__( '5+ new columns like SKU, stock, category etc', 'multiple-products-to-cart-for-woocommerce' ); ?></li>
-				<li><?php echo esc_html__( 'Subscription product types are supported', 'multiple-products-to-cart-for-woocommerce' ); ?></li>
-				<li><?php echo esc_html__( 'Single add to cart for each product', 'multiple-products-to-cart-for-woocommerce' ); ?></li>
-				<li><?php echo esc_html__( 'Sort or hide any columns', 'multiple-products-to-cart-for-woocommerce' ); ?></li>
-				<li><?php echo esc_html__( 'Custom product order', 'multiple-products-to-cart-for-woocommerce' ); ?></li>
-			</ul>
-			<a href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo esc_html__( 'See all PRO features', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+			<p><?php echo esc_html__( 'Unlock advanced features like custom columns for different tables, support for more product types, and an \'Add to Cart\' button with the PRO version. These tools are designed to streamline your workflow, enhance your experience, and boost your sales. We\'re committed to delivering the best solutions for you, 24/7.', 'multiple-products-to-cart-for-woocommerce' ); ?> <a href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo esc_html__( 'Read more', 'multiple-products-to-cart-for-woocommerce' ); ?></a></p>
 		</div>
+		<a class="mpc-get-pro" href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo esc_html__( 'Upgrade Now', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
 	</div>
 </div>

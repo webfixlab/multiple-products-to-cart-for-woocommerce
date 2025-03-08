@@ -27,10 +27,8 @@ $mpc__           = array(
 		'review_link'     => 'https://wordpress.org/support/plugin/multiple-products-to-cart-for-woocommerce/reviews/?rate=5#new-post',
 		'support'         => 'https://webfixlab.com/contact/',
 		'request_quote'   => 'https://webfixlab.com/contact/',
-		'docs'            => 'https://docs.webfixlab.com/kb/multiple-products-to-cart/',
 		'woo_url'         => 'https://wordpress.org/plugins/woocommerce/',
 		'free_mpc_url'    => 'https://wordpress.org/plugins/multiple-products-to-cart-for-woocommerce/',
-		'shortcode_doc'   => 'https://docs.webfixlab.com/kb/multiple-products-to-cart/',
 		'notice_interval' => 15, // days.
 	),
 	'notice'        => array(),
@@ -308,8 +306,8 @@ $mpc__['fields'] = array(
 				array(
 					'key'         => 'mpc_show_category_subheader',
 					'type'        => 'checkbox',
-					'label'       => __( 'Category-Based Subheadings', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Enable the division of products into subsections based on their categories within the product table.', 'multiple-products-to-cart-for-woocommerce' ),
+					'label'       => __( 'Section by Categories', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'There must be selected categories in the table to enable this feature.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -618,7 +616,7 @@ $mpc__['fields'] = array(
 					'max'         => 152,
 					'class'       => 'number-input',
 				),
-			)
+			),
 		),
 		array(
 			'section' => __( 'Product Title', 'multiple-products-to-cart-for-woocommerce' ),

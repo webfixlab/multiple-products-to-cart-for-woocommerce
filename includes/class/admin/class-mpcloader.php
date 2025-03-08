@@ -76,7 +76,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			include MPC_PATH . 'includes/class/admin/class-mpcadmintable.php';
 
-			include MPC_PATH . 'includes/class/class-mpctemplate.php';
+			include MPC_PATH . 'includes/class/class-mpc-template.php';
 			include MPC_PATH . 'includes/class/class-mpctable.php';
 			include MPC_PATH . 'includes/functions.php';
 
@@ -339,8 +339,12 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				$redirect_url = 'cart';
 			}
 
+			$cart_btn_text = get_option( 'wmc_button_text' );
+
 			// add localized variables.
 			$localaized_values = array(
+				'locale'         => str_replace( '_', '-', get_locale() ),
+				'currency'       => get_woocommerce_currency_symbol(), // currency symbol.
 				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
 				'redirect_url'   => $redirect_url,
 				'page_limit'     => $mpc__['plugin']['page_limit'],
@@ -348,10 +352,14 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				'blank_submit'   => get_option( 'wmc_empty_form_text' ),
 				'outofstock_txt' => '<p class="stock out-of-stock">' . __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ) . '</p>',
 				'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
+				'ds'             => wc_get_price_decimal_separator(), // decimal separator.
+				'ts'             => wc_get_price_thousand_separator(), // thousand separator.
 				'dqty'           => get_option( 'wmca_default_quantity' ),
 				'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
 				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
-				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' )
+				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
+				'has_pro'        => $mpc__['has_pro'],
+				'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
 			);
 
 			$localaized_values['key_fields'] = array(
@@ -415,9 +423,12 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			wp_enqueue_script( 'choices-js' );
 
 			$var = array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'has_pro' => $mpc__['has_pro'],
-				'nonce'   => wp_create_nonce( 'search_box_nonce' ),
+				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+				'has_pro'      => $mpc__['has_pro'],
+				'nonce'        => wp_create_nonce( 'search_box_nonce' ),
+				'export_nonce' => wp_create_nonce( 'mpc_export_nonce' ),
+				'export_text'  => __( 'Please wait while we are getting your file ready for download...', 'multiple-products-to-cart-for-woocommerce' ),
+				'export_ok'    => __( 'Export successful!', 'multiple-products-to-cart-for-woocommerce' ),
 			);
 
 			// apply hook for editing localized variables in admin script.
@@ -462,21 +473,14 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * @param string $file  plugin main file name.
 		 */
 		public function plugin_desc_meta( $links, $file ) {
+			global $mpc__;
 
 			// if it's not mpc plugin, return.
 			if ( plugin_basename( MPC ) !== $file ) {
 				return $links;
 			}
 
-			global $mpc__;
-			$row_meta = array();
-
-			$row_meta['docs'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( $mpc__['plugin']['docs'] ),
-				__( 'Docs', 'multiple-products-to-cart-for-woocommerce' )
-			);
-
+			$row_meta            = array();
 			$row_meta['apidocs'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $mpc__['plugin']['request_quote'] ),
@@ -493,7 +497,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_rating_nonce' ) ) {
-
 				if ( isset( $_GET['mpca_rate_us'] ) ) {
 					$task = sanitize_key( wp_unslash( $_GET['mpca_rate_us'] ) );
 
@@ -506,7 +509,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					}
 				}
 			} elseif ( isset( $_GET['pinonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['pinonce'] ) ), 'mpc_pro_info_nonce' ) ) {
-
 				if ( isset( $_GET['mpca_notify_pro'] ) ) {
 					if ( 'cancel' === sanitize_key( wp_unslash( $_GET['mpca_notify_pro'] ) ) ) {
 						update_option( 'mpca_notify_pro', gmdate( 'Y-m-d' ) );
@@ -708,6 +710,8 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * Get current admin settings tab
 		 */
 		public function get_tab() {
+			global $mpc__;
+
 			$tab = 'new-table';
 
 			if ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) {
@@ -716,8 +720,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					$tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
 				}
 			}
-
-			global $mpc__;
 
 			if ( isset( $mpc__['settings_tab'] ) && ! empty( $mpc__['settings_tab'] ) ) {
 				$tab = sanitize_title( $mpc__['settings_tab'] );
@@ -737,7 +739,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// Pro state.
 			$mpc__['prostate'] = 'none';
-			
+
 			// change states.
 			do_action( 'mpca_change_pro_state' );
 		}

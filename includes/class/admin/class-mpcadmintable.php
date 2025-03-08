@@ -112,7 +112,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 
 			$this->delete_shortcode();
 			$this->save_shortcode();
-			$this->show_notice();
 		}
 
 
@@ -140,18 +139,21 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 						</div>
 					</div>
 					<div class="mpcdp_row">
-						<div class="mpcdp_settings_option_description col-md-6">
+						<div class="mpcdp_settings_option_description col-md-12">
 							<textarea class="mpc-opt-sc" readonly >[woo-multi-cart table="<?php echo esc_attr( $id ); ?>"]</textarea>
 						</div>
-						<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
+						<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-4 mpc-sc-btns">
 							<span class="mpc-opt-sc-btn copy">
-								<?php echo esc_html__( 'Copy', 'multiple-products-to-cart-for-woocommerce' ); ?>
+								<span class="dashicons dashicons-admin-page"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Copy', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
 							</span>
-							<a class="mpc-opt-sc-btn edit" href="<?php echo esc_url( $edit . '&tab=new-table&mpctable=' . esc_attr( $id ) . '&nonce=' . $nonce ); ?>">
-								<?php echo esc_html__( 'Edit', 'multiple-products-to-cart-for-woocommerce' ); ?>
+							<a class="mpc-opt-sc-btn edit" href="<?php echo esc_url( $edit . '&tab=all-tables&mpctable=' . esc_attr( $id ) . '&nonce=' . $nonce ); ?>">
+								<span class="dashicons dashicons-welcome-write-blog"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Edit', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
 							</a>
 							<a class="mpc-opt-sc-btn delete" href="<?php echo esc_url( $delete . '&tab=all-tables&mpcscdlt=' . esc_attr( $id ) . '&nonce=' . $nonce ); ?>">
-								<?php echo esc_html__( 'Delete', 'multiple-products-to-cart-for-woocommerce' ); ?>
+								<span class="dashicons dashicons-trash"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Delete', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
 							</a>
 						</div>
 					</div>
@@ -405,7 +407,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				$page  = admin_url( 'admin.php?page=mpc-shortcode' );
 				$nonce = wp_create_nonce( 'mpc_option_tab' );
 
-				$url = $page . '&tab=new-table&mpctable=' . esc_attr( $table_id ) . '&nonce=' . esc_attr( $nonce ) . '&created=yes';
+				$url = $page . '&tab=all-tables&mpctable=' . esc_attr( $table_id ) . '&nonce=' . esc_attr( $nonce ) . '&created=yes';
 
 				header( 'Location: ' . $url );
 				exit();
@@ -516,7 +518,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		public function show_notice() {
 			// check for created flag.
 			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
-				if( isset( $_GET['created'] ) ){
+				if ( isset( $_GET['created'] ) ) {
 					$this->notice = array(
 						'status'  => 'succcess',
 						'message' => __( 'Shortcode created.', 'multiple-products-to-cart-for-woocommerce' ),
@@ -529,14 +531,12 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			?>
-			<div class="mpc-notice mpcdp_settings_section">
-				<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
-					<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
-						<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
-							<span class="theme_customizer_icon dashicons dashicons-saved"></span>
-							<div class="mpcdp_settings_option_description">
-								<div class="mpcdp_option_label"><?php echo esc_html( $this->notice['message'] ); ?></div>
-							</div>
+			<div class="mpc-notice mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
+				<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
+					<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
+						<span class="theme_customizer_icon dashicons dashicons-saved"></span>
+						<div class="mpcdp_settings_option_description">
+							<div class="mpcdp_option_label"><?php echo esc_html( $this->notice['message'] ); ?></div>
 						</div>
 					</div>
 				</div>
@@ -548,6 +548,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Show shortcode table item in header
 		 */
 		public function show_shortcode() {
+			global $mpc__;
 			$table_id = $this->table_index();
 
 			if ( empty( $table_id ) ) {
@@ -565,32 +566,37 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$title = $title ?? __( 'Product table', 'multiple-products-to-cart-for-woocommerce' );
 			$desc  = $desc ?? __( 'Product table shortcode details.', 'multiple-products-to-cart-for-woocommerce' );
 
+			$delete = admin_url( 'admin.php?page=mpc-shortcodes' );
+			$nonce  = wp_create_nonce( 'mpc_option_tab' );
 			?>
-			<div class="mpcdp_settings_section">
-				<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode" data-toggle-id="footer_theme_customizer">
-					<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
-						<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
-							<div class="mpcdp_settings_option_description">
-								<div class="mpcdp_option_label">
-									<span class="theme_customizer_icon dashicons dashicons-shortcode"></span>
-									<?php echo esc_html( $title ); ?>
-								</div>
-								<?php if ( ! empty( $desc ) ) : ?>
-									<div class="mpcdp_option_description">
-										<?php echo wp_kses_post( $desc ); ?>
-									</div>
-								<?php endif; ?>
-								<div class="mpcdp_row" style="margin-top: 30px;">
-									<div class="mpcdp_settings_option_description col-md-6">
-										<textarea class="mpc-opt-sc" readonly="">[woo-multi-cart table="<?php echo esc_attr( $table_id ); ?>"]</textarea>
-									</div>
-									<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
-										<span class="mpc-opt-sc-btn copy">
-											<?php echo esc_html__( 'Copy', 'multiple-products-to-cart-for-woocommerce' ); ?>
-										</span>
-									</div>
-								</div>
+			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode-item">
+				<div class="mpcdp_settings_option visible">
+					<div class="mpcdp_row">
+						<div class="mpcdp_settings_option_description">
+							<div class="mpcdp_option_label">
+								<span class="theme_customizer_icon dashicons dashicons-shortcode"></span>
+								<?php echo esc_html( $title ); ?>
 							</div>
+							<?php if ( ! empty( $desc ) ) : ?>
+								<div class="mpcdp_option_description">
+									<?php echo wp_kses_post( $desc ); ?>
+								</div>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class="mpcdp_row">
+						<div class="mpcdp_settings_option_description col-md-12">
+							<textarea class="mpc-opt-sc" readonly="">[woo-multi-cart table="<?php echo esc_attr( $table_id ); ?>"]</textarea>
+						</div>
+						<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-4 mpc-sc-btns">
+							<span class="mpc-opt-sc-btn copy">
+								<span class="dashicons dashicons-admin-page"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Copy', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+							</span>
+							<a class="mpc-opt-sc-btn delete" href="<?php echo esc_url( $delete . '&tab=all-tables&mpcscdlt=' . esc_attr( $table_id ) . '&nonce=' . $nonce ); ?>">
+								<span class="dashicons dashicons-trash"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Delete', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -760,13 +766,9 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 */
 		public function edit_shortcode() {
 			global $mpc__;
-
 			$atts = $this->get_shortcode( true );
-			$this->show_shortcode();
 
 			foreach ( $mpc__['fields']['new_table'] as $section ) {
-
-				// get section title.
 				$title = ! empty( $atts ) ? __( 'Edit Product Table', 'multiple-products-to-cart-for-woocommerce' ) : $section['section'];
 
 				?>
@@ -774,6 +776,8 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 					<div class="mpcdp_settings_section_title">
 						<?php echo wp_kses_post( $title ); ?>
 					</div>
+					<?php $this->show_notice(); ?>
+					<?php $this->show_shortcode(); ?>
 					<?php foreach ( $section['fields'] as $fld ) : ?>
 						<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="wmca_default_quantity">
 							<div class="mpcdp_settings_option visible" data-field-id="wmca_default_quantity">
@@ -783,7 +787,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 					<?php endforeach; ?>
 				</div>
 				<?php
-
 			}
 		}
 
@@ -890,26 +893,26 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				<div class="mpcdp_settings_option_description col-md-6">
 					<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-12">
 						<?php
-							if ( 'selectbox' === $fld['type'] ) {
-								printf( '<div class="choicesdp %s">', esc_html( $name ) );
+						if ( 'selectbox' === $fld['type'] ) {
+							printf( '<div class="choicesdp %s">', esc_html( $name ) );
 
-								$this->itembox( $fld, $value );
+							$this->itembox( $fld, $value );
 
-								echo '</div>';
-							} elseif ( 'checkbox' === $fld['type'] ) {
-								$this->switchbox( $fld, $value );
-							} else {
-								printf(
-									'<input type="text" name="%s" id="%s" min="%s" max="%s" value="%s" placeholder="%s" class="%s">',
-									esc_attr( $name ),
-									esc_attr( $name ),
-									esc_attr( $min ),
-									esc_attr( $max ),
-									esc_attr( $value ),
-									esc_attr( $placeholder ),
-									esc_html( $class )
-								);
-							}
+							echo '</div>';
+						} elseif ( 'checkbox' === $fld['type'] ) {
+							$this->switchbox( $fld, $value );
+						} else {
+							printf(
+								'<input type="text" name="%s" id="%s" min="%s" max="%s" value="%s" placeholder="%s" class="%s">',
+								esc_attr( $name ),
+								esc_attr( $name ),
+								esc_attr( $min ),
+								esc_attr( $max ),
+								esc_attr( $value ),
+								esc_attr( $placeholder ),
+								esc_html( $class )
+							);
+						}
 						?>
 					</div>
 				</div>
@@ -948,11 +951,11 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			?>
 			<div class="hurkanSwitch hurkanSwitch-switch-plugin-box">
 				<div class="hurkanSwitch-switch-box switch-animated-<?php echo esc_attr( $checked ); ?>">
-					<a class="hurkanSwitch-switch-item <?php echo 'on' === $checked ? 'active' : ''; ?> hurkanSwitch-switch-item-color-success  hurkanSwitch-switch-item-status-on" style="width:100px !important">
+					<a class="hurkanSwitch-switch-item <?php echo 'on' === $checked ? 'active' : ''; ?> hurkanSwitch-switch-item-color-success  hurkanSwitch-switch-item-status-on">
 						<span class="lbl"><?php echo esc_html( $fld['switch_text']['on'] ); ?></span>
 						<span class="hurkanSwitch-switch-cursor-selector"></span>
 					</a>
-					<a class="hurkanSwitch-switch-item <?php echo 'off' === $checked ? 'active' : ''; ?> hurkanSwitch-switch-item-color-  hurkanSwitch-switch-item-status-off" style="width:90px !important">
+					<a class="hurkanSwitch-switch-item <?php echo 'off' === $checked ? 'active' : ''; ?> hurkanSwitch-switch-item-color-  hurkanSwitch-switch-item-status-off">
 						<span class="lbl"><?php echo esc_html( $fld['switch_text']['off'] ); ?></span>
 						<span class="hurkanSwitch-switch-cursor-selector"></span>
 					</a>

@@ -25,64 +25,51 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			$tab = $this->get_tab();
 
 			$menus = array(
-				'table'    => array(
-					array(
-						'tab'  => 'All Tables',
-						'icon' => 'dashicons-saved',
-					),
-					array(
-						'tab'  => 'New Table',
-						'icon' => 'dashicons-shortcode',
-					),
-					array(
-						'tab'  => 'General Settings',
-						'icon' => 'dashicons-admin-settings',
-					),
+				array(
+					'tab'  => __( 'All Tables', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-saved',
 				),
-				'settings' => array(
-					array(
-						'tab'  => 'General Settings',
-						'icon' => 'dashicons-admin-settings',
-					),
-					array(
-						'tab'  => 'Labels',
-						'icon' => 'dashicons-text',
-					),
-					array(
-						'tab'  => 'Appearence',
-						'icon' => 'dashicons-admin-appearance',
-					),
-					array(
-						'tab'  => 'Column Sorting',
-						'icon' => 'dashicons-sort',
-					),
+				array(
+					'tab'  => __( 'New Table', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-shortcode',
+				),
+				array(
+					'tab'  => __( 'General Settings', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-admin-settings',
+				),
+				array(
+					'tab'  => __( 'Labels', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-text',
+				),
+				array(
+					'tab'  => __( 'Appearence', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-admin-appearance',
+				),
+				array(
+					'tab'  => __( 'Column Sorting', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-sort',
+				),
+				array(
+					'tab'  => __( 'Export', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-download',
+				),
+				array(
+					'tab'  => __( 'Import', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-upload',
 				),
 			);
 
-			if ( in_array( $tab, array( 'all-tables', 'new-table' ), true ) ) {
-				$navs = $menus['table'];
-			} else {
-				$navs = $menus['settings'];
-			}
-
 			$nonce = wp_create_nonce( 'mpc_option_tab' );
+			$page  = admin_url( 'admin.php?page=mpc-settings' );
 
-			// add edit menu when editing table shortcode.
-			$edit_flag = false;
-
-			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
-				if ( 'new-table' === $tab && isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) ) {
-					$edit_flag = true;
-				}
+			if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
+				$tab = isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) && 'new-table' === $tab ? 'all-tables' : $tab;
 			}
 
-			// get current page.
-			$page = admin_url( 'admin.php?page=mpc-settings' );
-
-			foreach ( $navs as $nav ) {
+			foreach ( $menus as $nav ) {
 				$nav_ = sanitize_title( $nav['tab'] );
-				$url  = $page . '&tab=' . $nav_ . '&nonce=' . $nonce;
 
+				$url = $page . '&tab=' . $nav_ . '&nonce=' . $nonce;
 				if ( 'all-tables' === $nav_ ) {
 					$url = admin_url( 'admin.php?page=mpc-shortcodes' );
 				} elseif ( 'new-table' === $nav_ ) {
@@ -90,19 +77,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				}
 
 				$is_active = $nav_ === $tab ? 'active' : '';
-
-				if ( 'new-table' === $tab && $nav_ === $tab && true === $edit_flag ) {
-					?>
-					<a href="javaScript:void(0)">
-						<div class="mpcdp_settings_tab_control active" data-tab="edit-table">
-							<span class="dashicons dashicons-edit"></span>
-							<span class="label">Edit Table</span>
-						</div>
-					</a>
-					<?php
-					$is_active = '';
-				}
-
 				?>
 				<a href="<?php echo esc_url( $url ); ?>">
 					<div class="mpcdp_settings_tab_control <?php echo esc_attr( $is_active ); ?>" data-tab="<?php echo esc_attr( $nav_ ); ?>">
@@ -113,7 +87,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					</div>
 				</a>
 				<?php
-				
 			}
 		}
 
@@ -133,12 +106,12 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
 					if ( isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) ) {
 						$long  = 'Update Table';
-						$short = 'Update';
+						$short = 'Save';
 					}
 				}
 			}
 
-			if ( 'all-tables' !== $tab ) :
+			if ( 'all-tables' !== $tab && 'export' !== $tab && 'import' !== $tab ) :
 				?>
 				<div class="mpcdp_settings_submit">
 					<div class="submit">
@@ -161,17 +134,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			global $mpc__;
 
 			$tab = $this->get_tab();
-
-			$notice = '';
-			if ( isset( $_POST['mpc_admin_settings'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
-				$notice = __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' );
-			}
-
-			if ( 'new-table' !== $tab && 'all-tables' !== $tab ) {
-				// show saved settings notice.
-			}
-
-			if ( in_array( $tab, array( 'new-table', 'all-tables', 'column-sorting' ), true ) ) {
+			if ( in_array( $tab, array( 'new-table', 'all-tables', 'column-sorting', 'import', 'export' ), true ) ) {
 				$path = MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php';
 
 				if ( file_exists( $path ) ) {
@@ -190,25 +153,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				return;
 			}
 
-			if( ! empty( $notice ) ){
-				?>
-				<div class="mpcdp_settings_section">
-					<div class="mpc-notice mpcdp_settings_section">
-						<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
-							<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
-								<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
-									<span class="theme_customizer_icon dashicons dashicons-saved"></span>
-									<div class="mpcdp_settings_option_description">
-										<div class="mpcdp_option_label"><?php echo esc_html( $notice ); ?></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<?php
-			}
-
+			$notice_done = false;
 			foreach ( $mpc__['fields'][ $tab ] as $section ) {
 				echo '<div class="mpcdp_settings_section">';
 
@@ -216,6 +161,11 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					'<div class="mpcdp_settings_section_title">%s</div>',
 					esc_html( $section['section'] )
 				);
+
+				if ( ! $notice_done ) {
+					$notice_done = true;
+					$this->show_notice();
+				}
 
 				foreach ( $section['fields'] as $fld ) {
 					$this->saving_field( $fld );
@@ -229,13 +179,40 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		/**
 		 * Display settings sidebar
 		 */
-		public function sidebar(){
+		public function sidebar() {
 			$path = MPC_PATH . 'templates/admin/sidebar.php';
 			$path = apply_filters( 'mpc_settings_sidebar', $path );
 
-			if( file_exists( $path ) ){
+			if ( file_exists( $path ) ) {
 				include $path;
 			}
+		}
+
+		/**
+		 * Display notice
+		 */
+		public function show_notice() {
+			$notice = '';
+			if ( isset( $_POST['mpc_admin_settings'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
+				$notice = __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' );
+			}
+
+			if ( empty( $notice ) ) {
+				return;
+			}
+
+			?>
+			<div class="mpc-notice mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
+				<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
+					<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
+						<span class="theme_customizer_icon dashicons dashicons-saved"></span>
+						<div class="mpcdp_settings_option_description">
+							<div class="mpcdp_option_label"><?php echo esc_html( $notice ); ?></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
 		}
 
 
@@ -289,7 +266,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
 				return;
 			}
-			
+
 			// only checkbox field and no data? save it as unchecked (no).
 			if ( 'checkbox' === $fld['type'] && ! isset( $_POST[ $name ] ) ) {
 				update_option( $name, 'no' );
@@ -441,7 +418,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				echo '<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6"><div class="switch-field">';
 
 				foreach ( $fld['options'] as $v => $lbl ) {
-					$id = $fld['key'] . '_' . $v;
+					$id         = $fld['key'] . '_' . $v;
 					$is_checked = $value === $v ? 'checked' : '';
 
 					if ( 'wmc_redirect' === $fld['key'] && 'custom' === $v && false === $mpc__['has_pro'] ) {
@@ -517,8 +494,8 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					esc_attr( $class ),
 					esc_attr( $pro_cls ),
 					esc_html( $pro_label ),
-					isset( $fld['min'] ) ? $fld['min'] : 1,
-					isset( $fld['max'] ) ? $fld['max'] : 100,
+					isset( $fld['min'] ) ? esc_attr( $fld['min'] ) : 1,
+					isset( $fld['max'] ) ? esc_attr( $fld['max'] ) : 100,
 				);
 
 				echo '</div>';
@@ -578,36 +555,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			}
 
 			return $tab;
-		}
-
-		/**
-		 * Display given message or notice
-		 *
-		 * @param string $msg message to display.
-		 */
-		public function notice( $msg ) {
-			if ( ! isset( $_POST['mpc_opt_sc'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_opt_sc'] ) ), 'mpc_opt_sc_save' ) ) {
-				return;
-			}
-
-			if ( ! isset( $_POST ) || empty( $_POST ) ) {
-				return;
-			}
-
-			?>
-			<div class="mpc-notice mpcdp_settings_section">
-				<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
-					<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
-						<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
-							<span class="theme_customizer_icon dashicons dashicons-saved"></span>
-							<div class="mpcdp_settings_option_description">
-								<div class="mpcdp_option_label"><?php echo esc_html( $msg ); ?></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<?php
 		}
 
 

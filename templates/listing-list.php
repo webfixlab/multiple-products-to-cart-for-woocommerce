@@ -1,10 +1,10 @@
 <?php
 /**
  * Shortcode table template.
- * 
+ *
  * This template can be overridden by copying it to yourtheme/templates/listing-list.php.
  * Or, with a filter hook.
- * 
+ *
  * SOMETIMES, we will update this file and you should update your theme file(s) as well. This prevents any potential issues.
  *
  * @package    WordPress
