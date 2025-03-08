@@ -76,7 +76,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			include MPC_PATH . 'includes/class/admin/class-mpcadmintable.php';
 
-			include MPC_PATH . 'includes/class/class-mpc-template.php';
+			include MPC_PATH . 'includes/class/class-mpctemplate.php';
 			include MPC_PATH . 'includes/class/class-mpctable.php';
 			include MPC_PATH . 'includes/functions.php';
 
@@ -339,8 +339,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				$redirect_url = 'cart';
 			}
 
-			$cart_btn_text = get_option( 'wmc_button_text' );
-
 			// add localized variables.
 			$localaized_values = array(
 				'locale'         => str_replace( '_', '-', get_locale() ),
@@ -359,7 +357,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
 				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
 				'has_pro'        => $mpc__['has_pro'],
-				'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+				'cart_text'      => get_option( 'wmc_button_text' ) ?? __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' )
 			);
 
 			$localaized_values['key_fields'] = array(
@@ -480,7 +478,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				return $links;
 			}
 
-			$row_meta            = array();
+			$row_meta = array();
 			$row_meta['apidocs'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $mpc__['plugin']['request_quote'] ),
@@ -497,6 +495,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_rating_nonce' ) ) {
+
 				if ( isset( $_GET['mpca_rate_us'] ) ) {
 					$task = sanitize_key( wp_unslash( $_GET['mpca_rate_us'] ) );
 
@@ -509,6 +508,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					}
 				}
 			} elseif ( isset( $_GET['pinonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['pinonce'] ) ), 'mpc_pro_info_nonce' ) ) {
+
 				if ( isset( $_GET['mpca_notify_pro'] ) ) {
 					if ( 'cancel' === sanitize_key( wp_unslash( $_GET['mpca_notify_pro'] ) ) ) {
 						update_option( 'mpca_notify_pro', gmdate( 'Y-m-d' ) );
@@ -720,7 +720,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					$tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
 				}
 			}
-
+			
 			if ( isset( $mpc__['settings_tab'] ) && ! empty( $mpc__['settings_tab'] ) ) {
 				$tab = sanitize_title( $mpc__['settings_tab'] );
 			}
@@ -739,7 +739,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// Pro state.
 			$mpc__['prostate'] = 'none';
-
+			
 			// change states.
 			do_action( 'mpca_change_pro_state' );
 		}

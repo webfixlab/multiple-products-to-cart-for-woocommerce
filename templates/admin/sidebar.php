@@ -22,7 +22,7 @@ global $mpc__;
 					__( 'Popular PRO features: Product category dropdown, AJAX-powered search, 4 additional columns, and subscription product support. Upgrade to the PRO version to unlock the full power of the plugin!', 'multiple-products-to-cart-for-woocommerce' )
 				)
 			);
-			?>
+		?>
 	</div>
 	<div><a href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo esc_html__( 'Get PRO license now', 'multiple-products-to-cart-for-woocommerce' ); ?></a></div>
 </div>

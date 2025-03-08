@@ -518,7 +518,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		public function show_notice() {
 			// check for created flag.
 			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
-				if ( isset( $_GET['created'] ) ) {
+				if( isset( $_GET['created'] ) ){
 					$this->notice = array(
 						'status'  => 'succcess',
 						'message' => __( 'Shortcode created.', 'multiple-products-to-cart-for-woocommerce' ),
@@ -893,26 +893,26 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				<div class="mpcdp_settings_option_description col-md-6">
 					<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-12">
 						<?php
-						if ( 'selectbox' === $fld['type'] ) {
-							printf( '<div class="choicesdp %s">', esc_html( $name ) );
+							if ( 'selectbox' === $fld['type'] ) {
+								printf( '<div class="choicesdp %s">', esc_html( $name ) );
 
-							$this->itembox( $fld, $value );
+								$this->itembox( $fld, $value );
 
-							echo '</div>';
-						} elseif ( 'checkbox' === $fld['type'] ) {
-							$this->switchbox( $fld, $value );
-						} else {
-							printf(
-								'<input type="text" name="%s" id="%s" min="%s" max="%s" value="%s" placeholder="%s" class="%s">',
-								esc_attr( $name ),
-								esc_attr( $name ),
-								esc_attr( $min ),
-								esc_attr( $max ),
-								esc_attr( $value ),
-								esc_attr( $placeholder ),
-								esc_html( $class )
-							);
-						}
+								echo '</div>';
+							} elseif ( 'checkbox' === $fld['type'] ) {
+								$this->switchbox( $fld, $value );
+							} else {
+								printf(
+									'<input type="text" name="%s" id="%s" min="%s" max="%s" value="%s" placeholder="%s" class="%s">',
+									esc_attr( $name ),
+									esc_attr( $name ),
+									esc_attr( $min ),
+									esc_attr( $max ),
+									esc_attr( $value ),
+									esc_attr( $placeholder ),
+									esc_html( $class )
+								);
+							}
 						?>
 					</div>
 				</div>

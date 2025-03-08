@@ -13,7 +13,7 @@ $cls = new MPCSettings();
 $cls->save_sorted_columns();
 
 $helper_cls = new MPCAdminHelper();
-$value      = get_option( 'wmc_sorted_columns' );
+$value = get_option( 'wmc_sorted_columns' );
 
 ?>
 <div class="mpcdp_settings_section">

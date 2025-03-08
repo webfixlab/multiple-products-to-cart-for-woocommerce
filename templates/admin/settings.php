@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 global $mpc__;
-global $mpc_settings__;
+global $MPCSettings;
 
-$mpc_settings__ = new MPCSettings();
+$MPCSettings = new MPCSettings();
 
-$mpc_tab = $mpc_settings__->get_tab();
+$tab = $MPCSettings->get_tab();
 
 ?>
 <form method="post" action="" id="mpcdp_settings_form" enctype="multipart/form-data">
@@ -33,8 +33,8 @@ $mpc_tab = $mpc_settings__->get_tab();
 				<div class="mpcdp_settings_sidebar" data-sticky-container="" style="position: relative;">
 					<div class="mpcdp_sidebar_tabs">
 						<div class="inner-wrapper-sticky">
-							<?php $mpc_settings__->menu(); ?>
-							<?php $mpc_settings__->save_btn(); ?>
+							<?php $MPCSettings->menu(); ?>
+							<?php $MPCSettings->save_btn(); ?>
 						</div>
 					</div>
 				</div>
@@ -42,21 +42,21 @@ $mpc_tab = $mpc_settings__->get_tab();
 			<div class="col-md-6" id="middle-content">
 				<div class="mpcdp_settings_content">
 					<?php
-						printf(
+						echo sprintf(
 							'<div id="%s" class="hidden mpcdp_settings_tab active" data-tab="%s" style="display: block;">',
-							esc_attr( $mpc_tab ),
-							esc_attr( $mpc_tab )
+							esc_attr( $tab ),
+							esc_attr( $tab )
 						);
 
-						$mpc_settings__->settings();
-						?>
+						$MPCSettings->settings();
+					?>
 					</div>
 				</div>
 			</div>
 			<div id="right-side">
 				<div class="mpcdp_settings_promo">
 					<div id="wfl-promo">
-						<?php $mpc_settings__->sidebar(); ?>
+						<?php $MPCSettings->sidebar(); ?>
 					</div>
 				</div>
 			</div>

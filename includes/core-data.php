@@ -307,7 +307,7 @@ $mpc__['fields'] = array(
 					'key'         => 'mpc_show_category_subheader',
 					'type'        => 'checkbox',
 					'label'       => __( 'Section by Categories', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'There must be selected categories in the table to enable this feature.', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Enable the sections of each category selected within the product table.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -616,7 +616,7 @@ $mpc__['fields'] = array(
 					'max'         => 152,
 					'class'       => 'number-input',
 				),
-			),
+			)
 		),
 		array(
 			'section' => __( 'Product Title', 'multiple-products-to-cart-for-woocommerce' ),

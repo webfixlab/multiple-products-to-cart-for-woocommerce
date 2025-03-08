@@ -46,11 +46,10 @@ $image_size = ! empty( $image_size ) ? $image_size : '90';
 	.mpc-product-title a{
 		color: <?php echo esc_html( $title_color ); ?>;
 	}
-		<?php
+	<?php
 	endif;
-
-	if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) :
-		?>
+	
+	if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) : ?>
 		.mpc-wrap .variation-group > select{
 			max-width: 100px;
 		}
@@ -60,31 +59,31 @@ $image_size = ! empty( $image_size ) ? $image_size : '90';
 	<?php endif; ?>
 	.mpc-container .mpc-product-title a{
 		<?php
-		if ( ! empty( $title_font_size ) ) {
-			printf( 'font-size: %spx;', esc_attr( $title_font_size ) );
-		}
+			if ( ! empty( $title_font_size ) ) {
+				printf( 'font-size: %spx;', esc_attr( $title_font_size ) );
+			}
 
-		if ( ! empty( $bold_title ) && 'on' === $bold_title ) {
-			echo esc_html( 'font-weight: bold;' );
-		}
+			if ( ! empty( $bold_title ) && 'on' === $bold_title ) {
+				echo esc_html( 'font-weight: bold;' );
+			}
 
-		if ( ! empty( $title_underline ) && 'on' === $title_underline ) {
-			echo esc_html( 'text-decoration: underline;' );
-		} else {
-			echo esc_html( 'text-decoration: none;' );
-		}
+			if ( ! empty( $title_underline ) && 'on' === $title_underline ) {
+				echo esc_html( 'text-decoration: underline;' );
+			} else {
+				echo esc_html( 'text-decoration: none;' );
+			}
 		?>
 	}
 	<?php do_action( 'mpc_dynamic_css' ); ?>
 	@media screen and (max-width: 767px) {
 		table.mpc-wrap tbody tr{
-			min-height: <?php echo esc_attr( $image_size ) + 17; ?>px;
+			min-height: <?php echo $image_size + 16; ?>px;
 		}
 		table.mpc-wrap tbody tr:has(.gallery-item){
-			min-height: <?php echo esc_attr( $image_size ) + ceil( ( esc_attr( $image_size ) * 47 ) / 100 ) + 24; ?>px;
+			min-height: <?php echo $image_size + ceil( ( $image_size * 47 ) / 100 ) + 24; ?>px;
 		}
-		#main-content table.mpc-wrap tbody tr td{
-			padding-left: <?php echo esc_attr( $image_size ) + 13; ?>px;
+		table.mpc-wrap tbody tr td{
+			padding-left: <?php echo $image_size + 13; ?>px;
 		}
 	}
 </style>

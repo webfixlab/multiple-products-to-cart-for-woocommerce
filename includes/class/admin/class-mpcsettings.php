@@ -61,15 +61,12 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 
 			$nonce = wp_create_nonce( 'mpc_option_tab' );
 			$page  = admin_url( 'admin.php?page=mpc-settings' );
-
-			if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
-				$tab = isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) && 'new-table' === $tab ? 'all-tables' : $tab;
-			}
+			$tab   = isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) && 'new-table' === $tab ? 'all-tables' : $tab;
 
 			foreach ( $menus as $nav ) {
 				$nav_ = sanitize_title( $nav['tab'] );
 
-				$url = $page . '&tab=' . $nav_ . '&nonce=' . $nonce;
+				$url  = $page . '&tab=' . $nav_ . '&nonce=' . $nonce;
 				if ( 'all-tables' === $nav_ ) {
 					$url = admin_url( 'admin.php?page=mpc-shortcodes' );
 				} elseif ( 'new-table' === $nav_ ) {
@@ -162,7 +159,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					esc_html( $section['section'] )
 				);
 
-				if ( ! $notice_done ) {
+				if( ! $notice_done ) {
 					$notice_done = true;
 					$this->show_notice();
 				}
@@ -179,11 +176,11 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		/**
 		 * Display settings sidebar
 		 */
-		public function sidebar() {
+		public function sidebar(){
 			$path = MPC_PATH . 'templates/admin/sidebar.php';
 			$path = apply_filters( 'mpc_settings_sidebar', $path );
 
-			if ( file_exists( $path ) ) {
+			if( file_exists( $path ) ){
 				include $path;
 			}
 		}
@@ -191,13 +188,13 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		/**
 		 * Display notice
 		 */
-		public function show_notice() {
+		public function show_notice(){
 			$notice = '';
 			if ( isset( $_POST['mpc_admin_settings'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
 				$notice = __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' );
 			}
 
-			if ( empty( $notice ) ) {
+			if( empty( $notice ) ){
 				return;
 			}
 
@@ -266,7 +263,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
 				return;
 			}
-
+			
 			// only checkbox field and no data? save it as unchecked (no).
 			if ( 'checkbox' === $fld['type'] && ! isset( $_POST[ $name ] ) ) {
 				update_option( $name, 'no' );
@@ -418,7 +415,7 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 				echo '<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6"><div class="switch-field">';
 
 				foreach ( $fld['options'] as $v => $lbl ) {
-					$id         = $fld['key'] . '_' . $v;
+					$id = $fld['key'] . '_' . $v;
 					$is_checked = $value === $v ? 'checked' : '';
 
 					if ( 'wmc_redirect' === $fld['key'] && 'custom' === $v && false === $mpc__['has_pro'] ) {
@@ -494,8 +491,8 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 					esc_attr( $class ),
 					esc_attr( $pro_cls ),
 					esc_html( $pro_label ),
-					isset( $fld['min'] ) ? esc_attr( $fld['min'] ) : 1,
-					isset( $fld['max'] ) ? esc_attr( $fld['max'] ) : 100,
+					isset( $fld['min'] ) ? $fld['min'] : 1,
+					isset( $fld['max'] ) ? $fld['max'] : 100,
 				);
 
 				echo '</div>';
