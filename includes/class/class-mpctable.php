@@ -767,36 +767,34 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param string $price_html Price html in string format.
 		 */
 		public function extract_price_from_html( $price_html ) {
-			$plain_text         = wp_strip_all_tags( $price_html );
-			$decimal_separator  = get_option( 'woocommerce_price_decimal_sep', '.' );
-			$thousand_separator = get_option( 'woocommerce_price_thousand_sep', ',' );
-
-			// preg_match_all( '/\d{1,3}(?:' . preg_quote( $thousand_separator ) . '\d{3})*(?:' . preg_quote( $decimal_separator ) . '\d+)?/', $plain_text, $matches );
+			$plain_text = str_replace( get_woocommerce_currency_symbol(), '', $price_html );
+			$plain_text = wp_strip_all_tags( $plain_text );
+			$ds = get_option( 'woocommerce_price_decimal_sep', '.' ); // decimal separator.
+			$ts = get_option( 'woocommerce_price_thousand_sep', ',' ); // thousand separator.
 
 			preg_match_all(
-				'/\d{1,3}(?:' . preg_quote( $thousand_separator, '/' ) . '\d{3})*(?:' . preg_quote( $decimal_separator, '/' ) . '\d+)?/',
+				'/\d{1,3}(?:' . preg_quote( $ts, '/' ) . '\d{3})*(?:' . preg_quote( $ds, '/' ) . '\d+)?/',
 				$plain_text,
 				$matches
 			);
 
 			if ( ! empty( $matches[0] ) ) {
 				$prices = array_map(
-					function ( $price ) use ( $thousand_separator, $decimal_separator ) {
-						$price = str_replace( $thousand_separator, '', $price );
-						$price = str_replace( $decimal_separator, '.', $price );
+					function ( $price ) use ( $ts, $ds ) {
+						$price = str_replace( $ts, '', $price );
+						$price = str_replace( $ds, '.', $price );
 						return (float) $price;
 					},
 					$matches[0]
 				);
 
-				$prices = array_filter( $prices, fn( $p ) => $p > 0 ); // Remove zero values.
-
-				return ! empty( $prices ) ? min( $prices ) : 0; // Return the smallest valid price.
+				$i = count( $prices ) - 1;
+				return $i > 3 ? $prices[4] : $prices[3];
 			}
 
 			return 0;
 		}
-
+		
 		/**
 		 * Get product variation data | JSON
 		 *
@@ -832,9 +830,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				$c = array( 'attributes' => $atts_sanitized );
 
 				// get variation price.
-				$price = $variation->get_price();
-
-				$price = (float) $price;
+				$price = $variation->get_price_html();
+				$price = $this->extract_price_from_html( $price );
 
 				// if subscription type.
 				if ( strpos( $product->get_type(), 'subscription' ) !== false ) {

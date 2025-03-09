@@ -231,7 +231,6 @@
 			}
 
 			row.find( '.mpc-def-stock' ).html( '<p class="stock in-stock">' + instock + '</p>' );
-			console.log( instock );
 		}
 
 		if ( instock == -1 || instock == 1 ) {
@@ -259,7 +258,7 @@
 				mpc_handle_variation_description( row, data[variation_id]['desc'] );
 
 				if ( mpc_if_all_options_selected( row ) && typeof data[variation_id]['price'] != 'undefined' ) {
-					price = parseFloat( data[variation_id]['price'].toString().replace( /[^\d\.\-]/g, "" ) );
+					price = parseFloat( data[variation_id]['price'] );
 				}
 
 				// handle sku.
@@ -444,13 +443,11 @@
 		);
 
 		if ( selected == 0 && total > 0 && wrap.find( '.mpc-check-all' ).is( ':checked' ) ) {
-			console.log( 'selected 0 and checked, uncheck' );
 			wrap.find( '.mpc-check-all' ).prop( 'checked', false );
 			wrap.find( '.mpc-check-all' ).attr( 'data-state', 'not' );
 		}
 
 		if ( total == selected && selected > 0 ) {
-			console.log( 'total = selected and selected > 0. so checking' );
 			// check select all checkbox.
 			wrap.find( '.mpc-check-all' ).prop( 'checked', true );
 			wrap.find( '.mpc-check-all' ).attr( 'data-state', 'checked' );
@@ -516,7 +513,6 @@
 		);
 		var width = table[0].offsetWidth;
 		let wrap  = table.closest( '.mpc-container' );
-		console.log( 'table width', width );
 		html = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
 		html = `<div class="mpc-fixed-header" style="left:${min}px; display: none;">${html}</div>`;
 		wrap.find( '.mpc-fixed-header' ).remove();
@@ -1265,7 +1261,6 @@
 			e.preventDefault();
 			var id      = parseInt( $( this ).data( 'id' ) );
 			var wrapper = $( this ).closest( '.mpc-container' );
-			console.log( 'hello', id );
 
 			var type   = $( this ).closest( 'td' ).hasClass( 'mpc-product-category' ) ? 'cats' : $( this ).closest( 'td' ).hasClass( 'mpc-product-tag' ) ? 'tags' : '';
 			var select = 'cats' === type ? wrapper.find( '.mpc-cat-filter' ) : wrapper.find( '.mpc-tag-filter' );
@@ -1318,7 +1313,7 @@
 
 				// table head.
 				let products   = table.find( 'tbody tr' );
-				let tableStart = $( products[1] ).offset().top;
+				let tableStart = products[1] ? $( products[1] ).offset().top : 0;
 				let tableEnd   = $( products[products.length - 1] ).offset().top + $( products[products.length - 1] )[0].offsetHeight;
 				if ( (cs + screenH) > tableStart && (cs + screenH) < tableEnd ) {
 					wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' ).addClass( 'mpc-fixed-total-m' );
