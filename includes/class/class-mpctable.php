@@ -769,6 +769,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		public function extract_price_from_html( $price_html ) {
 			$plain_text = str_replace( get_woocommerce_currency_symbol(), '', $price_html );
 			$plain_text = wp_strip_all_tags( $plain_text );
+
 			$ds = get_option( 'woocommerce_price_decimal_sep', '.' ); // decimal separator.
 			$ts = get_option( 'woocommerce_price_thousand_sep', ',' ); // thousand separator.
 
@@ -787,12 +788,25 @@ if ( ! class_exists( 'MPCTable' ) ) {
 					},
 					$matches[0]
 				);
-
+				
 				$i = count( $prices ) - 1;
-				return $i > 3 ? $prices[4] : $prices[3];
+				if(0 === $i){
+					return $prices[0];
+				}else{
+					return $i > 3 ? $prices[4] : $prices[3];
+				}
 			}
 
 			return 0;
+		}
+		private function log( $data ) {
+			if ( true === WP_DEBUG ) {
+				if ( is_array( $data ) || is_object( $data ) ) {
+					error_log( print_r( $data, true ) );
+				} else {
+					error_log( $data );
+				}
+			}
 		}
 		
 		/**

@@ -686,7 +686,7 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 				</div>
 			</div>
 			<?php $this->render_mpc_pagination(); ?>
-			<div class="mpc-table-query" data-atts="<?php echo ! empty( $mpctable__['attributes__'] ) && '' !== $mpctable__['attributes__'] ? wc_esc_json( wp_json_encode( $mpctable__['attributes__'] ) ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
+			<div class="mpc-table-query" data-query="<?php echo wc_esc_json( wp_json_encode( $mpctable__['args'] ) ); ?>" data-atts="<?php echo ! empty( $mpctable__['attributes__'] ) && '' !== $mpctable__['attributes__'] ? wc_esc_json( wp_json_encode( $mpctable__['attributes__'] ) ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
 			<?php
 		}
 
