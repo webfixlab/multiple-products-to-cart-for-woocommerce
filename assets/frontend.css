@@ -24,7 +24,6 @@ table.mpc-wrap tbody tr td {
 }
 table.mpc-wrap tbody tr:nth-child(2n).cart_item td {
 	background: #f5f5f5;
-	border-radius: 4px;
 }
 table.mpc-wrap tbody tr:nth-child(2n+1).cart_item td {
 	background: #ffffff;
@@ -92,6 +91,7 @@ select:-moz-focusring {
 	height: 35px;
 	background: #fff;
 	padding: 0 15px;
+	box-shadow: none;
 }
 .mpc-wrap .variation-group {
 	margin-bottom: .75em;
@@ -659,7 +659,7 @@ span.mpc-fixed-cart {
 }
 .woocommerce.mpc-container td.mpc-product-quantity .quantity .minus, .woocommerce.mpc-container td.mpc-product-quantity .quantity .qty, .woocommerce.mpc-container td.mpc-product-quantity .quantity .plus{
 	width: 35px !important;
-	height: 35px !important;
+	height: 37px !important;
 }
 /* Elementor section end */
 /* Mobile CSS */
