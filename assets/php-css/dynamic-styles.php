@@ -83,7 +83,7 @@ $image_size = ! empty( $image_size ) ? $image_size : '90';
 		table.mpc-wrap tbody tr:has(.gallery-item){
 			min-height: <?php echo esc_attr( $image_size ) + ceil( ( esc_attr( $image_size ) * 47 ) / 100 ) + 24; ?>px;
 		}
-		#main-content table.mpc-wrap tbody tr td{
+		#content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td{
 			padding-left: <?php echo esc_attr( $image_size ) + 13; ?>px;
 		}
 	}
