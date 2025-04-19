@@ -161,12 +161,12 @@ class MPC_Table_Template {
 
         // Add column names.
         $defult_labels = array(
-            'wmc_ct_image' => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_product' => __( 'Product', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_image'     => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_product'   => __( 'Product', 'multiple-products-to-cart-for-woocommerce' ),
             'wmc_ct_variation' => __( 'Variation', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_price' => __( 'Price', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_price'     => __( 'Price', 'multiple-products-to-cart-for-woocommerce' ),
             'wmc_ct_quantity' => __( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_buy' => __( 'Buy', 'multiple-products-to-cart-for-woocommerce' )
+            'wmc_ct_buy'      => __( 'Buy', 'multiple-products-to-cart-for-woocommerce' )
         );
         ?>
         <thead>

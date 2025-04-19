@@ -141,9 +141,6 @@ class MPC_Frontend_Loader {
 
 
     public static function template_loader( $template ){
-        // load dynamic css.
-        require_once apply_filters( 'mpc_template_loader', MPC_PATH . 'assets/php-css/dynamic-styles.php' );
-
         switch ( $template ) {
             case 'table':
                 include apply_filters( 'mpc_template_loader', MPC_PATH . 'templates/listing-list.php' );
@@ -167,11 +164,10 @@ class MPC_Frontend_Loader {
         $query = new WP_Query( $args );
         wp_reset_postdata();
 
-        $mpc_frontend__['products']     = $query->posts;
-        $mpc_frontend__['found_posts']  = $query->found_posts;
+        $mpc_frontend__['products']      = $query->posts;
+        $mpc_frontend__['found_posts']   = $query->found_posts;
         $mpc_frontend__['max_num_pages'] = $query->max_num_pages;
-
-        $mpc_frontend__['query_args']   = $args;
+        $mpc_frontend__['query_args']    = $args;
 
         if( !$query->have_posts() ) return array();
         

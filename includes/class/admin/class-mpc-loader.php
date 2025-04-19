@@ -267,6 +267,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			global $mpc__;
 
 			// enqueue style.
+			wp_enqueue_style( 'mpc-dynamic-css', plugin_dir_url( MPC ) . 'includes/dynamic-css.php', array(), MPC_VER, 'all' );
 			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.css', array(), MPC_VER, 'all' );
 
 			// register script.
