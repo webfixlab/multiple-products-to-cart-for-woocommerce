@@ -56,10 +56,6 @@ class MPC_Admin_Helper {
         
         self::set();
 
-        // don't save pro field data without existing pro version.
-        if ( isset( $field['pro'] ) && true === $field['pro'] && false === self::$data['has_pro'] ) {
-            return;
-        }
         self::save_field( $field );
         
         // handle followup also.

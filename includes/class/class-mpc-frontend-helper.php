@@ -310,28 +310,7 @@ class MPC_Frontend_Helper {
         }
 
         $mpc_frontend__['cols'] = $cols;
-        return self::get_column_labels( $cols );
-    }
-    private static function get_column_labels( $cols ){
-        $all_columns = array(
-            'wmc_ct_image'                  => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_product'                => __( 'Product', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_price'                  => __( 'Price', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_variation'              => __( 'Variation', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_quantity'               => __( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_buy'                    => __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_category'               => __( 'Category', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_stock'                  => __( 'Stock', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_tag'                    => __( 'Tag', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_sku'                    => __( 'SKU', 'multiple-products-to-cart-for-woocommerce' ),
-            'wmc_ct_rating'                 => __( 'Rating', 'multiple-products-to-cart-for-woocommerce' ),
-        );
-
-        $labels = [];
-        foreach( $cols as $col ){
-            $labels[ $col ] = get_option( $col ) ?? $all_columns[$col];
-        }
-        return $labels;
+        return $cols;
     }
 
 
@@ -339,6 +318,7 @@ class MPC_Frontend_Helper {
         $product = wc_get_product( $id );
 
         $data = array(
+            'id'                => $id,
             'type'              => $product->get_type(),
             'title'             => $product->get_title(),
             'url'               => $product->get_permalink(),
@@ -397,6 +377,7 @@ class MPC_Frontend_Helper {
         $product = wc_get_product( $id );
 
         $data = array(
+            'id'           => $id,
             'type'         => $product->get_type(),
             'title'        => $product->get_title(),
             'url'          => $product->get_permalink(),
@@ -516,5 +497,17 @@ class MPC_Frontend_Helper {
         }
 
         return $paged;
+    }
+
+
+
+    private static function log( $data ) {
+        if ( true === WP_DEBUG ) {
+            if ( is_array( $data ) || is_object( $data ) ) {
+                error_log( print_r( $data, true ) );
+            } else {
+                error_log( $data );
+            }
+        }
     }
 }

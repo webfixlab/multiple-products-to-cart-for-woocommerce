@@ -169,7 +169,7 @@ class MPC_Frontend_Loader {
 
         $mpc_frontend__['products']     = $query->posts;
         $mpc_frontend__['found_posts']  = $query->found_posts;
-        $mpc_frontend__['max_num_page'] = $query->max_num_page;
+        $mpc_frontend__['max_num_pages'] = $query->max_num_pages;
 
         $mpc_frontend__['query_args']   = $args;
 
@@ -307,4 +307,15 @@ class MPC_Frontend_Loader {
         // Hook to modify frontend core data.
         do_action( 'mpc_frontend_core_data' );
     }
+    private static function log( $data ) {
+        if ( true === WP_DEBUG ) {
+            if ( is_array( $data ) || is_object( $data ) ) {
+                error_log( print_r( $data, true ) );
+            } else {
+                error_log( $data );
+            }
+        }
+    }
 }
+
+MPC_Frontend_Loader::init();

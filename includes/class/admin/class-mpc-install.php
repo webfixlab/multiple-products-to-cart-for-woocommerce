@@ -34,7 +34,7 @@ class MPC_Inatall {
      */
     public static function init(){
         add_filter( 'plugin_action_links_' . plugin_basename( MPC ), array( __CLASS__, 'plugin_action_links' ) );
-        add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ) );
+        add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 
         add_action( 'before_woocommerce_init', array( __CLASS__, 'enable_wc_hpos' ) );
     }

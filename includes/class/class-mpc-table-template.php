@@ -33,9 +33,9 @@ class MPC_Table_Template {
         add_action( 'mpc_table_column_buy', array( __CLASS__, 'row_buy' ), 10 );
 
         add_action( 'mpc_table_footer', array( __CLASS__, 'table_total' ), 10 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination_info' ), 15 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'reset_button' ), 20 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'add_to_cart_button' ), 25 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'reset_button' ), 15 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'add_to_cart_button' ), 20 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination_info' ), 25 );
         add_action( 'mpc_table_footer', array( __CLASS__, 'pagination' ), 30 );
         add_action( 'mpc_table_footer', array( __CLASS__, 'table_data' ), 99 );
 
@@ -119,7 +119,8 @@ class MPC_Table_Template {
     private static function orderby_options( $options, $select ){
         foreach( $options as $slug => $option ){
             $selected = $slug === $select ? 'selected' : '';
-            $label    = get_option( $option['key'] ) ?? $option['label'];
+            $label    = get_option( $option['key'] );
+            $label    = empty( $label ) ? $option['label'] : $label;
             ?>
             <option value="<?php echo esc_attr( $slug ); ?>" <?php echo esc_attr( $selected ); ?>>
                 <?php echo esc_html( $label ); ?>
@@ -139,10 +140,11 @@ class MPC_Table_Template {
 
         // Don't show if buy column isn't in one of the table columns.
         $cols = MPC_Frontend_Helper::get_table_columns();
-        $cols = !empty( $cols ) ? array_keys( $cols ) : [];
+        $cols = !empty( $cols ) ? $cols : [];
         if( !empty( $cols ) && !in_array( 'wmc_ct_buy', $cols, true ) ) return;
 
-        $label = get_option( 'wmc_select_all_text' ) ?? __( 'Select All', 'multiple-products-to-cart-for-woocommerce' );
+        $label = get_option( 'wmc_select_all_text' );
+        $label = empty( $label ) ? __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         ?>
         <div class="mpc-all-select">
             <label><?php echo esc_html( $label ); ?></label>
@@ -156,12 +158,26 @@ class MPC_Table_Template {
     public static function table_columns() {
         $cols = MPC_Frontend_Helper::get_table_columns();
         if( empty( $cols ) ) return;
+
+        // Add column names.
+        $defult_labels = array(
+            'wmc_ct_image' => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_product' => __( 'Product', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_variation' => __( 'Variation', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_price' => __( 'Price', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_quantity' => __( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
+            'wmc_ct_buy' => __( 'Buy', 'multiple-products-to-cart-for-woocommerce' )
+        );
         ?>
         <thead>
             <tr>
-                <?php foreach ( $cols as $col => $label ) : ?>
+                <?php foreach ( $cols as $col ) : ?>
                     <th for="<?php echo esc_attr( $col ); ?>" class="mpc-product-<?php echo esc_attr( str_replace( 'wmc_ct_', '', $col ) ); ?>">
-                        <?php echo esc_html( $label ); ?>
+                        <?php
+                            $label = get_option( $col );
+                            $label = empty( $label ) ? $defult_labels[ $col ] : $label;
+                            echo esc_html( $label );
+                        ?>
                     </th>
                 <?php endforeach; ?>
             </tr>
@@ -188,7 +204,6 @@ class MPC_Table_Template {
         $price = $data['price_'] ?? '';
 
         $mpc_frontend__['row_data'] = $data;
-        $mpc_frontend__['row_id']   = $id;
         ?>
         <tr class="cart_item <?php echo esc_attr( $data['type'] ); ?>" data-varaition_id="0" data-type="<?php echo esc_attr( $data['type'] ); ?>" data-id="<?php echo esc_attr( $id ); ?>" stock="<?php echo esc_attr( $data['stock'] ); ?>" data-price="<?php echo esc_attr( $price ); ?>">
             <?php self::display_all_columns(); ?>
@@ -337,7 +352,7 @@ class MPC_Table_Template {
             $name = sanitize_title( $attribute ); // Sanitized attribute name.
             ?>
             <div class="variation-group">
-                <select class="<?php echo esc_attr( $name ); ?>" name="attribute_<?php echo esc_attr( $name . $data['row_id'] ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name ); ?>">
+                <select class="<?php echo esc_attr( $name ); ?>" name="attribute_<?php echo esc_attr( $name . $data['id'] ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name ); ?>">
                     <option value="">
                         <?php echo empty( $choose ) ? '' : esc_html( $choose ) . '&nbsp;'; ?>
                         <?php echo wc_attribute_label( $attribute ); ?>
@@ -353,7 +368,7 @@ class MPC_Table_Template {
     private static function attribute_options( $attribute, $options, $data ){
         if( empty( $options ) ) return;
 
-        $terms = taxonomy_exists( $attribute ) ? wc_get_product_terms( $data['row_id'], $attribute, array( 'fields' => 'all' ) ) : [];
+        $terms = taxonomy_exists( $attribute ) ? wc_get_product_terms( $data['id'], $attribute, array( 'fields' => 'all' ) ) : [];
 
         if( !empty( $terms ) ){
             foreach( $terms as $term ){
@@ -400,7 +415,6 @@ class MPC_Table_Template {
                 </a>
             <?php endif; ?>
         </div>
-        ?>
         <?php
     }
     private static function no_variation( $data ){
@@ -426,13 +440,13 @@ class MPC_Table_Template {
     private static function quantity_field( $data ){
         if( 'grouped' === $data['type'] ) return;
 
-        $id          = $data['row_id'];
+        $id          = $data['id'];
         $stock       = $data['stock'];
         $stock       = empty( $stock ) ? '' : (int) $stock;
         $stock       = $data['sold_individually'] ? 1 : $stock;
 
-        $default_qty = get_option( 'wmca_default_quantity' ) ?? 0;
-        $default_qty = (int) $default_qty;
+        $default_qty = get_option( 'wmca_default_quantity' );
+        $default_qty = empty( $default_qty ) ? 0 : (int) $default_qty;
 
         $min         = 1;
         $max         = empty( $stock ) ? '' : $stock;
@@ -461,9 +475,10 @@ class MPC_Table_Template {
         global $mpc_frontend__;
 
         $data     = $mpc_frontend__['row_data'];
-        $label    = get_option( 'wmc_ct_buy' ) ?? __( 'Buy', 'multiple-products-to-cart-for-woocommerce' );
+        $label    = get_option( 'wmc_ct_buy' );
+        $label    = empty( $label ) ? __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         $selected = $mpc_frontend__['atts']['selected'] ?? [];
-        $checked  = !empty( $selected ) && in_array( $data['row_id'], $selected, true ) ? 'checked' : '';
+        $checked  = !empty( $selected ) && in_array( $data['id'], $selected, true ) ? 'checked' : '';
         ?>
         <td for="buy" class="mpc-product-select">
             <span class="mpc-mobile-only">
@@ -472,7 +487,7 @@ class MPC_Table_Template {
             <input
                 type="checkbox"
                 name="product_ids[]"
-                value="<?php echo esc_attr( $data['row_id'] ); ?>"
+                value="<?php echo esc_attr( $data['id'] ); ?>"
                 data-price="<?php echo isset( $data['price_'] ) ? esc_attr( $data['price_'] ) : ''; ?>"
                 <?php echo esc_attr( $checked ); ?>>
         </td>
@@ -482,7 +497,8 @@ class MPC_Table_Template {
 
 
     public static function table_total(){
-        $label = get_option( 'wmc_total_button_text' ) ?? __( 'Total', 'multiple-products-to-cart-for-woocommerce' );
+        $label = get_option( 'wmc_total_button_text' );
+        $label = empty( $label ) ? __( 'Total', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         ?>
         <div class="total-row">
             <span class="total-label"><?php echo esc_html( $label ); ?></span>
@@ -495,6 +511,27 @@ class MPC_Table_Template {
                 </span>
             </span>
         </div>
+        <?php
+    }
+    public static function reset_button(){
+        $show_button = get_option( 'wmca_show_reset_btn' ) ?? '';
+        if( !empty( $show_button ) && 'on' !== $show_button ) return;
+
+        $label = get_option( 'wmc_reset_button_text' );
+        $label = empty( $label ) ? __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ) : $label;
+        ?>
+        <input type="reset" class="mpc-reset" value="<?php echo esc_html( $label ); ?>">
+        <?php
+    }
+    public static function add_to_cart_button(){
+        $label = get_option( 'wmc_button_text' );
+        $label = empty( $label ) ? __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ) : $label;
+        ?>
+        <input
+            type="submit"
+            class="mpc-add-to-cart single_add_to_cart_button button alt wc-forward"
+            name="proceed"
+            value="<?php echo esc_html( $label ); ?>" />
         <?php
     }
     public static function pagination_info(){
@@ -511,7 +548,8 @@ class MPC_Table_Template {
         // Found less products than posts per page.
         if( $mpc_frontend__['found_posts'] <= $atts['limit'] ) return;
 
-        $label = get_option( 'wmc_pagination_text' ) ?? __( 'Showing', 'multiple-products-to-cart-for-woocommerce' );
+        $label = get_option( 'wmc_pagination_text' );
+        $label = empty( $label ) ? __( 'Showing', 'multiple-products-to-cart-for-woocommerce' ) : $label;
 
         $page  = MPC_Frontend_Helper::get_current_page();
         $limit = $atts['limit'];
@@ -534,44 +572,26 @@ class MPC_Table_Template {
         </div>
         <?php
     }
-    public static function reset_button(){
-        $show_button = get_option( 'wmca_show_reset_btn' ) ?? '';
-        if( !empty( $show_button ) && 'on' !== $show_button ) return;
-
-        $label = get_option( 'wmc_reset_button_text' ) ?? __( 'Reset', 'multiple-products-to-cart-for-woocommerce' );
-        ?>
-        <input type="reset" class="mpc-reset" value="<?php echo esc_html( $label ); ?>">
-        <?php
-    }
-    public static function add_to_cart_button(){
-        $label = get_option( 'wmc_button_text' ) ?? __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' );
-        ?>
-        <input
-            type="submit"
-            class="mpc-add-to-cart single_add_to_cart_button button alt wc-forward"
-            name="proceed"
-            value="<?php echo esc_html( $label ); ?>" />
-        <?php
-    }
     public static function pagination(){
         global $mpc_frontend__;
 
         $current_page = MPC_Frontend_Helper::get_current_page();
-        $max_page     = $mpc_frontend__['max_num_page'];
+        $max_page     = $mpc_frontend__['max_num_pages'];
 
         $pages = self::get_pagination_pages( $current_page, $max_page );
-        if ( empty( $pages ) ) {
-            return;
-        }
+        if( empty( $pages ) ) return;
+
+        $prev = 0; // Previous page number.
         ?>
         <div class="mpc-pagenumbers" data-max_page="<?php echo esc_attr( $max_page ); ?>">
-            <?php foreach ( $pages as $i => $page ) : ?>
-                <?php if( $i > 0 && ( $page - $pages[$i - 1]) > 1 ) : ?>
+            <?php foreach ( $pages as $page ) : ?>
+                <?php if( $prev > 0 && ( $page - $prev) > 1 ) : ?>
                     <span class="mpc-divider">...</span>
                 <?php endif; ?>
                 <span <?php echo $page === $current_page ? 'class="current"' : ''; ?>>
                     <?php echo esc_html( $page ); ?>
                 </span>
+                <?php $prev = $page; ?>
             <?php endforeach; ?>
         </div>
         <?php
@@ -604,15 +624,12 @@ class MPC_Table_Template {
 
     public static function table_data(){
         global $mpc_frontend__;
-
-        $args = $mpc_frontend__['args'] ?? [];
-        $atts = $mpc_frontend__['atts'] ?? [];
         ?>
         <input type="hidden" name="add_more_to_cart" value="1">
         <div
             class="mpc-table-query"
-            data-query="<?php echo wc_esc_json( wp_json_encode( $args ) ); ?>"
-            data-atts="<?php echo wc_esc_json( wp_json_encode( $atts ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
+            data-query="<?php echo wc_esc_json( wp_json_encode( $mpc_frontend__['query_args'] ) ); ?>"
+            data-atts="<?php echo wc_esc_json( wp_json_encode( $mpc_frontend__['atts'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
         <?php
     }
 

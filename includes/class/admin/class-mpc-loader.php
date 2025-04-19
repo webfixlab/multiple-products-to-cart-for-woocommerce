@@ -16,14 +16,6 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 	class MPC_Loader {
 
 		/**
-		 * MPC plugin constructor
-		 */
-		public function __construct(){
-			$this->includes();
-			$this->init_hooks();
-		}
-
-		/**
 		 * Plugin loader hooks
 		 */
 		public function init_hooks(){
@@ -38,6 +30,8 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		}
 		
 		public function init(){
+			$this->includes();
+
 			load_plugin_textdomain( 'multiple-products-to-cart-for-woocommerce', false, plugin_basename( dirname( MPC ) ) . '/languages' );
 
 			$this->register_table_cpt();
@@ -46,7 +40,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 			add_action( 'admin_head', array( $this, 'admin_menu_style' ) );
-
+			
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_assets' ) );
 		}
@@ -340,3 +334,4 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 }
 
 $mpc_loader = new MPC_Loader();
+$mpc_loader->init_hooks();
