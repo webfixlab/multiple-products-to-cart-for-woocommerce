@@ -639,7 +639,7 @@ span.mpc-fixed-cart {
 	cursor: pointer;
 }
 .total-row.mpc-fixed-total-m > span {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 .mpcp-loading {
 	width: 34px;

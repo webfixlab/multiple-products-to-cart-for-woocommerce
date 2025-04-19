@@ -513,8 +513,8 @@
 		);
 		var width = table[0].offsetWidth;
 		let wrap  = table.closest( '.mpc-container' );
-		html = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
-		html = `<div class="mpc-fixed-header" style="left:${min}px; display: none;">${html}</div>`;
+		html      = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
+		html      = `<div class="mpc-fixed-header" style="left:${min}px;display:none;">${html}</div>`;
 		wrap.find( '.mpc-fixed-header' ).remove();
 		table.after( html );
 
@@ -1318,7 +1318,7 @@
 				if ( (cs + screenH) > tableStart && (cs + screenH) < tableEnd ) {
 					wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' ).addClass( 'mpc-fixed-total-m' );
 					wrap.find( '.total-row .mpc-fixed-cart' ).remove();
-					wrap.find( '.total-row' ).append( `<span class="mpc-fixed-cart">${mpc_frontend.cart_text}</span>` );
+					wrap.find( '.total-row' ).append( `<span class="mpc-fixed-cart">${mpc_frontend.cart_text}</span>`);
 				} else {
 					wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' );
 					wrap.find( '.total-row .mpc-fixed-cart' ).remove();

@@ -30,4 +30,4 @@ define( 'MPC', __FILE__ );
 define( 'MPC_VER', '7.4.1' );
 define( 'MPC_PATH', plugin_dir_path( MPC ) );
 
-require MPC_PATH . 'includes/class/admin/class-mpcloader.php';
+require MPC_PATH . 'includes/class/admin/class-mpc-loader.php';
