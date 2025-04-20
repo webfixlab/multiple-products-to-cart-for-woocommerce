@@ -29,6 +29,14 @@ table.mpc-wrap tbody tr:nth-child(2n).cart_item td {
 table.mpc-wrap tbody tr:nth-child(2n+1).cart_item td {
 	background: #ffffff;
 }
+table.mpc-wrap tbody tr:nth-child(2n).cart_item td:first-child {
+	border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+table.mpc-wrap tbody tr:nth-child(2n).cart_item td:last-child {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
 table.mpc-wrap tbody tr td.mpc-product-name > a {
 	text-decoration: none !important;
 	font-weight: bold;
@@ -185,6 +193,7 @@ span.mpc-total {
 }
 .mpc-pagenumbers span.current {
 	color: white;
+	border: 1px solid #535353;
 }
 
 
@@ -696,15 +705,15 @@ span.mpc-fixed-cart {
 	height: 32px !important;
 }
 .woocommerce.mpc-container .quantity input.qty, .woocommerce.mpc-container .quantity .minus, .woocommerce.mpc-container .quantity .plus{
-	border-radius: unset !important;
+	border-radius: 3px !important;
 }
 /* Elementor section end */
 #content .woocommerce-page.mpc-container td.mpc-product-quantity .quantity{
 	border: none !important;
 }
 #content .woocommerce.mpc-container td.mpc-product-quantity .quantity .minus, #content .woocommerce.mpc-container td.mpc-product-quantity .quantity .qty, #content .woocommerce.mpc-container td.mpc-product-quantity .quantity .plus{
-	width: 35px !important;
-	height: 37px !important;
+	width: 55px !important;
+	height: 45px !important;
 }
 /* Mobile CSS */
 @media screen and (max-width: 1600px) {
