@@ -114,22 +114,6 @@ select:-moz-focusring {
 .clear-button a.reset_variations {
 	margin: 0;
 }
-.total-row {
-	font-weight: bold;
-	text-align: right;
-	margin-bottom: 20px;
-	font-size: 1.3em;
-}
-span.mpc-total {
-	text-align: right;
-	display: inline-block;
-	padding-left: 20px;
-}
-.total-label {
-	text-align: right;
-	font-weight: normal;
-	margin-left: 5px;
-}
 .mpc-button {
 	text-align: right;
 }
@@ -137,25 +121,54 @@ span.mpc-total {
 	display: inline-block;
 }
 /* Footer section */
-.mpc-reset-table{
+.mpc-total-wrap{
 	display: inline-block;
-	margin-bottom: 20px;
 }
+.mpc-table-total, .mpc-reset-table, .mpc-reset-table svg{
+	display: inline;
+}
+.mpc-reset-table{
+	margin-left: 10px;
+}
+.mpc-reset-table svg{
+	width: 25px;
+	height: 25px;
+	vertical-align: middle;
+	stroke: #ccc;
+}
+.mpc-reset-table svg:hover{
+	stroke: #000;
+}
+span.mpc-total {
+	margin-left: 5px;
+}
+
 .mpc-add-to-cart {
     display: inline;
     float: right;
 }
+.mpc-add-to-cart input[type="submit"] {
+	padding: 5px 15px;
+    border-radius: 3px;
+}
+.mpc-pagenumbers {
+    text-align: center;
+	margin-top: 20px;
+}
+
+
+
+
+
+
+
 .mpc-product-range {
 	text-align: center;
 }
 .mpc-product-range p {
 	margin-bottom: 5px;
 }
-.mpc-pagenumbers {
-	margin: 0 auto;
-    width: auto;
-    text-align: center;
-}
+
 .mpc-pagenumbers span {
 	line-height: 36px;
 	margin-left: 10px;

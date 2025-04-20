@@ -32,11 +32,9 @@ class MPC_Table_Template {
         add_action( 'mpc_table_column_quantity', array( __CLASS__, 'row_quantity' ), 10 );
         add_action( 'mpc_table_column_buy', array( __CLASS__, 'row_buy' ), 10 );
 
-        add_action( 'mpc_table_footer', array( __CLASS__, 'table_total' ), 10 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'reset_button' ), 15 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'table_total_section' ), 10 );
         add_action( 'mpc_table_footer', array( __CLASS__, 'add_to_cart_button' ), 20 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination_info' ), 25 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination' ), 30 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination_section' ), 30 );
         add_action( 'mpc_table_footer', array( __CLASS__, 'table_data' ), 99 );
 
         add_action( 'wp_footer', array( __CLASS__, 'image_popup' ) );
@@ -496,12 +494,20 @@ class MPC_Table_Template {
 
 
 
-    public static function table_total(){
-        $label = get_option( 'wmc_total_button_text' );
-        $label = empty( $label ) ? __( 'Total', 'multiple-products-to-cart-for-woocommerce' ) : $label;
+    public static function table_total_section(){
         ?>
-        <div class="total-row">
-            <span class="total-label"><?php echo esc_html( $label ); ?></span>
+        <div class="mpc-total-wrap">
+            <?php self::table_total(); ?>
+            <?php self::reset_button(); ?>
+        </div>
+        <?php
+    }
+    public static function table_total(){
+        $total_label = get_option( 'wmc_total_button_text' );
+        $total_label = empty( $total_label ) ? __( 'Total', 'multiple-products-to-cart-for-woocommerce' ) : $total_label;
+        ?>
+        <div class="mpc-table-total">
+            <span class="total-label"><?php echo esc_html( $total_label ); ?></span>
             <span class="mpc-total">
                 <span class="woocommerce-Price-amount amount">
                     <bdi>
@@ -516,12 +522,11 @@ class MPC_Table_Template {
     public static function reset_button(){
         $show_button = get_option( 'wmca_show_reset_btn' ) ?? '';
         if( !empty( $show_button ) && 'on' !== $show_button ) return;
-
-        $label = get_option( 'wmc_reset_button_text' );
-        $label = empty( $label ) ? __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         ?>
         <div class="mpc-reset-table">
-            <input type="reset" value="<?php echo esc_html( $label ); ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.00 32.00">
+                <path d="M16,31.36C7.53,31.36,0.64,24.47,0.64,16S7.53,0.64,16,0.64c4.529,0,8.717,1.932,11.64,5.336V1h0.721v6.36 H22V6.64h5.259C24.466,3.275,20.402,1.36,16,1.36C7.927,1.36,1.36,7.927,1.36,16c0,8.072,6.567,14.64,14.64,14.64 c8.072,0,14.64-6.567,14.64-14.64h0.721C31.36,24.47,24.47,31.36,16,31.36z"></path>
+            </svg>
         </div>
         <?php
     }
@@ -535,6 +540,14 @@ class MPC_Table_Template {
                 class="mpc-add-to-cart single_add_to_cart_button button alt wc-forward"
                 name="proceed"
                 value="<?php echo esc_html( $label ); ?>" />
+        </div>
+        <?php
+    }
+    public static function pagination_section(){
+        ?>
+        <div class="mpc-pagination-wrap">
+            <?php self::pagination(); ?>
+            <?php self::pagination_info(); ?>
         </div>
         <?php
     }
