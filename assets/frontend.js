@@ -1231,7 +1231,7 @@
 	// reset form.
 	$( 'body' ).on(
 		'click',
-		'.mpc-reset',
+		'.mpc-reset-table',
 		function () {
 			window.location.reload();
 		}

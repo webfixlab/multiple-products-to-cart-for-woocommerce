@@ -136,8 +136,53 @@ span.mpc-total {
 .mpc-button > div {
 	display: inline-block;
 }
+/* Footer section */
+.mpc-reset-table{
+	display: inline-block;
+	margin-bottom: 20px;
+}
+.mpc-add-to-cart {
+    display: inline;
+    float: right;
+}
 .mpc-product-range {
-	margin-right: 15px;
+	text-align: center;
+}
+.mpc-product-range p {
+	margin-bottom: 5px;
+}
+.mpc-pagenumbers {
+	margin: 0 auto;
+    width: auto;
+    text-align: center;
+}
+.mpc-pagenumbers span {
+	line-height: 36px;
+	margin-left: 10px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	padding: 0 14px;
+}
+.mpc-pagenumbers span:first-child {
+	margin-left: 0;
+}
+.mpc-pagenumbers span.mpc-divider {
+	border: none;
+	font-weight: bold;
+	letter-spacing: 3px;
+}
+.mpc-pagenumbers span.current {
+	color: white;
+}
+
+
+button.mpce-single-add, .mpc-button input[type=submit], .mpc-button input.mpc-reset {
+	font-weight: normal;
+	font-size: 14px;
+	border-radius: 3px;
 }
 .mpc-button button, .mpc-button input[type=submit], .mpc-button input.mpc-reset {
 	border: 0;
@@ -303,29 +348,6 @@ span.mpc-single-add:hover {
 .mpc-inner-pagination {
 	display: inline-block;
 	position: relative;
-}
-.mpc-pagenumbers {
-	display: inline-block;
-}
-.mpc-pagenumbers span {
-	min-width: 34px;
-	height: 34px;
-	line-height: 32px;
-	margin-left: 10px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	cursor: pointer;
-	display: inline-block;
-	text-align: center;
-	padding: 0 5px;
-}
-.mpc-pagenumbers span.mpc-divider {
-	border: none;
-	font-weight: bold;
-	letter-spacing: 3px;
-}
-.mpc-pagenumbers span.current {
-	color: white;
 }
 .table-query{
 	display: initial;
@@ -551,11 +573,6 @@ span.mpc-mobile-only {
 .hentry .entry-content .mpc-subheader-info a {
 	text-decoration: none;
 	font-size: 18px;
-}
-button.mpce-single-add, .mpc-button input[type=submit], .mpc-button input.mpc-reset {
-	font-weight: normal;
-	font-size: 14px;
-	border-radius: 3px;
 }
 table.mpc-wrap thead tr th:first-child{
 	border-top-left-radius: 4px;

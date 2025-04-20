@@ -520,18 +520,22 @@ class MPC_Table_Template {
         $label = get_option( 'wmc_reset_button_text' );
         $label = empty( $label ) ? __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         ?>
-        <input type="reset" class="mpc-reset" value="<?php echo esc_html( $label ); ?>">
+        <div class="mpc-reset-table">
+            <input type="reset" value="<?php echo esc_html( $label ); ?>">
+        </div>
         <?php
     }
     public static function add_to_cart_button(){
         $label = get_option( 'wmc_button_text' );
         $label = empty( $label ) ? __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         ?>
-        <input
-            type="submit"
-            class="mpc-add-to-cart single_add_to_cart_button button alt wc-forward"
-            name="proceed"
-            value="<?php echo esc_html( $label ); ?>" />
+        <div class="mpc-add-to-cart">
+            <input
+                type="submit"
+                class="mpc-add-to-cart single_add_to_cart_button button alt wc-forward"
+                name="proceed"
+                value="<?php echo esc_html( $label ); ?>" />
+        </div>
         <?php
     }
     public static function pagination_info(){
