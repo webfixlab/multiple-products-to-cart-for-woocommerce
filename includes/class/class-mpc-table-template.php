@@ -306,7 +306,7 @@ class MPC_Table_Template {
     }
     private static function product_price( $data ){
         if( empty( $data['price'] ) ) return;
-        wp_kses(
+        echo wp_kses(
             $data['price'],
             array(
                 'span' => array(
