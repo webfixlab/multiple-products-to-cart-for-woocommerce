@@ -77,6 +77,16 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			add_action( 'mpc_table_footer', array( $this, 'table_footer' ), 10 );
 		}
 
+		private function log( $data ) {
+			if ( true === WP_DEBUG ) {
+				if ( is_array( $data ) || is_object( $data ) ) {
+					error_log( print_r( $data, true ) );
+				} else {
+					error_log( $data );
+				}
+			}
+		}
+
 
 		/**
 		 * Display table image popup
@@ -561,20 +571,18 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 
 			?>
 			<td for="quantity" class="mpc-product-quantity">
-				<div class="quantity">
-					<?php
-						printf(
-							'<input type="number" class="input-text qty text" step="1" min="%s"%s name="quantity%s" value="%s" data-default="%s" title="%s" size="4" inputmode="numeric"%s>',
-							esc_attr( $minimum_qty ),
-							'' === $maximum_qty ? '' : ' max="' . esc_attr( $maximum_qty ) . '"',
-							esc_attr( $this->id ),
-							esc_html( $default_qty ),
-							esc_html( $default_qty ),
-							esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
-							isset( $prod['stock_'] ) ? ' data-current_stock="' . esc_html( $prod['stock_'] ) . '"' : ''
-						);
-					?>
-				</div>
+				<?php
+					printf(
+						'<input type="number" class="" step="1" min="%s"%s name="quantity%s" value="%s" data-default="%s" title="%s" size="4" inputmode="numeric"%s>',
+						esc_attr( $minimum_qty ),
+						'' === $maximum_qty ? '' : ' max="' . esc_attr( $maximum_qty ) . '"',
+						esc_attr( $this->id ),
+						esc_html( $default_qty ),
+						esc_html( $default_qty ),
+						esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
+						isset( $prod['stock_'] ) ? ' data-current_stock="' . esc_html( $prod['stock_'] ) . '"' : ''
+					);
+				?>
 			</td>
 			<?php
 		}

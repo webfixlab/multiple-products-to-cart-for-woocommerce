@@ -1294,6 +1294,48 @@
 	}
 	prepareStickyTable();
 
+	function setStickyTop(wrap){
+		// Dynamic sticky header height calculation.
+		let top = 0;
+		const adminBar = $(document).find('#wpadminbar');
+		if(typeof adminBar !== undefined && adminBar.length > 0){
+			top += adminBar.height();
+		}
+		// console.log('css:top', top);
+
+		const elementorSticky = $(document).find('.elementor-sticky.elementor-sticky--active');
+		if(typeof elementorSticky !== undefined && elementorSticky.length > 0){
+			const device = $(document).find('body').data('elementor-device-mode');
+			// console.log('device', device);
+			elementorSticky.each(function(){
+				if(!$(this).is(':hidden') || (typeof device !== undefined && !$(this).hasClass('elementor-hidden-'+device))){
+					top += $(this).height();
+					// console.log('height::' + $(this).height());
+				}
+			});
+
+			// top += elementorSticky.height();
+			// console.log('elem:h:' + elementorSticky.length, elementorSticky.height(), elementorSticky);
+		}
+		// console.log('css:top:elementor-sticky', top);
+
+		const fixedColumns = wrap.find('.mpc-fixed-header');
+		if(typeof fixedColumns !== undefined && !fixedColumns.is(':hidden')){
+			fixedColumns.css({'top': `${top}px`});
+			const fixedColsHeight = fixedColumns.height();
+			// console.log('fixed-header-height', fixedColsHeight);
+			if(fixedColsHeight){
+				top += fixedColsHeight;
+			}
+		}
+		// console.log('css:top', top);
+
+		const fixedFilters = wrap.find('.mpc-table-header.mpc-fixed-filter');
+		if(typeof fixedFilters !== undefined){
+			fixedFilters.css({'top': `${top}px`});
+		}
+	}
+
 	var screenH = $( window ).height();
 	var screenW = window.screen.width;
 
@@ -1307,6 +1349,8 @@
 			function () {
 				var table = $( this );
 				var wrap  = table.closest( '.mpc-container' );
+
+				setStickyTop(wrap);
 
 				var head = table.offset().top + 50;
 				var tail = table.find( 'tbody tr:last-child' ).offset().top;

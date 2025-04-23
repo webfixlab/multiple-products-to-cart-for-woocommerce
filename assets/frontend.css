@@ -2,7 +2,7 @@ table.mpc-wrap {
 	width: 100%;
 }
 #content table.mpc-wrap, #content table.mpc-wrap tr, #content table.mpc-wrap th, #content table.mpc-wrap td,
-#main-content table.mpc-wrap, #main-content table.mpc-wrap tr, #main-content table.mpc-wrap th, #main-content table.mpc-wrap td {
+#main table.mpc-wrap, #main table.mpc-wrap tr, #main table.mpc-wrap th, #main table.mpc-wrap td {
 	border: 0;
 }
 table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
@@ -165,6 +165,8 @@ span.mpc-total {
 }
 .mpc-button input.mpc-add-to-cart.wc-forward {
 	color: #fff;
+	border-width: 1px;
+	font-size: 16px;
 }
 .mpcpopimg{
 	display: none;
@@ -254,9 +256,11 @@ select.mpc-highlighter{
 }
 .mpc-sort, .mpcp-cat-filter, .mpc-asearch, .mpcp-tag-filter {
 	float: left;
-	margin-bottom: 20px;
 	margin-right: 15px;
 	display: inline-flex;
+}
+.mpc-sort, .mpcp-cat-filter, .mpc-asearch, .mpcp-tag-filter, .mpc-all-select {
+	margin-bottom: 20px;
 }
 .mpc-asearch {
 	position: relative;
@@ -339,47 +343,6 @@ span.mpc-single-add:hover {
 	margin: 0 0 5px 0;
 	border-radius: 4px;
 	border: 1px solid #c3c3c3;
-}
-.mpce-quantity {
-	display: flex;
-	align-items: center;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-}
-.mpce-quantity span {
-	background: #d7d7d769;
-	width: 35px;
-	display: inline-block;
-	text-align: center;
-	line-height: 1.3;
-	color: #000;
-	padding: 8px 0;
-}
-.mpce-quantity span:hover {
-	cursor: pointer;
-	opacity: .9;
-}
-.mpce-quantity span.mpcqdis {
-	opacity: .2;
-	cursor: not-allowed;
-}
-.mpce-quantity input{
-	box-shadow: none;
-	line-height: 25px;
-}
-.mpce-quantity input::-webkit-outer-spin-button,
-.mpce-quantity input::-webkit-inner-spin-button {
-	/* display: none; <- Crashes Chrome on hover */
-	-webkit-appearance: none;
-	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
-}
-.mpce-quantity input {
-	-moz-appearance:textfield; /* Firefox */
-}
-.mpce-quantity input:focus {
-	outline: 1px solid #7f54b3;
 }
 @-webkit-keyframes zoom {
 	from {-webkit-transform:scale(0)}
@@ -577,9 +540,15 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
 	top: -1px;
 	z-index: 999;
 }
-.admin-bar .mpc-fixed-header{
-	top: 31px;
+.mpc-fixed-header, .mpc-fixed-header table {
+	margin: 0;
 }
+.mpc-fixed-header table {
+    border-collapse: collapse;
+}
+/* .admin-bar .mpc-fixed-header{
+	top: 31px;
+} */
 .mpc-fixed-header table thead tr th:first-child{
 	border-bottom-left-radius: 4px;
 }
@@ -602,9 +571,9 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
 	overflow-x: auto;
 	white-space: nowrap;
 }
-.admin-bar .mpc-table-header.mpc-fixed-filter {
+/* .admin-bar .mpc-table-header.mpc-fixed-filter {
 	top: 81px;
-}
+} */
 .mpc-table-header.mpc-fixed-filter > div {
 	margin-bottom: 0;
 }
@@ -660,25 +629,10 @@ span.mpc-fixed-cart {
 		transform: rotate(360deg);
 	}
 }
-/* Elementor section start */
-.woocommerce-page.mpc-container td.mpc-product-quantity .quantity{
-	width: max-content !important;
-	border: 1px solid #d5d5d5 !important;
-}
-.woocommerce.mpc-container td.mpc-product-quantity .quantity .minus, .woocommerce.mpc-container td.mpc-product-quantity .quantity .qty, .woocommerce.mpc-container td.mpc-product-quantity .quantity .plus{
-	width: 33px !important;
-	height: 32px !important;
-}
-.woocommerce.mpc-container .quantity input.qty, .woocommerce.mpc-container .quantity .minus, .woocommerce.mpc-container .quantity .plus{
-	border-radius: unset !important;
-}
-/* Elementor section end */
-#content .woocommerce-page.mpc-container td.mpc-product-quantity .quantity{
-	border: none !important;
-}
-#content .woocommerce.mpc-container td.mpc-product-quantity .quantity .minus, #content .woocommerce.mpc-container td.mpc-product-quantity .quantity .qty, #content .woocommerce.mpc-container td.mpc-product-quantity .quantity .plus{
-	width: 35px !important;
-	height: 37px !important;
+td.mpc-product-quantity input[type="number"] {
+    width: 67px;
+    height: 45px;
+    text-align: center;
 }
 /* Mobile CSS */
 @media screen and (max-width: 1600px) {
@@ -702,12 +656,9 @@ span.mpc-fixed-cart {
 }
 @media screen and (max-width: 767px) {
 	.total-row.mpc-fixed-total-m {
-		bottom: 69px;
+		bottom: 0;
 		width: 100%;
 		left: 0;
-	}
-	#main-content .total-row.mpc-fixed-total-m {
-		bottom: 0;
 	}
 	.mpc-table-header .mpc-all-select label, .mpc-table-header.mpc-fixed-filter .mpc-all-select label{
 		display: inline-block;
@@ -743,11 +694,12 @@ span.mpc-fixed-cart {
 	table.mpc-wrap tbody tr td:nth-child(-n + 2) {
 		margin-top: 0;
 	}
-	table.mpc-wrap tbody tr td.mpc-product-quantity{
+	/* table.mpc-wrap tbody tr td.mpc-product-quantity{
 		height: 34px;
-	}
+	} */
 	#content table.mpc-wrap tbody tr td.mpc-product-quantity{
-		height: 44px;
+		/* height: 44px; */
+		margin-bottom: 20px;
 	}
 	.mpc-container input[type="checkbox"]{
 		margin: 0;
@@ -778,7 +730,7 @@ span.mpc-fixed-cart {
 	td.mpc-product-price.mpc-single-active{
 		display: inline-block;
 	}
-	#content table.mpc-wrap tbody tr, #main-content table.mpc-wrap tbody tr {
+	table.mpc-wrap tbody tr, #main table.mpc-wrap tbody tr {
 		position: relative;
 		margin-bottom: 25px;
 		padding: 7px;
@@ -804,7 +756,7 @@ span.mpc-fixed-cart {
 		top: 4px;
 		right: 10px;
 	}
-	#content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td {
+	#content table.mpc-wrap tbody tr td, #main table.mpc-wrap tbody tr td {
 		padding: 0;
 		text-align: left;
 		background-color: #f5f5f7;
@@ -813,10 +765,10 @@ span.mpc-fixed-cart {
 		text-align: left;
 	}
 	table.mpc-wrap tbody tr:nth-child(2n) td {
-		background: #fdfdfd;
+		background: #f5f5f7;
 	}
 	table.mpc-wrap tbody tr:nth-child(2n).cart_item td, table.mpc-wrap tbody tr:nth-child(2n+1).cart_item td {
-		background: #fff;
+		background: #f5f5f7;
 	}
 	table.mpc-wrap tbody tr:nth-child td .qty {
 		background: #f2f2f2;
@@ -871,7 +823,7 @@ span.mpc-fixed-cart {
 	}
 
 	/* Update: August 01, 2024 */
-	#content table.mpc-wrap tbody tr td.mpc-product-image, #main-content table.mpc-wrap tbody tr td.mpc-product-image {
+	#content table.mpc-wrap tbody tr td.mpc-product-image, #main table.mpc-wrap tbody tr td.mpc-product-image {
 		position: absolute;
 		top: 7px;
 		padding-left: 0;
@@ -888,10 +840,10 @@ span.mpc-fixed-cart {
 	span.mpc-mobile-only {
 		display: block;
 		float: left;
-		padding-right: 3px;
-		font-size: 85%;
+		padding-right: 10px;
+		font-size: 16px;
 		color: #6d6d6d;
-		line-height: 22px;
+		line-height: 30px;
 	}
 	#mpcpop .mpc-gallery{
 		display: flex;
@@ -958,5 +910,10 @@ span.mpc-fixed-cart {
 		width: 41px;
 		height: 35px;
 		margin-left: 12px;
+	}
+
+	/* Storefront theme start */
+	.theme-storefront .total-row.mpc-fixed-total-m{
+		bottom: 69px;
 	}
 }
