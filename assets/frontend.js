@@ -1299,7 +1299,9 @@
 		let top = 0;
 		const adminBar = $(document).find('#wpadminbar');
 		if(typeof adminBar !== undefined && adminBar.length > 0){
-			top += adminBar.height();
+			if(adminBar.css('position') === 'fixed'){
+				top += adminBar.height();
+			}
 		}
 		// console.log('css:top', top);
 

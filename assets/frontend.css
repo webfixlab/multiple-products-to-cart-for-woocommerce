@@ -633,6 +633,7 @@ td.mpc-product-quantity input[type="number"] {
     width: 67px;
     height: 45px;
     text-align: center;
+	border: 1px solid #ccc;
 }
 /* Mobile CSS */
 @media screen and (max-width: 1600px) {
