@@ -1,9 +1,16 @@
 table.mpc-wrap {
 	width: 100%;
+	margin-bottom: 10px;
 }
 #content table.mpc-wrap, #content table.mpc-wrap tr, #content table.mpc-wrap th, #content table.mpc-wrap td,
 #main table.mpc-wrap, #main table.mpc-wrap tr, #main table.mpc-wrap th, #main table.mpc-wrap td {
 	border: 0;
+}
+#content table.mpc-wrap tbody tr:last-child td, #main table.mpc-wrap tbody tr:last-child td {
+	border-bottom: 1px solid #e3e3e3;
+}
+#content table.mpc-wrap tbody tr td:last-child, #main table.mpc-wrap tbody tr td:last-child {
+	text-align: right;
 }
 table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
 	background: #444;
@@ -117,18 +124,17 @@ select:-moz-focusring {
 .total-row {
 	font-weight: bold;
 	text-align: right;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	font-size: 1.3em;
 }
 span.mpc-total {
 	text-align: right;
 	display: inline-block;
-	padding-left: 20px;
+	padding-left: 5px;
 }
 .total-label {
 	text-align: right;
 	font-weight: normal;
-	margin-left: 5px;
 }
 .mpc-button {
 	text-align: right;

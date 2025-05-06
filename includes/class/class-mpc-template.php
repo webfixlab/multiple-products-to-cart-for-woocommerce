@@ -721,31 +721,31 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 
 			// Current page.
 			$page = $mpctable__['paged'];
-			if ( empty( $page ) || '' === $page ) {
-				$page = 1;
-			}
+			$page = empty( $page ) || '' === $page ? 1 : $page;
 
 			// display current page products range.
 			$product_range = '';
-
 			if ( $mpctable__['query']['total'] > $mpctable__['attributes']['limit'] ) {
 				$product_range = ( ( $page - 1 ) * $mpctable__['attributes']['limit'] + 1 ) . ' - ';
 
 				// check if max range is within max.
 				if ( ( $page * $mpctable__['attributes']['limit'] ) <= $mpctable__['query']['total'] ) {
 					$product_range .= ( $page * $mpctable__['attributes']['limit'] );
-
 				} else {
 					$product_range .= $mpctable__['query']['total'];
 				}
 			} else {
 				$product_range = ( ( $page - 1 ) * $mpctable__['attributes']['limit'] + 1 ) . ' - ' . $mpctable__['query']['total'];
 			}
-
 			?>
 			<div class="mpc-product-range" data-page_limit="<?php echo esc_attr( $mpctable__['attributes']['limit'] ); ?>">
 				<p>
-					<?php echo esc_html( $mpctable__['labels']['wmc_pagination_text'] ); ?> <strong><span class="ranges"><?php echo esc_html( $product_range ); ?></span> / <span class="max_product"><?php echo esc_attr( $mpctable__['query']['total'] ); ?></soan></strong>
+					<?php echo sprintf(
+						'%1$s <span class="ranges">%2$s</span> of <span class="max_product">%3$s</span> products',
+						esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
+						wp_kses_post( $product_range ),
+						esc_attr( $mpctable__['query']['total'] )
+					); ?>
 				</p>
 			</div>
 			<?php

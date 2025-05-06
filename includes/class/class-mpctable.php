@@ -1035,7 +1035,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 					'wmc_button_text'               => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_reset_button_text'         => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_total_button_text'         => __( 'Total', 'multiple-products-to-cart-for-woocommerce' ),
-					'wmc_pagination_text'           => __( 'Showing Products', 'multiple-products-to-cart-for-woocommerce' ),
+					'wmc_pagination_text'           => '',
 					'wmc_select_all_text'           => __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_option_text'               => '',
 					'wmc_empty_form_text'           => __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' ),
