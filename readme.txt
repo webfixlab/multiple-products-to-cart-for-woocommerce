@@ -2,8 +2,8 @@
 Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
-Tested up to: 6.8
-Stable tag: 7.4.2
+Tested up to: 6.8.1
+Stable tag: 7.4.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -99,7 +99,9 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 == Screenshots ==
 
-1. Front-end View
-2. Admin settings
-3. Edit table
-4. Mobile view
+1. Frontend view of only simple products
+2. Frontend view of only variable products
+3. Mobile view
+4. Admin settings
+5. All tables page
+6. Edit table
