@@ -3,10 +3,16 @@ table.mpc-wrap {
 	margin-bottom: 10px;
 }
 #content table.mpc-wrap, #content table.mpc-wrap tr, #content table.mpc-wrap th, #content table.mpc-wrap td,
-#main table.mpc-wrap, #main table.mpc-wrap tr, #main table.mpc-wrap th, #main table.mpc-wrap td {
+#main table.mpc-wrap, #main table.mpc-wrap tr, #main table.mpc-wrap th, #main table.mpc-wrap td,
+.entry-content table.mpc-wrap, .entry-content table.mpc-wrap thead td, .entry-content table.mpc-wrap tbody tr td,
+.mpc-fixed-header table, .mpc-fixed-header thead th, .entry-content .mpc-fixed-header table, .entry-content .mpc-fixed-header thead th
+{
 	border: 0;
 }
-#content table.mpc-wrap tbody tr:last-child td, #main table.mpc-wrap tbody tr:last-child td {
+.mpc-fixed-header table, .entry-content .mpc-fixed-header table{
+	margin-bottom: 0;
+}
+#content table.mpc-wrap tbody tr:last-child td, #main table.mpc-wrap tbody tr:last-child td, .entry-content table.mpc-wrap tbody tr:last-child td {
 	border-bottom: 1px solid #e3e3e3;
 }
 #content table.mpc-wrap tbody tr td:last-child, #main table.mpc-wrap tbody tr td:last-child {
@@ -138,6 +144,7 @@ span.mpc-total {
 }
 .mpc-button {
 	text-align: right;
+	margin-bottom: 10px;
 }
 .mpc-button > div {
 	display: inline-block;

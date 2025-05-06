@@ -726,13 +726,13 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			// display current page products range.
 			$product_range = '';
 			if ( $mpctable__['query']['total'] > $mpctable__['attributes']['limit'] ) {
-				$product_range = ( ( $page - 1 ) * $mpctable__['attributes']['limit'] + 1 ) . ' - ';
+				$product_range = number_format( ( $page - 1 ) * $mpctable__['attributes']['limit'] + 1 ) . ' - ';
 
 				// check if max range is within max.
 				if ( ( $page * $mpctable__['attributes']['limit'] ) <= $mpctable__['query']['total'] ) {
-					$product_range .= ( $page * $mpctable__['attributes']['limit'] );
+					$product_range .= number_format( $page * $mpctable__['attributes']['limit'] );
 				} else {
-					$product_range .= $mpctable__['query']['total'];
+					$product_range .= number_format( $mpctable__['query']['total'] );
 				}
 			} else {
 				$product_range = ( ( $page - 1 ) * $mpctable__['attributes']['limit'] + 1 ) . ' - ' . $mpctable__['query']['total'];
@@ -744,7 +744,7 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 						'%1$s <span class="ranges">%2$s</span> of <span class="max_product">%3$s</span> products',
 						esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
 						wp_kses_post( $product_range ),
-						esc_attr( $mpctable__['query']['total'] )
+						esc_attr( number_format( (int) $mpctable__['query']['total'] ) )
 					); ?>
 				</p>
 			</div>
