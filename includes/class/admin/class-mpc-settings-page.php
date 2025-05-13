@@ -71,11 +71,13 @@ class MPC_Settings_Page {
             return;
         }
 
+        MPC_Admin_Helper::save_settings();
+
         self::set();
 
         self::$tab = sanitize_title( $tab );
         if( 'settings' === $tab ){
-            self::get_tab();
+            self::$tab = MPC_Admin_Helper::get_tab();
             self::$tab = 'all-tables' === self::$tab || 'new-table' === self::$tab ? 'general-settings' : self::$tab;
         }
 
@@ -85,20 +87,7 @@ class MPC_Settings_Page {
         self::settings_form();
         self::settings_form_popup();
     }
-
-    /**
-     * Get current tab of admin settings page
-     */
-    public static function get_tab(){
-        if ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) {
-            if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) &&
-                wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
-                self::$tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
-            }
-        }
-    }
-
-
+    
     public static function settings_form(){
         ?>
         <form method="post" action="" id="mpcdp_settings_form" enctype="multipart/form-data">
@@ -295,17 +284,17 @@ class MPC_Settings_Page {
     public static function save_btn() {
         if( in_array( self::$tab, array( 'all-tables', 'export', 'import' ), true ) ) return;
 
-        $long  = 'Save Changes';
-        $short = 'Save';
+        $long  = __( 'Save Changes', 'multiple-products-to-cart-for-woocommerce' );
+        $short = __( 'Save', 'multiple-products-to-cart-for-woocommerce' );
 
         if ( 'new-table' === self::$tab ) {
-            $long  = 'Create Table';
-            $short = 'Create';
+            $long  = __( 'Create Table', 'multiple-products-to-cart-for-woocommerce' );
+            $short = __( 'Create', 'multiple-products-to-cart-for-woocommerce' );
 
             if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
                 if ( isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) ) {
-                    $long  = 'Update Table';
-                    $short = 'Save';
+                    $long  = __( 'Update Table', 'multiple-products-to-cart-for-woocommerce' );
+                    $short = __( 'Save', 'multiple-products-to-cart-for-woocommerce' );
                 }
             }
         }
@@ -379,7 +368,6 @@ class MPC_Settings_Page {
             </div>
             <?php
                 foreach ( $section['fields'] as $field ) {
-                    MPC_Admin_Helper::pre_save_field( $field );
                     self::render_tab_section_field( $field );
                 }
             ?>
@@ -393,9 +381,9 @@ class MPC_Settings_Page {
      * @param array $field Field data.
      */
     public static function render_tab_section_field( $field ){
-        $name  = isset( $field['key'] ) ? $field['key'] : '';
-        $label = isset( $field['label'] ) ? $field['label'] : '';
-        $desc  = isset( $field['desc'] ) ? $field['desc'] : '';
+        $name  = $field['key'] ?? '';
+        $label = $field['label'] ?? '';
+        $desc  = $field['desc'] ?? '';
         ?>
         <div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="<?php echo esc_attr( $name ); ?>">
             <div class="mpcdp_settings_option visible" data-field-id="<?php echo esc_attr( $name ); ?>">
@@ -437,12 +425,11 @@ class MPC_Settings_Page {
         }
 
         foreach ( $field['followup'] as $sfld ) :
-            $name        = isset( $sfld['key'] ) ? $sfld['key'] : '';
-            $label       = isset( $sfld['label'] ) ? $sfld['label'] : '';
-            $desc        = isset( $sfld['desc'] ) ? $sfld['desc'] : '';
-            $placeholder = isset( $sfld['placeholder'] ) ? $sfld['placeholder'] : '';
-
-            $value = get_option( $name );
+            $name        = $sfld['key'] ?? '';
+            $label       = $sfld['label'] ?? '';
+            $desc        = $sfld['desc'] ?? '';
+            $placeholder = $sfld['placeholder'] ?? '';
+            $value       = get_option( $name );
             ?>
             <div class="mpcdp_settings_option" data-field-id="<?php echo esc_attr( $field['key'] ); ?>" data-depends-on-<?php echo esc_attr( $field['key'] ); ?>="on" data-depends-on="<?php echo esc_attr( $field['key'] ); ?>" data-visible="false" style="display: <?php echo esc_attr( $display ); ?>;">
                 <div class="mpcdp_row">

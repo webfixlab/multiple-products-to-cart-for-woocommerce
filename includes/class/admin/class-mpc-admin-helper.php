@@ -41,63 +41,68 @@ class MPC_Admin_Helper {
     }
 
     /**
-     * Pre-process settings field data
-     *
-     * @param array $field settings field data.
+     * Get current tab of admin settings page
      */
-    public static function pre_save_field( $field ) {
-        if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
-            return;
+    public static function get_tab(){
+        $tab = '';
+        if ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) {
+            if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) &&
+                wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
+                $tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
+            }
         }
-        
-        if ( ! isset( $_POST ) || empty( $_POST ) ) {
-            return;
-        }
-        
-        self::set();
-
-        self::save_field( $field );
-        
-        // handle followup also.
-        if ( ! isset( $field['followup'] ) || empty( $field['followup'] ) ) {
-            return;
-        }
-        
-        foreach ( $field['followup'] as $followup_field ) {
-            self::save_field( $followup_field );
-        }
+        return $tab;
     }
 
     /**
-     * Save settings field data
-     *
-     * @param array $field settings field data.
+     * Pre-process settings field data
      */
-    public static function save_field( $field ) {
-        $name = $field['key'];
-
-        // without a name/key to find or save data, skip.
-        if ( ! isset( $name ) || empty( $name ) ) {
-            return;
-        }
-
+    public static function save_settings() {
         if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
             return;
         }
+        
+        if ( ! isset( $_POST ) || empty( $_POST ) ) return;
+        
+        self::set();
 
-        // only checkbox field and no data? save it as unchecked (no).
-        if ( 'checkbox' === $field['type'] && ! isset( $_POST[ $name ] ) ) {
-            update_option( $name, 'no' );
-            return;
+        $post_field_keys = [];
+        foreach($_POST as $key => $value){
+            if( 'mpc_admin_settings' === $key || '_wp_http_referer' === $key ) continue;
+
+            $value = sanitize_text_field( wp_unslash( $value) );
+            update_option( $key, $value );
+
+            $post_field_keys[] = $key;
         }
 
-        // without post data, skip.
-        if ( ! isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) ) {
-            delete_option( $name );
-            return;
-        }
+        // delete checkbox if it's not in post field keys.
+        self::scrape_checkboxes( $post_field_keys );
+    }
 
-        update_option( $name, sanitize_text_field( wp_unslash( $_POST[ $name ] ) ) );
+    /**
+     * Remove checkbox values which are missing from post request
+     *
+     * @param array $post_field_keys All field names present in post request.
+     */
+    public static function scrape_checkboxes( $post_field_keys ){
+        if(empty(self::$data['fields'])) return;
+
+        $tab = self::get_tab();
+        if(empty($tab)) return;
+
+        foreach(self::$data['fields'] as $page => $sections){
+            if($page !== $tab) continue;
+
+            foreach($sections as $section){
+                if(empty($section['fields'])) continue;
+                foreach($section['fields'] as $field){
+                    if($field['type'] === 'checkbox' && !in_array( $field['key'], $post_field_keys, true)){
+                        delete_option( $field['key'] );
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -234,5 +239,17 @@ class MPC_Admin_Helper {
         }
 
         return false;
+    }
+
+
+
+    private static function log( $data ) {
+        if ( true === WP_DEBUG ) {
+            if ( is_array( $data ) || is_object( $data ) ) {
+                error_log( print_r( $data, true ) );
+            } else {
+                error_log( $data );
+            }
+        }
     }
 }

@@ -532,7 +532,7 @@ $mpc__['fields'] = array(
 					'default'     => '',
 					'label'       => __( 'Pagination', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
-					'placeholder' => __( 'Showing', 'multiple-products-to-cart-for-woocommerce' ),
+					'placeholder' => __( '', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				array(
 					'key'         => 'wmc_select_all_text',

@@ -166,6 +166,9 @@ class MPC_Table_Template {
             'wmc_ct_quantity' => __( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
             'wmc_ct_buy'      => __( 'Buy', 'multiple-products-to-cart-for-woocommerce' )
         );
+
+        // Remove pro columns from free version.
+        $cols = array_diff( $cols, array( 'wmc_ct_category', 'wmc_ct_stock', 'wmc_ct_rating', 'wmc_ct_tag', 'wmc_ct_sku' ) );
         ?>
         <thead>
             <tr>
@@ -224,7 +227,7 @@ class MPC_Table_Template {
         $data = $mpc_frontend__['row_data'];
         $img  = MPC_Frontend_Helper::get_product_image( $data );
         ?>
-        <td for="image" class="mpc-product-image" data-pimg-thumb="<?php echo esc_url( $img['thumb'] ); ?>" data-pimg-full="<?php echo esc_url( $img['full'] ); ?>">
+        <td for="image" class="mpc-product-image">
             <div class="mpcpi-wrap">
                 <?php if ( $img['show_sale'] ) : ?>
                     <span class="wfl-sale">
@@ -295,7 +298,7 @@ class MPC_Table_Template {
         $data = $mpc_frontend__['row_data'];
         ?>
         <td for="price" class="mpc-product-price">
-            <div class="mpc-single-price" style="display:none;">
+            <div class="mpc-single-price">
                 <?php self::price_range( $data ); ?>
             </div>
             <div class="mpc-range">
@@ -351,10 +354,10 @@ class MPC_Table_Template {
             ?>
             <div class="variation-group">
                 <select class="<?php echo esc_attr( $name ); ?>" name="attribute_<?php echo esc_attr( $name . $data['id'] ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name ); ?>">
-                    <option value="">
-                        <?php echo empty( $choose ) ? '' : esc_html( $choose ) . '&nbsp;'; ?>
-                        <?php echo wc_attribute_label( $attribute ); ?>
-                    </option>
+                    <option value=""><?php
+                        echo empty( $choose ) ? '' : esc_html( $choose ) . '&nbsp;';
+                        echo wc_attribute_label( $attribute );
+                        ?></option>
                     <?php self::attribute_options( $attribute, $options, $data ); ?>
                 </select>
             </div>
@@ -383,10 +386,9 @@ class MPC_Table_Template {
     private static function option_item( $slug, $name, $data ){
         ?>
         <option
-            value="<?php echo esc_attr( $slug ); ?>"
-            <?php self::select_option( $slug ); ?>>
-            <?php echo esc_html( $name ); ?>
-        </option>
+            value="<?php echo esc_attr( $name ); ?>"
+            <?php self::select_option( $slug ); ?>
+            ><?php echo esc_html( $name ); ?></option>
         <?php
     }
     private static function select_option( $slug ){
@@ -525,7 +527,7 @@ class MPC_Table_Template {
         ?>
         <div class="mpc-reset-table">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.00 32.00">
-                <path d="M16,31.36C7.53,31.36,0.64,24.47,0.64,16S7.53,0.64,16,0.64c4.529,0,8.717,1.932,11.64,5.336V1h0.721v6.36 H22V6.64h5.259C24.466,3.275,20.402,1.36,16,1.36C7.927,1.36,1.36,7.927,1.36,16c0,8.072,6.567,14.64,14.64,14.64 c8.072,0,14.64-6.567,14.64-14.64h0.721C31.36,24.47,24.47,31.36,16,31.36z"></path>
+                <path d="M27.1 14.313V5.396L24.158 8.34c-2.33-2.325-5.033-3.503-8.11-3.503C9.902 4.837 4.901 9.847 4.899 16c.001 6.152 5.003 11.158 11.15 11.16 4.276 0 9.369-2.227 10.836-8.478l.028-.122h-3.23l-.022.068c-1.078 3.242-4.138 5.421-7.613 5.421a8 8 0 0 1-5.691-2.359A7.993 7.993 0 0 1 8 16.001c0-4.438 3.611-8.049 8.05-8.049 2.069 0 3.638.58 5.924 2.573l-3.792 3.789H27.1z"></path>
             </svg>
         </div>
         <?php
@@ -560,16 +562,14 @@ class MPC_Table_Template {
 
         // Table attribute: hidden pagination info.
         $atts = $mpc_frontend__['atts'] ?? [];
-        if( isset( $atts['pagination'] ) && !$atts['pagination'] ) return;
+        if( isset( $atts['pagination'] ) && ( 'false' === $atts['pagination'] || !$atts['pagination'] ) ) return;
 
         // Found less products than posts per page.
-        if( $mpc_frontend__['found_posts'] <= $atts['limit'] ) return;
+        $limit = isset( $atts['limit'] ) && !empty( $atts['limit'] ) ? $atts['limit'] : 10;
+        if( $mpc_frontend__['found_posts'] <= $limit ) return;
 
         $label = get_option( 'wmc_pagination_text' );
-        $label = empty( $label ) ? __( 'Showing', 'multiple-products-to-cart-for-woocommerce' ) : $label;
-
         $page  = MPC_Frontend_Helper::get_current_page();
-        $limit = $atts['limit'];
         $total = $mpc_frontend__['found_posts'];
 
         $start = ( $page - 1 ) * $limit + 1; // Example: pa 1, li 10, st is 1.

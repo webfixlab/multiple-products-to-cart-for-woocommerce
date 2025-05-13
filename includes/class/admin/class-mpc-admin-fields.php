@@ -81,9 +81,9 @@ if ( ! class_exists( 'MPC_Admin_Fields' ) ) {
 
             self::$field = $field;
 
-            self::$name        = isset( $field['key'] ) ? $field['key'] : '';
-			self::$placeholder = isset( $field['placeholder'] ) ? $field['placeholder'] : '';
-			self::$class       = isset( $field['class'] ) ? $field['class'] : '';
+            self::$name        = $field['key'] ?? '';
+			self::$placeholder = $field['placeholder'] ?? '';
+			self::$class       = $field['class'] ?? '';
 
 			self::$value = get_option( self::$name );
 			if ( empty( self::$value ) && isset( $field['default'] ) ) {
@@ -176,15 +176,15 @@ if ( ! class_exists( 'MPC_Admin_Fields' ) ) {
          * Checkbox type input field
          */
         public static function checkbox(){
-            $checked   = ! empty( $value ) && ( 'on' === $value || true === $value ) ? 'checked' : '';
-
             $label_on  = self::$field['switch_text']['on'] ?? '';
             $label_off = self::$field['switch_text']['off'] ?? '';
+            $checked   = !empty( self::$value ) && ( 'on' === self::$value || true === self::$value ) ? 'checked' : '';
             ?>
             <div class="input-field" style="display: none;">
                 <input
                     type="checkbox"
                     name="<?php echo esc_attr( self::$name ); ?>"
+                    value="on"
                     id="<?php echo esc_attr( self::$name ); ?>"
                     class="hurkanSwitch-switch-input <?php echo esc_attr( self::$pro_cls ); ?>"
                     title="<?php echo esc_html( self::$pro_label ); ?>"
@@ -237,7 +237,7 @@ if ( ! class_exists( 'MPC_Admin_Fields' ) ) {
          * Switch box field
          */
         public static function swich_box(){
-            $checked   = ! empty( $value ) && ( 'on' === $value || true === $value ) ? 'on' : 'off';
+            $checked   = ! empty( self::$value ) && ( 'on' === self::$value || true === self::$value ) ? 'on' : 'off';
 
             $label_on  = self::$field['switch_text']['on'] ?? '';
             $label_off = self::$field['switch_text']['off'] ?? '';

@@ -314,23 +314,16 @@ class MPC_Frontend_Helper {
     }
 
 
+
     public static function get_product_data( $id ){
         $product = wc_get_product( $id );
 
-        $data = array(
-            'id'                => $id,
-            'type'              => $product->get_type(),
-            'title'             => $product->get_title(),
-            'url'               => $product->get_permalink(),
-            'desc'              => $product->get_short_description(),
-            'price'             => $product->get_price_html(),
-            'sold_individually' => $product->is_sold_individually(),
-            'sku'               => $product->get_sku(),
-            'stock'             => $product->get_stock_quantity(),
-            'stock_status'      => $product->get_stock_status(),
-            'on_sale'           => $product->is_on_sale(),
-            'backorder'         => $product->get_backorders(),
-        );
+        $data                      = self::get_common_data( $product );
+        $data['id']                = $id;
+        $data['stock']             = $product->get_stock_quantity();
+        $data['on_sale']           = $product->is_on_sale();
+        $data['backorder']         = $product->get_backorders();
+        $data['sold_individually'] = $product->is_sold_individually();
 
         if('variable' === $data['type']){
             $data['atts']         = $product->get_variation_attributes();
@@ -376,20 +369,10 @@ class MPC_Frontend_Helper {
     public static function get_child_data( $id, $parent ){
         $product = wc_get_product( $id );
 
-        $data = array(
-            'id'           => $id,
-            'type'         => $product->get_type(),
-            'title'        => $product->get_title(),
-            'url'          => $product->get_permalink(),
-            'desc'         => $product->get_short_description(),
-            'price'        => $product->get_price_html(),
-            'sku'          => $product->get_sku(),
-            'stock'        => $product->get_stock_quantity(),
-            'in_stock'     => $product->is_in_stock(),
-            'stock_status' => $product->get_stock_status(),
-            'img_id'       => $product->get_image_id(),
-            'ss_fee'       => get_post_meta( $id, '_subscription_sign_up_fee', true ), // Subscription product's sign up fee.
-        );
+        $data           = self::get_common_data( $product );
+        $data['id']     = $id;
+        $data['img_id'] = $product->get_image_id();
+        $data['ss_fee'] = get_post_meta( $id, '_subscription_sign_up_fee', true ); // Subscription product's sign up fee.
 
         if( 'variation' === $data['type'] ){
             $data['atts'] = $product->get_attributes();
@@ -414,6 +397,24 @@ class MPC_Frontend_Helper {
         $data['price'] = self::extract_price( $data['price'] );
         $data['stock'] = self::prepare_stock( $data );
         return $data;
+    }
+    public static function get_common_data( $product ){ // properties common for parent and child product.
+        $common = array(
+            'type'         => $product->get_type(),
+            'title'        => $product->get_title(),
+            'url'          => $product->get_permalink(),
+            'desc'         => $product->get_description(),
+            'price'        => $product->get_price_html(),
+            'sku'          => $product->get_sku(),
+            'stock'        => $product->get_stock_quantity(),
+            'stock_status' => $product->get_stock_status(),
+        );
+
+        $common['desc'] = empty( $common['desc'] ) ? $product->get_description() : $common['desc'];
+        $common['desc'] = strlen( $common['desc'] ) > 150 ? substr( $common['desc'], 0, 150 ) . '...' : $common['desc'];
+        if( strlen( $common['desc'] ) > 150 ) $common['desc'] = substr( $common['desc'], 0, 150 ) . '...';
+
+        return $common;
     }
 
     public static function extract_price( $html ){

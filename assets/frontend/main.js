@@ -20,30 +20,6 @@
 		}
 	}
 
-	// for fixed price variable product - handle it's price.
-	function mpc_fixed_price_variable_product( row ){
-		if ( row.find( '.mpc-range' ).text() == row.find( '.mpc-single-price' ).text() ) {
-			row.find( '.mpc-single-price' ).hide();
-		}
-		if ( typeof row.find( '.mpc-range ins' ).text() != 'undefined' ) {
-			if ( row.find( '.mpc-range ins' ).text() == row.find( '.mpc-single-price' ).text() ) {
-				row.find( '.mpc-single-price' ).hide();
-			}
-		}
-	}
-
-	// show specific image or default woocommerce one.
-	function mpc_variation_image( row, data ){
-		var img = data['image'];
-		if ( img['full'].indexOf( 'woocommerce-placeholder' ) != -1 ) {
-			row.find( '.mpc-product-image .mpcpi-wrap img' ).attr( 'src', row.find( '.mpc-product-image' ).data( 'pimg-thumb' ) );
-			row.find( '.mpc-product-image .mpcpi-wrap img' ).attr( 'data-fullimage', row.find( '.mpc-product-image' ).data( 'pimg-full' ) );
-		} else {
-			row.find( '.mpc-product-image .mpcpi-wrap img' ).attr( 'src', img['thumbnail'] );
-			row.find( '.mpc-product-image .mpcpi-wrap img' ).attr( 'data-fullimage', img['full'] );
-		}
-	}
-
 	// get variation id.
 	function mpc_get_variation_id( row, data ){
 		var total_select = 0, actual_selected = 0, varid = 0;
@@ -74,25 +50,6 @@
 			}
 		}
 		return varid;
-	}
-
-	// shows specific price for the selected option.
-	function mpc_row_price_handler( row, price ){
-		if ( typeof price == 'undefined' ) {
-			row.find( '.mpc-single-price span.total-price' ).text( '' );
-		} else {
-			row.find( '.mpc-single-price' ).show();
-			row.find( '.mpc-single-price span.total-price' ).text( price );
-			if ( ! row.find( '.mpc-product-price' ).hasClass( 'mpc-single-active' ) ) {
-				row.find( '.mpc-product-price' ).addClass( 'mpc-single-active' );
-			}
-		}
-		if ( row.find( '.mpc-single-price span.total-price' ).text().length == 0 ) {
-			row.find( '.mpc-single-price' ).hide();
-			if ( row.find( '.mpc-product-price' ).hasClass( 'mpc-single-active' ) ) {
-				row.find( '.mpc-product-price' ).removeClass( 'mpc-single-active' );
-			}
-		}
 	}
 
 	function mpc_is_variable_product( row ){
@@ -137,33 +94,6 @@
 		}
 
 		return quantity;
-	}
-
-	// update variation short description.
-	function mpc_handle_variation_description( row, desc ){
-
-		// wheather to add variation description or not.
-		var add_desc = false;
-
-		if ( typeof desc != 'undefined' && desc.length > 0 ) {
-			// update flag | add description.
-			add_desc = true;
-		}
-
-		if ( add_desc === false ) {
-			// remove description.
-			row.find( '.mpc-var-desc' ).remove();
-
-		} else {
-			// add description.
-			if ( row.find( '.mpc-var-desc' ) != 'undefined' && row.find( '.mpc-var-desc' ).length > 0 ) {
-				// update.
-				row.find( '.mpc-var-desc' ).replaceWith( '<p class="mpc-var-desc">' + desc + '</p>' );
-			} else {
-				// add.
-				row.find( '.mpc-product-variation' ).append( '<p class="mpc-var-desc">' + desc + '</p>' );
-			}
-		}
 	}
 
 	function row_in_stock( row ){
@@ -308,70 +238,6 @@
 		};
 	}
 
-	// dynamic total price calculation.
-	function mpc_dynamic_product_pricing(){
-		$( 'body' ).find( 'form.mpc-cart' ).each(
-			function () {
-				var table = $( this );
-				var total = 0.0;
-
-				// find if at least one checkbox is checked.
-				var checked = 0;
-
-				table.find( '.cart_item' ).each(
-					function () {
-						var value = mpc_dynamic_pricing_for_row( $( this ) );
-						total     = total + value['price'] * value['quantity'];
-
-						if ( $( this ).find( '.mpc-product-select input[type="checkbox"]' ).is( ':checked' ) ) {
-								checked++;
-						}
-					}
-				);
-
-				total = total.toLocaleString(
-					mpc_frontend.locale,
-					{
-						minimumFractionDigits: mpc_frontend.dp,
-						maximumFractionDigits: mpc_frontend.dp,
-						useGrouping: true
-					}
-				);
-
-				table.find( '.mpc-total span.total-price' ).text( total );
-
-				// floating total.
-				var wrap = table.closest( '.mpc-container' );
-				if ( checked == 0 ) {
-					wrap.find( '.mpc-floating-total' ).removeClass( 'active' );
-				} else {
-						wrap.find( '.mpc-floating-total' ).addClass( 'active' );
-				}
-				wrap.find( '.mpc-floating-total span.total-price' ).text( total );
-			}
-		);
-	}
-
-	// check if all options are selected for a variable product.
-	function mpc_if_all_options_selected( row ){
-		var total = selected = 0;
-
-		row.find( 'select' ).each(
-			function () {
-				total++;
-				if ( $( this ).val().length > 0 ) {
-						selected++;
-				}
-			}
-		);
-
-		if ( total == selected && total != 0 ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	function mpc_render_gallery( item ){
 		var row = item.closest( 'tr.cart_item' );
 
@@ -403,28 +269,6 @@
 			}
 		}
 
-	}
-	// load image popup.
-	function mpc_image_popup_loader( item ){
-		var row  = item.closest( 'tr.cart_item' );
-		var link = item.attr( 'data-fullimage' );
-
-		if ( typeof link != 'undefined' && link.length > 0 ) {
-		} else {
-			link = item.attr( 'data-fullimage' );
-		}
-
-		var mpop = $( '#mpcpop' );
-		mpop.find( 'img' ).attr( 'src', link );
-
-		if ( typeof image_src != 'undefined' && image_src != '' ) {
-			mpop.find( 'img' ).attr( 'src', image_src );
-		}
-
-		// handle gallery.
-		mpc_render_gallery( item );
-
-		mpop.show();
 	}
 
 	/**
@@ -988,19 +832,6 @@
 	);
 
 	/**
-	 * One time section after table load
-	 * Handle dynamic all select checkbox status at page load
-	 */
-	$( 'body' ).find( '.mpc-container' ).each(
-		function () {
-			mpc_init_select_all( $( this ) );
-		}
-	);
-
-	// on document load, calculate price.
-	mpc_dynamic_product_pricing(); // table.
-
-	/**
 	 * User Events section
 	 * On popup box clicked, hide it
 	 */
@@ -1017,143 +848,16 @@
 		}
 	);
 
-	// on close button of popup box clicked, hide it.
-	$( 'body' ).on(
-		'click',
-		'span.mpcpop-close',
-		function () {
-			$( '#mpcpop' ).hide();
-		}
-	);
 
-	// variation option clear button handler.
-	function variation_clear_button( row ){
-		// check if all select boxes are empty. If yes, remove clear button.
-		var has_value = false;
 
-		row.find( 'select' ).each(
-			function () {
-				if ( $( this ).val().length > 0 ) {
-						has_value = true;
-				}
-			}
-		);
 
-		if ( has_value == false ) {
-			row.find( '.clear-button' ).html( '' );
-		} else {
-			row.find( '.clear-button' ).html( '<a class="reset_variations" href="#">' + mpc_frontend.reset_var + '</a>' );
-		}
-	}
 
-	// on variation option change event.
-	$( 'body' ).on(
-		'change',
-		'table.mpc-wrap select',
-		function () {
-			var row = $( this ).closest( 'tr.cart_item' );
 
-			// for stock handling purpose.
-			if ( row_stock_handler( row ) ) {
 
-				// trigger automatic checkbox check if all options are selected (irrespective of their values).
-				if ( mpc_if_all_options_selected( row ) ) {
-					var chk = row.find( 'input[type="checkbox"]' );
-					chk.prop( 'checked', true );
-				}
 
-				mpc_dynamic_product_pricing(); // row.
-			}
+	
 
-			// clear variations button handler.
-			variation_clear_button( row );
-		}
-	);
 
-	// on variation clear button click event.
-	$( 'body' ).on(
-		'click',
-		'a.reset_variations',
-		function (e) {
-			e.preventDefault();
-
-			// remove all selected values of variation dropdowns.
-			var row = $( this ).closest( '.mpc-product-variation' );
-			row.find( 'select' ).each(
-				function () {
-					$( this ).val( '' );
-					$( this ).trigger( 'change' );
-				}
-			);
-
-			row.find( '.mpc-var-desc' ).empty();
-		}
-	);
-
-	function quantity_handler( row ){
-		var qty = parseInt( row.find( 'input[type="number"]' ).val() );
-
-		// filter only integer.
-		if ( qty < 0 ) {
-			row.find( 'input[type="number"]' ).val( 0 );
-		}
-
-		if ( mpc_is_variable_product( row ) ) {
-			// variable product.
-			var instock = row_in_stock( row );
-			if ( instock != -1 && instock != 1 ) {
-				// has stock quantity.
-				instock = instock.replace( /[A-Za-z]/g, '' );
-				instock = instock.replace( ' ', '' );
-
-				if ( instock.length > 0 ) {
-					var stock = parseInt( instock );
-					if ( qty > stock ) {
-						row.find( 'input[type="number"]' ).val( stock );
-					}
-				}
-			}
-		} else {
-			// simple product.
-			var stock = row.attr( 'stock' );
-
-			if ( typeof stock != 'undefined' && stock.length > 0 ) {
-				stock = parseInt( stock );
-
-				if ( qty > stock ) {
-					row.find( 'input[type="number"]' ).val( stock );
-				}
-			}
-		}
-	}
-	// on quantity change event, calculate total price.
-	$( 'body' ).on(
-		'change paste keyup cut select',
-		'.mpc-product-quantity input[type="number"]',
-		function () {
-			quantity_handler( $( this ).closest( 'tr.cart_item' ) );
-
-			mpc_dynamic_product_pricing(); // row.
-		}
-	);
-
-	// on add to cart checkbox checked event, calculate total price.
-	$( 'body' ).on(
-		'click',
-		'input[type="checkbox"]',
-		function () {
-			mpc_dynamic_product_pricing(); // row.
-		}
-	);
-
-	// on click image, show image popup.
-	$( 'body' ).on(
-		'click',
-		'.mpc-product-image img',
-		function () {
-			mpc_image_popup_loader( $( this ) );
-		}
-	);
 	$( 'body' ).on(
 		'click',
 		'.mpc-product-image .moregallery',
@@ -1203,30 +907,6 @@
 
 		input.trigger( 'click' );
 	}
-	$( 'body' ).on(
-		'click',
-		'.mpc-check-all',
-		function () {
-			var wrap      = $( this ).closest( '.mpc-container' );
-			var do_select = wrap.find( '.mpc-check-all' ).attr( 'data-state' );
-
-			if ( typeof do_select == 'undefined' || do_select === 'not' ) {
-				do_select = true;
-			} else {
-				do_select = false;
-			}
-
-			wrap.find( 'tr.cart_item' ).each(
-				function () {
-					handle_row_select( $( this ), do_select );
-				}
-			);
-
-			do_select = do_select === false ? 'not' : 'checked';
-
-			wrap.find( '.mpc-check-all' ).attr( 'data-state', do_select );
-		}
-	);
 
 	// reset form.
 	$( 'body' ).on(
@@ -1234,16 +914,6 @@
 		'.mpc-reset-table',
 		function () {
 			window.location.reload();
-		}
-	);
-
-	// on ESC key pressed, hide popup box.
-	$( document ).on(
-		'keyup',
-		function ( e ) {
-			if ( e.keyCode == 27 ) {
-				$( '#mpcpop' ).hide();
-			}
 		}
 	);
 
@@ -1278,140 +948,6 @@
 		'.mpcp-tag-filter select',
 		function () {
 			table_loader_by_tag( parseInt( $( this ).find( 'option:selected' ).val() ), 'tags', $( this ).closest( '.mpc-container' ) );
-		}
-	);
-
-	// table: sticky header.
-	function prepareStickyTable(){
-		$( 'body' ).find( 'table.mpc-wrap' ).each(
-			function () {
-				var table = $( this );
-				if ( table.find( 'thead' ).length && ! table.find( 'thead' ).is( ':hidden' ) ) {
-					renderStickyHead( $( this ) );
-				}
-			}
-		);
-	}
-	prepareStickyTable();
-
-	var screenH = $( window ).height();
-	var screenW = window.screen.width;
-
-	var oldScrolls = {};
-	function tableScroll(currentScroll){
-		var currentScroll = $( window ).scrollTop();
-		var cs            = currentScroll; // current scroll offset.
-
-		var tk = 0; // table key.
-		$( 'body' ).find( 'table.mpc-wrap' ).each(
-			function () {
-				var table = $( this );
-				var wrap  = table.closest( '.mpc-container' );
-
-				var head = table.offset().top + 50;
-				var tail = table.find( 'tbody tr:last-child' ).offset().top;
-
-				// table head.
-				let products   = table.find( 'tbody tr' );
-				let tableStart = products[1] ? $( products[1] ).offset().top : 0;
-				let tableEnd   = $( products[products.length - 1] ).offset().top + $( products[products.length - 1] )[0].offsetHeight;
-				if ( (cs + screenH) > tableStart && (cs + screenH) < tableEnd ) {
-					wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' ).addClass( 'mpc-fixed-total-m' );
-					wrap.find( '.total-row .mpc-fixed-cart' ).remove();
-					wrap.find( '.total-row' ).append( `<span class="mpc-fixed-cart">${mpc_frontend.cart_text}</span>`);
-				} else {
-					wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' );
-					wrap.find( '.total-row .mpc-fixed-cart' ).remove();
-				}
-
-				// fixed header.
-				if ( screenW > 500 ) {
-					if ( cs > head && cs < tail ) {
-						if ( table.find( 'thead' ).length ) {
-							table.closest( 'form' ).find( '.mpc-fixed-header' ).show();
-						}
-					}
-					if ( cs < head || cs > tail ) {
-						if ( table.find( 'thead' ).length ) {
-							table.closest( 'form' ).find( '.mpc-fixed-header' ).hide();
-						}
-					}
-				}
-
-				// filter section.
-				if ( currentScroll < oldScrolls[tk] && currentScroll > head && currentScroll < tail ) {
-					var height = wrap.find( '.mpc-table-header' )[0].offsetHeight + 20;
-					if ( wrap.find( '.mpc-all-select' ).length ) {
-						height += 32;
-					}
-
-					if ( ! wrap.find( '.mpc-table-header' ).hasClass( 'mpc-fixed-filter' ) ) {
-						// if check all products exists, add it's height.
-						wrap.css( 'margin-top', `${height}px` );
-					}
-
-					wrap.find( '.mpc-table-header' ).removeClass( 'mpc-fixed-filter' ).addClass( 'mpc-fixed-filter' );
-				} else {
-					wrap.find( '.mpc-table-header' ).removeClass( 'mpc-fixed-filter' );
-					wrap.css( 'margin-top', '20px' );
-				}
-				oldScrolls[tk] = currentScroll;
-				tk++;
-			}
-		);
-	}
-	$( window ).on(
-		'scroll',
-		function () {
-			tableScroll();
-		}
-	);
-
-	function prepareFreeHead(){
-		$( 'body' ).find( '.mpc-container' ).each(
-			function () {
-				var wrap      = $( this );
-				var elemCount = 0;
-				wrap.find( '.mpc-table-header > div' ).each(
-					function () {
-						elemCount++;
-					}
-				);
-				if ( elemCount < 3 ) {
-					wrap.find( '.mpc-table-header' ).removeClass( 'mpc-free-head' ).addClass( 'mpc-free-head' );
-				}
-			}
-		);
-	}
-	if ( screenW < 500 ) {
-		prepareFreeHead();
-	}
-	$( window ).on(
-		'resize',
-		function () {
-			prepareStickyTable();
-			tableScroll();
-		}
-	);
-
-	$( document ).on(
-		'click',
-		'.mpc-to-top',
-		function () {
-			var btn = $( this );
-			$( 'html, body' ).animate(
-				{
-					scrollTop: btn.closest( 'form' ).offset().top - 80
-				},
-				'slow'
-			);
-		}
-	);
-	$( document ).on(
-		'click',
-		'.mpc-fixed-cart',
-		function () {
-			$( this ).closest( '.mpc-container' ).find( '.mpc-cart .mpc-add-to-cart' ).trigger( 'click' );
 		}
 	);
 })( jQuery );

@@ -134,9 +134,10 @@ select:-moz-focusring {
 }
 .mpc-table-total, .mpc-reset-table, .mpc-reset-table svg{
 	display: inline;
+	vertical-align: middle;
 }
 .mpc-reset-table{
-	margin-left: 10px;
+	margin-left: 5px;
 }
 .mpc-reset-table svg{
 	width: 20px;
@@ -301,10 +302,6 @@ h4.mpcpop-title {
 }
 #mpcpop .mpcpop-close:hover:before{
 	cursor: pointer;
-}
-.mpc-single-active .mpc-single-price {
-	/*font-size: 130%;*/
-	font-weight: 600;
 }
 p.mpcpop-price {
 	color: #fff;
@@ -686,14 +683,18 @@ span.mpc-fixed-cart {
 	animation: sp-anime 0.8s infinite linear;
 	margin-left: 5px;
 }
-.mpc-fixed-filter .mpcp-loading{
-	width: 31px;
-	height: 30px;
-}
 @keyframes sp-anime {
 	100% {
 		transform: rotate(360deg);
 	}
+}
+.mpc-single-price {
+	display: none;
+    font-weight: 600;
+}
+.mpc-fixed-filter .mpcp-loading{
+	width: 31px;
+	height: 30px;
 }
 /* Elementor section start */
 .woocommerce-page.mpc-container td.mpc-product-quantity .quantity{
@@ -808,9 +809,6 @@ span.mpc-fixed-cart {
 		display: block;
 	}
 	table.mpc-wrap tbody td.mpc-product-price {
-		display: inline-block;
-	}
-	td.mpc-product-price.mpc-single-active{
 		display: inline-block;
 	}
 	#content table.mpc-wrap tbody tr, #main-content table.mpc-wrap tbody tr {

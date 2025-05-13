@@ -35,8 +35,6 @@ class MPC_Inatall {
     public static function init(){
         add_filter( 'plugin_action_links_' . plugin_basename( MPC ), array( __CLASS__, 'plugin_action_links' ) );
         add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
-
-        add_action( 'before_woocommerce_init', array( __CLASS__, 'enable_wc_hpos' ) );
     }
 
     
@@ -120,15 +118,6 @@ class MPC_Inatall {
         );
 
         return array_merge( $links, $row_meta );
-    }
-
-    /**
-     * WC high speed order-storage optimization hook
-     */
-    public static function enable_wc_hpos() {
-        if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', MPC, true );
-        }
     }
 }
 

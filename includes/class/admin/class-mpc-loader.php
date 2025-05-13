@@ -27,6 +27,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			register_deactivation_hook( MPC, array( 'MPC_Install', 'deactivate' ) );
 
 			add_action( 'init', array( $this, 'init' ) );
+			add_action( 'before_woocommerce_init', array( __CLASS__, 'enable_wc_hpos' ) );
 		}
 		
 		public function init(){
@@ -266,13 +267,20 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		public function frontend_assets() {
 			global $mpc__;
 
-			// enqueue style.
+			// Enqueue styles.
 			wp_enqueue_style( 'mpc-dynamic-css', plugin_dir_url( MPC ) . 'includes/dynamic-css.php', array(), MPC_VER, 'all' );
-			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.css', array(), MPC_VER, 'all' );
+			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend/frontend.css', array(), MPC_VER, 'all' );
 
-			// register script.
-			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.js', array( 'jquery' ), MPC_VER, true );
-			wp_enqueue_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.js', array( 'jquery' ), MPC_VER, false );
+			// Register scripts.
+			wp_register_script( 'mpc-table', plugin_dir_url( MPC ) . 'assets/frontend/table.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-helper', plugin_dir_url( MPC ) . 'assets/frontend/table-helper.js', array( 'jquery' ), MPC_VER, true );
+
+			// Enqueue scripts.
+			wp_enqueue_script( 'mpc-table' );
+			wp_enqueue_script( 'mpc-table-helper' );
+
+			// wp_register_script( 'mpc-main', plugin_dir_url( MPC ) . 'assets/frontend/main.js', array( 'jquery' ), MPC_VER, true );
+			// wp_enqueue_script( 'mpc-main' );
 
 			// handle localized variables.
 			$redirect_url = get_option( 'wmc_redirect' );
@@ -301,6 +309,10 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
 				'has_pro'        => $mpc__['has_pro'],
 				'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+				'wc_default_img' => array(
+					'thumb' => wc_placeholder_img_src(),
+					'full'  => wc_placeholder_img_src('full')
+				),
 			);
 
 			$localaized_values['key_fields'] = array(
@@ -325,11 +337,36 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// orderby supports.
 			$localaized_values['orderby_ddown'] = array( 'price', 'title', 'date' );
 
+			// settings.
+			$localaized_values['settings'] = $this->get_settings();
+
 			// apply filter.
 			$localaized_values = apply_filters( 'mpca_update_local_vars', $localaized_values );
 
 			// localize script.
-			wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
+			wp_localize_script( 'mpc-table', 'mpc_frontend', $localaized_values );
+			wp_localize_script( 'mpc-table-helper', 'mpc_frontend', $localaized_values );
+			// wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
+		}
+
+		private function get_settings(){
+			$variation_desc = get_option( 'mpc_show_variation_desc' );
+			$variation_desc = empty( $variation_desc ) || 'on' !== $variation_desc ? false : true;
+
+			return array(
+				'variation_desc' => $variation_desc
+			);
+		}
+
+
+
+		/**
+		 * WC high speed order-storage hook
+		 */
+		public static function enable_wc_hpos() {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', MPC, true );
+			}
 		}
 	}
 }
