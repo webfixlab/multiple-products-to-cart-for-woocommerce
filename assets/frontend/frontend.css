@@ -1,3 +1,31 @@
+.mpc-container-loading{
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+	margin-bottom: 15px;
+}
+.mpc-skeleton {
+    animation: skeleton-loading 1s linear infinite alternate;
+	color: #8a8a8a;
+    padding: 40px;
+    width: 100%;
+    text-align: center;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: #eeeeee; /* FROM Color 1 */
+    }
+    100% {
+        background-color: #fff1f1; /* TO Color 2 */
+    }
+}
+
+
+
+
+
+
 table.mpc-wrap {
 	width: 100%;
 }

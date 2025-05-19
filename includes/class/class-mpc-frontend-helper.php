@@ -14,6 +14,80 @@ defined( 'ABSPATH' ) || exit;
  */
 class MPC_Frontend_Helper {
     /**
+     * Get localized variable data
+     *
+     * @return array
+     */
+    public static function get_localized_data(){
+        // global $mpc__;
+
+        // handle localized variables.
+        $redirect_url  = get_option( 'wmc_redirect' );
+        $cart_btn_text = get_option( 'wmc_button_text' );
+
+        // add localized variables.
+        $localaized_values = array(
+            'locale'         => str_replace( '_', '-', get_locale() ),
+            'currency'       => get_woocommerce_currency_symbol(), // currency symbol.
+            'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+            'redirect_url'   => empty( $redirect_url ) ? 'cart' : $redirect_url,
+            // 'page_limit'     => $mpc__['plugin']['page_limit'],
+            'missed_option'  => get_option( 'wmc_missed_variation_text' ),
+            'blank_submit'   => get_option( 'wmc_empty_form_text' ),
+            'outofstock_txt' => '<p class="stock out-of-stock">' . __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ) . '</p>',
+            'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
+            'ds'             => wc_get_price_decimal_separator(), // decimal separator.
+            'ts'             => wc_get_price_thousand_separator(), // thousand separator.
+            'dqty'           => get_option( 'wmca_default_quantity' ),
+            'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
+            'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
+            'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
+            // 'has_pro'        => $mpc__['has_pro'],
+            'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+            'wc_default_img' => array(
+                'thumb' => wc_placeholder_img_src(),
+                'full'  => wc_placeholder_img_src('full')
+            ),
+        );
+
+        $localaized_values['key_fields'] = array(
+            'orderby' => '.mpc-orderby',
+        );
+
+        // default quantity.
+        if ( empty( $localaized_values['dqty'] ) || '' === $localaized_values['dqty'] ) {
+            $localaized_values['dqty'] = 1;
+        }
+
+        if ( empty( $localaized_values['missed_option'] ) ) {
+            $localaized_values['missed_option'] = __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' );
+        }
+        if ( empty( $localaized_values['blank_submit'] ) ) {
+            $localaized_values['blank_submit'] = __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' );
+        }
+
+        // assets url.
+        $localaized_values['imgassets'] = plugin_dir_url( MPC ) . 'assets/images/';
+
+        // orderby supports.
+        $localaized_values['orderby_ddown'] = array( 'price', 'title', 'date' );
+
+        // settings.
+        $localaized_values['settings'] = self::get_settings();
+
+        // apply filter.
+        return apply_filters( 'mpca_update_local_vars', $localaized_values );
+    }
+    public static function get_settings(){
+        $variation_desc = get_option( 'mpc_show_variation_desc' );
+        $variation_desc = empty( $variation_desc ) || 'on' !== $variation_desc ? false : true;
+
+        return array(
+            'variation_desc' => $variation_desc
+        );
+    }
+    
+    /**
      * Process shortcode to array
      *
      * @param array $atts table shortcode.

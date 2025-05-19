@@ -22,10 +22,20 @@ class MPC_Frontend_Loader {
      * Initialize hooks
      */
     public static function init() {
-        add_shortcode( 'woo-multi-cart', array( __CLASS__, 'mpc_frontend_loader' ) );
+        add_shortcode( 'woo-multi-cart', array( __CLASS__, 'lazy_loader' ) );
+        // add_shortcode( 'woo-multi-cart', array( __CLASS__, 'mpc_frontend_loader' ) );
 
         add_action( 'wp_ajax_mpc_ajax_table_loader', array( __CLASS__, 'mpc_frontend_ajax_loader' ) );
         add_action( 'wp_ajax_nopriv_mpc_ajax_table_loader', array( __CLASS__, 'mpc_frontend_ajax_loader' ) );
+    }
+
+
+    public static function lazy_loader( $atts ){
+        ?>
+        <div class="woocommerce-page woocommerce mpc-container-loading">
+            <div class="mpc-skeleton">Loading...</div>
+        </div>
+        <?php
     }
 
 
@@ -174,6 +184,12 @@ class MPC_Frontend_Loader {
         return $query->posts;
     }
     
+
+
+
+
+
+
 
 
     public static function init_fields() {

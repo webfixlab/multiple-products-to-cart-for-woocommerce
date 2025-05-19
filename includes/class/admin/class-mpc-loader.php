@@ -265,97 +265,28 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		 * Frontend styles and scripts
 		 */
 		public function frontend_assets() {
-			global $mpc__;
-
 			// Enqueue styles.
 			wp_enqueue_style( 'mpc-dynamic-css', plugin_dir_url( MPC ) . 'includes/dynamic-css.php', array(), MPC_VER, 'all' );
 			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend/frontend.css', array(), MPC_VER, 'all' );
 
 			// Register scripts.
-			wp_register_script( 'mpc-table', plugin_dir_url( MPC ) . 'assets/frontend/table.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-templates', plugin_dir_url( MPC ) . 'assets/frontend/table-templates.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-loader', plugin_dir_url( MPC ) . 'assets/frontend/table-loader.js', array( 'jquery', 'mpc-table-templates' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-events', plugin_dir_url( MPC ) . 'assets/frontend/table-events.js', array( 'jquery' ), MPC_VER, true );
 			wp_register_script( 'mpc-table-helper', plugin_dir_url( MPC ) . 'assets/frontend/table-helper.js', array( 'jquery' ), MPC_VER, true );
 
 			// Enqueue scripts.
-			wp_enqueue_script( 'mpc-table' );
+			wp_enqueue_script( 'mpc-table-templates' );
+			wp_enqueue_script( 'mpc-table-loader' );
+			wp_enqueue_script( 'mpc-table-events' );
 			wp_enqueue_script( 'mpc-table-helper' );
 
-			// wp_register_script( 'mpc-main', plugin_dir_url( MPC ) . 'assets/frontend/main.js', array( 'jquery' ), MPC_VER, true );
-			// wp_enqueue_script( 'mpc-main' );
-
-			// handle localized variables.
-			$redirect_url = get_option( 'wmc_redirect' );
-			if ( '' === $redirect_url ) {
-				$redirect_url = 'cart';
-			}
-
-			$cart_btn_text = get_option( 'wmc_button_text' );
-
-			// add localized variables.
-			$localaized_values = array(
-				'locale'         => str_replace( '_', '-', get_locale() ),
-				'currency'       => get_woocommerce_currency_symbol(), // currency symbol.
-				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-				'redirect_url'   => $redirect_url,
-				'page_limit'     => $mpc__['plugin']['page_limit'],
-				'missed_option'  => get_option( 'wmc_missed_variation_text' ),
-				'blank_submit'   => get_option( 'wmc_empty_form_text' ),
-				'outofstock_txt' => '<p class="stock out-of-stock">' . __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ) . '</p>',
-				'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
-				'ds'             => wc_get_price_decimal_separator(), // decimal separator.
-				'ts'             => wc_get_price_thousand_separator(), // thousand separator.
-				'dqty'           => get_option( 'wmca_default_quantity' ),
-				'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
-				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
-				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
-				'has_pro'        => $mpc__['has_pro'],
-				'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
-				'wc_default_img' => array(
-					'thumb' => wc_placeholder_img_src(),
-					'full'  => wc_placeholder_img_src('full')
-				),
-			);
-
-			$localaized_values['key_fields'] = array(
-				'orderby' => '.mpc-orderby',
-			);
-
-			// default quantity.
-			if ( empty( $localaized_values['dqty'] ) || '' === $localaized_values['dqty'] ) {
-				$localaized_values['dqty'] = 1;
-			}
-
-			if ( empty( $localaized_values['missed_option'] ) ) {
-				$localaized_values['missed_option'] = __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' );
-			}
-			if ( empty( $localaized_values['blank_submit'] ) ) {
-				$localaized_values['blank_submit'] = __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' );
-			}
-
-			// assets url.
-			$localaized_values['imgassets'] = plugin_dir_url( MPC ) . 'assets/images/';
-
-			// orderby supports.
-			$localaized_values['orderby_ddown'] = array( 'price', 'title', 'date' );
-
-			// settings.
-			$localaized_values['settings'] = $this->get_settings();
-
-			// apply filter.
-			$localaized_values = apply_filters( 'mpca_update_local_vars', $localaized_values );
+			$localaized_values = MPC_Frontend_Helper::get_localized_data();
 
 			// localize script.
-			wp_localize_script( 'mpc-table', 'mpc_frontend', $localaized_values );
+			wp_localize_script( 'mpc-table-loader', 'mpc_frontend', $localaized_values );
+			wp_localize_script( 'mpc-table-events', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-helper', 'mpc_frontend', $localaized_values );
-			// wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
-		}
-
-		private function get_settings(){
-			$variation_desc = get_option( 'mpc_show_variation_desc' );
-			$variation_desc = empty( $variation_desc ) || 'on' !== $variation_desc ? false : true;
-
-			return array(
-				'variation_desc' => $variation_desc
-			);
 		}
 
 

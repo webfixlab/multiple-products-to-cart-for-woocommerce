@@ -17,7 +17,6 @@
         }
         init(){
             const self = this;
-
             $('body').on('click', '#mpcpop', function(e){
                 if(e.target.tagName.toLowerCase() !== 'img'){
                     self.renderImagePopup('', 'hide');
