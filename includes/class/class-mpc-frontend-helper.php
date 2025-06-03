@@ -19,71 +19,56 @@ class MPC_Frontend_Helper {
      * @return array
      */
     public static function get_localized_data(){
-        // global $mpc__;
-
-        // handle localized variables.
-        $redirect_url  = get_option( 'wmc_redirect' );
-        $cart_btn_text = get_option( 'wmc_button_text' );
-
-        // add localized variables.
+        // 'missed_option'  => get_option( 'wmc_missed_variation_text' ),
+        // 'blank_submit'   => get_option( 'wmc_empty_form_text' ),
         $localaized_values = array(
-            'locale'         => str_replace( '_', '-', get_locale() ),
-            'currency'       => get_woocommerce_currency_symbol(), // currency symbol.
             'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-            'redirect_url'   => empty( $redirect_url ) ? 'cart' : $redirect_url,
-            // 'page_limit'     => $mpc__['plugin']['page_limit'],
-            'missed_option'  => get_option( 'wmc_missed_variation_text' ),
-            'blank_submit'   => get_option( 'wmc_empty_form_text' ),
-            'outofstock_txt' => '<p class="stock out-of-stock">' . __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ) . '</p>',
-            'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
-            'ds'             => wc_get_price_decimal_separator(), // decimal separator.
-            'ts'             => wc_get_price_thousand_separator(), // thousand separator.
-            'dqty'           => get_option( 'wmca_default_quantity' ),
-            'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
             'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
-            'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
-            // 'has_pro'        => $mpc__['has_pro'],
-            'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+            'has_pro'        => false,
+            'locale'         => str_replace( '_', '-', get_locale() ),
+            'currency'       => get_woocommerce_currency_symbol(), // woocommerce currency symbol.
+            'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
             'wc_default_img' => array(
                 'thumb' => wc_placeholder_img_src(),
                 'full'  => wc_placeholder_img_src('full')
             ),
         );
 
-        $localaized_values['key_fields'] = array(
-            'orderby' => '.mpc-orderby',
-        );
-
-        // default quantity.
-        if ( empty( $localaized_values['dqty'] ) || '' === $localaized_values['dqty'] ) {
-            $localaized_values['dqty'] = 1;
-        }
-
-        if ( empty( $localaized_values['missed_option'] ) ) {
-            $localaized_values['missed_option'] = __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' );
-        }
-        if ( empty( $localaized_values['blank_submit'] ) ) {
-            $localaized_values['blank_submit'] = __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' );
-        }
-
-        // assets url.
-        $localaized_values['imgassets'] = plugin_dir_url( MPC ) . 'assets/images/';
-
-        // orderby supports.
-        $localaized_values['orderby_ddown'] = array( 'price', 'title', 'date' );
-
-        // settings.
         $localaized_values['settings'] = self::get_settings();
+        $localaized_values['labels']   = self::get_labels();
 
         // apply filter.
         return apply_filters( 'mpca_update_local_vars', $localaized_values );
     }
     public static function get_settings(){
-        $variation_desc = get_option( 'mpc_show_variation_desc' );
-        $variation_desc = empty( $variation_desc ) || 'on' !== $variation_desc ? false : true;
+        $variation_desc  = get_option( 'mpc_show_variation_desc' );
+        $title_filter    = get_option( 'mpc_show_title_dopdown' ) ?? '';
+        $default_cols    = get_option( 'wmc_sorted_columns' );
+        $show_sale       = get_option( 'mpc_show_on_sale' ) ?? '';
+        $default_qty     = get_option( 'wmca_default_quantity');
+        $rest_btn        = get_option( 'wmca_show_reset_btn' );
+        $pagination_info = get_option( 'wmc_show_pagination_text');
 
         return array(
-            'variation_desc' => $variation_desc
+            'variation_desc'  => empty( $variation_desc ) || 'on' !== $variation_desc ? false : true,
+            'title_filter'    => empty($title_filter) || 'on' === $title_filter ? true : false,
+            'default_cols'    => empty($default_cols) ? array('wmc_ct_image', 'wmc_ct_product', 'wmc_ct_variation', 'wmc_ct_price', 'wmc_ct_quantity', 'wmc_ct_buy') : explode(',', $default_cols ),
+            'show_sale'       => empty($show_sale) || 'on' === $show_sale ? true : false,
+            'default_qty'     => empty($default_qty) ? 0 : $default_qty,
+            'reset_btn'       => empty($rest_btn) || 'on' === $rest_btn ? true : false,
+            'pagination_info' => empty($pagination_info) || 'on'=== $pagination_info ? true : false,
+        );
+    }
+    public static function get_labels(){
+        return array(
+            'buy'               => get_option( 'wmc_ct_buy', __('Buy', 'multiple-products-to-cart-for-woocommerce') ),
+            'total'             => get_option( 'wmc_total_button_text', __( 'Total', 'multiple-products-to-cart-for-woocommerce') ),
+            'add_to_cart'       => get_option( 'wmc_button_text', __('Add to Cart', 'multiple-products-to-cart-for-woocommerce') ),
+            'pagination_prefix' => get_option( 'wmc_pagination_text', __('Showing', 'multiple-products-to-cart-for-woocommerce') ),
+            // translators: %1$s label, %2$s current range, %3$s total products.
+            'pagination_text'   => __( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
+            'empty_variation'   => get_option( 'wmc_empty_value_text', __('N/A', 'multiple-products-to-cart-for-woocommerce') ),
+            'variation_prefix'  => get_option( 'wmc_option_text', '' ),
         );
     }
     
@@ -400,14 +385,15 @@ class MPC_Frontend_Helper {
         $data['sold_individually'] = $product->is_sold_individually();
 
         if('variable' === $data['type']){
-            $data['atts']         = $product->get_variation_attributes();
+            $atts_data = self::process_variable_atts($id, $product->get_variation_attributes());
+            $data['atts']         = $atts_data['atts'];
+            $data['att_names']    = $atts_data['names'];
             $data['default_atts'] = $product->get_default_attributes(); // Pre-selected.
-
-            $data['children'] = self::get_all_children_data( $product, [] );
+            $data['children']     = self::get_all_children_data( $product, [] );
         }elseif( 'grouped' === $data['type'] ){
-            $data['children'] = self::get_all_children_data( $product, array( 'title' => $data['title'], 'url' => $data['url'] ) );
+            $data['children']     = self::get_all_children_data( $product, array( 'title' => $data['title'], 'url' => $data['url'] ) );
         }elseif( 'grouped' !== $data['type'] ){
-            $data['img_id'] = $product->get_image_id();
+            $data['image']        = self::get_imgage_urls( $product->get_image_id() );;
         }
 
         $data = self::process_product_data( $data );
@@ -431,7 +417,6 @@ class MPC_Frontend_Helper {
     public static function get_all_children_data( $product, $parent ){
         $data      = array();
         $childrens = $product->get_children();
-
         if( empty( $childrens ) ) return array();
 
         foreach( $childrens as $child ){
@@ -445,7 +430,7 @@ class MPC_Frontend_Helper {
 
         $data           = self::get_common_data( $product );
         $data['id']     = $id;
-        $data['img_id'] = $product->get_image_id();
+        $data['image']  = self::get_imgage_urls($product->get_image_id());
         $data['ss_fee'] = get_post_meta( $id, '_subscription_sign_up_fee', true ); // Subscription product's sign up fee.
 
         if( 'variation' === $data['type'] ){
@@ -459,18 +444,40 @@ class MPC_Frontend_Helper {
             );
         }
 
-        return self::process_child_data( $data );
-    }
-    public static function process_child_data( $data ){
-        $image = self::get_product_image( $data );
-        $data['image'] = array(
-            'thumbnail' => $image['thumb'],
-            'full'      => $image['full']
-        );
-
         $data['price'] = self::extract_price( $data['price'] );
         $data['stock'] = self::prepare_stock( $data );
         return $data;
+    }
+    private static function process_variable_atts($id, $atts){
+        $data  = array();
+        $names = array();
+        foreach( $atts as $att => $options ){
+            $names[ $att ] = wc_attribute_label( $att );
+            if(taxonomy_exists($att)){
+                $terms = wc_get_product_terms($id, $att, array('fields' => 'all'));
+                $data[$att] = array_map(
+                    function($term) use($options) {
+                        if(in_array($term->slug, $options, true)) return array(
+                            'name' => $term->name,
+                            'slug' => $term->slug
+                        );
+                    },
+                $terms);
+            }else{
+                $data[$att] = array_map(
+                    function($option){
+                        return array(
+                            'name' => $option,
+                            'slug' => sanitize_title($option)
+                        );
+                    }, $options
+                );
+            }
+        }
+        return array(
+            'names' => $names,
+            'atts'  => $data
+        );
     }
     public static function get_common_data( $product ){ // properties common for parent and child product.
         $common = array(
@@ -489,6 +496,14 @@ class MPC_Frontend_Helper {
         if( strlen( $common['desc'] ) > 150 ) $common['desc'] = substr( $common['desc'], 0, 150 ) . '...';
 
         return $common;
+    }
+    public static function get_imgage_urls( $image_id ){
+        if(empty( $image_id )) return false;
+
+        return array(
+            'thumb' => wp_get_attachment_image_url( $image_id, 'thumbnail' ),
+            'full'  => wp_get_attachment_image_url( $image_id, 'full' )
+        );
     }
 
     public static function extract_price( $html ){
@@ -548,19 +563,7 @@ class MPC_Frontend_Helper {
 
         return $stock;
     }
-
     
-    public static function get_product_image( $data ){
-        $image_id  = $data['img_id'] ?? '';
-        $show_sale = get_option( 'mpc_show_on_sale' );
-
-        return array(
-            'show_sale' => !empty( $show_sale ) && 'on' === $show_sale ? true : false,
-            'thumb'     => empty( $image_id ) ? wc_placeholder_img_src() : wp_get_attachment_image_url( $image_id, 'thumbnail' ),
-            'full'      => empty( $image_id ) ? wc_placeholder_img_src( 'full' ) : wp_get_attachment_image_url( $image_id, 'full' )
-        );
-    }
-
 
 
     public static function get_current_page(){

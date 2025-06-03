@@ -5,25 +5,20 @@
 	margin-bottom: 15px;
 }
 .mpc-skeleton {
-    animation: skeleton-loading 1s linear infinite alternate;
+    animation: skeleton-loading 1.5s linear infinite alternate;
 	color: #8a8a8a;
     padding: 40px;
     width: 100%;
     text-align: center;
 }
-
 @keyframes skeleton-loading {
-    0% {
-        background-color: #eeeeee; /* FROM Color 1 */
-    }
-    100% {
-        background-color: #fff1f1; /* TO Color 2 */
-    }
+    0%{
+		background-color: #eeeeee;
+	}
+    100%{
+		background-color: #cfcece;
+	}
 }
-
-
-
-
 
 
 table.mpc-wrap {
@@ -159,6 +154,7 @@ select:-moz-focusring {
 /* Footer section */
 .mpc-total-wrap{
 	display: inline-block;
+	padding: 5px 0;
 }
 .mpc-table-total, .mpc-reset-table, .mpc-reset-table svg{
 	display: inline;

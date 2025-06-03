@@ -14,27 +14,20 @@ defined( 'ABSPATH' ) || exit;
  */
 class MPC_Inatall {
     /**
+     * Static initialization function
+     */
+    public static function init(){
+        add_filter( 'plugin_action_links_' . plugin_basename( MPC ), array( __CLASS__, 'plugin_action_links' ) );
+        add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
+    }
+
+    /**
      * Plugin activation function. Fires once when activating.
      */
     public static function activate(){
         // runs only once, when activating the plugin.
         self::init_fields();
         flush_rewrite_rules();
-    }
-
-    /**
-     * Plugin deactivation function
-     */
-    public static function deactivate(){
-        flush_rewrite_rules();
-    }
-
-    /**
-     * Static initialization function
-     */
-    public static function init(){
-        add_filter( 'plugin_action_links_' . plugin_basename( MPC ), array( __CLASS__, 'plugin_action_links' ) );
-        add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
     }
 
     

@@ -24,8 +24,8 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			}
 
 			register_activation_hook( MPC, array( 'MPC_Install', 'activate' ) );
-			register_deactivation_hook( MPC, array( 'MPC_Install', 'deactivate' ) );
-
+			register_shutdown_function( array( $this, 'deactivate' ) );
+			
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'before_woocommerce_init', array( __CLASS__, 'enable_wc_hpos' ) );
 		}
@@ -34,7 +34,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			$this->includes();
 
 			load_plugin_textdomain( 'multiple-products-to-cart-for-woocommerce', false, plugin_basename( dirname( MPC ) ) . '/languages' );
-
+			
 			$this->register_table_cpt();
 			
 			do_action( 'mpca_change_pro_state' );
@@ -70,8 +70,6 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			include MPC_PATH . 'includes/class/class-mpc-frontend-helper.php';
 			include MPC_PATH . 'includes/class/class-mpc-frontend-loader.php';
 			include MPC_PATH . 'includes/class/class-mpc-add-to-cart.php';
-			
-			include MPC_PATH . 'includes/class/class-mpc-table-template.php';
 		}
 
 		/**
@@ -270,12 +268,14 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend/frontend.css', array(), MPC_VER, 'all' );
 
 			// Register scripts.
-			wp_register_script( 'mpc-table-templates', plugin_dir_url( MPC ) . 'assets/frontend/table-templates.js', array( 'jquery' ), MPC_VER, true );
-			wp_register_script( 'mpc-table-loader', plugin_dir_url( MPC ) . 'assets/frontend/table-loader.js', array( 'jquery', 'mpc-table-templates' ), MPC_VER, true );
-			wp_register_script( 'mpc-table-events', plugin_dir_url( MPC ) . 'assets/frontend/table-events.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-hooks', plugin_dir_url( MPC ) . 'assets/frontend/hooks.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-templates', plugin_dir_url( MPC ) . 'assets/frontend/table-templates.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-loader', plugin_dir_url( MPC ) . 'assets/frontend/table-loader.js', array( 'jquery', 'mpc-hooks', 'mpc-table-templates' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-events', plugin_dir_url( MPC ) . 'assets/frontend/table-events.js', array( 'jquery', 'mpc-hooks', 'mpc-table-templates' ), MPC_VER, true );
 			wp_register_script( 'mpc-table-helper', plugin_dir_url( MPC ) . 'assets/frontend/table-helper.js', array( 'jquery' ), MPC_VER, true );
 
 			// Enqueue scripts.
+			wp_enqueue_script( 'mpc-hooks' );
 			wp_enqueue_script( 'mpc-table-templates' );
 			wp_enqueue_script( 'mpc-table-loader' );
 			wp_enqueue_script( 'mpc-table-events' );
@@ -284,6 +284,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			$localaized_values = MPC_Frontend_Helper::get_localized_data();
 
 			// localize script.
+			wp_localize_script( 'mpc-hooks', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-loader', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-events', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-helper', 'mpc_frontend', $localaized_values );
@@ -291,6 +292,9 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 
 
 
+		public function deactivate() {
+			flush_rewrite_rules();
+		}
 		/**
 		 * WC high speed order-storage hook
 		 */

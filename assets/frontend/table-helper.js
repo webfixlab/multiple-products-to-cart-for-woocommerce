@@ -15,7 +15,7 @@
             };
             this.$oldScrolls = {};
             
-            $(document).ready(() => {
+            $(document.body).on('mpc_init_tables', () => {
                 this.init();
             });
         }
@@ -60,30 +60,29 @@
         renderStickyHead(table){
             var min  = 99999;
             var html = '';
-            table.find( 'thead th' ).each(
-                function () {
-                    var th = $( this );
-                    if ( th.offset().left < min ) {
-                        min = th.offset().left;
-                    }
-        
-                    html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
-                }
-            );
+            table.find('thead th').each(function (){
+                const th = $(this);
+                min   = th.offset().left < min ? th.offset().left : min;
+                html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
+            });
+
             var width = table[0].offsetWidth;
-            let wrap  = table.closest( '.mpc-container' );
-            html      = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
-            html      = `<div class="mpc-fixed-header" style="left:${min}px;display:none;">${html}</div>`;
-            wrap.find( '.mpc-fixed-header' ).remove();
-            table.after( html );
-        
-            wrap.find( '.total-row' ).css( {'width': `${width}px`} );
-        
-            var header       = wrap.find( '.mpc-table-header' );
-            width            = width < 401 ? '100%' : `${width}px`;
+            let wrap  = table.closest('.mpc-container');
+
+            html = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
+            html = `<div class="mpc-fixed-header" style="left:${min}px;display:none;">${html}</div>`;
+
+            wrap.find('.mpc-fixed-header').remove();
+            table.after(html);
+            
+            wrap.find('.total-row').css({'width': `${width}px`});
+            
+            var header       = wrap.find('.mpc-table-header');
             var headerHeight = header[0].offsetHeight;
-            headerHeight     = headerHeight > 100 ? 55 : headerHeight;
-            header.css( {'left': `${min}px`, 'width' : width, 'min-height' : `${headerHeight}px`} );
+
+            width        = width < 401 ? '100%' : `${width}px`;
+            headerHeight = headerHeight > 100 ? 55 : headerHeight;
+            header.css({'left': `${min}px`, 'width' : width, 'min-height' : `${headerHeight}px`});
         }
 
 
@@ -123,60 +122,56 @@
             });
         }
         tableScrollHandler(table, tk){
-            var wrap  = table.closest( '.mpc-container' );
-
-            var currentScroll = $( window ).scrollTop();
-            var cs            = currentScroll; // current scroll offset.
+            const wrap = table.closest('.mpc-container');
+            const cs   = $(window).scrollTop();
 
             var head = table.offset().top + 50;
-            var tail = table.find( 'tbody tr:last-child' ).offset().top;
+            var tail = table.find('tbody tr:last-child').offset().top;
 
             // table head.
-            let products   = table.find( 'tbody tr' );
+            let products   = table.find('tbody tr');
             let tableStart = products[1] ? $( products[1] ).offset().top : 0;
             let tableEnd   = $( products[products.length - 1] ).offset().top + $( products[products.length - 1] )[0].offsetHeight;
-            if ( (cs + this.$screen.height) > tableStart && (cs + this.$screen.height) < tableEnd ) {
-                wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' ).addClass( 'mpc-fixed-total-m' );
-                wrap.find( '.total-row .mpc-fixed-cart' ).remove();
-                wrap.find( '.total-row' ).append( `<span class="mpc-fixed-cart">${mpc_frontend.cart_text}</span>`);
+
+            // table fixed footer.
+            if((cs + this.$screen.height) > tableStart && (cs + this.$screen.height) < tableEnd){
+                wrap.find('.total-row').removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
             } else {
-                wrap.find( '.total-row' ).removeClass( 'mpc-fixed-total-m' );
-                wrap.find( '.total-row .mpc-fixed-cart' ).remove();
+                wrap.find('.total-row').removeClass('mpc-fixed-total-m');
             }
 
             // fixed header.
             if(this.$screen.width > 500){
-                if ( cs > head && cs < tail ) {
-                    if ( table.find( 'thead' ).length ) {
-                        table.closest( 'form' ).find( '.mpc-fixed-header' ).show();
+                if(cs > head && cs < tail){
+                    if(table.find('thead').length){
+                        table.closest('form').find('.mpc-fixed-header').show();
                     }
                 }
-                if ( cs < head || cs > tail ) {
-                    if ( table.find( 'thead' ).length ) {
-                        table.closest( 'form' ).find( '.mpc-fixed-header' ).hide();
+                if(cs < head || cs > tail){
+                    if(table.find('thead').length){
+                        table.closest('form').find('.mpc-fixed-header').hide();
                     }
                 }
             }
 
             // filter section.
-            if ( currentScroll < this.$oldScrolls[tk] && currentScroll > head && currentScroll < tail ) {
-                var height = wrap.find( '.mpc-table-header' )[0].offsetHeight + 20;
-                if ( wrap.find( '.mpc-all-select' ).length ) {
+            if(cs < this.$oldScrolls[tk] && cs > head && cs < tail){
+                var height = wrap.find('.mpc-table-header')[0].offsetHeight + 20;
+                if(wrap.find('.mpc-all-select').length){
                     height += 32;
                 }
 
-                if ( ! wrap.find( '.mpc-table-header' ).hasClass( 'mpc-fixed-filter' ) ) {
+                if(!wrap.find('.mpc-table-header').hasClass('mpc-fixed-filter')){
                     // if check all products exists, add it's height.
-                    wrap.css( 'margin-top', `${height}px` );
+                    wrap.css('margin-top', `${height}px`);
                 }
-
-                wrap.find( '.mpc-table-header' ).removeClass( 'mpc-fixed-filter' ).addClass( 'mpc-fixed-filter' );
-            } else {
-                wrap.find( '.mpc-table-header' ).removeClass( 'mpc-fixed-filter' );
-                wrap.css( 'margin-top', '20px' );
+                wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter').addClass('mpc-fixed-filter');
+            }else{
+                wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter');
+                wrap.css('margin-top', '20px');
             }
 
-            this.$oldScrolls[tk] = currentScroll;
+            this.$oldScrolls[tk] = cs;
         }
     }
 

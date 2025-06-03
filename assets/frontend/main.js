@@ -886,28 +886,6 @@
 		}
 	);
 
-	// select all handler.
-	function handle_row_select( row, do_select ){
-		var type = row.data( 'type' );
-
-		var input = row.find( 'input[type="checkbox"]' );
-		if ( typeof input === 'undefined' || input.length === 0 ) {
-			return;
-		}
-
-		var input_checked = input.is( ':checked' );
-
-		if ( type === 'variable' && do_select && ! mpc_if_all_options_selected( row ) ) {
-			return;
-		}
-
-		if ( ( input_checked && do_select ) || ( ! input_checked && ! do_select ) ) {
-			return;
-		}
-
-		input.trigger( 'click' );
-	}
-
 	// reset form.
 	$( 'body' ).on(
 		'click',
