@@ -9,11 +9,17 @@
 ;(function($, window, document) {
     class mpcTableEvents{
         constructor(){
+            this.$row       = null;
+            this.$fields    = null;
+            this.$variation = null;
+
             $(document).ready(() => {
                 this.globalEvents();
                 this.headerEvents();
                 this.tableRowEvents();
                 this.tableFooterEvents();
+
+                this.initTables();
             });
         }
 
@@ -42,7 +48,8 @@
                 self.showProductImage($(this));
             });
             $(document.body).on('change paste keyup cut select', '.mpc-product-quantity input[type="number"]', function(){
-                self.checkProductStock($(this), '');
+                self.setRowData($(this));
+                self.checkProductStock();
                 self.updateTotalPrice($(this));
             });
             $(document.body).on('click', 'input[type="checkbox"]', function(){
@@ -51,17 +58,15 @@
             $(document.body).on('change', '.mpc-product-variation select', function(){
                 self.variationAttributeMarker($(this));
 
-                const row       = $(this).closest('tr.cart_item');
-                const variation = self.getVariation(row);
+                self.setRowData($(this));
 
-                self.checkProductStock(row, variation);
+                self.setVariationImage();
+                self.setVariationPrice();
+                self.setVariationDescription();
+                self.addClearVariations();
+                self.disableRow();
 
-                self.setVariationImage(row, variation);
-                self.setVariationPrice(row, variation);
-                self.setVariationDescription(row, variation);
-                self.addClearVariations(row);
-
-                self.disableRow(row, variation);
+                self.checkProductStock();
             });
             $(document.body).on('click', '.mpc-product-variation a.reset_variations', function(e){
                 e.preventDefault();
@@ -74,10 +79,29 @@
                 self.resetTable($(this));
             });
         }
-
+        
 
 
         // global events.
+        initTables(){
+            const self = this;
+            $(document.body).find('.mpc-container table.mpc-wrap').each(function(){
+                let totalRow = 0, checkedRow = 0;
+                $(this).find('tbody tr').each(function(){
+                    totalRow++;
+                    // const qtyField = $(this).find('.mpc-product-quantity input[type="number"]');
+                    const checkBox = $(this).find('.mpc-product-select input[type="checkbox"]');
+
+                    if(!self.hasRowDisputs($(this)) && checkBox.length !== 0 && !checkBox.is(':checked')){
+                        checkBox.trigger('click');
+                        checkedRow++;
+                    }
+                });
+
+                const checkAllBox = $(this).find('.mpc-select-all input[type="checkbox"]');
+                if(totalRow > 0 && totalRow === checkedRow && checkAllBox.length !== 0 && !checkAllBox.is(':checked')) checkAllBox.trigger('click');
+            });
+        }
         imagePopup(url, action){
             const popup = $('#mpcpop');
             if(!popup) return;
@@ -128,19 +152,15 @@
             tableWrap.find('.mpc-total .total-price').text(total);
             tableWrap.find('.mpc-floating-total span.total-price').text(total);
         }
-        checkProductStock(item, hasVariation){
-            const row       = item.hasClass('.cart_item') ? item : item.closest('tr.cart_item');
-            const variation = hasVariation ? hasVariation : this.getVariation(row);
-            if(row.attr('data-type') !== 'variable' || !variation || !variation.stock) return;
+        checkProductStock(){
+            if(this.$row.attr('data-type') !== 'variable' || !this.$variation || !this.$variation.stock) return;
 
-            const qtyField = row.find('.mpc-product-quantity input[type="number"]');
-            const qty      = qtyField.length !== 0 ? parseInt(qtyField.val()) : 1;
-
-            const stock = variation['stock'].replace(/[A-Za-z]/g, '').replace(' ', '');
+            const qty   = this.$fields.qtyField.length !== 0 ? parseInt(this.$fields.qtyField.val()) : 1;
+            const stock = this.$variation['stock'].replace(/[A-Za-z]/g, '').replace(' ', '');
             if(!stock || stock === '0') return;
 
             if(stock && qty > parseInt(stock)){
-                qtyField.val(parseInt(stock));
+                this.$fields.qtyField.val(parseInt(stock));
             }
         }
         resetTable(item){
@@ -160,11 +180,11 @@
 
 
         // variation related functions.
-        setVariationImage(row, variation){
-            if(!variation) return;
+        setVariationImage(){
+            if(!this.$variation) return;
 
-            const imgWrap = row.find('.mpc-product-image');
-            const img     = variation.image ?? false;
+            const imgWrap = this.$row.find('.mpc-product-image');
+            const img     = this.$variation.image ?? false;
             if(!imgWrap || !img) return;
 
             if(img.thumbnail){
@@ -174,27 +194,27 @@
                 imgWrap.find('.mpcpi-wrap img').attr('data-fullimage', img.full);
             }
         }
-        setVariationPrice(row, variation){
-            const priceWrap = row.find('.mpc-single-price');
+        setVariationPrice(){
+            const priceWrap = this.$row.find('.mpc-single-price');
             if(!priceWrap) return;
 
             priceWrap.hide();
-            if(!variation) return;
+            if(!this.$variation) return;
             
-            const price = variation.price;
+            const price = this.$variation.price;
             priceWrap.find('span.total-price').text(this.formatPrice(price));
             typeof price !== 'undefined' ? priceWrap.show() : priceWrap.hide();
 
             // handle same variation price.
             const singlePrice = priceWrap.text().trim().replace(/[^0-9.$]/g, '');
-            let rangePrice    = row.find('.mpc-range').text().trim();
-            rangePrice        = row.find('.mpc-range ins').length > 0 ? row.find('.mpc-range ins').text().trim() : rangePrice;
+            let rangePrice    = this.$row.find('.mpc-range').text().trim();
+            rangePrice        = this.$row.find('.mpc-range ins').length > 0 ? this.$row.find('.mpc-range ins').text().trim() : rangePrice;
             if(singlePrice === rangePrice){ // fixed price variable product.
                 priceWrap.hide();
             }
         }
-        setVariationDescription(row, variation){
-            if(!variation || !variation.desc){
+        setVariationDescription(){
+            if(!this.$variation || !this.$variation.desc){
                 return;
             }
 
@@ -202,57 +222,61 @@
                 return;
             }
             
-            const titleWrap = row.find('td.mpc-product-name');
+            const titleWrap = this.$row.find('td.mpc-product-name');
             if(!titleWrap){
                 return;
             }
 
-            const descWrap = row.find('.woocommerce-product-details__short-description');
-            descWrap.length !== 0 ? descWrap.text(variation.desc) : titleWrap.append(`<p class="woocommerce-product-details__short-description">${variation.desc}</p>`);
+            const descWrap = this.$row.find('.woocommerce-product-details__short-description');
+            descWrap.length !== 0 ? descWrap.text(this.$variation.desc) : titleWrap.append(`<p class="woocommerce-product-details__short-description">${this.$variation.desc}</p>`);
         }
-        addClearVariations(row){
-            const total  = row.find('select').length;
+        addClearVariations(){
+            const total  = this.$row.find('select').length;
             let selected = 0;
-            row.find('select').each(function(){
+            this.$row.find('select').each(function(){
                 if($(this).find('option:selected').val()) selected++;
             });
-            if(total === 0) return;
+            if(total === 0 || (total > 0 && total !== selected)){
+                if(this.$row.find('.clear-button').length !== 0) this.$row.find('.clear-button').empty();
+                return;
+            }
 
-            if(row.find('.clear-button').length){
-                row.find('.clear-button').html(`<a class="reset_variations" href="#">Clear</a>`);
+            if(this.$row.find('.clear-button').length !== 0){
+                this.$row.find('.clear-button').html(`<a class="reset_variations" href="#">Clear</a>`);
             }else{
-                row.find('.mpc-product-variation').append(`<div class="clear-button"><a class="reset_variations" href="#">Clear</a></div>`);
+                this.$row.find('.mpc-product-variation').append(`<div class="clear-button"><a class="reset_variations" href="#">Clear</a></div>`);
             }
         }
-        disableRow(row, variation){
-            const qtyField = row.find('.mpc-product-quantity input[type="number"]');
-            const checkBox = row.find('.mpc-product-select input[type="checkbox"]');
-
+        disableRow(){
             let ability = true;
-            if(!this.hasRowDisputs(row)){
-                if(!variation) ability = false;
-                if(variation && (variation.stock_status === 'outofstock' || !variation.price)) ability = false;
+            const hasDisput = this.hasRowDisputs(this.$row);
+            if(!hasDisput){
+                if(!this.$variation) ability = false;
+                if(this.$variation && (this.$variation.stock_status === 'outofstock' || !this.$variation.price)) ability = false;
             }
 
             if(ability){
-                if(qtyField.length !== 0) qtyField.prop('disabled', false);
-                if(checkBox.length !== 0) checkBox.prop('disabled', false);
-            }else{
-                if(qtyField.length !== 0){
-                    qtyField.val(0);
-                    qtyField.prop('disabled', true);
+                if(this.$fields.qtyField.length !== 0) this.$fields.qtyField.prop('disabled', false);
+                if(this.$fields.checkBox.length !== 0){
+                    this.$fields.checkBox.prop('disabled', false);
+                    if(!hasDisput && !this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
                 }
-                if(checkBox.length !== 0){
-                    if(checkBox.is(':checked')) checkBox.trigger('click');
-                    checkBox.prop('disabled', true);
+            }else{
+                if(this.$fields.qtyField.length !== 0){
+                    this.$fields.qtyField.val(0);
+                    this.$fields.qtyField.prop('disabled', true);
+                }
+                if(this.$fields.checkBox.length !== 0){
+                    if(this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
+                    this.$fields.checkBox.prop('disabled', true);
                 }
             }
         }
-        variationAttributeMarker(att){
+        variationAttributeMarker(attOpt){
             const marker = 'mpc-att-marker';
-            if(att.find('option:selected').val().length !== 0){
-                if(!att.hasClass(marker)) att.addClass(marker);
-            }else att.removeClass(marker);
+            if(attOpt.find('option:selected').val().length !== 0){
+                if(!attOpt.hasClass(marker)) attOpt.addClass(marker);
+            }else attOpt.removeClass(marker);
         }
 
         // helper functions.
@@ -301,12 +325,6 @@
             }
             return variation;
         }
-        autoCheckProduct(row, ability){
-            const checkBox = row.find('input[type="checkbox"]');
-            if(checkBox.length === 0) return;
-
-            if((!ability && checkBox.is(':checked')) || (ability && !checkBox.is(':checked'))) checkBox.trigger('click');
-        }
         hasRowDisputs(row){
             let total = 0, selected = 0;
             row.find('select').each(function(){
@@ -316,18 +334,30 @@
             return total > 0 && total === selected ? false : true;
         }
         resetTableRow(row){
-            if(row.find('select').length !== 0){
-                row.find('select').each(function(){
-                    $(this).val('').trigger('change');
-                });
+            row.find('select').each(function(){
+                $(this).val('').trigger('change');
+            });
 
-                const qtyField = row.find('.mpc-product-quantity input[type="number"]');
-                if(qtyField.length !== 0 && parseInt(qtyField.val()) > mpc_frontend.settings.default_qty) qtyField.val(mpc_frontend.settings.default_qty);
-            }
+            const qtyField = row.find('.mpc-product-quantity input[type="number"]');
+            const checkBox = row.find('.mpc-product-select input[type="checkbox"]');
+
+            if(qtyField.length !== 0 && parseInt(qtyField.val()) > mpc_frontend.settings.default_qty) qtyField.val(mpc_frontend.settings.default_qty);
+            if(checkBox.length !== 0 && checkBox.is(':checked')) checkBox.trigger('click');
 
             if(row.find('a.reset_variations').length !== 0) row.find('a.reset_variations').remove();
             if(row.find('.woocommerce-product-details__short-description').length !== 0) row.find('.woocommerce-product-details__short-description').text('');
-            
+        }
+
+
+
+        setRowData(item){
+            this.$row       = item.closest('tr.cart_item');
+            this.$variation = this.getVariation(this.$row);
+
+            this.$fields = {
+                'qtyField' : this.$row.find('.mpc-product-quantity input[type="number"]'),
+                'checkBox' : this.$row.find('.mpc-product-select input[type="checkbox"]')
+            };
         }
         formatPrice(price){
             return price.toLocaleString(mpc_frontend.locale, {
