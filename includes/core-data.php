@@ -341,14 +341,6 @@ $mpc__['fields'] = array(
 					'placeholder' => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				array(
-					'key'         => 'wmc_reset_button_text',
-					'type'        => 'text',
-					'default'     => '',
-					'label'       => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => '',
-					'placeholder' => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
-				),
-				array(
 					'key'         => 'mpce_single_order_button_text',
 					'type'        => 'text',
 					'default'     => '',

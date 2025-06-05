@@ -12,7 +12,7 @@
  * Tags:                 product table, woocommerce product table,wc product table,products table,woocommerce table
  * Requires Plugins:     woocommerce
  * WC requires at least: 3.6
- * WC tested up to:      9.8.3
+ * WC tested up to:      9.8.4
  * License:              GPL2
  * License URI:          https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:          multiple-products-to-cart-for-woocommerce
@@ -30,4 +30,4 @@ define( 'MPC', __FILE__ );
 define( 'MPC_VER', '7.4.3' );
 define( 'MPC_PATH', plugin_dir_path( MPC ) );
 
-require MPC_PATH . 'includes/class/admin/class-mpcloader.php';
+require MPC_PATH . 'includes/class/admin/class-mpc-loader.php';
