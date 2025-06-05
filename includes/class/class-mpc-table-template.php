@@ -373,7 +373,6 @@ class MPC_Table_Template {
 
         $att         = sanitize_title($attribute);
         $default_att = !empty($att) && $data['default_atts'] ? ($data['default_atts'][$att] ?? $data['default_atts'][`attribute_{$att}`]) : '';
-        self::log('default att ' . $default_att);
         $default_att = empty($default_att) ? '' : sanitize_title($default_att);
 
         if( !empty( $terms ) ){

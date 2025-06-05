@@ -60,13 +60,11 @@
                 self.setVariationDescription(row, variation);
                 self.addClearVariations(row);
 
-                const ability = !variation || (variation && variation.stock_status === 'outofstock') || (variation && !variation.price) ? false : true;
-                self.disableRow(row, ability);
+                self.disableRow(row, variation);
             });
             $(document.body).on('click', '.mpc-product-variation a.reset_variations', function(e){
                 e.preventDefault();
                 self.clearAllVariations($(this));
-                self.disableRow($(this).closest('tr.cart_item'), true);
             });
         }
 
@@ -213,21 +211,20 @@
             });
             row.find('a.reset_variations').remove();
             row.find('.woocommerce-product-details__short-description').text('');
-            this.disableRow(row, true);
         }
-        disableRow(row, ability){
+        disableRow(row, variation){
             const qtyField = row.find('.mpc-product-quantity input[type="number"]');
             const checkBox = row.find('.mpc-product-select input[type="checkbox"]');
 
-            // check variation attribute situations.
-            ability = row.data('type') === 'variable' && this.hasRowDisputs(row) ? false : ability;
+            let ability = true;
+            if(!this.hasRowDisputs(row)){
+                if(!variation) ability = false;
+                if(variation && (variation.stock_status === 'outofstock' || !variation.price)) ability = false;
+            }
 
             if(ability){
                 if(qtyField.length !== 0) qtyField.prop('disabled', false);
-                if(checkBox.length !== 0){
-                    checkBox.prop('disabled', false);
-                    checkBox.trigger('click');
-                }
+                if(checkBox.length !== 0) checkBox.prop('disabled', false);
             }else{
                 if(qtyField.length !== 0){
                     qtyField.val(0);
@@ -241,7 +238,9 @@
         }
         variationAttributeMarker(att){
             const marker = 'mpc-att-marker';
-            att.find('option:selected').val().length !== 0 && !att.hasClass(marker) ? att.addClass(marker) : att.removeClass(marker);
+            if(att.find('option:selected').val().length !== 0){
+                if(!att.hasClass(marker)) att.addClass(marker);
+            }else att.removeClass(marker);
         }
 
         // helper functions.
@@ -253,8 +252,6 @@
             const variation = this.getVariation(row);
             const price     = variation ? parseFloat(variation['price']) : parseFloat(row.data('price'));
             const qty       = qtyField && qtyField.length !== 0 ? parseInt(qtyField.val()) : 1;
-            // console.log(price, qty);
-            // console.log(variation, typeof variation);
             return price && qty ? price * qty : 0;
         }
         getVariation(row){
@@ -304,7 +301,7 @@
                 total++;
                 if($(this).find('option:selected').val()) selected++;
             });
-            return total === 0 || (total > 0 && total === selected) ? false : true;
+            return total > 0 && total === selected ? false : true;
         }
         formatPrice(price){
             return price.toLocaleString(mpc_frontend.locale, {
