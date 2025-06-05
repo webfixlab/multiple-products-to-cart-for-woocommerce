@@ -371,32 +371,31 @@ class MPC_Table_Template {
 
         $terms = taxonomy_exists( $attribute ) ? wc_get_product_terms( $data['id'], $attribute, array( 'fields' => 'all' ) ) : [];
 
+        $att         = sanitize_title($attribute);
+        $default_att = !empty($att) && $data['default_atts'] ? ($data['default_atts'][$att] ?? $data['default_atts'][`attribute_{$att}`]) : '';
+        self::log('default att ' . $default_att);
+        $default_att = empty($default_att) ? '' : sanitize_title($default_att);
+
         if( !empty( $terms ) ){
             foreach( $terms as $term ){
                 if( !in_array( $term->slug, $options, true ) ) continue;
-                self::option_item( $term->slug, $term->name, $data );
+                self::option_item( $term->slug, $term->name, $default_att );
             }
         }else{
             foreach( $options as $option ){
                 $s_option = sanitize_title( $option ); // Sanitized option name.
-                self::option_item( $s_option, $option, $data );
+                self::option_item( $s_option, $option, $default_att );
             }
         }
     }
-    private static function option_item( $slug, $name, $data ){
+    private static function option_item( $slug, $name, $default_att ){
         ?>
         <option
             value="<?php echo esc_attr( $name ); ?>"
-            <?php self::select_option( $slug ); ?>
-            ><?php echo esc_html( $name ); ?></option>
+            <?php echo selected($default_att, $slug); ?>>
+            <?php echo esc_html( $name ); ?>
+        </option>
         <?php
-    }
-    private static function select_option( $slug ){
-        $slug   = sanitize_title( $slug );
-        $select = $data['default_atts'] ?? [];
-        if( empty( $select ) ) return;
-
-        echo selected( $select, $slug ) || selected( $select, 'attribute_' . $slug );
     }
     private static function json_variation_data( $data ){
         if( !isset( $data['children'] ) || empty( $data['children'] ) ) return;
