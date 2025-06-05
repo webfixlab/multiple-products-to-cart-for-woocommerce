@@ -351,10 +351,10 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 
 		private function get_settings(){
 			$variation_desc = get_option( 'mpc_show_variation_desc' );
-			$variation_desc = empty( $variation_desc ) || 'on' !== $variation_desc ? false : true;
 
 			return array(
-				'variation_desc' => $variation_desc
+				'variation_desc' => empty( $variation_desc ) || 'on' !== $variation_desc ? false : true,
+				'default_qty'    => get_option( 'wmca_default_quantity', 1 ),
 			);
 		}
 

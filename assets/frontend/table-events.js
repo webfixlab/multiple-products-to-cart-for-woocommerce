@@ -13,6 +13,7 @@
                 this.globalEvents();
                 this.headerEvents();
                 this.tableRowEvents();
+                this.tableFooterEvents();
             });
         }
 
@@ -64,7 +65,13 @@
             });
             $(document.body).on('click', '.mpc-product-variation a.reset_variations', function(e){
                 e.preventDefault();
-                self.clearAllVariations($(this));
+                self.resetTableRow($(this).closest('tr.cart_item'));
+            });
+        }
+        tableFooterEvents(){
+            const self = this;
+            $(document.body).on('click', '.mpc-reset-table', function(){
+                self.resetTable($(this));
             });
         }
 
@@ -136,6 +143,19 @@
                 qtyField.val(parseInt(stock));
             }
         }
+        resetTable(item){
+            const self = this;
+            const wrap = item.closest('.mpc-container');
+            wrap.find('table.mpc-wrap tbody tr').each(function(){
+                self.resetTableRow($(this));
+            });
+
+            const filterDropdown = wrap.find('select[name="mpc_orderby"]');
+            if(filterDropdown.length !== 0 && filterDropdown.val() !== 'menu_order') filterDropdown.val('menu_order').trigger('change');
+
+            const checkAll = wrap.find('.mpc-all-select input[type="checkbox"]');
+            if(checkAll.length !== 0 && checkAll.is(':checked')) checkAll.trigger('click');
+        }
 
 
 
@@ -203,14 +223,6 @@
             }else{
                 row.find('.mpc-product-variation').append(`<div class="clear-button"><a class="reset_variations" href="#">Clear</a></div>`);
             }
-        }
-        clearAllVariations(item){
-            const row = item.closest('tr.cart_item');
-            row.find('select').each(function(){
-                $(this).val('').trigger('change');
-            });
-            row.find('a.reset_variations').remove();
-            row.find('.woocommerce-product-details__short-description').text('');
         }
         disableRow(row, variation){
             const qtyField = row.find('.mpc-product-quantity input[type="number"]');
@@ -302,6 +314,20 @@
                 if($(this).find('option:selected').val()) selected++;
             });
             return total > 0 && total === selected ? false : true;
+        }
+        resetTableRow(row){
+            if(row.find('select').length !== 0){
+                row.find('select').each(function(){
+                    $(this).val('').trigger('change');
+                });
+
+                const qtyField = row.find('.mpc-product-quantity input[type="number"]');
+                if(qtyField.length !== 0 && parseInt(qtyField.val()) > mpc_frontend.settings.default_qty) qtyField.val(mpc_frontend.settings.default_qty);
+            }
+
+            if(row.find('a.reset_variations').length !== 0) row.find('a.reset_variations').remove();
+            if(row.find('.woocommerce-product-details__short-description').length !== 0) row.find('.woocommerce-product-details__short-description').text('');
+            
         }
         formatPrice(price){
             return price.toLocaleString(mpc_frontend.locale, {
