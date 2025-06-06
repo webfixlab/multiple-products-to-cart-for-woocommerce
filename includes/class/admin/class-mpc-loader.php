@@ -274,10 +274,12 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// Register scripts.
 			wp_register_script( 'mpc-table-events', plugin_dir_url( MPC ) . 'assets/frontend/table-events.js', array( 'jquery' ), MPC_VER, true );
 			wp_register_script( 'mpc-table-helper', plugin_dir_url( MPC ) . 'assets/frontend/table-helper.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-cart-handler', plugin_dir_url( MPC ) . 'assets/frontend/table-cart-handler.js', array( 'jquery' ), MPC_VER, true );
 
 			// Enqueue scripts.
 			wp_enqueue_script( 'mpc-table-events' );
 			wp_enqueue_script( 'mpc-table-helper' );
+			wp_enqueue_script( 'mpc-table-cart-handler' );
 
 			// wp_register_script( 'mpc-main', plugin_dir_url( MPC ) . 'assets/frontend/main.js', array( 'jquery' ), MPC_VER, true );
 			// wp_enqueue_script( 'mpc-main' );
@@ -346,6 +348,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// localize script.
 			wp_localize_script( 'mpc-table-events', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-helper', 'mpc_frontend', $localaized_values );
+			wp_localize_script( 'mpc-table-cart-handler', 'mpc_frontend', $localaized_values );
 			// wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
 		}
 

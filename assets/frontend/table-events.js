@@ -88,19 +88,21 @@
             $(document.body).find('.mpc-container table.mpc-wrap').each(function(){
                 let totalRow = 0, checkedRow = 0;
                 $(this).find('tbody tr').each(function(){
+                    self.setRowData($(this));
+                    self.initTableRow();
+                    
                     totalRow++;
-                    // const qtyField = $(this).find('.mpc-product-quantity input[type="number"]');
-                    const checkBox = $(this).find('.mpc-product-select input[type="checkbox"]');
-
-                    if(!self.hasRowDisputs($(this)) && checkBox.length !== 0 && !checkBox.is(':checked')){
-                        checkBox.trigger('click');
-                        checkedRow++;
-                    }
+                    if(!self.hasRowDisputs($(this))) checkedRow++;
                 });
 
                 const checkAllBox = $(this).find('.mpc-select-all input[type="checkbox"]');
                 if(totalRow > 0 && totalRow === checkedRow && checkAllBox.length !== 0 && !checkAllBox.is(':checked')) checkAllBox.trigger('click');
             });
+        }
+        initTableRow(){
+            if(!this.hasRowDisputs(this.$row) && this.$fields.checkBox.length !== 0 && !this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
+            const variationId = this.$variation ? this.$variation.id : 0;
+            this.$row.attr('data-variation_id', variationId);
         }
         imagePopup(url, action){
             const popup = $('#mpcpop');
