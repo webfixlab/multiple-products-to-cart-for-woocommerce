@@ -20,9 +20,7 @@
             const self = this;
             $(document.body).on('click', '.mpc-cart .mpc-add-to-cart', function(e){
                 self.setCartData($(this));
-                if(!this.$data || mpc_frontend.redirect_url === 'ajax'){
-                    e.preventDefault();
-                }
+                if(!self.hasCartData()) e.preventDefault();
 
                 if(mpc_frontend.redirect_url === 'ajax') {
                     self.sendRequest();
@@ -41,10 +39,67 @@
 
 
 
+        // request preparation.
+        setCartData(item){
+            this.$wrap = item.closest('.mpc-container');
+            this.$data = this.getRequestData();
+        }
+        getRequestData(){
+            const self = this;
+            let data   = {};
+            this.$wrap.find('tr.cart_item').each(function(){
+                const rowData = self.getRowData($(this));
+                const id      = parseInt($(this).attr('data-id'));
+                if(rowData) data[id] = rowData;
+            });
+
+            if($.isEmptyObject(data)) this.notifyMsg(this.$wrap, 'error', mpc_frontend.blank_submit);
+            return data;
+        }
+        getRowData(row){
+            const type = row.attr('data-type');
+            if('grouped' === type) return false;
+
+            const variationId = parseInt(row.attr('data-variation_id'))
+            const checkBox    = row.find('input[type="checkbox"]');
+            const qtyField    = row.find('input[type="number"]');
+
+            let atts = {};
+            let totalAtts = 0, selectedAtts = 0;
+            row.find('select').each(function(){
+                const att = $(this).attr('data-attribute_name');
+                const val = $(this).find('option:selected').val();
+
+                totalAtts++;
+                if(val.length !== 0){
+                    atts[att] = val;
+                    selectedAtts++;
+                }
+            });
+
+            if(checkBox.length !== 0 && !checkBox.is(':checked')) return false;
+            if(qtyField.length !== 0 && qtyField.val() === 0) return false;
+            if(!variationId || variationId === 0) return false;
+            if(totalAtts > 0 && totalAtts !== selectedAtts) return false;
+
+            return {
+                'quantity':     qtyField.length !== 0 ? parseInt(qtyField.val()) : 1,
+                'type':         row.attr('data-type'),
+                'variation_id': variationId,
+                'attributes':   atts,
+            };
+        }
+        hasCartData(){
+            return !this.$data || mpc_frontend.redirect_url === 'ajax' ? false : true;
+        }
+
+
+
+        // process response section.
         sendRequest(){
             const self = this;
-            // remove loading animation.
-            this.loaderAnimation('load');
+            this.loaderAnimation('load'); // remove loading animation.
+
             $.ajax({
                 method: "POST",
                 url:    mpc_frontend.ajaxurl,
@@ -93,140 +148,6 @@
                 self.removeCartMsg();
             }, 7000);
         }
-        updateMiniCart(){
-            const event = new CustomEvent(
-                'wc-blocks_added_to_cart', {
-                    bubbles    : true,
-                    cancelable : true,
-                }
-            );
-            document.body.dispatchEvent(event);
-        }
-
-
-
-        setCartData(item){
-            this.$wrap = item.closest('.mpc-container');
-            this.$data = this.getRequestData(item);
-        }
-        getRequestData(item){
-            const self = this;
-            const wrap = item.closest('.mpc-container');
-
-            let data   = {};
-            wrap.find('tr.cart_item').each(function(){
-                const rowData = self.getRowData($(this), false);
-                if(!rowData) return; // continue, return false - break;.
-
-                $.each(rowData, function(id, d){
-                    data[id] = d;
-                });
-            });
-
-            if($.isEmptyObject(data)){
-                self.showNotification(wrap, 'error', mpc_frontend.blank_submit);
-                return false;
-            }
-            return data;
-        }
-        getRowData(row, is_single){
-            const type = row.attr('data-type');
-            if('grouped' === type) return false;
-
-            var data     = {};
-            var chk      = 0;
-            var qty      = 0;
-            var quantity = 1;
-
-            // check if checkbox is checked for adding.
-            const checkBox = row.find('input[type="checkbox"]');
-            if(checkBox.length !== 0 && !is_single){
-                chk++;
-                if(checkBox.is(':checked')) chk++;
-            }
-
-            // if quantity box exists.
-            const qtyField = row.find('input[type="number"]');
-            if(qtyField.length !== 0){
-                qty++;
-
-                if(qtyField.val().length > 0 && parseInt(qtyField.val()) > 0){
-                    qty++;
-                    quantity = parseInt(qtyField.val());
-                }
-            }
-
-            if((chk == 0 || chk == 2) && (qty == 0 || qty == 2)){
-            }else return false;
-
-            var id = 0, varid = 0;
-            id = parseInt(row.attr('data-id'));
-
-            // if exists or has value, get variation id.
-            if(typeof row.attr('data-variation_id') !== 'undefined' && row.attr('data-variation_id').length > 0){
-                varid = parseInt(row.attr('data-variation_id'));
-            }
-
-            data[id] = {};
-            data[id]['quantity'] = quantity;
-            data[id]['type']     = row.attr('data-type');
-
-            if(type === 'variable'){
-                // has_variation = true;
-                var tt = 0, ss = 0;
-                row.find('select').each(function(){
-                    tt++;
-                    if($(this).val().length > 0) ss++;
-                });
-
-                if(tt === ss && tt !== 0){
-                    data[id]['variation_id'] = varid;
-                    data[id]['attributes']   = {};
-
-                    row.find('select').each(function(){
-                        data[id]['attributes'][$(this).attr('data-attribute_name')] = $(this).find('option:selected').val();
-                    });
-                }else{
-                    return false;
-                }
-            }
-            return data;
-        }
-
-
-        loaderAnimation(way){
-            // way = load or close.
-            if(way === 'load'){
-                this.$wrap.find('table').before(`<span class="mpc-loader"><img src="${mpc_frontend.imgassets}loader.gif"></span>`);
-            }else if(way === 'close'){
-                $('body').find('.mpc-loader').remove();
-            }
-        }
-        showNotification(table, type, msg){
-            var html = type === 'error' ? `<p class="woo-err woocommerce-error">${msg}</p>` : '';
-
-            const noticeWrap = table.find('.woo-notices');
-            if(noticeWrap.length !== 0){
-                noticeWrap.html(html);
-            }else{
-                table.prepend(`<div class="woo-notices mpc-notice">${html}</div>`);
-            }
-
-            $('html, body').animate({
-                scrollTop: $(table).offset().top - 60
-            }, 'slow');
-
-            setTimeout(function(){
-                $('body').find('.mpc-popify').remove();
-            }, 2000);
-
-            setTimeout(function(){
-                table.find('.woo-notices').remove();
-            }, 5000);
-        }
-
-
-
         addCartMsg(response){
             $('body').find('.mpc-cart-messege').remove();
     
@@ -256,6 +177,48 @@
         removeCartMsg(){
             const cartMsg = this.$wrap.find('.mpc-cart-messege');
             if(cartMsg.length !== 0) cartMsg.remove();
+        }
+        updateMiniCart(){
+            const event = new CustomEvent(
+                'wc-blocks_added_to_cart', {
+                    bubbles    : true,
+                    cancelable : true,
+                }
+            );
+            document.body.dispatchEvent(event);
+        }
+
+
+
+        loaderAnimation(way){
+            // way = load or close.
+            if(way === 'load'){
+                this.$wrap.find('table').before(`<span class="mpc-loader"><img src="${mpc_frontend.imgassets}loader.gif"></span>`);
+            }else if(way === 'close'){
+                $('body').find('.mpc-loader').remove();
+            }
+        }
+        notifyMsg(table, type, msg){
+            var html = type === 'error' ? `<p class="woo-err woocommerce-error">${msg}</p>` : '';
+
+            const noticeWrap = table.find('.woo-notices');
+            if(noticeWrap.length !== 0){
+                noticeWrap.html(html);
+            }else{
+                table.prepend(`<div class="woo-notices mpc-notice">${html}</div>`);
+            }
+
+            $('html, body').animate({
+                scrollTop: $(table).offset().top - 60
+            }, 'slow');
+
+            setTimeout(function(){
+                $('body').find('.mpc-popify').remove();
+            }, 2000);
+
+            setTimeout(function(){
+                table.find('.woo-notices').remove();
+            }, 5000);
         }
     }
 

@@ -101,8 +101,13 @@
         }
         initTableRow(){
             if(!this.hasRowDisputs(this.$row) && this.$fields.checkBox.length !== 0 && !this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
+            
             const variationId = this.$variation ? this.$variation.id : 0;
             this.$row.attr('data-variation_id', variationId);
+            
+            this.$row.find('select').each(function(){ // triggering change since it's document load time.
+                if($(this).find('option:selected').val().length !== 0) $(this).trigger('change');
+            });
         }
         imagePopup(url, action){
             const popup = $('#mpcpop');
