@@ -58,7 +58,7 @@
                 self.checkProductStock();
                 self.updateTotalPrice($(this));
             });
-            $(document.body).on('click', 'input[type="checkbox"]', function(){
+            $(document.body).on('click change', 'input[type="checkbox"]', function(){
                 self.updateTotalPrice($(this));
             });
             $(document.body).on('change', '.mpc-product-variation select', function(){
@@ -92,21 +92,14 @@
         initTables(){
             const self = this;
             $(document.body).find('.mpc-container table.mpc-wrap').each(function(){
-                let totalRow = 0, checkedRow = 0;
                 $(this).find('tbody tr').each(function(){
                     self.setRowData($(this));
                     self.initTableRow();
-                    
-                    totalRow++;
-                    if(!self.hasRowDisputs($(this))) checkedRow++;
                 });
-
-                const checkAllBox = $(this).find('.mpc-select-all input[type="checkbox"]');
-                if(totalRow > 0 && totalRow === checkedRow && checkAllBox.length !== 0 && !checkAllBox.is(':checked')) checkAllBox.trigger('click');
             });
         }
         initTableRow(){
-            if(!this.hasRowDisputs(this.$row) && this.$fields.checkBox.length !== 0 && !this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
+            if(this.$fields.checkBox.is(':checked') && !this.hasRowDisputs(this.$row)) this.$fields.checkBox.trigger('change');
             
             const variationId = this.$variation ? this.$variation.id : 0;
             this.$row.attr('data-variation_id', variationId);
@@ -344,7 +337,7 @@
                 total++;
                 if($(this).find('option:selected').val()) selected++;
             });
-            return total > 0 && total === selected ? false : true;
+            return total > 0 && total !== selected ? true : false;
         }
         resetTableRow(row){
             row.find('select').each(function(){

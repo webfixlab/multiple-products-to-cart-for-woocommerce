@@ -85,20 +85,21 @@
             });
         }
         processResponse(response){
-            const wrapper = this.$wrap;
-            $(document.body).trigger('mpc_table_loaded');
+            const wrap = this.$wrap;
 
             this.updateContent(response);
 
             $('html, body').animate({
-                scrollTop: wrapper.offset().top - 80 // animate to table top.
+                scrollTop: wrap.offset().top - 80 // animate to table top.
             }, 'slow');
 
-            // remove sticky header     | wrapper.find('.mpc-fixed-header').remove();
-            // new sticky header render | renderStickyHead(wrapper.find('table'));
+            $(document.body).trigger('mpc_table_loaded');
+
+            // remove sticky header     | wrap.find('.mpc-fixed-header').remove();
+            // new sticky header render | renderStickyHead(wrap.find('table'));
 
             // calculate total price    | mpc_dynamic_product_pricing();
-            // select all handler       | mpc_init_select_all( wrapper );
+            // select all handler       | mpc_init_select_all( wrap );
         }
         updateContent(response){
             const wrap = this.$wrap;
