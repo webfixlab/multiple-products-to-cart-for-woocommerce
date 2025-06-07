@@ -272,14 +272,19 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend/frontend.css', array(), MPC_VER, 'all' );
 
 			// Register scripts.
+			wp_register_script( 'mpc-common', plugin_dir_url( MPC ) . 'assets/frontend/common.js', array( 'jquery' ), MPC_VER, true );
+
 			wp_register_script( 'mpc-table-events', plugin_dir_url( MPC ) . 'assets/frontend/table-events.js', array( 'jquery' ), MPC_VER, true );
 			wp_register_script( 'mpc-table-helper', plugin_dir_url( MPC ) . 'assets/frontend/table-helper.js', array( 'jquery' ), MPC_VER, true );
 			wp_register_script( 'mpc-table-cart-handler', plugin_dir_url( MPC ) . 'assets/frontend/table-cart-handler.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-loader', plugin_dir_url( MPC ) . 'assets/frontend/table-loader.js', array( 'jquery' ), MPC_VER, true );
 
 			// Enqueue scripts.
+			wp_enqueue_script( 'mpc-common' );
 			wp_enqueue_script( 'mpc-table-events' );
 			wp_enqueue_script( 'mpc-table-helper' );
 			wp_enqueue_script( 'mpc-table-cart-handler' );
+			wp_enqueue_script( 'mpc-table-loader' );
 
 			// wp_register_script( 'mpc-main', plugin_dir_url( MPC ) . 'assets/frontend/main.js', array( 'jquery' ), MPC_VER, true );
 			// wp_enqueue_script( 'mpc-main' );
@@ -346,10 +351,11 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			$localaized_values = apply_filters( 'mpca_update_local_vars', $localaized_values );
 
 			// localize script.
+			wp_localize_script( 'mpc-common', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-events', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-helper', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-cart-handler', 'mpc_frontend', $localaized_values );
-			// wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
+			wp_localize_script( 'mpc-table-loader', 'mpc_frontend', $localaized_values );
 		}
 
 		private function get_settings(){

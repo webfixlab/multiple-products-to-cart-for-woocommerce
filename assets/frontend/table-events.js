@@ -155,7 +155,7 @@
                 total += self.getRowTotalPrice($(this));
             });
 
-            total = this.formatPrice(total);
+            total = window.mpcCommon.formatPrice(total);
             tableWrap.find('.mpc-total .total-price').text(total);
             tableWrap.find('.mpc-floating-total span.total-price').text(total);
         }
@@ -209,7 +209,7 @@
             if(!this.$variation) return;
             
             const price = this.$variation.price;
-            priceWrap.find('span.total-price').text(this.formatPrice(price));
+            priceWrap.find('span.total-price').text(window.mpcCommon.formatPrice(price));
             typeof price !== 'undefined' ? priceWrap.show() : priceWrap.hide();
 
             // handle same variation price.
@@ -365,13 +365,6 @@
                 'qtyField' : this.$row.find('.mpc-product-quantity input[type="number"]'),
                 'checkBox' : this.$row.find('.mpc-product-select input[type="checkbox"]')
             };
-        }
-        formatPrice(price){
-            return price.toLocaleString(mpc_frontend.locale, {
-                minimumFractionDigits: mpc_frontend.dp,
-                maximumFractionDigits: mpc_frontend.dp,
-                useGrouping:           true
-            });
         }
     }
 

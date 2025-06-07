@@ -98,7 +98,7 @@
         // process response section.
         sendRequest(){
             const self = this;
-            this.loaderAnimation('load'); // remove loading animation.
+            window.mpcCommon.loaderAnimation(this.$wrap, 'load'); // remove loading animation.
 
             $.ajax({
                 method: "POST",
@@ -118,7 +118,7 @@
         }
         processResponse(response){
             // remove loading animation.
-            this.loaderAnimation('close');
+            window.mpcCommon.loaderAnimation(this.$wrap, 'close');
             this.processAddToCartResponse(response);
 
             // Call this function whenever you need to trigger a mini-cart update.
@@ -190,14 +190,6 @@
 
 
 
-        loaderAnimation(way){
-            // way = load or close.
-            if(way === 'load'){
-                this.$wrap.find('table').before(`<span class="mpc-loader"><img src="${mpc_frontend.imgassets}loader.gif"></span>`);
-            }else if(way === 'close'){
-                $('body').find('.mpc-loader').remove();
-            }
-        }
         notifyMsg(table, type, msg){
             var html = type === 'error' ? `<p class="woo-err woocommerce-error">${msg}</p>` : '';
 
