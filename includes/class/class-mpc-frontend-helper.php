@@ -89,6 +89,14 @@ class MPC_Frontend_Helper {
             }
         }
 
+        // convert to integer.
+        foreach($cs_atts as $type){
+            if('columns' === $type || 'type' === $type || !is_array( $atts[$type])) continue;
+            $atts[$type] = array_map(function($val){
+                return (int) $val;
+            }, $atts[$type]);
+        }
+
         return $atts;
     }
 
