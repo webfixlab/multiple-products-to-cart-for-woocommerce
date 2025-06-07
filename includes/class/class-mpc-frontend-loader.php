@@ -134,6 +134,7 @@ class MPC_Frontend_Loader {
         wp_send_json(
             array(
                 'mpc_fragments' => $response,
+                'post' => $_POST,
             )
         );
     }

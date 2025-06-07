@@ -50,24 +50,13 @@
                 });
             }
 
-            $.each(mpc_frontend.key_fields, function(shortcode_attr, attr_key){
-                // Shortcode_attr | shortcode attribute key - attr_key | identifier | .something or #something.
-                if(typeof wrap.find(attr_key) !== 'undefined' && typeof wrap.find(attr_key).val() !== 'undefined') return false;
+            const filter = wrap.find('select[name="mpc_orderby"]');
+            if(filter.length !== 0){
+                const filterBy  = filter.val();
+                atts['order']   = filterBy.indexOf('ASC') !== -1 ? 'ASC' : 'DESC';
+                atts['orderby'] = filterBy.replace(`-${atts['order']}`, '');
+            }
 
-                var attr_value = wrap.find(attr_key).val();
-                if(attr_value.length > 0){
-                    if(attr_value.indexOf('ASC') !== -1){
-                        attr_value = attr_value.replace('-ASC', '');
-                        atts.order = 'ASC';
-                    }else if(attr_value.indexOf('DESC') !== -1){
-                        attr_value = attr_value.replace('-DESC', '');
-                        atts.order = 'DESC';
-                    }
-
-                    if(attr_key.indexOf('mpcp-cat-filter') !== -1 && typeof atts[shortcode_attr] === 'undefined') atts.origin = 'dropdown_filter';
-                    if(attr_value !== 'menu_order') atts[shortcode_attr] = attr_value;
-                }
-            });
             this.$atts = atts;
         }
         sendRequest(){

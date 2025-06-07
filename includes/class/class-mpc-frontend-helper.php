@@ -126,6 +126,7 @@ class MPC_Frontend_Helper {
         
         // Orderb By and Order.
         $order_by = $atts['orderby'] ?? 'date';
+        $order_by = !in_array( $order_by, array( 'title', 'date', 'price' ), true ) ? 'date' : $order_by;
         $order    = isset( $atts['order'] ) && !empty( $atts['order'] ) ? strtoupper( $atts['order'] ) : 'DESC';
 
         // special ordering support.
@@ -133,26 +134,21 @@ class MPC_Frontend_Helper {
 
         $meta_key = '';
         if( in_array( $order_by, $special_support, true ) ){
-            $meta_key = 'price' === $order_by ? '_price' : '';
+            $meta_key = 'price' === $order_by ? '_price' : $order_by;
             $order_by = 'meta_value_num';
         }
-
+        
         // Fail-safe for enhanced security.
-        $limit    = $limit > 100 ? 100 : $limit;
-        $order_by = !in_array( $order_by, array( 'title', 'date' ), true ) ? 'date' : $order_by;
-
         $args = array(
             'post_type'      => 'product',
             'post_status'    => 'publish',
-            'posts_per_page' => $limit,
+            'posts_per_page' => $limit > 100 ? 100 : $limit,
             'paged'          => $paged,
             'fields'         => 'ids',
             'orderby'        => $order_by,
             'order'          => $order
         );
-        if( !empty( $meta_key ) ){
-            $args['meta_key'] = $meta_key; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-        }
+        if( !empty( $meta_key ) ) $args['meta_key'] = $meta_key; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 
         $args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
             array(

@@ -188,7 +188,7 @@ class MPC_Table_Template {
     public static function table_body() {
         global $mpc_frontend__;
 
-        if( !$mpc_frontend__['products'] ) return '<p>Sorry! No products found!';
+        if( !$mpc_frontend__['products'] ) return;
 
         foreach ( $mpc_frontend__['products'] as $id ) {
             self::display_row( $id );

@@ -322,10 +322,6 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 				),
 			);
 
-			$localaized_values['key_fields'] = array(
-				'orderby' => '.mpc-orderby',
-			);
-
 			// default quantity.
 			if ( empty( $localaized_values['dqty'] ) || '' === $localaized_values['dqty'] ) {
 				$localaized_values['dqty'] = 1;
