@@ -14,13 +14,19 @@
             this.$variation = null;
 
             $(document).ready(() => {
-                this.globalEvents();
-                this.headerEvents();
-                this.tableRowEvents();
-                this.tableFooterEvents();
-
-                this.initTables();
+                this.init();
             });
+            $(document).on('mpc_table_loaded', () => {
+                this.init();
+            });
+        }
+        init(){
+            this.globalEvents();
+            this.headerEvents();
+            this.tableRowEvents();
+            this.tableFooterEvents();
+
+            this.initTables();
         }
 
 

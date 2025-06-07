@@ -68,10 +68,10 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 						
 			// Include frontend Classes and functions.
 			include MPC_PATH . 'includes/class/class-mpc-frontend-helper.php';
-			include MPC_PATH . 'includes/class/class-mpc-frontend-loader.php';
-			include MPC_PATH . 'includes/class/class-mpc-add-to-cart.php';
-			
 			include MPC_PATH . 'includes/class/class-mpc-table-template.php';
+
+			include MPC_PATH . 'includes/class/class-mpc-frontend-loader.php';		
+			include MPC_PATH . 'includes/class/class-mpc-add-to-cart.php';
 		}
 
 		/**

@@ -65,8 +65,8 @@ class MPC_Frontend_Loader {
         }
 
         $atts = array(); // shortcode attribute data.
-        if ( isset( $_POST['atts'] ) ) {
-            $atts = array_map( 'sanitize_text_field', wp_unslash( $_POST['atts'] ) );
+        foreach(wp_unslash($_POST['atts']) as $key => $val){
+            $atts[$key] = !is_array($val) ? sanitize_text_field($val) : array_map('sanitize_text_field', $val);
         }
 
         $products = self::get_products( $atts );

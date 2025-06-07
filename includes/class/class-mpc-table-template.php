@@ -188,7 +188,7 @@ class MPC_Table_Template {
     public static function table_body() {
         global $mpc_frontend__;
 
-        if( !$mpc_frontend__['products'] ) return;
+        if( !$mpc_frontend__['products'] ) return '<p>Sorry! No products found!';
 
         foreach ( $mpc_frontend__['products'] as $id ) {
             self::display_row( $id );
@@ -214,6 +214,7 @@ class MPC_Table_Template {
     }
     public static function display_all_columns(){
         global $mpc_frontend__;
+        if(!isset($mpc_frontend__['cols'])) return;
 
         foreach ( $mpc_frontend__['cols'] as $col ) {
             do_action( 'mpc_table_column_' . str_replace( 'wmc_ct_', '', $col ) );

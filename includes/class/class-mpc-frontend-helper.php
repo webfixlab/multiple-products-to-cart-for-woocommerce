@@ -79,27 +79,13 @@ class MPC_Frontend_Helper {
         $cs_atts = array( 'selected', 'ids', 'skip_products', 'cats', 'tags', 'type', 'columns' );
 
         foreach ( $cs_atts as $type ) {
-            // for selected all, skip.
-            if ( 'selected' === $type && 'all' === $atts[ $type ] ) {
-                continue;
-            }
-
+            if( 'selected' === $type && 'all' === $atts[ $type ] ) continue; // for selected all, skip.
+            if( is_array( $atts[$type] ) ) continue;
+            
             if ( isset( $atts[ $type ] ) && '' !== $atts[ $type ] ) {
-                $tmp   = str_replace( ' ', '', $atts[ $type ] );
-                $tmp   = explode( ',', $tmp );
-                $tmp_a = array();
-
-                foreach ( $tmp as $a ) {
-                    if ( false === in_array( $a, $tmp_a, true ) ) {
-                        if ( 'type' === $type || 'columns' === $type ) {
-                            array_push( $tmp_a, $a );
-                        } else {
-                            array_push( $tmp_a, (int) $a );
-                        }
-                    }
-                }
-
-                $atts[ $type ] = $tmp_a;
+                $tmp = str_replace( ' ', '', $atts[ $type ] );
+                $tmp = explode( ',', $tmp );
+                $atts[ $type ] = array_unique( $tmp );
             }
         }
 
@@ -190,16 +176,13 @@ class MPC_Frontend_Helper {
         }
 
         // product type(s).
-        $att_types = isset( $atts['type'] ) ? $atts['type'] : array( 'simple', 'variable' );
+        $att_types = $atts['type'] ? (is_array($atts['type']) ? $atts['type'] : explode(',', $atts['type'])) : ['simple', 'variable'];
         $supported = apply_filters( 'mpc_change_product_types', array( 'simple', 'variable' ) );
 
         // sanitize types.
-        $types     = array_map(
-            function ( $val ) {
-                return sanitize_title( $val );
-            },
-            $att_types
-        );
+        $types = array_map(function ( $val ) {
+            return sanitize_title( $val );
+        }, $att_types );
         $supported = array_map(
             function ( $val ) {
                 return sanitize_title( $val );
