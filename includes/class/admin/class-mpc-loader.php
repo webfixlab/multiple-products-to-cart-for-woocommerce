@@ -237,7 +237,10 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			wp_enqueue_script( 'wp-color-picker' );
 
 			wp_register_script( 'mpc_admin_script', plugin_dir_url( MPC ) . 'assets/admin/admin.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
+			wp_register_script( 'mpc-shortcode', plugin_dir_url( MPC ) . 'assets/admin/shortcode.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
+
 			wp_enqueue_script( 'mpc_admin_script' );
+			wp_enqueue_script( 'mpc-shortcode' );
 
 			// Choices JS.
 			wp_register_style( 'choices-css', plugin_dir_url( MPC ) . 'assets/lib/choices-js/choices.min.css', array(), MPC_VER );
@@ -258,7 +261,8 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// apply hook for editing localized variables in admin script.
 			$var = apply_filters( 'mpca_local_var', $var );
 
-			wp_localize_script( 'mpc_admin_script', 'mpca_obj', $var );
+			wp_localize_script( 'mpc_admin_script', 'mpc_admin', $var );
+			wp_localize_script( 'mpc-shortcode', 'mpc_admin', $var );
 		}
 
 		/**
