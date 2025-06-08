@@ -18,8 +18,8 @@
         }
 		initChoiceJSItem(item){
             const self = this;
-			var id = item.attr('id');
-			if(!id || id.length === 0) return; // true/none = continue, false = break.
+			const id   = item.attr('id');
+			if(id.length === 0) return; // true/none = continue, false = break.
 
             const single = id === 'cats' ? 'category' : 'product';
             const plural = id === 'cats' ? 'categories' : 'products';
@@ -42,10 +42,10 @@
 				params['searchResultLimit'] = 50;
 			}
 
-			var type = new Choices(document.querySelector(`#${id}`), params);
+			var type = new Choices(document.querySelector('#' + id), params); // `#${id}`
 
 			var debounceTimeout;
-			$(`#${id}`).on('search', function(event){
+			$('#' + id).on('search', function(event){
 				clearTimeout(debounceTimeout);
 				type.setChoices([{ value: '', label: 'Loading...' }], 'value', 'label', true);
 
@@ -76,27 +76,19 @@
 			});
 
 			type.passedElement.element.addEventListener('addItem', function(event){
-				self.UpdateFieldValue(item.closest('.choicesdp'));
+				self.UpdateFieldValue($(this).closest('.choicesdp'));
 			});
 
 			type.passedElement.element.addEventListener('removeItem', function(event){
-				self.UpdateFieldValue(item.closest('.choicesdp'));
+				self.UpdateFieldValue($(this).closest('.choicesdp'));
 			});
 		}
         UpdateFieldValue(wrap) {
-			let val    = '';
-			let values = [];
-
-			wrap.find('.choices__inner .choices__list .choices__item').each(function(){
-                var itemValue = $(this).attr('data-value');
-                if(values.indexOf(itemValue) === -1) { // Ensure uniqueness.
-                    values.push(itemValue);
-                    val = val.length !== 0 ? ',' : '';
-                    val += itemValue;
-                }
-            });
-
-			wrap.find('.choicesdp-field').val(val);
+			let selected = '';
+			wrap.find('select.mpc-sc-itembox option').each(function(){
+				if($(this).is(':selected')) selected += selected.length !== 0 ? `,${$(this).val()}` : $(this).val();
+			});
+			wrap.find('.choicesdp-field').val(selected);
 		}
     }
 
