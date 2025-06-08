@@ -437,7 +437,7 @@
 	margin-bottom:-40px
 }
 .first_customizer_field{
-	margin-top:-40px !important
+	margin-top:-20px !important
 }
 #mpcdp_settings .mpcdp_settings_option_field_theme_customizer:last-child:after{
 	content:unset
@@ -1086,7 +1086,7 @@ a .mpcasc-reset .button-secondary{
 		padding-top: 20px;
 	}
 	.mpc-notice.mpcdp_settings_toggle .mpcdp_settings_option:first-child, .mpc-banner.mpcdp_settings_toggle .mpcdp_settings_option:first-child{
-		padding-top: 0;
+		padding-top: 8px;
 	}
 	.mpcdp_settings_section .mpcdp_settings_toggle.mpc-shortcode .mpcdp_settings_option{
 		padding-top: 50px;
