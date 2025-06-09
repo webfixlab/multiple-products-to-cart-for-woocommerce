@@ -32,9 +32,8 @@ class MPC_Table_Template {
         add_action( 'mpc_table_column_quantity', array( __CLASS__, 'row_quantity' ), 10 );
         add_action( 'mpc_table_column_buy', array( __CLASS__, 'row_buy' ), 10 );
 
-        add_action( 'mpc_table_footer', array( __CLASS__, 'table_total_section' ), 10 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'add_to_cart_button' ), 20 );
-        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination_section' ), 30 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'total_row' ), 10 );
+        add_action( 'mpc_table_footer', array( __CLASS__, 'pagination_section' ), 20 );
         add_action( 'mpc_table_footer', array( __CLASS__, 'table_data' ), 99 );
 
         add_action( 'wp_footer', array( __CLASS__, 'image_popup' ) );
@@ -495,11 +494,14 @@ class MPC_Table_Template {
 
 
 
-    public static function table_total_section(){
+    public static function total_row(){
         ?>
-        <div class="mpc-total-wrap">
-            <?php self::table_total(); ?>
-            <?php self::reset_button(); ?>
+        <div class="total-row">
+            <div class="mpc-total-wrap">
+                <?php self::table_total(); ?>
+                <?php self::reset_button(); ?>
+            </div>
+            <?php self::add_to_cart_button(); ?>
         </div>
         <?php
     }
