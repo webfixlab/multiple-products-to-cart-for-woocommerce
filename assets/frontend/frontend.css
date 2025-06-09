@@ -349,6 +349,7 @@ span.mpc-close-search {
 }
 .mpc-all-select input[type="checkbox"] {
 	margin-right: 0;
+	margin-left: 5px;
 }
 .mpc-all-select label {
 	color: #000;

@@ -144,8 +144,10 @@ class MPC_Table_Template {
         $label = empty( $label ) ? __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         ?>
         <div class="mpc-all-select">
-            <label><?php echo esc_html( $label ); ?></label>
-            <input type="checkbox" class="mpc-check-all">
+            <label>
+                <?php echo esc_html( $label ); ?>
+                <input name="show_all_select" type="checkbox" class="mpc-check-all">
+            </label>
         </div>
         <?php
     }
@@ -234,7 +236,7 @@ class MPC_Table_Template {
                         <?php echo esc_html__( 'sale', 'multiple-products-to-cart-for-woocommerce' ); ?>
                     </span>
                 <?php endif; ?>
-                <img src="<?php echo esc_url( $img['thumb'] ); ?>" class="mpc-product-image attachment-thumbnail size-thumbnail" alt="" data-fullimage="<?php echo esc_url( $img['full'] ); ?>">
+                <img src="<?php echo esc_url( $img['thumb'] ); ?>" class="mpc-product-image attachment-thumbnail size-thumbnail" alt="<?php echo esc_html( $data['title'] ); ?>" data-fullimage="<?php echo esc_url( $img['full'] ); ?>">
             </div>
             <?php do_action( 'init_mpc_gallery' ); ?>
         </td>

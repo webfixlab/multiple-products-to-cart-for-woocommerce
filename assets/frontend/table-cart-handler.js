@@ -79,12 +79,12 @@
 
             if(checkBox.length !== 0 && !checkBox.is(':checked')) return false;
             if(qtyField.length !== 0 && qtyField.val() === 0) return false;
-            if(!variationId || variationId === 0) return false;
+            if(type === 'variable' && (!variationId || variationId === 0)) return false;
             if(totalAtts > 0 && totalAtts !== selectedAtts) return false;
 
             return {
                 'quantity':     qtyField.length !== 0 ? parseInt(qtyField.val()) : 1,
-                'type':         row.attr('data-type'),
+                'type':         type,
                 'variation_id': variationId,
                 'attributes':   atts,
             };

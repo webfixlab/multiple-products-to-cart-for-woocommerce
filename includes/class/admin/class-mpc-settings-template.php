@@ -366,7 +366,7 @@ class MPC_Settings_Template {
                 </div>
                 <div class="mpcdp_row">
                     <div class="mpcdp_settings_option_description col-md-12">
-                        <textarea class="mpc-opt-sc" readonly >[woo-multi-cart table="<?php echo esc_attr( $id ); ?>"]</textarea>
+                        <textarea name="mpc_shortcode" class="mpc-opt-sc" readonly>[woo-multi-cart table="<?php echo esc_attr( $id ); ?>"]</textarea>
                     </div>
                     <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-4 mpc-sc-btns">
                         <span class="mpc-opt-sc-btn copy">
