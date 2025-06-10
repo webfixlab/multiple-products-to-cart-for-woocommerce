@@ -57,7 +57,7 @@
                 atts['orderby'] = filterBy.replace(`-${atts['order']}`, '');
             }
 
-            this.$atts = atts;
+            this.$atts = mpcCommon.applyFilters('mpcTableLoaderData', atts, this.$wrap);
         }
         sendRequest(){
             const self = this;

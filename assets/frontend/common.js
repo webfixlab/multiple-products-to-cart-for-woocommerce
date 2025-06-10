@@ -9,6 +9,7 @@
 ;(function($, window, document) {
     class mpcCommon{
         constructor(){
+            this.$filters = {};
             $(document).ready(() => {});
         }
         loaderAnimation(wrap, way){
@@ -25,6 +26,19 @@
                 maximumFractionDigits: mpc_frontend.dp,
                 useGrouping:           true
             });
+        }
+
+
+
+        addFilter(hookName, callback) {
+            if (!this.$filters[hookName]) {
+                this.$filters[hookName] = [];
+            }
+            this.$filters[hookName].push(callback);
+        }
+        applyFilters(hookName, value, ...args) {
+            if (!this.$filters[hookName]) return value;
+            return this.$filters[hookName].reduce((v, cb) => cb(v, ...args), value);
         }
     }
 
