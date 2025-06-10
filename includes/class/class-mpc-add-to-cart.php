@@ -83,26 +83,25 @@ class MPC_Add_To_Cart {
         $all_products       = array(); // array of product id => quantity.
 
         foreach ( $data as $product_id => $product ) {
+            if ( 'grouped' === $product['type'] ) continue;
+
             $flag = false;
             $key  = '';
-
-            if ( 'grouped' === $product['type'] ) {
-                continue;
-            }
-
-            if ( strpos( $product['type'], 'variable' ) !== false && isset( $product['variation_id'] ) ) {
+            $type         = false !== strpos( $product['type'], 'variable' ) ? 'variable' : 'simple';
+            $variation_id = $product['variation_id'] ?? '';
+            $variation_id = !empty( $variation_id ) ? (int) $variation_id : '';
+            if ( 'variable' === $type && !empty( $variation_id ) ) {
                 $flag = WC()->cart->add_to_cart( $product_id, $product['quantity'], $product['variation_id'], $product['attributes'] );
             } else {
-                $key  = WC()->cart->add_to_cart( $product_id, $product['quantity'] );
-                $flag = false !== $key ? true : false;
+                $flag = WC()->cart->add_to_cart( $product_id, $product['quantity'] );
+                // $flag = false !== $key ? true : false;
             }
 
             if ( false !== $flag ) {
                 do_action( 'woocommerce_ajax_added_to_cart', $product_id );
                 $all_products[ $product_id ] = $product['quantity'];
-            } else {
-                $add_to_cart_missed = true;
             }
+            $add_to_cart_missed = !$flag ? true : $add_to_cart_missed;
 
             do_action( 'mpc_after_add_to_cart', $product_id, $key );
         }
@@ -112,9 +111,7 @@ class MPC_Add_To_Cart {
             $resonse['req']          = $data;
             $resonse['cart_message'] = wc_add_to_cart_message( $all_products, true, true );
 
-            if ( $add_to_cart_missed ) {
-                $resonse['error_message'] = self::cart_format_error();
-            }
+            if ( $add_to_cart_missed ) $resonse['error_message'] = self::cart_format_error();
 
             wp_send_json( $resonse );
         } else {
@@ -132,17 +129,14 @@ class MPC_Add_To_Cart {
      */
     public static function cart_redirect( $url = '' ) {
         // if admin option set to cart.
-        if ( 'cart' === get_option( 'wmc_redirect' ) ) {
-            $url = wc_get_cart_url();
-        }
+        if( 'cart' === get_option( 'wmc_redirect', 'ajax' ) ) $url = wc_get_cart_url();
 
         // filter - modify given url.
         $url = apply_filters( 'mpc_add_to_cart_redirect_url', $url );
+        if( empty( $url ) ) return;
 
-        if ( ! empty( $url ) && '' !== $url ) {
-            wp_safe_redirect( $url );
-            exit;
-        }
+        wp_safe_redirect( $url );
+        exit;
     }
 
     /**
@@ -188,6 +182,18 @@ class MPC_Add_To_Cart {
 
         wc_clear_notices();
         return $result;
+    }
+
+
+
+    private static function log( $data ) {
+        if ( true === WP_DEBUG ) {
+            if ( is_array( $data ) || is_object( $data ) ) {
+                error_log( print_r( $data, true ) );
+            } else {
+                error_log( $data );
+            }
+        }
     }
 }
 

@@ -437,7 +437,7 @@
 	margin-bottom:-40px
 }
 .first_customizer_field{
-	margin-top:-20px !important
+	margin-top:-40px !important
 }
 #mpcdp_settings .mpcdp_settings_option_field_theme_customizer:last-child:after{
 	content:unset
@@ -917,6 +917,9 @@ a .mpcasc-reset .button-secondary{
 	display: none;
 }
 @media screen and (max-width: 1600px){
+	.first_customizer_field{
+		margin-top:-20px !important
+	}
 	.mpcdp_settings_submit .submit{
 		margin: 5px;
 	}

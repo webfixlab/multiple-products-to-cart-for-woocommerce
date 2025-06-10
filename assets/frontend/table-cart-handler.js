@@ -22,11 +22,8 @@
                 self.setCartData($(this));
                 if(!self.hasCartData()) e.preventDefault();
 
-                if(mpc_frontend.redirect_url === 'ajax') {
-                    self.sendRequest();
-                }else{
-                    this.$wrap.find('input[name="mpc_cart_data"]').val(JSON.stringify(this.$data));
-                }
+                if(mpc_frontend.redirect_url === 'ajax') self.sendRequest();
+                else self.prepareNonAjaxCartData();
             });
             $(document.body).on('click', '.mpc-floating-total .float-label', function(){
                 var wrap = $(this).closest('.mpc-container');
@@ -141,7 +138,7 @@
     
             setTimeout(function(){
                 $('body').find('.mpc-popify').remove();
-                self.resetTable();
+                self.resetTable(); 
             }, 2000);
     
             setTimeout(function(){
@@ -186,6 +183,9 @@
                 }
             );
             document.body.dispatchEvent(event);
+        }
+        prepareNonAjaxCartData(){
+            this.$wrap.find('input[name="mpc_cart_data"]').val(JSON.stringify(this.$data));
         }
 
 

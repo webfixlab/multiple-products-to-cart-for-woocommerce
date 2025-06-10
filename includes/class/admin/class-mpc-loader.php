@@ -294,12 +294,8 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// wp_enqueue_script( 'mpc-main' );
 
 			// handle localized variables.
-			$redirect_url = get_option( 'wmc_redirect' );
-			if ( '' === $redirect_url ) {
-				$redirect_url = 'cart';
-			}
-
-			$cart_btn_text = get_option( 'wmc_button_text' );
+			$redirect_url = get_option( 'wmc_redirect', 'ajax' );
+			$cart_btn_text = get_option( 'wmc_button_text', __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ) );
 
 			// add localized variables.
 			$localaized_values = array(
@@ -319,7 +315,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
 				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
 				'has_pro'        => $mpc__['has_pro'],
-				'cart_text'      => ! empty( $cart_btn_text ) ? $cart_btn_text : __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+				'cart_text'      => $cart_btn_text,
 				'wc_default_img' => array(
 					'thumb' => wc_placeholder_img_src(),
 					'full'  => wc_placeholder_img_src('full')
