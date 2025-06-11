@@ -433,13 +433,11 @@ class MPC_Table_Template {
         $data = $mpc_frontend__['row_data'];
         ?>
         <td for="quantity" class="mpc-product-quantity">
-            <?php self::quantity_field( $data ); ?>
+            <?php if( 'grouped' !== $data['type'] ) self::quantity_field( $data ); ?>
         </td>
         <?php
     }
     public static function quantity_field( $data ){
-        if( 'grouped' === $data['type'] ) return;
-
         $id          = $data['id'];
         $stock       = $data['stock'];
         $stock       = empty( $stock ) ? '' : (int) $stock;
@@ -451,7 +449,6 @@ class MPC_Table_Template {
         $min         = 1;
         $max         = empty( $stock ) ? '' : $stock;
         $default_qty = !empty( $stock ) && $default_qty > $stock ? $stock : $default_qty;
-
         ?>
         <input
             type="number"
@@ -470,26 +467,33 @@ class MPC_Table_Template {
     }
 
     public static function row_buy() {
+        ?>
+        <td for="buy" class="mpc-product-select">
+            <?php self::product_checker(); ?>
+        </td>
+        <?php
+    }
+    public static function product_checker(){
         global $mpc_frontend__;
+        $data = $mpc_frontend__['row_data'];
 
-        $data     = $mpc_frontend__['row_data'];
+        if( 'grouped' === $data['type'] ) return;
+
         $label    = get_option( 'wmc_ct_buy' );
         $label    = empty( $label ) ? __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ) : $label;
+
         $selected = $mpc_frontend__['atts']['selected'];
         $checked  = !empty($selected) && is_array($selected) && in_array( $data['id'], $selected, true ) ? 'checked' : '';
         ?>
-        <td for="buy" class="mpc-product-select">
-            <span class="mpc-mobile-only">
-                <?php echo esc_html( $label ); ?>
-            </span>
-            <input
-                type="checkbox"
-                name="product_ids[]"
-                value="<?php echo esc_attr( $data['id'] ); ?>"
-                data-price="<?php echo isset( $data['price_'] ) ? esc_attr( $data['price_'] ) : ''; ?>"
-                <?php echo esc_attr( $checked ); ?>>
-        </td>
-        <?php
+        <span class="mpc-mobile-only">
+            <?php echo esc_html( $label ); ?>
+        </span>
+        <input
+            type="checkbox"
+            name="product_ids[]"
+            value="<?php echo esc_attr( $data['id'] ); ?>"
+            data-price="<?php echo isset( $data['price_'] ) ? esc_attr( $data['price_'] ) : ''; ?>"
+            <?php echo esc_attr( $checked );
     }
 
 

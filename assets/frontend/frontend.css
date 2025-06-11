@@ -86,7 +86,6 @@ select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .m
 	background-repeat: no-repeat;
 	border-radius: 4px;
 	border: 1px solid #cdcdcd;
-	height: 35px;
 	font-size: 15px;
 }
 td.mpc-product-variation select.mpc-att-marker {
