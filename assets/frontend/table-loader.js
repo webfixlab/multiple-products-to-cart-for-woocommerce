@@ -13,15 +13,17 @@
             this.$page = 1;
             this.$atts = null;
 
+            const self = this;
+
             $(document).ready(() => {
                 this.loaderEvents();
+            });
+            $(document.body).on('mpc_load_table', function(event, item){
+                self.loadTable(item);
             });
         }
         loaderEvents(){
             const self = this;
-            $(document.body).on('change', '.mpcp-cat-filter select', function(){
-                self.loadTable($(this));
-            });
             $(document.body).on('click', '.mpc-pagenumbers span', function(){
                 if(!$(this).hasClass('current')) self.loadTable($(this));
             });
