@@ -477,8 +477,8 @@ class MPC_Table_Template {
         $data     = $mpc_frontend__['row_data'];
         $label    = get_option( 'wmc_ct_buy' );
         $label    = empty( $label ) ? __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ) : $label;
-        $selected = $mpc_frontend__['atts']['selected'] ?? [];
-        $checked  = in_array( $data['id'], $selected, true ) ? 'checked' : '';
+        $selected = $mpc_frontend__['atts']['selected'];
+        $checked  = !empty($selected) && is_array($selected) && in_array( $data['id'], $selected, true ) ? 'checked' : '';
         ?>
         <td for="buy" class="mpc-product-select">
             <span class="mpc-mobile-only">

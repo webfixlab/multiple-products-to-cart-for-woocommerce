@@ -59,8 +59,6 @@ class MPC_Frontend_Helper {
             'order'         => 'DESC',
             'ids'           => '',
             'skip_products' => '',
-            'cats'          => '',
-            'tags'          => '',
             'type'          => 'all',
             'link'          => 'true',
             'description'   => 'false',
