@@ -113,7 +113,7 @@ class MPC_Table_Template {
         </div>
         <?php
     }
-    private static function orderby_options( $options, $select ){
+    public static function orderby_options( $options, $select ){
         foreach( $options as $slug => $option ){
             $selected = $slug === $select ? 'selected' : '';
             $label    = get_option( $option['key'] );
@@ -258,7 +258,7 @@ class MPC_Table_Template {
         </td>
         <?php
     }
-    private static function product_parent( $data ){
+    public static function product_parent( $data ){
         if( ! isset( $data['parent'] ) || empty( $data['parent'] ) ){
             return;
         }
@@ -270,7 +270,7 @@ class MPC_Table_Template {
         </div>
         <?php
     }
-    private static function product_title( $data, $atts ){
+    public static function product_title( $data, $atts ){
         if( !$atts['link'] ){
             echo esc_html( $data['title'] );
             return;
@@ -281,7 +281,7 @@ class MPC_Table_Template {
         </a>
         <?php
     }
-    private static function product_desc( $data, $atts ){
+    public static function product_desc( $data, $atts ){
         if( !$atts['description'] ) {
             return;
         }
@@ -309,7 +309,7 @@ class MPC_Table_Template {
         </td>
         <?php
     }
-    private static function product_price( $data ){
+    public static function product_price( $data ){
         if( empty( $data['price'] ) ) return;
         echo wp_kses(
             $data['price'],
@@ -323,7 +323,7 @@ class MPC_Table_Template {
             )
         );
     }
-    private static function price_range( $data ){
+    public static function price_range( $data ){
         if( 'variable' !== $data['type'] ) return;
         ?>
         <span class="woocommerce-Price-amount amount">
@@ -347,7 +347,7 @@ class MPC_Table_Template {
         </td>
         <?php
     }
-    private static function variation_attributes( $data ){
+    public static function variation_attributes( $data ){
         if( !isset( $data['atts'] ) || empty( $data['atts'] ) ) return;
         $choose = get_option( 'wmc_option_text' ); // Choose attribute label.
 
@@ -368,7 +368,7 @@ class MPC_Table_Template {
 
         self::clear_variation( $data );
     }
-    private static function attribute_options( $attribute, $options, $data ){
+    public static function attribute_options( $attribute, $options, $data ){
         if( empty( $options ) ) return;
 
         $terms = taxonomy_exists( $attribute ) ? wc_get_product_terms( $data['id'], $attribute, array( 'fields' => 'all' ) ) : [];
@@ -389,7 +389,7 @@ class MPC_Table_Template {
             }
         }
     }
-    private static function option_item( $slug, $name, $default_att ){
+    public static function option_item( $slug, $name, $default_att ){
         ?>
         <option
             value="<?php echo esc_attr( $name ); ?>"
@@ -398,13 +398,13 @@ class MPC_Table_Template {
         </option>
         <?php
     }
-    private static function json_variation_data( $data ){
+    public static function json_variation_data( $data ){
         if( !isset( $data['children'] ) || empty( $data['children'] ) ) return;
         ?>
         <div class="row-variation-data" data-variation_data="<?php echo wc_esc_json( wp_json_encode( $data['children'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
         <?php
     }
-    private static function clear_variation( $data ){
+    public static function clear_variation( $data ){
         $total   = isset( $data['atts'] ) && !empty( $data['atts'] ) ? count( $data['atts'] ) : 0;
         $default = isset( $data['default_atts'] ) && !empty( $data['default_atts'] ) ? count( $data['default_atts'] ) : 0;
         ?>
@@ -417,7 +417,7 @@ class MPC_Table_Template {
         </div>
         <?php
     }
-    private static function no_variation( $data ){
+    public static function no_variation( $data ){
         if( isset( $data['atts'] ) && !empty( $data['atts'] ) ) return;
 
         $label = get_option( 'wmc_empty_value_text' );
@@ -437,7 +437,7 @@ class MPC_Table_Template {
         </td>
         <?php
     }
-    private static function quantity_field( $data ){
+    public static function quantity_field( $data ){
         if( 'grouped' === $data['type'] ) return;
 
         $id          = $data['id'];
@@ -453,21 +453,19 @@ class MPC_Table_Template {
         $default_qty = !empty( $stock ) && $default_qty > $stock ? $stock : $default_qty;
 
         ?>
-        <div class="quantity">
-            <input
-                type="number"
-                name="quantity<?php echo esc_attr( $id ); ?>"
-                value="<?php echo esc_attr( $default_qty ); ?>"
-                class="input-text qty text"
-                step="1"
-                min="<?php echo esc_attr( $min ); ?>"
-                max="<?php echo esc_attr( $max ); ?>"
-                title="<?php echo esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ); ?>"
-                size="4"
-                inputmode="numeric"
-                data-default="<?php echo esc_attr( $default_qty ); ?>"
-                data-current_stock="<?php echo esc_attr( $stock ); ?>">
-        </div>
+        <input
+            type="number"
+            name="quantity<?php echo esc_attr( $id ); ?>"
+            value="<?php echo esc_attr( $default_qty ); ?>"
+            class="input-text qty text"
+            step="1"
+            min="<?php echo esc_attr( $min ); ?>"
+            max="<?php echo esc_attr( $max ); ?>"
+            title="<?php echo esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ); ?>"
+            size="4"
+            inputmode="numeric"
+            data-default="<?php echo esc_attr( $default_qty ); ?>"
+            data-current_stock="<?php echo esc_attr( $stock ); ?>">
         <?php
     }
 
@@ -624,7 +622,7 @@ class MPC_Table_Template {
      * @param int $surround Number of pages to show before and after current page.
      * @return array
      */
-    private static function get_pagination_pages( $current, $total, $surround = 1 ) {
+    public static function get_pagination_pages( $current, $total, $surround = 1 ) {
         if ( $total <= 1 ) return array();
 
         $pages = array_unique( // Find unique numbers.
@@ -668,7 +666,7 @@ class MPC_Table_Template {
 
 
 
-    private static function log( $data ) {
+    public static function log( $data ) {
         if ( true === WP_DEBUG ) {
             if ( is_array( $data ) || is_object( $data ) ) {
                 error_log( print_r( $data, true ) );
