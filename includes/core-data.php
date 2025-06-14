@@ -263,7 +263,7 @@ $mpc__['fields'] = array(
 					'key'         => 'mpc_show_stock_out',
 					'type'        => 'checkbox',
 					'label'       => __( 'Display Out-of-Stock Products', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Choose to include out-of-stock products in the table. Note: products must be allowed to backorder.', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose to include out-of-stock products in the table.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -339,6 +339,14 @@ $mpc__['fields'] = array(
 					'label'       => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
 					'placeholder' => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+				),
+				array(
+					'key'         => 'wmc_reset_button_text',
+					'type'        => 'text',
+					'default'     => '',
+					'label'       => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => '',
+					'placeholder' => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				array(
 					'key'         => 'mpce_single_order_button_text',

@@ -15,6 +15,7 @@
 defined( 'ABSPATH' ) || exit;
 
 do_action( 'mpc_after_wrap' );
+
 ?>
 <div class="woocommerce-page woocommerce mpc-container">
 	<?php do_action( 'mpc_before_table' ); ?>
@@ -22,7 +23,7 @@ do_action( 'mpc_after_wrap' );
 		<div class="mpc-table-header">
 			<?php do_action( 'mpc_table_header' ); ?>
 		</div>    
-		<?php MPC_Table_Template::display_table(); ?>
+		<?php mpc_display_table(); ?>
 		<input type="hidden" name="mpc_cart_data" value="">
 		<div class="mpc-table-footer">
 			<?php do_action( 'mpc_table_footer' ); ?>
@@ -32,4 +33,5 @@ do_action( 'mpc_after_wrap' );
 	<?php do_action( 'mpc_after_table' ); ?>
 </div>
 <?php
+
 do_action( 'mpc_after_wrap' );
