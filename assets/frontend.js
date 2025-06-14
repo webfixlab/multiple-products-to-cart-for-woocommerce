@@ -518,7 +518,7 @@
 		wrap.find( '.mpc-fixed-header' ).remove();
 		table.after( html );
 
-		wrap.find( '.total-row' ).css( {'width': `${width}px`} );
+		if(window.screen.width > 500) wrap.find( '.total-row' ).css( {'width': `${width}px`} );
 
 		var header       = wrap.find( '.mpc-table-header' );
 		width            = width < 401 ? '100%' : `${width}px`;
