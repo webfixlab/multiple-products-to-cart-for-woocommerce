@@ -354,15 +354,13 @@ class MPC_Table_Template {
         foreach( $data['atts'] as $attribute => $options ){
             $name = sanitize_title( $attribute ); // Sanitized attribute name.
             ?>
-            <div class="variation-group">
-                <select class="<?php echo esc_attr( $name ); ?>" name="attribute_<?php echo esc_attr( $name ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name ); ?>">
-                    <option value=""><?php
-                        echo empty( $choose ) ? '' : esc_html( $choose ) . '&nbsp;';
-                        echo wc_attribute_label( $attribute );
-                        ?></option>
-                    <?php self::attribute_options( $attribute, $options, $data ); ?>
-                </select>
-            </div>
+            <select class="<?php echo esc_attr( $name ); ?>" name="attribute_<?php echo esc_attr( $name ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name ); ?>">
+                <option value=""><?php
+                    echo empty( $choose ) ? '' : esc_html( $choose ) . '&nbsp;';
+                    echo wc_attribute_label( $attribute );
+                    ?></option>
+                <?php self::attribute_options( $attribute, $options, $data ); ?>
+            </select>
             <?php
         }
 

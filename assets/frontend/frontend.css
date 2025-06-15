@@ -1,9 +1,20 @@
+.mpc-container {
+	position: relative;
+	margin-bottom: 20px;
+}
 table.mpc-wrap {
 	width: 100%;
+	margin-bottom: 10px;
 }
 #content table.mpc-wrap, #content table.mpc-wrap tr, #content table.mpc-wrap th, #content table.mpc-wrap td,
 #main-content table.mpc-wrap, #main-content table.mpc-wrap tr, #main-content table.mpc-wrap th, #main-content table.mpc-wrap td {
 	border: 0;
+}
+.mpc-fixed-header table, .entry-content .mpc-fixed-header table{
+	margin-bottom: 0;
+}
+#content table.mpc-wrap tbody tr:last-child td, #main-content table.mpc-wrap tbody tr:last-child td, #brx-cotnent table.mpc-wrap tbody tr:last-child td, .entry-content table.mpc-wrap tbody tr:last-child td {
+	border-bottom: 1px solid #e3e3e3;
 }
 table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
 	background: #444;
@@ -14,6 +25,9 @@ table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
 button.mpce-single-add {
 	padding: 4px 10px;
 	margin-top: 5px;
+}
+#brx-content button.mpce-single-add {
+	padding: 10px 20px;
 }
 .mpc-stock div {
 	color: #0f834d;
@@ -62,10 +76,14 @@ table.mpc-wrap img:hover {
 	margin-right: 7px;
 }
 select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .mpcp-tag-filter select {
-	max-width: 100%;
+	max-width: 200px;
     min-width: 75%;
     display: inline-block;
     border-radius: 4px;
+	padding: 7px 10px;
+}
+#brx-content select.mpc-orderby, #brx-content td.mpc-product-variation select, #brx-content .mpcp-cat-filter select, #brx-content .mpcp-tag-filter select {
+	padding: 0 25px 0 10px;
 }
 td.mpc-product-variation select {
 	margin-bottom: 10px;
@@ -84,6 +102,13 @@ td.mpc-product-variation select.mpc-att-marker {
 	background: #fff;
 	padding: 0 15px;
 	box-shadow: none;
+}
+#brx-content .mpc-asearch input {
+	padding: 0 12px;
+	height: auto;
+}
+#brx-content .mpc-asearch input:focus {
+	outline: 2px solid currentColor;
 }
 .mpc-wrap input.input-text.qty.text {
 	padding: 6px 3px;
