@@ -62,38 +62,19 @@ table.mpc-wrap img:hover {
 	margin-right: 7px;
 }
 select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .mpcp-tag-filter select {
-	background-color: white;
-	display: inline-block;
-	padding: 5px 20px 5px 10px;
-	margin: 0;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	outline: none;
-	background-image:
-		linear-gradient(45deg, transparent 50%, gray 50%),
-		linear-gradient(135deg, gray 50%, transparent 50%),
-		linear-gradient(to right, #ccc, #ccc);
-	background-position: calc(100% - 12px) calc(14px),
-	calc(100% - 7px) calc(14px),
-	calc(100% - 24px) 7px;
-	background-size:
-		5px 5px,
-		5px 5px,
-		0px 19px;
-	background-repeat: no-repeat;
-	border-radius: 4px;
-	border: 1px solid #cdcdcd;
-	font-size: 15px;
+	max-width: 100%;
+    min-width: 75%;
+    display: inline-block;
+    border-radius: 4px;
+}
+td.mpc-product-variation select {
+	margin-bottom: 10px;
+}
+table.mpc-wrap td select:last-of-type {
+	margin-bottom: 0;
 }
 td.mpc-product-variation select.mpc-att-marker {
     border: 1px solid #666;
-}
-select:-moz-focusring {
-	color: transparent;
-	text-shadow: 0 0 0 #000;
 }
 .mpc-asearch input {
 	border-radius: 4px;
@@ -103,18 +84,6 @@ select:-moz-focusring {
 	background: #fff;
 	padding: 0 15px;
 	box-shadow: none;
-}
-.mpc-wrap .variation-group {
-	margin-bottom: .75em;
-}
-.mpc-wrap .variation-group:last-child {
-	margin-bottom: 0;
-}
-.mpc-wrap .variation-group > label {
-	display: block;
-}
-.mpc-wrap .variation-group > select {
-	min-width: 65%;
 }
 .mpc-wrap input.input-text.qty.text {
 	padding: 6px 3px;
@@ -622,10 +591,6 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
 }
 .mpc-fixed-header table thead tr th:last-child{
 	border-bottom-right-radius: 4px;
-}
-.mpc-table-header .mpc-sort select, .mpc-table-header .mpcp-cat-filter select, .mpc-table-header .mpcp-tag-filter select {
-	padding-right: 25px;
-	max-width: 160px;
 }
 .mpc-table-header.mpc-fixed-filter {
 	position: fixed;

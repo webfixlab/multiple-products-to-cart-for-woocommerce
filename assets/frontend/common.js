@@ -12,6 +12,26 @@
             this.$filters = {};
             $(document).ready(() => {});
         }
+
+
+
+        imagePopup(url, action){
+            const popup = $('#mpcpop');
+            if(!popup) return;
+
+            if(action === 'hide'){
+                popup.hide();
+                return;
+            }
+
+            if(!url) return;
+
+            popup.find('.image-wrap img').attr('src', url);
+            popup.show();
+        }
+
+
+
         loaderAnimation(wrap, way){
             // way = load or close.
             if(way === 'load'){

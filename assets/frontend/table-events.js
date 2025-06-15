@@ -35,11 +35,11 @@
             const self = this;
             $(document.body).on('click', '#mpcpop', function(e){
                 if(e.target.tagName.toLowerCase() !== 'img'){
-                    self.imagePopup('', 'hide');
+                    mpcCommon.imagePopup('', 'hide');
                 }
             });
             $(document.body).on('click', 'span.mpcpop-close', function(){
-                self.imagePopup('', 'hide');
+                mpcCommon.imagePopup('', 'hide');
             });
         }
         headerEvents(){
@@ -108,20 +108,6 @@
                 if($(this).find('option:selected').val().length !== 0) $(this).trigger('change');
             });
         }
-        imagePopup(url, action){
-            const popup = $('#mpcpop');
-            if(!popup) return;
-
-            if(action === 'hide'){
-                popup.hide();
-                return;
-            }
-
-            if(!url) return;
-
-            popup.find('img').attr('src', url);
-            popup.show();
-        }
 
         // table header events.
         selectAllProducts(item){
@@ -142,7 +128,7 @@
         showProductImage(item){
             const url = item.attr('data-fullimage');
             if(!url) return;
-            this.imagePopup(url, 'show');
+            mpcCommon.imagePopup(url, 'show');
         }
         updateTotalPrice(item){
             const self      = this;
