@@ -491,7 +491,8 @@ class MPC_Table_Template {
             name="product_ids[]"
             value="<?php echo esc_attr( $data['id'] ); ?>"
             data-price="<?php echo isset( $data['price_'] ) ? esc_attr( $data['price_'] ) : ''; ?>"
-            <?php echo esc_attr( $checked );
+            <?php echo esc_attr( $checked ); ?>>
+        <?php
     }
 
 
