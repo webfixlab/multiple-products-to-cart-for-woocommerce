@@ -22,16 +22,6 @@ table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
 	padding: .75em 1em;
 	text-align: left;
 }
-button.mpce-single-add {
-	padding: 4px 10px;
-	margin-top: 5px;
-}
-#brx-content button.mpce-single-add {
-	padding: 10px 20px;
-}
-.mpc-stock div {
-	color: #0f834d;
-}
 table.mpc-wrap tbody tr td {
 	padding: 1em;
 	vertical-align: middle;
@@ -75,14 +65,14 @@ table.mpc-wrap img:hover {
 	vertical-align: middle;
 	margin-right: 7px;
 }
-select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .mpcp-tag-filter select {
+select.mpc-orderby, td.mpc-product-variation select{
 	max-width: 200px;
     min-width: 75%;
     display: inline-block;
     border-radius: 4px;
 	padding: 7px 10px;
 }
-#brx-content select.mpc-orderby, #brx-content td.mpc-product-variation select, #brx-content .mpcp-cat-filter select, #brx-content .mpcp-tag-filter select {
+#brx-content select.mpc-orderby, #brx-content td.mpc-product-variation select{
 	padding: 0 25px 0 10px;
 }
 td.mpc-product-variation select {
@@ -93,22 +83,6 @@ table.mpc-wrap td select:last-of-type {
 }
 td.mpc-product-variation select.mpc-att-marker {
     border: 1px solid #666;
-}
-.mpc-asearch input {
-	border-radius: 4px;
-	outline: none;
-	border: 1px solid #666;
-	height: 35px;
-	background: #fff;
-	padding: 0 15px;
-	box-shadow: none;
-}
-#brx-content .mpc-asearch input {
-	padding: 0 12px;
-	height: auto;
-}
-#brx-content .mpc-asearch input:focus {
-	outline: 2px solid currentColor;
 }
 .mpc-wrap input.input-text.qty.text {
 	padding: 6px 3px;
@@ -196,7 +170,7 @@ span.mpc-total {
 }
 
 
-button.mpce-single-add, .mpc-button input[type=submit], .mpc-button input.mpc-reset {
+.mpc-button input[type=submit], .mpc-button input.mpc-reset {
 	font-weight: normal;
 	font-size: 14px;
 	border-radius: 3px;
@@ -210,7 +184,6 @@ button.mpce-single-add, .mpc-button input[type=submit], .mpc-button input.mpc-re
 	text-decoration: none;
 	text-shadow: none;
 	display: inline-block;
-	-webkit-appearance: none;
 	transition: .5s;
 	line-height: 1;
 }
@@ -261,8 +234,7 @@ button.mpce-single-add, .mpc-button input[type=submit], .mpc-button input.mpc-re
 	text-align: center;
 	z-index: 999999;
 }
-.mpc-popup .image-wrap,
-.mpc-popup .mpc-gallery {
+.mpc-popup .image-wrap{
 	position: relative;
 	z-index: 1; /* Keep content above the backdrop blur */
 }
@@ -280,6 +252,14 @@ button.mpce-single-add, .mpc-button input[type=submit], .mpc-button input.mpc-re
 	-webkit-animation-duration: 0.6s;
 	animation-name: zoom;
 	animation-duration: 0.6s;
+}
+@-webkit-keyframes zoom {
+	from {-webkit-transform:scale(0)}
+	to {-webkit-transform:scale(1)}
+}
+@keyframes zoom {
+	from {transform:scale(0)}
+	to {transform:scale(1)}
 }
 h4.mpcpop-title {
 	color: #fff;
@@ -310,14 +290,11 @@ select.mpc-highlighter{
 .mpc-popify{
 	display: block;
 }
-.mpc-sort, .mpcp-cat-filter, .mpc-asearch, .mpcp-tag-filter {
+.mpc-sort{
 	float: left;
 	margin-bottom: 20px;
 	margin-right: 15px;
 	display: inline-flex;
-}
-.mpc-asearch {
-	position: relative;
 }
 span.mpc-close-search {
 	display: none;
@@ -376,92 +353,6 @@ span.mpc-single-add:hover {
 	border-radius: 4px;
 	border: 1px solid #c3c3c3;
 }
-.mpce-quantity {
-	display: flex;
-	align-items: center;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-}
-.mpce-quantity span {
-	background: #d7d7d769;
-	width: 35px;
-	display: inline-block;
-	text-align: center;
-	line-height: 1.3;
-	color: #000;
-	padding: 8px 0;
-}
-.mpce-quantity span:hover {
-	cursor: pointer;
-	opacity: .9;
-}
-.mpce-quantity span.mpcqdis {
-	opacity: .2;
-	cursor: not-allowed;
-}
-.mpce-quantity input{
-	box-shadow: none;
-	line-height: 25px;
-}
-.mpce-quantity input::-webkit-outer-spin-button,
-.mpce-quantity input::-webkit-inner-spin-button {
-	/* display: none; <- Crashes Chrome on hover */
-	-webkit-appearance: none;
-	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
-}
-.mpce-quantity input {
-	-moz-appearance:textfield; /* Firefox */
-}
-.mpce-quantity input:focus {
-	outline: 1px solid #7f54b3;
-}
-@-webkit-keyframes zoom {
-	from {-webkit-transform:scale(0)}
-	to {-webkit-transform:scale(1)}
-}
-@keyframes zoom {
-	from {transform:scale(0)}
-	to {transform:scale(1)}
-}
-/* loader */
-.mpc-loading{
-	color: #eeeeee;
-	position: relative;
-	opacity: .5;
-	background-color: #eeeeee;
-	border-color: #eeeeee;
-	cursor: pointer;
-	padding: 0.6180469716em 1.41575em;
-	display: inline-block;
-}
-.mpc-loading:after {
-	color: #333333;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	display: inline-block;
-	font-style: normal;
-	font-variant: normal;
-	font-weight: normal;
-	line-height: 1;
-	font-family: "Font Awesome 5 Free";
-	font-weight: 900;
-	line-height: inherit;
-	vertical-align: baseline;
-	content: "";
-	animation: fa-spin .75s linear infinite;
-	height: 20px;
-	width: 20px;
-	line-height: 20px;
-	font-size: 20px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-left: -10px;
-	margin-top: -10px;
-	display: block;
-}
 .mpc-container {
 	position: relative;
 }
@@ -490,103 +381,14 @@ table.mpc-wrap tbody tr td {
 .woo-notices.mpc-notice {
 	background: #ff9797;
 }
-/* Gallery */
-.mpcp-gallery .gallery-item {
-	width: 47%;
-	margin-top: 5px;
-	position: relative;
-	display: inline-block;
-}
-.gallery-item:nth-child(2) {
-	float: right;
-}
-.mpcp-gallery span.moregallery {
-	position: absolute;
-	top: 57%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-#mpcpop .mpc-gallery img {
-	width: 65px;
-	float: left;
-	margin-right: 10px;
-}
-#mpcpop .mpc-gallery {
-	position: fixed;
-	left: 50%;
-	bottom: 10px;
-	transform: translate(-50%, -50%);
-	margin: 0 auto;
-}
-.mpc-gallery img.mpcgi-selected {
-	border: 4px solid #2199c5;
-}
-/* floating total */
-.mpc-floating-total {
-	position: fixed;
-	left: 5px;
-	top: 50%;
-	background: #ccc;
-	padding: 2%;
-	text-align: center;
-}
-.mpc-floating-total span.float-label {
-	display: block;
-	text-decoration: underline;
-}
-.mpc-floating-total.active {
-	padding: 26px 30px;
-	background: #15b555;
-	color: #fff;
-}
-.mpc-floating-total.active span.float-label {
-	text-decoration: none;
-	padding: 1px 10px;
-	border-radius: 5px;
-	background: #077633;
-	cursor: pointer;
-}
-.mpc-subheader {
-	display: flex;
-	align-items: center;
-	padding: 10px 0;
-}
-table.mpc-wrap .mpc-subheader-img img {
-	margin: 0 10px 0 0;
-	border: 1px solid #c2b8b8;
-}
-.mpcp-gallery .gallery-item img {
-	width: 100%;
-	margin-top: 3%;
-}
-.mpc-subheader-info h3 {
-	margin: 0;
-}
-
-table.mpc-wrap tbody tr.mpc-subhead td{
-	padding: 0;
-}
-tr.mpc-subhead, tr.mpc-subhead .mpc-subheader{
-	background-color: #dee8ec;
-	padding-left: 10px;
-}
 .mpc-cart-messege .woocommerce-message {
 	margin: 0 0 10px 0;
 }
 .product-image img{
 	max-width: none !important;
 }
-.mpc-asearch img {
-	display: inline-block;
-	width: 26px;
-	margin: -5px 15px;
-}
 span.mpc-mobile-only {
 	display: none;
-}
-.hentry .entry-content .mpc-subheader-info a {
-	text-decoration: none;
-	font-size: 18px;
 }
 table.mpc-wrap thead tr th:first-child{
 	border-top-left-radius: 4px;
@@ -635,14 +437,6 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
 .mpc-table-header.mpc-fixed-filter > div {
 	margin-bottom: 0;
 }
-span.mpc-qlower{
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
-}
-span.mpc-qhigher{
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
-}
 .total-row.mpc-fixed-total-m {
 	position: fixed;
 	bottom: 0;
@@ -668,28 +462,9 @@ span.mpc-fixed-cart {
 .total-row.mpc-fixed-total-m > span {
 	vertical-align: middle;
 }
-.mpcp-loading {
-	width: 34px;
-	height: 34px;
-	border: 4px #fff solid;
-	border-top: 4px #878787 solid;
-	border-right: 4px #878787 solid;
-	border-radius: 50%;
-	animation: sp-anime 0.8s infinite linear;
-	margin-left: 5px;
-}
-@keyframes sp-anime {
-	100% {
-		transform: rotate(360deg);
-	}
-}
 .mpc-single-price {
 	display: none;
     font-weight: 600;
-}
-.mpc-fixed-filter .mpcp-loading{
-	width: 31px;
-	height: 30px;
 }
 /* Elementor section start */
 .woocommerce-page.mpc-container td.mpc-product-quantity .quantity{
@@ -713,7 +488,7 @@ span.mpc-fixed-cart {
 }
 /* Mobile CSS */
 @media screen and (max-width: 1600px) {
-	.mpc-sort, .mpcp-cat-filter, .mpc-asearch, .mpcp-tag-filter{
+	.mpc-sort{
 		margin-right: 10px;
 		max-width: 25%;
 	}
@@ -872,17 +647,17 @@ span.mpc-fixed-cart {
 		max-width: 98%;
 		max-height: 70vh;
 	}
-	.mpc-sort, .mpcp-cat-filter, .mpc-asearch, .mpcp-tag-filter {
+	.mpc-sort{
 		float: none;
 		margin-bottom: 10px;
 		margin-right: 0;
 		max-width: 100%;
 		width: 100%;
 	}
-	.mpc-fixed-filter .mpc-sort, .mpc-fixed-filter .mpcp-cat-filter, .mpc-fixed-filter .mpc-asearch, .mpc-fixed-filter .mpcp-tag-filter{
+	.mpc-fixed-filter .mpc-sort{
 		max-width: 47%;
 	}
-	select.mpc-orderby, .mpcp-cat-filter select, .mpc-asearch input, .mpcp-tag-filter select {
+	select.mpc-orderby{
 		display: block;
 		width: 100%;
 	}
@@ -904,14 +679,6 @@ span.mpc-fixed-cart {
 		padding-left: 0;
 		float: left;
 	}
-	button.mpce-single-add{
-		margin: 0;
-		vertical-align: middle;
-		font-weight: 400;
-		font-size: 14px;
-		padding: 5px 30px;
-		border-radius: 25px;
-	}
 	span.mpc-mobile-only {
 		display: block;
 		float: left;
@@ -919,16 +686,6 @@ span.mpc-fixed-cart {
 		font-size: 85%;
 		color: #6d6d6d;
 		line-height: 22px;
-	}
-	#mpcpop .mpc-gallery{
-		display: flex;
-		position: relative;
-		left: auto;
-		transform: unset;
-	}
-	#mpcpop .mpc-gallery img{
-		float: none;
-		margin-right: auto;
 	}
 	form.mpc-cart select, form.mpc-cart input[type="search"]{
 		border-radius: 5px;
@@ -946,18 +703,6 @@ span.mpc-fixed-cart {
 	}
 	.admin-bar .mpc-popup{
 		top: 0;
-	}
-	table.mpc-wrap tbody tr.mpc-subhead {
-		min-height: auto;
-	}
-	table.mpc-wrap tbody tr.mpc-subhead td {
-		padding: 0;
-	}
-	tr.mpc-subhead .mpc-subheader{
-		padding: 0;
-	}
-	.mpc-subheader-info {
-		margin-left: 10px;
 	}
 	.hentry .entry-content .mpc-container a {
 		text-decoration: none;
@@ -978,12 +723,7 @@ span.mpc-fixed-cart {
 		border-radius: 15px;
 		border: none;
 	}
-	.mpc-table-header .mpc-sort select, .mpc-table-header .mpcp-cat-filter select, .mpc-table-header .mpcp-tag-filter select{
+	.mpc-table-header .mpc-sort select{
 		max-width: 100%;
-	}
-	.mpcp-loading{
-		width: 41px;
-		height: 35px;
-		margin-left: 12px;
 	}
 }

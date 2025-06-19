@@ -25,10 +25,6 @@
                 if(mpc_frontend.redirect_url === 'ajax') self.sendRequest();
                 else self.prepareNonAjaxCartData();
             });
-            $(document.body).on('click', '.mpc-floating-total .float-label', function(){
-                var wrap = $(this).closest('.mpc-container');
-                wrap.find('.mpc-cart .mpc-add-to-cart').trigger('click');
-            });
             $(document.body).on('click', '.mpc-fixed-cart', function(){
                 $(this).closest('.mpc-container').find('.mpc-cart .mpc-add-to-cart').trigger('click');
             });
@@ -124,8 +120,7 @@
         processAddToCartResponse(response){
             const self = this;
             $(document.body).trigger('updated_cart_totals');
-    
-            this.$wrap.find('.mpc-button a.mpc-loading').remove();
+
             this.$wrap.find('.mpc-button input[type="submit"]').show();
     
             if(response.fragments){

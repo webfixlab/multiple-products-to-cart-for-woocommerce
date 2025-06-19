@@ -142,7 +142,6 @@
 
             total = window.mpcCommon.formatPrice(total);
             tableWrap.find('.mpc-total .total-price').text(total);
-            tableWrap.find('.mpc-floating-total span.total-price').text(total);
         }
         checkProductStock(){
             if(this.$row.attr('data-type') !== 'variable' || !this.$variation || !this.$variation.stock) return;
