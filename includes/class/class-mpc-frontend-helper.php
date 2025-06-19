@@ -396,38 +396,30 @@ class MPC_Frontend_Helper {
         return $common;
     }
 
-    public static function extract_price( $html ){
-        $plain_text = str_replace( get_woocommerce_currency_symbol(), '', $html );
+    public static function extract_price( $price_html ) {
+        $plain_text = str_replace( get_woocommerce_currency_symbol(), '', $price_html );
         $plain_text = wp_strip_all_tags( $plain_text );
 
-        $ds = get_option( 'woocommerce_price_decimal_sep', '.' ); // decimal separator.
-        $ts = get_option( 'woocommerce_price_thousand_sep', ',' ); // thousand separator.
+        $decimal_sep  = get_option( 'woocommerce_price_decimal_sep', '.' );
+        $thousand_sep = get_option( 'woocommerce_price_thousand_sep', ',' );
 
-        preg_match_all(
-            '/\d{1,3}(?:' . preg_quote( $ts, '/' ) . '\d{3})*(?:' . preg_quote( $ds, '/' ) . '\d+)?/',
-            $plain_text,
-            $matches
+        $ds = preg_quote( $decimal_sep, '/' );
+        $ts = preg_quote( $thousand_sep, '/' );
+
+        $pattern = "/\d{1,}(?:{$ts}\d{3})*(?:{$ds}\d+)?/";
+        preg_match_all( $pattern, $plain_text, $matches );
+        if( empty( $matches[0] ) ) return 0.0;
+
+        $prices = array_map(
+            function ( $price ) use ( $thousand_sep, $decimal_sep ) {
+                $price = str_replace( $thousand_sep, '', $price );
+                $price = str_replace( $decimal_sep, '.', $price );
+                return (float) $price;
+            },
+            $matches[0]
         );
 
-        if ( ! empty( $matches[0] ) ) {
-            $prices = array_map(
-                function ( $price ) use ( $ts, $ds ) {
-                    $price = str_replace( $ts, '', $price );
-                    $price = str_replace( $ds, '.', $price );
-                    return (float) $price;
-                },
-                $matches[0]
-            );
-
-            $i = count( $prices ) - 1;
-            if ( 0 === $i ) {
-                return $prices[0];
-            } else {
-                return $i > 3 ? $prices[4] : $prices[3];
-            }
-        }
-
-        return 0;
+        return end( $prices );
     }
     public static function prepare_stock( $data ){
         $status = $data['stock_status'] ?? '';
