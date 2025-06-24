@@ -397,8 +397,10 @@ class MPC_Frontend_Helper {
     }
 
     public static function extract_price( $price_html ) {
-        $plain_text = str_replace( get_woocommerce_currency_symbol(), '', $price_html );
-        $plain_text = wp_strip_all_tags( $plain_text );
+        $cs = get_woocommerce_currency_symbol();
+        $plain_text = wp_strip_all_tags( $price_html );
+        $plain_text = html_entity_decode( $plain_text );
+        $plain_text = str_replace( $cs, '', $plain_text );
 
         $decimal_sep  = get_option( 'woocommerce_price_decimal_sep', '.' );
         $thousand_sep = get_option( 'woocommerce_price_thousand_sep', ',' );
