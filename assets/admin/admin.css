@@ -917,6 +917,9 @@ a .mpcasc-reset .button-secondary{
 	display: none;
 }
 @media screen and (max-width: 1600px){
+	.first_customizer_field{
+		margin-top:-20px !important
+	}
 	.mpcdp_settings_submit .submit{
 		margin: 5px;
 	}
@@ -1086,7 +1089,7 @@ a .mpcasc-reset .button-secondary{
 		padding-top: 20px;
 	}
 	.mpc-notice.mpcdp_settings_toggle .mpcdp_settings_option:first-child, .mpc-banner.mpcdp_settings_toggle .mpcdp_settings_option:first-child{
-		padding-top: 0;
+		padding-top: 8px;
 	}
 	.mpcdp_settings_section .mpcdp_settings_toggle.mpc-shortcode .mpcdp_settings_option{
 		padding-top: 50px;

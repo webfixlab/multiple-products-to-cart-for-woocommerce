@@ -1,6 +1,6 @@
 === Product Table for WooCommerce - Multiple Products to Cart ===
 Contributors: aikya, smshahriar, webfixlab
-Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
+Tags: product table, woocommerce product table,wc product table,products table,woocommerce table
 Requires at least: 4.9
 Tested up to: 6.8.1
 Stable tag: 7.4.4
@@ -20,15 +20,13 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 
 **FEATURES**
 
-* NEW! Better support for custom themes like Avada, Astra, Bricks, Divi and plugins like YITH WooCommerce Dynamic Pricing & Discounts
-* NEW! Admin setting library [Choice-js](https://github.com/Choices-js/Choices/) update
-* Multiple product types like simple, variable support
-* Add to cart multiple products at once
-* One of the best mobile view for product table for WooCommerce
-* Supports default variations with correct attribute ordering
-* Sticky header and total price
-* Set table specific columns
-* Add pre-selected products and skip products
+* NEW! Better mobile view
+* NEW! Fixed total and filter bar
+* Import and export tables and settings
+* Select columns for each table
+* Sort table by categories and tags on clicking them
+* Skip products
+* Simple, Variable and Grouped product types supported
 * Works with MULTISITE
 * AJAX & non-ajax add to cart method
 * Truly lightweight and extremely fast, almost no impact on page speed
@@ -40,17 +38,15 @@ https://www.youtube.com/watch?v=bZr8LOo2-q0
 
 **PRO FEATURES**
 
-* Grouped and Subscription product types support
-* Category hierarchy dropdown with dynamic product count
-* Create dynamic sections in the table based on categories
-* Gallery images support
-* Add to cart button for each product
-* AJAX search with searchable custom meta data like SKU
-* Import and export tables and settings
-* Redirect to custom page after add to cart
-* Category, Tag, SKU, Stock and Rating columns
-* Custom product order
+* Show product gallery
 * Show variation description
+* Subscription product types supported
+* Redirect to custom page after submission
+* Category, Tag, SKU, Stock and Rating columns
+* AJAX powered live search box
+* Single add to cart button for each product
+* Sort or hide the columns using the drag and drop option
+* Custom product order
 * Rocket speed 24/7 support
 * [See all PRO features](https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/)
 
@@ -100,9 +96,7 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 == Screenshots ==
 
-1. Frontend view of only simple products
-2. Frontend view of only variable products
-3. Mobile view
-4. Admin settings
-5. All tables page
-6. Edit table
+1. Front-end View
+2. Settings
+3. Add custom columns on each table
+4. Import and export tables and settings
