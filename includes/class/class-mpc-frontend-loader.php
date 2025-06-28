@@ -84,12 +84,6 @@ class MPC_Frontend_Loader {
                             ),
                         ),
                         array(
-                            'key'         => '.mpc-product-range',
-                            'parent'      => '.mpc-button', // if key element not found add to parent.
-                            'adding_type' => 'prepend',
-                            'val'         => '',
-                        ),
-                        array(
                             'key'         => '.mpc-pagenumbers',
                             'parent'      => '.mpc-inner-pagination',
                             'adding_type' => 'prepend',
@@ -114,20 +108,18 @@ class MPC_Frontend_Loader {
         );
 
         ob_start();
-        MPC_Table_Template::pagination_info();
-        $response[] = array(
-            'key'         => '.mpc-product-range',
-            'parent'      => '.mpc-button', // if key element not found add to parent.
-            'adding_type' => 'prepend',
-            'val'         => ob_get_clean(),
-        );
-
-        ob_start();
         MPC_Table_Template::pagination();
         $response[] = array(
             'key'         => '.mpc-pagenumbers',
             'parent'      => '.mpc-inner-pagination',
             'adding_type' => 'prepend',
+            'val'         => ob_get_clean(),
+        );
+
+        ob_start();
+        MPC_Table_Template::pagination_info();
+        $response[] = array(
+            'key'         => '.mpc-product-range',
             'val'         => ob_get_clean(),
         );
 

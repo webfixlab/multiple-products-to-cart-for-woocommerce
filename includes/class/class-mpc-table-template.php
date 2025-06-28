@@ -231,7 +231,7 @@ class MPC_Table_Template {
         <td for="image" class="mpc-product-image">
             <div class="mpcpi-wrap">
                 <?php if ( $img['show_sale'] ) : ?>
-                    <span class="wfl-sale">
+                    <span class="mpc-on-sale">
                         <?php echo esc_html__( 'sale', 'multiple-products-to-cart-for-woocommerce' ); ?>
                     </span>
                 <?php endif; ?>

@@ -51,51 +51,25 @@ class MPC_Frontend_Helper {
      * @param array $atts shortcode attributes.
      */
     public static function parse_atts( $atts ) {
-        // Reference attributes.
-        $ref_atts = array(
+        $ref = apply_filters( 'mpc_filter_attributes', array(
             'table'         => '',
             'limit'         => 10,
             'orderby'       => '',
             'order'         => 'DESC',
             'ids'           => '',
             'skip_products' => '',
+            'cats'          => '',
             'type'          => 'all',
             'link'          => 'true',
             'description'   => 'false',
             'selected'      => '',
             'pagination'    => 'true',
             'columns'       => '',
+        ) );
+
+        return self::sanitize_atts(
+            shortcode_atts( $ref, $atts, 'woo-multi-cart' )
         );
-
-        // Hook for editing shortcode attributes.
-        $ref_atts = apply_filters( 'mpc_filter_attributes', $ref_atts );
-        $atts     = shortcode_atts( $ref_atts, $atts, 'woo-multi-cart' );
-
-        $atts = self::sanitize_boolean( $atts );
-
-        // comma separated attributes.
-        $cs_atts = array( 'selected', 'ids', 'skip_products', 'cats', 'tags', 'type', 'columns' );
-
-        foreach ( $cs_atts as $type ) {
-            if( 'selected' === $type && 'all' === $atts[ $type ] ) continue; // for selected all, skip.
-            if( is_array( $atts[$type] ) ) continue;
-            
-            if ( isset( $atts[ $type ] ) && '' !== $atts[ $type ] ) {
-                $tmp = str_replace( ' ', '', $atts[ $type ] );
-                $tmp = explode( ',', $tmp );
-                $atts[ $type ] = array_unique( $tmp );
-            }
-        }
-
-        // convert to integer.
-        foreach($cs_atts as $type){
-            if('columns' === $type || 'type' === $type || !is_array( $atts[$type])) continue;
-            $atts[$type] = array_map(function($val){
-                return (int) $val;
-            }, $atts[$type]);
-        }
-
-        return $atts;
     }
 
     /**
@@ -103,20 +77,26 @@ class MPC_Frontend_Helper {
      *
      * @param array $atts shortcode attributes.
      */
-    public static function sanitize_boolean( $atts ) {
-        if ( !is_array( $atts ) ) {
-            return $atts;
+    public static function sanitize_atts( $atts ) {
+        if( !is_array( $atts ) ) return $atts;
+
+        $boolean_types = [ 'link', 'description', 'pagination' ];
+        $number_types  = [ 'limit', 'table' ];
+        $array_types   = [ 'selected', 'ids', 'skip_products', 'cats', 'tags', 'type', 'columns' ];
+        foreach( $atts as $key => $value ){
+            if( empty( $value ) ) continue;
+
+            if( in_array( $key, $boolean_types, true ) ){
+                $atts[ $key ] = (bool) $value;
+            }
+            elseif( in_array( $key, $number_types, true ) ){
+                $atts[ $key ] = (int) $value;
+            }
+            elseif( in_array( $key, $array_types, true ) ){
+                if( 'all' === $value || is_array( $value ) ) continue;
+                $atts[ $key ] = array_unique( explode( ',', str_replace( ' ', '', $value ) ) );
+            }
         }
-
-        foreach ( $atts as $key => $value ) {
-            if ( ! isset( $value ) || empty( $value ) || '' === $value || 'string' !== gettype($value) ) continue;
-
-            $val = sanitize_title( $value );
-            $val = 'true' === $val ? true : ('false' === $val ? false : '');
-            
-            $atts[$key] = is_bool($val)? $val : $value;
-        }
-
         return $atts;
     }
 
@@ -168,14 +148,10 @@ class MPC_Frontend_Helper {
             ),
         );
 
-        if ( isset( $atts['ids'] ) && '' !== $atts['ids'] ) {
-            $args['post__in'] = $atts['ids'];
-        }
+        if( isset( $atts['ids'] ) && '' !== $atts['ids'] ) $args['post__in'] = $atts['ids'];
 
         // exclude posts if skip_products attribute is given.
-        if ( isset( $atts['skip_products'] ) && ! empty( $atts['skip_products'] ) ) {
-            $args['post__not_in'] = $atts['skip_products'];
-        }
+        if( isset( $atts['skip_products'] ) && ! empty( $atts['skip_products'] ) ) $args['post__not_in'] = $atts['skip_products'];
 
         // product type(s).
         $att_types = $atts['type'] ? (is_array($atts['type']) ? $atts['type'] : explode(',', $atts['type'])) : ['simple', 'variable'];
@@ -194,9 +170,7 @@ class MPC_Frontend_Helper {
 
         // filter appropriate types.
         $types = in_array( 'all', $types, true ) ? $supported : array_intersect( $types, $supported );
-        if ( empty( $types ) ) {
-            $types = array( 'simple', 'variable' );
-        }
+        if( empty( $types ) ) $types = array( 'simple', 'variable' );
 
         $args['tax_query'] = array( 'relation' => 'AND' ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
@@ -207,27 +181,20 @@ class MPC_Frontend_Helper {
         );
 
         $term_ids = self::get_term_ids( $atts['cats'], 'product_cat' );
-        if ( false !== $term_ids ) {
-            $args['tax_query'][] = $term_ids;
-        }
-
-        $term_ids = self::get_term_ids( $atts['tags'], 'product_tag' );
-        if ( false !== $term_ids ) {
-            $args['tax_query'][] = $term_ids;
-        }
+        if( false !== $term_ids ) $args['tax_query'][] = $term_ids;
 
         return apply_filters( 'mpc_modify_query', $args, $atts );
     }
     public static function get_term_ids( $atts, $taxonomy ) {
-        if ( ! isset( $atts ) || '' === $atts ) {
+        if( ! isset( $atts ) || '' === $atts ) {
             return false;
         }
 
-        if ( ! is_array( $atts ) ) {
+        if( ! is_array( $atts ) ) {
             $atts = explode( ',', str_replace( ' ', '', $atts ) );
         }
 
-        if ( ! is_array( $atts ) || empty( $atts ) ) {
+        if( ! is_array( $atts ) || empty( $atts ) ) {
             return false;
         }
 
@@ -236,17 +203,17 @@ class MPC_Frontend_Helper {
         foreach ( $atts as $term_id ) {
             $term = get_term_by( 'id', $term_id, $taxonomy );
 
-            if ( ! empty( $term ) && isset( $term->term_id ) ) {
+            if( ! empty( $term ) && isset( $term->term_id ) ) {
                 $extracted_term_ids[] = $term->term_id;
             } else {
                 $term = get_term_by( 'slug', $term_id, $taxonomy );
-                if ( ! empty( $term ) && isset( $term->term_id ) ) {
+                if( ! empty( $term ) && isset( $term->term_id ) ) {
                     $extracted_term_ids[] = $term->term_id;
                 }
             }
         }
 
-        if ( empty( $extracted_term_ids ) ) {
+        if( empty( $extracted_term_ids ) ) {
             return false;
         }
 

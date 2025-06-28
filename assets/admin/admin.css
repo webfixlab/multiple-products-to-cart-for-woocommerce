@@ -757,20 +757,9 @@ li.mpc-stone-col:before {
 	animation-name: zoom;
 	animation-duration: 0.6s;
 }
-h4.mpcpop-title {
-	color: #fff;
-	margin-top: 5px;
-	margin-bottom: 0;
-}
 .mpc-single-active .mpc-single-price {
 	/*font-size: 130%;*/
 	font-weight: 600;
-}
-p.mpcpop-price {
-	color: #fff;
-}
-select.mpc-highlighter{
-	border: 1px solid #e74c3c;
 }
 .mpc-saved-sca {
 	font-weight: bold;

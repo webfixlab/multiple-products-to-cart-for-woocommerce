@@ -117,10 +117,10 @@
                 const element = wrap.find(v.key);
                 const parent  = v.parent ? wrap.find(v.parent) : false;
                 
-                if(element.length !== 0) element.html(v.val);
+                if(element.length !== 0) element.replaceWith(v.val);
                 else if(parent.length !== 0){
                     if(v.adding_type === 'prepend') parent.prepend(v.val);
-                    else parent.html(v.val);
+                    else parent.replaceWith(v.val);
                 }
             });
         }

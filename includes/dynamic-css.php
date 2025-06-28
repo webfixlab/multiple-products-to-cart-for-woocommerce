@@ -33,22 +33,20 @@ $image_size = ! empty( $image_size ) ? $image_size : '90';
 	<?php printf( 'background: %s;', esc_html( $hnp_background ) ); ?>
 	<?php printf( 'color: %s;', esc_html( $hnp_color ) ); ?>
 }
-.mpc-button input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{
+input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{
 	<?php printf( 'background: %s;', esc_html( $btn_background ) ); ?>
 	<?php printf( 'color: %s;', esc_html( $btn_color ) ); ?>
 }
 td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 	width: <?php echo esc_attr( $image_size ); ?>px;
 }
-<?php if ( isset( $title_color ) && ! empty( $title_color ) ) : ?>
-.mpc-product-title a{
-	color: <?php echo esc_html( $title_color ); ?>;
-}
+<?php if( isset( $title_color ) && ! empty( $title_color ) ) : ?>
+	.mpc-product-title a{
+		color: <?php echo esc_html( $title_color ); ?>;
+	}
 	<?php
 endif;
-
-if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) :
-	?>
+if( 'on' === get_option( 'wmca_inline_dropdown' ) ) : ?>
 	.mpc-wrap .variation-group > select{
 		max-width: 100px;
 	}
@@ -58,19 +56,11 @@ if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) :
 <?php endif; ?>
 .mpc-container .mpc-product-title a{
 	<?php
-	if ( ! empty( $title_font_size ) ) {
-		printf( 'font-size: %spx;', esc_attr( $title_font_size ) );
-	}
+		if( ! empty( $title_font_size ) ) printf( 'font-size: %spx;', esc_attr( $title_font_size ) );
+		if( ! empty( $bold_title ) && 'on' === $bold_title ) echo esc_html( 'font-weight: bold;' );
 
-	if ( ! empty( $bold_title ) && 'on' === $bold_title ) {
-		echo esc_html( 'font-weight: bold;' );
-	}
-
-	if ( ! empty( $title_underline ) && 'on' === $title_underline ) {
-		echo esc_html( 'text-decoration: underline;' );
-	} else {
-		echo esc_html( 'text-decoration: none;' );
-	}
+		if( ! empty( $title_underline ) && 'on' === $title_underline ) echo esc_html( 'text-decoration: underline;' );	
+		else echo esc_html( 'text-decoration: none;' );
 	?>
 }
 <?php do_action( 'mpc_dynamic_css' ); ?>

@@ -53,6 +53,8 @@ class MPC_Settings_Template {
                 break;
 
             case 'import':
+                do_action( 'mpc_pro_import' );
+                
                 self::import();
                 break;
                 
@@ -214,8 +216,6 @@ class MPC_Settings_Template {
         wp_nonce_field( 'mpc_export_nonce', 'mpc_export' );
     }
     public static function import(){
-        do_action( 'mpc_pro_import' );
-
         $icon     = self::$data['notice_icon'] ?? 'saved';
         $response = self::$data['response'] ?? '';
         $pro_cls  = false === self::$data['has_pro'] ? 'mpcex-disabled' : '';

@@ -121,7 +121,7 @@
             const self = this;
             $(document.body).trigger('updated_cart_totals');
 
-            this.$wrap.find('.mpc-button input[type="submit"]').show();
+            this.$wrap.find('input[type="submit"]').show();
     
             if(response.fragments){
                 $.each(response.fragments, function(key, value){

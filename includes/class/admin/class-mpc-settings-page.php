@@ -155,9 +155,7 @@ class MPC_Settings_Page {
         ?>
         <div id="right-side">
             <div class="mpcdp_settings_promo">
-                <div id="wfl-promo">
-                    <?php self::sidebar(); ?>
-                </div>
+                <?php self::sidebar(); ?>
             </div>
         </div>
         <?php
