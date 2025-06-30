@@ -774,7 +774,7 @@ li.mpc-stone-col:before {
 	left: 45%;
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-	background-color: #cdcdcd;
+	background-color: #ffffff;
 	padding: 50px 30px 20px 30px;
 	color: #1d2327;
 	width: 500px;
@@ -804,11 +804,13 @@ li.mpc-stone-col:before {
 	font-weight: 500;
 }
 a.mpc-get-pro {
-	color: #000000;
-	font-size: 16px;
-	font-weight: 500;
-	float: right;
-	margin-top: 15px;
+	font-size: 14px;
+    float: right;
+    margin-top: 3px;
+    background: #2271b1;
+    color: #fff;
+    padding: 10px 30px;
+    border-radius: 25px;
 }
 .mpc-focus a:hover {
 	background-color: #1169b1;

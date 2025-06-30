@@ -60,10 +60,10 @@ class MPC_Frontend_Helper {
             'skip_products' => '',
             'cats'          => '',
             'type'          => 'all',
-            'link'          => 'true',
-            'description'   => 'false',
+            'link'          => '',
+            'description'   => '',
             'selected'      => '',
-            'pagination'    => 'true',
+            'pagination'    => '',
             'columns'       => '',
         ) );
 
@@ -87,10 +87,10 @@ class MPC_Frontend_Helper {
             if( empty( $value ) ) continue;
 
             if( in_array( $key, $boolean_types, true ) ){
-                $atts[ $key ] = (bool) $value;
+                $atts[ $key ] = 'false' === $value || false === $value ? false : true;
             }
             elseif( in_array( $key, $number_types, true ) ){
-                $atts[ $key ] = (int) $value;
+                $atts[ $key ] = 'int' === gettype( $value ) ? $value : (int) $value;
             }
             elseif( in_array( $key, $array_types, true ) ){
                 if( 'all' === $value || is_array( $value ) ) continue;

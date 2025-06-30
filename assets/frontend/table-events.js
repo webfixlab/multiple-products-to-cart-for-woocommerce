@@ -57,6 +57,7 @@
                 self.setRowData($(this));
                 self.checkProductStock();
                 self.updateTotalPrice($(this));
+                self.ifAutoCheckProduct($(this));
             });
             $(document.body).on('click change', 'input[type="checkbox"]', function(){
                 self.updateTotalPrice($(this));
@@ -73,6 +74,7 @@
                 self.disableRow();
 
                 self.checkProductStock();
+                self.ifAutoCheckProduct($(this));
             });
             $(document.body).on('click', '.mpc-product-variation a.reset_variations', function(e){
                 e.preventDefault();
@@ -178,12 +180,8 @@
             const img     = this.$variation.image ?? false;
             if(!imgWrap || !img) return;
 
-            if(img.thumbnail){
-                imgWrap.find('.mpcpi-wrap img').attr('src', img.thumbnail);
-            }
-            if(img.full){
-                imgWrap.find('.mpcpi-wrap img').attr('data-fullimage', img.full);
-            }
+            if(img.thumbnail) imgWrap.find('.mpcpi-wrap img').attr('src', img.thumbnail);
+            if(img.full) imgWrap.find('.mpcpi-wrap img').attr('data-fullimage', img.full);
         }
         setVariationPrice(){
             const priceWrap = this.$row.find('.mpc-single-price');
@@ -200,23 +198,14 @@
             const singlePrice = priceWrap.text().trim().replace(/[^0-9.$]/g, '');
             let rangePrice    = this.$row.find('.mpc-range').text().trim();
             rangePrice        = this.$row.find('.mpc-range ins').length > 0 ? this.$row.find('.mpc-range ins').text().trim() : rangePrice;
-            if(singlePrice === rangePrice){ // fixed price variable product.
-                priceWrap.hide();
-            }
+            if(singlePrice === rangePrice) priceWrap.hide(); // fixed price variable product.
         }
         setVariationDescription(){
-            if(!this.$variation || !this.$variation.desc){
-                return;
-            }
-
-            if(!mpc_frontend.settings.variation_desc){ // if setting disabled.
-                return;
-            }
+            if(!this.$variation || !this.$variation.desc) return;
+            if(!mpc_frontend.settings.variation_desc) return; // if setting disabled.
             
             const titleWrap = this.$row.find('td.mpc-product-name');
-            if(!titleWrap){
-                return;
-            }
+            if(!titleWrap) return;
 
             const descWrap = this.$row.find('.woocommerce-product-details__short-description');
             descWrap.length !== 0 ? descWrap.text(this.$variation.desc) : titleWrap.append(`<p class="woocommerce-product-details__short-description">${this.$variation.desc}</p>`);
@@ -336,12 +325,13 @@
             if(checkBox.length !== 0 && checkBox.is(':checked')) checkBox.trigger('click');
 
             if(row.find('a.reset_variations').length !== 0) row.find('a.reset_variations').remove();
-            if(row.find('.woocommerce-product-details__short-description').length !== 0) row.find('.woocommerce-product-details__short-description').text('');
+            if(row.hasClass('variable') && row.find('.woocommerce-product-details__short-description').length !== 0) row.find('.woocommerce-product-details__short-description').text('');
         }
 
 
 
         setRowData(item){
+            if(this.$variation) return;
             this.$row       = item.closest('tr.cart_item');
             this.$variation = this.getVariation(this.$row);
 
@@ -349,6 +339,23 @@
                 'qtyField' : this.$row.find('.mpc-product-quantity input[type="number"]'),
                 'checkBox' : this.$row.find('.mpc-product-select input[type="checkbox"]')
             };
+        }
+        ifAutoCheckProduct(item){
+            this.$row = item.closest('tr.cart_item');
+            const checkBox = this.$row.find('.mpc-product-select input[type="checkbox"]');
+            if(checkBox.length === 0) return;
+
+            const qtyField = this.$row.find('.mpc-product-quantity input[type="number"]');
+            if(qtyField.length !== 0 && (qtyField.val().length === 0 || qtyField.val() === 0)){
+                if(checkBox.is(':checked')) checkBox.trigger('click');
+                return;
+            }
+            
+            if(this.$row.hasClass('variable')){
+                this.setRowData(item);
+                if(!this.$variation) return;
+            }
+            if(!checkBox.is(':checked')) checkBox.trigger('click');
         }
     }
 

@@ -250,23 +250,10 @@ class MPC_Table_Template {
         ?>
         <td for="title" class="mpc-product-name">
             <div class="mpc-product-title">
-                <?php self::product_parent( $data ); ?>
                 <?php self::product_title( $data, $atts ); ?>
                 <?php self::product_desc( $data, $atts ); ?>
             </div>
         </td>
-        <?php
-    }
-    public static function product_parent( $data ){
-        if( ! isset( $data['parent'] ) || empty( $data['parent'] ) ){
-            return;
-        }
-        ?>
-        <div class="product-parent">
-            <a href="<?php echo esc_url( $data['parent']['url'] ); ?>">
-                <?php echo esc_html( $data['parent']['title'] ); ?>
-            </a>
-        </div>
         <?php
     }
     public static function product_title( $data, $atts ){
@@ -572,6 +559,7 @@ class MPC_Table_Template {
         if( $mpc_frontend__['found_posts'] <= $limit ) return;
 
         $label = get_option( 'wmc_pagination_text' );
+        $label = empty( $label ) ? __( 'Showing', 'multiple-products-to-cart-for-woocommerce' ) : $label;
         $page  = MPC_Frontend_Helper::get_current_page();
         $total = $mpc_frontend__['found_posts'];
 

@@ -11,12 +11,16 @@ require_once( dirname( __FILE__, 5 ) . '/wp-load.php' );
 header( "Content-Type: text/css" );
 
 // add to cart button color and background color.
-$btn_color      = ( get_option( 'mpc_button_text_color' ) ? get_option( 'mpc_button_text_color' ) : '#353535' );
-$btn_background = ( get_option( 'wmc_button_color' ) ? get_option( 'wmc_button_color' ) : '#d3d3d3' );
+$btn_color = get_option( 'mpc_button_text_color' );
+$btn_background = get_option( 'wmc_button_color' );
+$btn_color = empty( $btn_color ) ? '#353535' : $btn_color;
+$btn_background = empty( $btn_background ) ? '#d3d3d3' : $btn_background;
 
 // header and pagination color and background color.
-$hnp_color      = ( get_option( 'mpc_head_text_color' ) ? get_option( 'mpc_head_text_color' ) : '#ffffff' );
-$hnp_background = ( get_option( 'wmc_thead_back_color' ) ? get_option( 'wmc_thead_back_color' ) : '#535353' );
+$hnp_color      = get_option( 'mpc_head_text_color' );
+$hnp_background = get_option( 'wmc_thead_back_color' );
+$hnp_color = empty( $hnp_color ) ? '#ffffff' : $hnp_color;
+$hnp_background = empty( $hnp_background ) ? '#535353' : $hnp_background;
 
 // product title color, font size, whether to bold it and also underline it.
 $title_color     = get_option( 'mpc_protitle_color' );
@@ -26,10 +30,9 @@ $title_underline = get_option( 'mpc_protitle_underline' );
 
 // product image size.
 $image_size = get_option( 'mpc_image_size' );
-$image_size = ! empty( $image_size ) ? $image_size : '90';
-
+$image_size = empty( $image_size ) ? 90 : (int) $image_size;
 ?>
-.mpc-wrap thead tr th, .mpc-pagenumbers span.current, .mpc-fixed-header table thead tr th{
+table.mpc-wrap thead tr th, .mpc-container .mpc-pagenumbers span.current, .mpc-container .mpc-fixed-header table thead tr th{
 	<?php printf( 'background: %s;', esc_html( $hnp_background ) ); ?>
 	<?php printf( 'color: %s;', esc_html( $hnp_color ) ); ?>
 }
@@ -43,15 +46,6 @@ td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 <?php if( isset( $title_color ) && ! empty( $title_color ) ) : ?>
 	.mpc-product-title a{
 		color: <?php echo esc_html( $title_color ); ?>;
-	}
-	<?php
-endif;
-if( 'on' === get_option( 'wmca_inline_dropdown' ) ) : ?>
-	.mpc-wrap .variation-group > select{
-		max-width: 100px;
-	}
-	.variation-group select{
-		width: 100px;
 	}
 <?php endif; ?>
 .mpc-container .mpc-product-title a{
@@ -71,7 +65,7 @@ if( 'on' === get_option( 'wmca_inline_dropdown' ) ) : ?>
 	table.mpc-wrap tbody tr:has(.gallery-item){
 		min-height: <?php echo esc_attr( $image_size ) + ceil( ( esc_attr( $image_size ) * 47 ) / 100 ) + 24; ?>px;
 	}
-	#content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td{
+	table.mpc-wrap tbody tr td, #content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td{
 		padding-left: <?php echo esc_attr( $image_size ) + 13; ?>px;
 	}
 }

@@ -17,6 +17,7 @@
 
             $(document).ready(() => {
                 this.loaderEvents();
+                this.initAllTableEvents();
             });
             $(document.body).on('mpc_load_table', function(event, item){
                 self.loadTable(item);
@@ -38,6 +39,12 @@
             window.mpcCommon.loaderAnimation(this.$wrap, 'load');
             this.setRequestData();
             this.sendRequest();
+        }
+        initAllTableEvents(){
+            const self = this;
+            $(document.body).find('.mpc-container').each(function(){
+                self.autoHideVariationColumn($(this));
+            });
         }
 
 
@@ -123,6 +130,11 @@
                     else parent.replaceWith(v.val);
                 }
             });
+            this.autoHideVariationColumn();
+        }
+        autoHideVariationColumn(givenWrap = null){
+            const wrap = givenWrap === null ? this.$wrap : givenWrap;
+            if(wrap.find('.mpc-product-variation select').length === 0) wrap.find('table.mpc-wrap .mpc-product-variation').hide();
         }
     }
 
