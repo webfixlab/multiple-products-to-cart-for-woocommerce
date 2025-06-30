@@ -63,7 +63,6 @@ class MPC_Admin_Helper {
         }
         
         if ( ! isset( $_POST ) || empty( $_POST ) ) return;
-        
         self::set();
 
         $post_field_keys = [];
@@ -86,21 +85,13 @@ class MPC_Admin_Helper {
      * @param array $post_field_keys All field names present in post request.
      */
     public static function scrape_checkboxes( $post_field_keys ){
-        if(empty(self::$data['fields'])) return;
-
-        $tab = self::get_tab();
-        if(empty($tab)) return;
-
-        foreach(self::$data['fields'] as $page => $sections){
-            if($page !== $tab) continue;
-
-            foreach($sections as $section){
-                if(empty($section['fields'])) continue;
-                foreach($section['fields'] as $field){
-                    if($field['type'] === 'checkbox' && !in_array( $field['key'], $post_field_keys, true)){
-                        delete_option( $field['key'] );
-                    }
-                }
+        global $mpc__;
+        
+        foreach( $mpc__['fields']['general-settings'] as $section ){
+            foreach( $section['fields'] as $field ){
+                if( 'checkbox' !== $field['type'] ) continue;
+                if( in_array( $field['key'], $post_field_keys, true ) ) continue;
+                delete_option( $field['key'] );
             }
         }
     }

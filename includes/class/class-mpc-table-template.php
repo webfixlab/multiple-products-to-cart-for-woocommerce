@@ -57,15 +57,11 @@ class MPC_Table_Template {
     public static function table_orderby(){
         global $mpc_frontend__;
 
-        $show_orderby = get_option( 'wmc_show_products_filter' ) ?? '';
-        if( !empty( $show_orderby ) && 'on' !== $show_orderby ) return;
+        $show_orderby = get_option( 'wmc_show_products_filter' );
+        if( empty( $show_orderby ) || 'on' !== $show_orderby ) return;
 
-        $title_filter = get_option( 'mpc_show_title_dopdown' ) ?? '';
-        $title_filter = empty( $title_filter ) || 'on' === $title_filter ? true : false;
-
-        // Pro feature.
-        $sku_filter = get_option( 'wmca_allow_sku_sort' ) ?? '';
-        $sku_filter = empty( $sku_filter ) || 'on' === $sku_filter ? true : false;
+        $title_filter = get_option( 'mpc_show_title_dopdown' );
+        $title_filter = !empty( $title_filter ) && 'on' === $title_filter ? true : false;
 
         $select = $mpc_frontend__['atts']['orderby'] ?? 'menu_order';
 
@@ -93,17 +89,6 @@ class MPC_Table_Template {
                 'label' => __( 'Title: Z to A', 'multiple-products-to-cart-for-woocommerce' )
             );
         }
-        if( $mpc_frontend__['has_pro'] && $sku_filter ){
-            $options['_sku-ASC'] = array(
-                'key'   => 'mpc_sddt_sku_asc',
-                'label' => __( 'SKU: A to Z', 'multiple-products-to-cart-for-woocommerce-pro' )
-            );
-            $options['_sku-DESC'] = array(
-                'key'   => 'mpc_sddt_sku_desc',
-                'label' => __( 'SKU: Z to A', 'multiple-products-to-cart-for-woocommerce-pro' )
-            );
-        }
-
         ?>
         <div class="mpc-sort">
             <select name="mpc_orderby" class="mpc-orderby" title="<?php echo esc_html__( 'Table order by', 'multiple-products-to-cart-for-woocommerce' ); ?>">

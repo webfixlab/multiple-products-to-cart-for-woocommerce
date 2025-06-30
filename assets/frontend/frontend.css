@@ -43,6 +43,7 @@ table.mpc-wrap tbody tr td, .mpc-range del span.woocommerce-Price-amount.amount,
 .mpc-all-select {
 	float: right;
 	line-height: 36px;
+	margin-bottom: 10px;
 }
 .mpc-all-select label {
 	color: var(--mpc-label-primary-color);
