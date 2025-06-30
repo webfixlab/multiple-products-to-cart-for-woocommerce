@@ -176,12 +176,13 @@
         setVariationImage(){
             if(!this.$variation) return;
 
-            const imgWrap = this.$row.find('.mpc-product-image');
+            const imgWrap = this.$row.find('.mpc-product-image .mpcpi-wrap img');
             const img     = this.$variation.image ?? false;
             if(!imgWrap || !img) return;
+            console.log(img.full);
 
-            if(img.thumbnail) imgWrap.find('.mpcpi-wrap img').attr('src', img.thumbnail);
-            if(img.full) imgWrap.find('.mpcpi-wrap img').attr('data-fullimage', img.full);
+            if(img.thumbnail) imgWrap.attr('src', img.thumbnail);
+            if(img.full) imgWrap.attr('data-fullimage', img.full);
         }
         setVariationPrice(){
             const priceWrap = this.$row.find('.mpc-single-price');
@@ -331,8 +332,7 @@
 
 
         setRowData(item){
-            if(this.$variation) return;
-            this.$row       = item.closest('tr.cart_item');
+            this.$row = item.closest('tr.cart_item');
             this.$variation = this.getVariation(this.$row);
 
             this.$fields = {

@@ -122,7 +122,7 @@
 
             $.each(rp.mpc_fragments, function(k, v){
                 const element = wrap.find(v.key);
-                const parent  = v.parent ? wrap.find(v.parent) : false;
+                const parent  = v.parent ? wrap.find(v.parent) : '';
                 
                 if(element.length !== 0) element.replaceWith(v.val);
                 else if(parent.length !== 0){
