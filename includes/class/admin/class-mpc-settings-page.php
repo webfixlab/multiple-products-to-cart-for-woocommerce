@@ -64,9 +64,9 @@ class MPC_Settings_Page {
     /**
      * Render admin settings page based on tab
     
-     * @param string $tab Settings tab.
+     * @param string $page Settings page slug.
      */
-    public static function render_page( $tab ){
+    public static function render_page( $page ){
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
@@ -75,10 +75,11 @@ class MPC_Settings_Page {
 
         self::set();
 
-        self::$tab = sanitize_title( $tab );
-        if( 'mpc-settings' === $tab ){
-            self::$tab = MPC_Admin_Helper::get_tab();
-            self::$tab = 'all-tables' === self::$tab || 'new-table' === self::$tab ? 'general-settings' : self::$tab;
+        self::$tab = sanitize_title( $page );
+        if( 'mpc-settings' === $page ){
+            $tab = MPC_Admin_Helper::get_tab();
+            $tab = empty( $tab ) ? 'general-settings' : $tab;
+            self::$tab = 'all-tables' === self::$tab || 'new-table' === self::$tab ? 'general-settings' : $tab;
         }
 
         // show error/update messages.
@@ -209,9 +210,6 @@ class MPC_Settings_Page {
      */
     public static function navigation() {
         $tab = self::$tab;
-        self::log('tab ' . $tab);
-        $tab = 'mpc-settings' === $tab ? 'general-settings' : $tab;
-        self::log('tab next ' . $tab);
 
         $menus = array(
             array(
@@ -254,7 +252,6 @@ class MPC_Settings_Page {
         if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
             $tab = isset( $_GET['mpctable'] ) && ! empty( $_GET['mpctable'] ) && 'new-table' === $tab ? 'all-tables' : $tab;
         }
-        self::log('tab 3 ' . $tab);
 
         foreach ( $menus as $nav ) {
             $nav_ = sanitize_title( $nav['tab'] );
