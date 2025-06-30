@@ -144,16 +144,16 @@
             }
 
             // filter section.
+            if(wrap.find('.mpc-table-header').length){
+                this.$oldScrolls[tk] = currentScroll;
+                return;
+            }
+
             if(currentScroll < this.$oldScrolls[tk] && currentScroll > head && currentScroll < tail){
                 var height = wrap.find('.mpc-table-header')[0].offsetHeight + 20;
-                if(wrap.find('.mpc-all-select').length){
-                    height += 32;
-                }
+                if(wrap.find('.mpc-all-select').length !== 0) height += 32;
 
-                if(!wrap.find('.mpc-table-header').hasClass('mpc-fixed-filter')){
-                    // if check all products exists, add it's height.
-                    wrap.css('margin-top', `${height}px`);
-                }
+                if(!wrap.find('.mpc-table-header').hasClass('mpc-fixed-filter')) wrap.css('margin-top', `${height}px`); // if check all products exists, add it's height.
 
                 wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter').addClass('mpc-fixed-filter');
             }else{

@@ -113,12 +113,12 @@ class MPC_Table_Template {
 
     public static function table_all_check(){
         // Don't show if not enabled.
-        $show_all_check = get_option( 'wmc_show_all_select' ) ?? '';
-        if( !empty( $show_all_check ) && 'on' !== $show_all_check ) return;
+        $show_all_check = get_option( 'wmc_show_all_select' );
+        if( empty( $show_all_check ) || 'on' !== $show_all_check ) return;
 
         // Don't show if checkbox is hidden in the table.
-        $has_checkbox = get_option( 'mpc_add_to_cart_checkbox' ) ?? '';
-        if( !empty( $has_checkbox ) && 'on' !== $has_checkbox ) return;
+        $has_checkbox = get_option( 'mpc_add_to_cart_checkbox' );
+        if( empty( $has_checkbox ) || 'on' !== $has_checkbox ) return;
 
         // Don't show if buy column isn't in one of the table columns.
         $cols = MPC_Frontend_Helper::get_table_columns();
@@ -497,8 +497,8 @@ class MPC_Table_Template {
         <?php
     }
     public static function reset_button(){
-        $show_button = get_option( 'wmca_show_reset_btn' ) ?? '';
-        if( !empty( $show_button ) && 'on' !== $show_button ) return;
+        $show_button = get_option( 'wmca_show_reset_btn' );
+        if( empty( $show_button ) || 'on' !== $show_button ) return;
         ?>
         <div class="mpc-reset-table">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.00 32.00">
@@ -532,8 +532,8 @@ class MPC_Table_Template {
         global $mpc_frontend__;
 
         // Settings: hide pagination info.
-        $show_info = get_option( 'wmc_show_pagination_text' ) ?? '';
-        if( !empty( $show_info ) && 'on' !== $show_info ) return;
+        $show_info = get_option( 'wmc_show_pagination_text' );
+        if( empty( $show_info ) || 'on' !== $show_info ) return;
 
         // Table attribute: hidden pagination info.
         $atts = $mpc_frontend__['atts'] ?? [];
