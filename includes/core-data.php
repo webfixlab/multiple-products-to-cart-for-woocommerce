@@ -240,16 +240,6 @@ $mpc__['fields'] = array(
 					'pro'         => true,
 				),
 				array(
-					'key'         => 'mpc_show_variation_desc',
-					'type'        => 'checkbox',
-					'label'       => __( 'Variation Descriptions', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Choose if product variation descriptions should dynamically showed based on variation selection.', 'multiple-products-to-cart-for-woocommerce' ),
-					'switch_text' => array(
-						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
-						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
-					),
-				),
-				array(
 					'key'         => 'wmc_show_pagination_text',
 					'type'        => 'checkbox',
 					'label'       => __( 'Display Pagination Text', 'multiple-products-to-cart-for-woocommerce' ),

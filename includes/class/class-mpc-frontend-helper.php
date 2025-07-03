@@ -349,17 +349,17 @@ class MPC_Frontend_Helper {
             'type'         => $product->get_type(),
             'title'        => $product->get_title(),
             'url'          => $product->get_permalink(),
-            'desc'         => $product->get_description(),
             'price'        => $product->get_price_html(),
             'sku'          => $product->get_sku(),
             'stock'        => $product->get_stock_quantity(),
             'stock_status' => $product->get_stock_status(),
         );
 
-        $common['desc'] = empty( $common['desc'] ) ? $product->get_description() : $common['desc'];
-        $common['desc'] = strlen( $common['desc'] ) > 150 ? substr( $common['desc'], 0, 150 ) . '...' : $common['desc'];
-        if( strlen( $common['desc'] ) > 150 ) $common['desc'] = substr( $common['desc'], 0, 150 ) . '...';
-
+        $desc = $product->get_short_description();
+        $desc = empty( $desc ) ? $product->get_description() : $desc;
+        $desc = !empty( $desc ) && strlen( $desc ) > 150 ? substr( $desc, 0, 150 ) . '...' : $desc;
+        if( !empty( $desc ) ) $common['desc'] = $desc;
+        
         return $common;
     }
 

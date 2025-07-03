@@ -51,9 +51,7 @@
 
 
         addFilter(hookName, callback) {
-            if (!this.$filters[hookName]) {
-                this.$filters[hookName] = [];
-            }
+            if (!this.$filters[hookName]) this.$filters[hookName] = [];
             this.$filters[hookName].push(callback);
         }
         applyFilters(hookName, value, ...args) {

@@ -76,19 +76,15 @@
 			});
 
 			type.passedElement.element.addEventListener('addItem', function(event){
-				self.UpdateFieldValue($(this).closest('.choicesdp'));
+				self.UpdateFieldValue($(this).closest('.choicesdp'), type.getValue(true));
 			});
 
 			type.passedElement.element.addEventListener('removeItem', function(event){
-				self.UpdateFieldValue($(this).closest('.choicesdp'));
+				self.UpdateFieldValue($(this).closest('.choicesdp'), type.getValue(true));
 			});
 		}
-        UpdateFieldValue(wrap) {
-			let selected = '';
-			wrap.find('select.mpc-sc-itembox option').each(function(){
-				if($(this).is(':selected')) selected += selected.length !== 0 ? `,${$(this).val()}` : $(this).val();
-			});
-			wrap.find('.choicesdp-field').val(selected);
+        UpdateFieldValue(wrap, values) {
+			wrap.find('.choicesdp-field').val(values.length === 0 ? '' : values.join(','));
 		}
     }
 

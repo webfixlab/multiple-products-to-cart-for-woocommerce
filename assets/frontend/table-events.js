@@ -179,7 +179,6 @@
             const imgWrap = this.$row.find('.mpc-product-image .mpcpi-wrap img');
             const img     = this.$variation.image ?? false;
             if(!imgWrap || !img) return;
-            console.log(img.full);
 
             if(img.thumbnail) imgWrap.attr('src', img.thumbnail);
             if(img.full) imgWrap.attr('data-fullimage', img.full);
@@ -203,7 +202,6 @@
         }
         setVariationDescription(){
             if(!this.$variation || !this.$variation.desc) return;
-            if(!mpc_frontend.settings.variation_desc) return; // if setting disabled.
             
             const titleWrap = this.$row.find('td.mpc-product-name');
             if(!titleWrap) return;

@@ -108,6 +108,7 @@
                     console.log( errorThrown );
                 }
             });
+            console.log(this.$data);
         }
         processResponse(response){
             // remove loading animation.

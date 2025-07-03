@@ -81,29 +81,23 @@ class MPC_Add_To_Cart {
 
         $add_to_cart_missed = false;   // flag to find if any error occured while adding products to cart.
         $all_products       = array(); // array of product id => quantity.
-
         foreach ( $data as $product_id => $product ) {
             if ( 'grouped' === $product['type'] ) continue;
 
-            $flag = false;
-            $key  = '';
-            $type         = false !== strpos( $product['type'], 'variable' ) ? 'variable' : 'simple';
-            $variation_id = $product['variation_id'] ?? '';
-            $variation_id = !empty( $variation_id ) ? (int) $variation_id : '';
-            if ( 'variable' === $type && !empty( $variation_id ) ) {
-                $flag = WC()->cart->add_to_cart( $product_id, $product['quantity'], $product['variation_id'], $product['attributes'] );
-            } else {
-                $flag = WC()->cart->add_to_cart( $product_id, $product['quantity'] );
-                // $flag = false !== $key ? true : false;
-            }
+            $id           = (int) $product_id;
+            $qty          = (int) $product['quantity'];
+            $variation_id = isset( $product['variation_id'] ) && !empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
+            $attributes   = isset( $product['attributes'] ) && !empty( $product['attributes'] ) ? $product['attributes'] : [];
+
+            $flag = WC()->cart->add_to_cart( $id, $qty, $variation_id, $attributes );
 
             if ( false !== $flag ) {
-                do_action( 'woocommerce_ajax_added_to_cart', $product_id );
-                $all_products[ $product_id ] = $product['quantity'];
+                do_action( 'woocommerce_ajax_added_to_cart', $id );
+                $all_products[ $id ] = $product['quantity'];
             }
             $add_to_cart_missed = !$flag ? true : $add_to_cart_missed;
 
-            do_action( 'mpc_after_add_to_cart', $product_id, $key );
+            do_action( 'mpc_after_add_to_cart', $id, $flag );
         }
 
         if ( 'ajax' === $method ) {
