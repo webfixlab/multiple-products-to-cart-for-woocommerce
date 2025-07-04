@@ -57,6 +57,9 @@ td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 		else echo esc_html( 'text-decoration: none;' );
 	?>
 }
+.mpc-container td.mpc-product-name .mpc-product-title p, .mpc-container td.mpc-product-name .woocommerce-product-details__short-description{
+	<?php if( ! empty( $title_font_size ) ) printf( 'font-size: %spx;', esc_attr( (int) $title_font_size - 1 ) ); ?>
+}
 <?php do_action( 'mpc_dynamic_css' ); ?>
 @media screen and (max-width: 767px) {
 	table.mpc-wrap tbody tr{
