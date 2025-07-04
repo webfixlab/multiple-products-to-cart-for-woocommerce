@@ -13,17 +13,19 @@
             this.$wrap = null;
             
             $(document).ready(() => {
+                console.log(mpc_frontend);
                 this.cartEvents();
             });
         }
         cartEvents(){
             const self = this;
-            $(document.body).on('click', '.mpc-cart .mpc-add-to-cart', function(e){
-                self.setCartData($(this));
-                if(!self.hasCartData()) e.preventDefault();
-
-                if(mpc_frontend.redirect_url === 'ajax') self.sendRequest();
-                else self.prepareNonAjaxCartData();
+            $(document.body).on('click', '.mpc-add-to-cart input[type="submit"]', function(e){
+                const data = self.setCartData($(this));
+                if(!data) return;
+                if(mpc_frontend.settings.cart_method === 'ajax'){
+                    e.preventDefault();
+                    self.sendRequest();
+                } else self.prepareNonAjaxCartData();
             });
             $(document.body).on('click', '.mpc-fixed-cart', function(){
                 $(this).closest('.mpc-container').find('.mpc-cart .mpc-add-to-cart').trigger('click');
@@ -36,6 +38,7 @@
         setCartData(item){
             this.$wrap = item.closest('.mpc-container');
             this.$data = this.getRequestData();
+            return this.$data;
         }
         getRequestData(){
             const self = this;
@@ -46,44 +49,36 @@
                 if(rowData) data[id] = rowData;
             });
 
-            if($.isEmptyObject(data)) this.notifyMsg(this.$wrap, 'error', mpc_frontend.blank_submit);
+            if($.isEmptyObject(data)) this.notifyMsg(this.$wrap, 'error', mpc_frontend.labels.blank_submit);
             return data;
         }
         getRowData(row){
             const type = row.attr('data-type');
             if('grouped' === type) return false;
 
-            const variationId = parseInt(row.attr('data-variation_id'))
             const checkBox    = row.find('input[type="checkbox"]');
             const qtyField    = row.find('input[type="number"]');
-
-            let atts = {};
-            let totalAtts = 0, selectedAtts = 0;
-            row.find('select').each(function(){
-                const att = $(this).attr('data-attribute_name');
-                const val = $(this).find('option:selected').val();
-
-                totalAtts++;
-                if(val.length !== 0){
-                    atts[att] = val;
-                    selectedAtts++;
-                }
-            });
-
             if(checkBox.length !== 0 && !checkBox.is(':checked')) return false;
             if(qtyField.length !== 0 && qtyField.val() === 0) return false;
-            if(type === 'variable' && (!variationId || variationId === 0)) return false;
-            if(totalAtts > 0 && totalAtts !== selectedAtts) return false;
+            
+            let selected = 0;
+            let atts = {};
+            row.find('select').each(function(){
+                const val = $(this).find('option:selected').val();
+                atts[$(this).data('attribute_name')] = val;
+                if(val.length !== 0) selected++;
+            });
+            const total    = row.find('select').length;
+            if(total > 0 && total !== selected) return false;
 
+            const variationId = parseInt(row.attr('data-variation_id'))
+            if(type === 'variable' && (!variationId || variationId === 0)) return false;
             return {
                 'quantity':     qtyField.length !== 0 ? parseInt(qtyField.val()) : 1,
                 'type':         type,
                 'variation_id': variationId,
                 'attributes':   atts,
             };
-        }
-        hasCartData(){
-            return !this.$data || mpc_frontend.redirect_url === 'ajax' ? false : true;
         }
 
 
@@ -108,7 +103,6 @@
                     console.log( errorThrown );
                 }
             });
-            console.log(this.$data);
         }
         processResponse(response){
             // remove loading animation.

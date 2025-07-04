@@ -143,8 +143,9 @@ table.mpc-wrap img:hover {
 .mpc-container .mpc-product-title{
 	color: var(--mpc-label-primary-color);
 }
-.woocommerce-product-details__short-description {
-    font-size: 15px;
+.mpc-container .mpc-product-title p, .woocommerce-product-details__short-description {
+	font-size: 15px;
+	opacity: 0.8;
 }
 .mpc-container select.mpc-orderby, td.mpc-product-variation select{
 	max-width: 200px;
@@ -165,7 +166,7 @@ table.mpc-wrap img:hover {
 .mpc-container select.mpc-orderby:focus, td.mpc-product-variation select:focus{
 	outline: none;
 }
-td.mpc-product-variation select.mpc-att-marker {
+tr.cart_item.mpc-row-marked{
 	border: 1px solid var(--mpc-border-hightlight-color);
 }
 .mpc-container .clear-button a.reset_variations {

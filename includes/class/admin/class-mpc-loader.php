@@ -224,8 +224,6 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		 * Admin styles and scripts
 		 */
 		public function admin_assets() {
-			global $mpc__;
-
 			if( ! MPC_Admin_Helper::in_screen() ) return;
 
 			// enqueue style.
@@ -249,20 +247,22 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			wp_register_script( 'choices-js', plugin_dir_url( MPC ) . 'assets/lib/choices-js/choices.min.js', array( 'jquery' ), MPC_VER, true );
 			wp_enqueue_script( 'choices-js' );
 
-			$var = array(
+			$var = $this->get_admin_loacl_data();
+
+			wp_localize_script( 'mpc_admin_script', 'mpc_admin', $var );
+			wp_localize_script( 'mpc-shortcode', 'mpc_admin', $var );
+		}
+		public function get_admin_loacl_data(){
+			global $mpc__;
+
+			return apply_filters( 'mpca_local_var', array(
 				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
 				'has_pro'      => $mpc__['has_pro'],
 				'nonce'        => wp_create_nonce( 'search_box_nonce' ),
 				'export_nonce' => wp_create_nonce( 'mpc_export_nonce' ),
 				'export_text'  => __( 'Please wait while we are getting your file ready for download...', 'multiple-products-to-cart-for-woocommerce' ),
 				'export_ok'    => __( 'Export successful!', 'multiple-products-to-cart-for-woocommerce' ),
-			);
-
-			// apply hook for editing localized variables in admin script.
-			$var = apply_filters( 'mpca_local_var', $var );
-
-			wp_localize_script( 'mpc_admin_script', 'mpc_admin', $var );
-			wp_localize_script( 'mpc-shortcode', 'mpc_admin', $var );
+			) );
 		}
 
 		/**
@@ -287,7 +287,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			wp_enqueue_script( 'mpc-table-cart-handler' );
 			wp_enqueue_script( 'mpc-table-loader' );
 
-			$localaized_values = $this->get_local_data(); // localized variable data.
+			$localaized_values = $this->get_frontend_local_data(); // localized variable data.
 
 			// localize script.
 			wp_localize_script( 'mpc-common', 'mpc_frontend', $localaized_values );
@@ -296,52 +296,36 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			wp_localize_script( 'mpc-table-cart-handler', 'mpc_frontend', $localaized_values );
 			wp_localize_script( 'mpc-table-loader', 'mpc_frontend', $localaized_values );
 		}
-		private function get_local_data(){
-			global $mpc__;
-
-			$redirect_url  = get_option( 'wmc_redirect' );
-			$default_qty   = get_option( 'wmca_default_quantity' );
-			$missed_option = get_option( 'wmc_missed_variation_text' );
-			$blank_submit  = get_option( 'wmc_empty_form_text' );
-			$cart_btn_text = get_option( 'wmc_button_text' );
-
+		private function get_frontend_local_data(){
 			return apply_filters( 'mpca_update_local_vars', array(
 				'locale'         => str_replace( '_', '-', get_locale() ),
-				'currency'       => get_woocommerce_currency_symbol(), // currency symbol.
 				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-				'imgassets'      => plugin_dir_url( MPC ) . 'assets/images/',
-				'redirect_url'   => empty( $redirect_url ) ? 'ajax' : $redirect_url,
-				'page_limit'     => $mpc__['plugin']['page_limit'],
-				'missed_option'  => empty( $missed_option ) ? __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' ) : $missed_option,
-				'blank_submit'   => empty( $blank_submit ) ? __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' ) : $blank_submit,
-				'outofstock_txt' => '<p class="stock out-of-stock">' . __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ) . '</p>',
 				'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
-				'ds'             => wc_get_price_decimal_separator(), // decimal separator.
-				'ts'             => wc_get_price_thousand_separator(), // thousand separator.
-				'dqty'           => empty( $default_qty ) ? 1 : (int) $default_qty,
 				'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
 				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
-				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
-				'has_pro'        => $mpc__['has_pro'],
-				'cart_text'      => empty( $cart_btn_text ) ? __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ) : $cart_btn_text,
-				'wc_default_img' => array(
-					'thumb' => wc_placeholder_img_src(),
-					'full'  => wc_placeholder_img_src('full')
-				),
+				'imgassets'      => plugin_dir_url( MPC ) . 'assets/images/',
 				'settings'       => $this->get_settings(),
 				'labels'         => $this->get_labels(),
-				'orderby_ddown'  => array( 'price', 'title', 'date' ), // orderby supported value.
 			) );
 		}
 
 		private function get_settings(){
+			$cart_method = get_option( 'wmc_redirect' );
 			return array(
+				'cart_method' => empty( $cart_method ) ? 'ajax' : $cart_method,
 				'default_qty' => get_option( 'wmca_default_quantity', 1 ),
 			);
 		}
 		private function get_labels(){
+			$missed_option = get_option( 'wmc_missed_variation_text' );
+			$blank_submit  = get_option( 'wmc_empty_form_text' );
+			$cart_btn_text = get_option( 'wmc_button_text' );
+
 			return array(
-				''
+				'reset_var'     => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
+				'missed_option' => empty( $missed_option ) ? __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' ) : $missed_option,
+				'blank_submit'  => empty( $blank_submit ) ? __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' ) : $blank_submit,
+				'cart_text'     => empty( $cart_btn_text ) ? __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ) : $cart_btn_text,
 			);
 		}
 

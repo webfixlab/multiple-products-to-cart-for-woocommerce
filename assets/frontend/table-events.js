@@ -12,6 +12,7 @@
             this.$row       = null;
             this.$fields    = null;
             this.$variation = null;
+            this.$atts      = null;
 
             $(document).ready(() => {
                 this.init();
@@ -32,7 +33,6 @@
 
 
         globalEvents(){
-            const self = this;
             $(document.body).on('click', '#mpcpop', function(e){
                 if(e.target.tagName.toLowerCase() !== 'img'){
                     mpcCommon.imagePopup('', 'hide');
@@ -59,12 +59,10 @@
                 self.updateTotalPrice($(this));
                 self.ifAutoCheckProduct($(this));
             });
-            $(document.body).on('click change', 'input[type="checkbox"]', function(){
+            $(document.body).on('click change', '.mpc-product-select input[type="checkbox"]', function(){
                 self.updateTotalPrice($(this));
             });
             $(document.body).on('change', '.mpc-product-variation select', function(){
-                self.variationAttributeMarker($(this));
-
                 self.setRowData($(this));
 
                 self.setVariationImage();
@@ -202,6 +200,8 @@
         }
         setVariationDescription(){
             if(!this.$variation || !this.$variation.desc) return;
+            const desc = this.getAttVal('description');
+            if(!desc) return;
             
             const titleWrap = this.$row.find('td.mpc-product-name');
             if(!titleWrap) return;
@@ -221,9 +221,9 @@
             }
 
             if(this.$row.find('.clear-button').length !== 0){
-                this.$row.find('.clear-button').html(`<a class="reset_variations" href="#">Clear</a>`);
+                this.$row.find('.clear-button').html(`<a class="reset_variations" href="#">${mpc_frontend.labels.reset_var}</a>`);
             }else{
-                this.$row.find('.mpc-product-variation').append(`<div class="clear-button"><a class="reset_variations" href="#">Clear</a></div>`);
+                this.$row.find('.mpc-product-variation').append(`<div class="clear-button"><a class="reset_variations" href="#">${mpc_frontend.labels.reset_var}</a></div>`);
             }
         }
         disableRow(){
@@ -250,12 +250,6 @@
                     this.$fields.checkBox.prop('disabled', true);
                 }
             }
-        }
-        variationAttributeMarker(attOpt){
-            const marker = 'mpc-att-marker';
-            if(attOpt.find('option:selected').val().length !== 0){
-                if(!attOpt.hasClass(marker)) attOpt.addClass(marker);
-            }else attOpt.removeClass(marker);
         }
 
         // helper functions.
@@ -354,6 +348,10 @@
                 if(!this.$variation) return;
             }
             if(!checkBox.is(':checked')) checkBox.trigger('click');
+        }
+        getAttVal(key){
+            const atts = this.$row.closest('.mpc-container').find('.mpc-table-query').data('atts');
+            return atts[key] ?? '';
         }
     }
 

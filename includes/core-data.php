@@ -17,7 +17,6 @@ $mpc__           = array(
 	'prolink'       => 'https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/',
 	'activate_link' => 'admin.php?page=mpc-shortcodes-pricing',
 	'plugin'        => array(
-		'page_limit'      => 10,
 		'screen'          => array(
 			'toplevel_page_mpc-shortcodes',
 			'multiple-products_page_mpc-shortcode',

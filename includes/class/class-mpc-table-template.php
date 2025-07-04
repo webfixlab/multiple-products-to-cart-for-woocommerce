@@ -388,12 +388,8 @@ class MPC_Table_Template {
     }
     public static function no_variation( $data ){
         if( isset( $data['atts'] ) && !empty( $data['atts'] ) ) return;
-
-        $label = get_option( 'wmc_empty_value_text' );
         ?>
-        <span>
-            <?php echo !empty( $label ) ? esc_html( $label ) : esc_html__( 'N/A', 'multiple-products-to-cart-for-woocommerce' ); ?>
-        </span>
+        <span><?php echo esc_html( get_option( 'wmc_empty_value_text', '' ) ); ?></span>
         <?php
     }
 
@@ -552,7 +548,7 @@ class MPC_Table_Template {
         $end   = min( $page * $limit, $total ); // Take whichever comes first, end or total.
         $range = "{$start} - {$end}";
         ?>
-        <div class="mpc-product-range" data-page_limit="<?php echo esc_attr( $limit ); ?>">
+        <div class="mpc-product-range">
             <p>
                 <?php printf(
                     // translators: %1$s label, %2$s current range, %3$s total products.
