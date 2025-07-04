@@ -138,7 +138,7 @@
         addCartMsg(response){
             $('body').find('.mpc-cart-messege').remove();
     
-            var popup  = '', notice = '';
+            var popup = '', notice = '';
             if(response.cart_message){
                 popup  = `<div class="woocommerce-message" role="alert">${response.cart_message}</div>`;
                 notice = popup;
