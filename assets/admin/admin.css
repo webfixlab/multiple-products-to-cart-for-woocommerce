@@ -855,6 +855,19 @@ a .mpcasc-reset .button-secondary{
 #export .mpcdp_settings_submit .submit, #export .mpcdp_settings_submit button.mpcdp_submit_button, .mpcdp_settings_submit .submit input#submit, #import .mpcdp_settings_submit .submit, #import .mpcdp_settings_submit button.mpcdp_submit_button, .mpcdp_settings_submit .submit input#submit{
 	margin: 0;
 }
+.mpc-import-wrap input[type="file"]::file-selector-button {
+    background: #f6f6f6;
+    padding: 10px 20px;
+    border: 1px solid #858585;
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+    box-shadow: none;
+}
+.mpcdp_settings_submit.mpc-file button.mpcdp_submit_button {
+    padding: 5px 30px;
+	height: 44px;
+}
 .choicesdp .choices__list--multiple .choices__item{
 	background-color: #787878;
 	border-color: #787878;

@@ -176,15 +176,15 @@ class MPC_Settings_Template {
                                     <?php echo esc_html__( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 </div>
                             <?php endif; ?>
-                            <div class="mpcdp_option_label">Export MPC Tables and Settings</div>
+                            <div class="mpcdp_option_label"><?php echo __( 'Export MPC Tables and Settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                             <div class="mpcdp_option_description">
                                 <br>
-                                Click on `Export` to export tables and settings.
+                                <?php echo __( 'Click on `Export` to export tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 <br><br>
-                                You will find either a `mpc_export.json` or an enumarated `mpc_export(1).json` file in your `Downloads` folder. You can use this file to import it later or to other websites.
+                                <?php echo __( 'You will find either a `mpc_export.json` or an enumarated `mpc_export(1).json` file in your `Downloads` folder. You can use this file to import it later or to other websites.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 <br><br>
                                 <?php if ( false === self::$data['has_pro'] ) : ?>
-                                    The export feature is only available for PRO plugin.
+                                    <?php echo __( 'The export feature is only available for PRO plugin.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -195,15 +195,15 @@ class MPC_Settings_Template {
                 <div class="mpcdp_settings_option visible">
                     <div class="mpcdp_row">
                         <div class="mpcdp_settings_option_description col-md-6">
-                            <div class="mpcdp_option_label">Export</div>
-                            <div class="mpcdp_option_description">Export tables and settings</div>
+                            <div class="mpcdp_option_label"><?php echo __( 'Export', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                            <div class="mpcdp_option_description"><?php echo __( 'Export tables and settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                         </div>
                         <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
                             <div class="mpcdp_settings_submit mpc-file">
                                 <div class="submit">
                                     <button id="mpc-export" class="mpcdp_submit_button <?php echo esc_attr( $pro_cls ); ?>" title="Export">
-                                        <div class="save-text">Export settings</div>
-                                        <div class="save-text save-text-mobile">Export</div>
+                                        <div class="save-text"><?php echo __( 'Export settings', 'multiple-products-to-cart-for-woocommerce' ) ;?></div>
+                                        <div class="save-text save-text-mobile"><?php echo __( 'Export', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                                     </button>
                                 </div>
                             </div>
@@ -244,15 +244,15 @@ class MPC_Settings_Template {
                                     <?php echo esc_html__( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 </div>
                             <?php endif; ?>
-                            <div class="mpcdp_option_label">Import MPC Tables and Settings</div>
+                            <div class="mpcdp_option_label"><?php echo __( 'Import MPC Tables and Settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                             <div class="mpcdp_option_description">
                                 <br>
-                                The file name will be `mpc_export.json` or enumarated `mpc_export(1).json`.
+                                <?php echo __( 'The file name will be `mpc_export.json` or enumarated `mpc_export(1).json`', 'multiple-products-to-cart-for-woocommerce' ); ?>.
                                 <br><br>
-                                Choose the .json file and click on `Import`. This will import `Multiple products to cart for WooCommerce` tables and settings.
+                                <?php echo __( 'Choose the .json file and click on `Import`. This will import `Multiple products to cart for WooCommerce` tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 <br><br>
                                 <?php if ( false === self::$data['has_pro'] ) : ?>
-                                    The import feature is only available for PRO plugin.
+                                    <?php echo __( 'The import feature is only available for PRO plugin.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -263,20 +263,20 @@ class MPC_Settings_Template {
                 <div class="mpcdp_settings_option visible">
                     <div class="mpcdp_row">
                         <div class="mpcdp_settings_option_description col-md-12">
-                            <div class="mpcdp_option_label">Import</div>
-                            <div class="mpcdp_option_description">Import MPC settings and tables</div>
+                            <div class="mpcdp_option_label"><?php echo __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                            <div class="mpcdp_option_description"><?php echo __( 'Import MPC settings and tables', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                         </div>
                     </div>
                     <div class="mpcdp_row">
-                        <div class="mpcdp_settings_option_description col-md-6">
-                            <input name="mpc_import_file" type="file" class="mpc-file-uploader" accept=".json">
+                        <div class="mpcdp_settings_option_description col-md-6 mpc-import-wrap">
+                            <input id="mpc_import_file" name="mpc_import_file" type="file" class="mpc-file-uploader" accept=".json">
                         </div>
                         <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
                             <div class="mpcdp_settings_submit mpc-file">
                                 <div class="submit">
                                     <button class="mpcdp_submit_button <?php echo esc_attr( $pro_cls ); ?>" title="Import">
-                                        <div class="save-text">Import settings</div>
-                                        <div class="save-text save-text-mobile">Import</div>
+                                        <div class="save-text"><?php echo __( 'Import settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                                        <div class="save-text save-text-mobile"><?php echo __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                                     </button>
                                 </div>
                             </div>
