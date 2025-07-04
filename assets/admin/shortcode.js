@@ -84,7 +84,7 @@
 			});
 		}
         UpdateFieldValue(wrap, values) {
-			values = values ? typeof values === 'string' ? values : values.joint(',') : '';
+			values = typeof values === 'undefined' ? '' : typeof values === 'string' ? values : values.join(',');
 			wrap.find('.choicesdp-field').val(values);
 		}
     }
