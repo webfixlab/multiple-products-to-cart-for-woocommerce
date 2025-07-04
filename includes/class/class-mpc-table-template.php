@@ -320,22 +320,25 @@ class MPC_Table_Template {
     }
     public static function variation_attributes( $data ){
         if( !isset( $data['atts'] ) || empty( $data['atts'] ) ) return;
-        $choose = get_option( 'wmc_option_text' ); // Choose attribute label.
-
         foreach( $data['atts'] as $attribute => $options ){
-            $name = sanitize_title( $attribute ); // Sanitized attribute name.
+            $name = sanitize_title( $attribute );
             ?>
             <select class="<?php echo esc_attr( $name ); ?>" name="attribute_<?php echo esc_attr( $name ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name ); ?>">
-                <option value=""><?php
-                    echo empty( $choose ) ? '' : esc_html( $choose ) . '&nbsp;';
-                    echo wc_attribute_label( $attribute );
-                    ?></option>
+                <option value=""><?php echo self::get_att_name( $attribute ); ?></option>
                 <?php self::attribute_options( $attribute, $options, $data ); ?>
             </select>
             <?php
         }
 
         self::clear_variation( $data );
+    }
+    public static function get_att_name( $attribute ){
+        $name = wc_attribute_label( $attribute );
+        $choose = get_option( 'wmc_option_text' ); // Choose attribute label.
+        if( !empty( $choose ) ) return "{$choose} {$name}";
+
+        $letter = strtolower( substr( $name, 0, 1 ) );
+        return in_array( $letter, array( 'a', 'e', 'i', 'o', 'u' ), true ) ? "Choose an {$name}" : "Choose a {$name}";
     }
     public static function attribute_options( $attribute, $options, $data ){
         if( empty( $options ) ) return;
