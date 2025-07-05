@@ -96,7 +96,6 @@ table.mpc-wrap tbody tr td:last-child{
 }
 .mpc-container .mpc-table-header.mpc-fixed-filter {
 	position: fixed;
-	top: 49px;
 	z-index: 999;
 	background: #ffffff;
 	padding: 10px;
@@ -105,9 +104,6 @@ table.mpc-wrap tbody tr td:last-child{
 	border-bottom-right-radius: 5px;
 	overflow-x: auto;
 	white-space: nowrap;
-}
-.mpc-container .mpc-table-header.mpc-fixed-filter {
-	top: 81px;
 }
 .mpc-container .mpc-table-header.mpc-fixed-filter > div, .mpc-container .mpc-table-header.mpc-fixed-filter select, .mpc-container .mpc-fixed-header table, .entry-content .mpc-fixed-header table {
 	margin-bottom: 0;

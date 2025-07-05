@@ -50,37 +50,49 @@
 
         prepareAllTables(){
             const self = this;
-            $('body').find('table.mpc-wrap').each(function(){
-                var table = $(this);
-                if(table.find('thead').length && !table.find('thead').is(':hidden')){
-                    self.renderStickyHead($(this));
-                }
+            $('body').find('.mpc-container').each(function(){
+                self.renderStickyHead($(this));
             });
         }
-        renderStickyHead(table){
-            var min  = 99999;
-            var html = '';
-            table.find('thead th').each(function(){
+        renderStickyHead(wrap){
+            const table = wrap.find('table.mpc-wrap')
+            wrap.find('.mpc-fixed-header').remove();
+            
+            const left  = $(table[0]).offset().left; // first column distanct to the left.
+            const width = table[0].offsetWidth;
+
+            this.addStickyHeaderColumns(table, left, width);
+            
+            const totalRow = wrap.find('.total-row');
+            if(totalRow.length !== 0) totalRow.css({'width': `${width}px`});
+            
+            this.addStickyHeaderFilters(wrap, table, left, width);
+        }
+        addStickyHeaderColumns(table, left, width){
+            const header = table.find('thead');
+            if(header.length === 0) return;
+
+            let html = '';
+            header.find('th').each(function(){
                 const th = $(this);
-                if(th.offset().left < min) min = th.offset().left;
-    
                 html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
             });
 
-            var width = table[0].offsetWidth;
-            let wrap  = table.closest('.mpc-container');
-            html      = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
-            html      = `<div class="mpc-fixed-header" style="left:${min}px;display:none;">${html}</div>`;
-            wrap.find('.mpc-fixed-header').remove();
+            html = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
+            html = `<div class="mpc-fixed-header" style="left:${left}px;display:none;">${html}</div>`;
             table.after(html);
-        
-            wrap.find('.total-row').css({'width': `${width}px`});
-        
-            var header       = wrap.find('.mpc-table-header');
-            width            = width < 401 ? '100%' : `${width}px`;
-            var headerHeight = header[0].offsetHeight;
-            headerHeight     = headerHeight > 100 ? 55 : headerHeight;
-            header.css({'left': `${min}px`, 'width' : width, 'min-height' : `${headerHeight}px`});
+        }
+        addStickyHeaderFilters(wrap, table, left, width){
+            const thead  = table.find('thead');
+            const header = wrap.find('.mpc-table-header');
+            
+            let top    = thead.length !== 0 ? thead.find('th')[0].offsetHeight : 0;
+            let height = header[0].offsetHeight;
+
+            top    = $(document.body).hasClass('admin-bar') ? top + 31 : top;
+            width  = width < 401 ? '100%' : `${width}px`;
+            height = height > 100 ? 55 : height;
+            header.css({'left': `${left}px`, 'width' : width, 'min-height' : `${height}px`, 'top': `${top}px`});
         }
 
 
@@ -105,13 +117,13 @@
         }
         scrollHandler(){
             const self = this;
-            var tk = 0; // table key.
+            var tabldId = 0; // table key.
             $('body').find('table.mpc-wrap').each(function(){
-                self.tableScrollHandler($(this), tk);
-                tk++;
+                self.tableScrollHandler($(this), tabldId);
+                tabldId++;
             });
         }
-        tableScrollHandler(table, tk){
+        tableScrollHandler(table, tabldId){
             var wrap = table.closest('.mpc-container');
 
             var currentScroll = $(window).scrollTop();
@@ -120,11 +132,11 @@
             var head = table.offset().top + 50;
             var tail = table.find('tbody tr:last-child').offset().top;
 
-            // table head.
             let products   = table.find('tbody tr');
             let tableStart = products[1] ? $( products[1] ).offset().top : 0;
             let tableEnd   = $(products[products.length - 1]).offset().top + $(products[products.length - 1])[0].offsetHeight;
 
+            // total section.
             const totalRow = wrap.find('.total-row');
             if((cs + this.$screen.height) > tableStart && (cs + this.$screen.height) < tableEnd){
                 totalRow.removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
@@ -145,11 +157,11 @@
 
             // filter section.
             if(wrap.find('.mpc-table-header').length === 0){
-                this.$oldScrolls[tk] = currentScroll;
+                this.$oldScrolls[tabldId] = currentScroll;
                 return;
             }
 
-            if(currentScroll < this.$oldScrolls[tk] && currentScroll > head && currentScroll < tail){
+            if(currentScroll < this.$oldScrolls[tabldId] && currentScroll > head && currentScroll < tail){
                 var height = wrap.find('.mpc-table-header')[0].offsetHeight + 20;
                 if(wrap.find('.mpc-all-select').length !== 0) height += 32;
 
@@ -161,7 +173,7 @@
                 wrap.css('margin-top', '20px');
             }
 
-            this.$oldScrolls[tk] = currentScroll;
+            this.$oldScrolls[tabldId] = currentScroll;
         }
     }
 
