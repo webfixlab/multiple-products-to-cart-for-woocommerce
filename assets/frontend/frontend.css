@@ -37,7 +37,7 @@ table.mpc-wrap tbody tr td, .mpc-range del span.woocommerce-Price-amount.amount,
 }
 .mpc-sort{
 	float: left;
-	margin-right: 15px;
+	margin-right: 10px;
 	display: inline-flex;
 }
 .mpc-all-select {

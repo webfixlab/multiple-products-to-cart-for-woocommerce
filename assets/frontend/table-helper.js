@@ -144,7 +144,7 @@
             }
 
             // filter section.
-            if(wrap.find('.mpc-table-header').length){
+            if(wrap.find('.mpc-table-header').length === 0){
                 this.$oldScrolls[tk] = currentScroll;
                 return;
             }
