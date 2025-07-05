@@ -137,12 +137,7 @@
             let tableEnd   = $(products[products.length - 1]).offset().top + $(products[products.length - 1])[0].offsetHeight;
 
             // total section.
-            const totalRow = wrap.find('.total-row');
-            if((cs + this.$screen.height) > tableStart && (cs + this.$screen.height) < tableEnd){
-                totalRow.removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
-            }else{
-                totalRow.removeClass('mpc-fixed-total-m');
-            }
+            this.fixedFooterScrolled(wrap, tableStart, tableEnd);
 
             // fixed header.
             if(this.$screen.width > 500){
@@ -174,6 +169,20 @@
             }
 
             this.$oldScrolls[tabldId] = currentScroll;
+        }
+        fixedFooterScrolled(wrap, tableStart, tableEnd){
+            const footer = wrap.find('.total-row');
+            const total = footer.find('.mpc-table-total');
+            const reset = footer.find('.mpc-reset-table');
+            const btn   = footer.find('.mpc-add-to-cart');
+            if(total.length === 0 && reset.length === 0 && btn.length === 0) return;
+            
+            var cs = $(window).scrollTop(); // current scroll offset.
+            if((cs + this.$screen.height) > tableStart && (cs + this.$screen.height) < tableEnd){
+                footer.removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
+            }else{
+                footer.removeClass('mpc-fixed-total-m');
+            }
         }
     }
 
