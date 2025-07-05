@@ -9,7 +9,9 @@
 ;(function($, window, document) {
     class mpcCommon{
         constructor(){
-            this.$filters = {};
+            this.$filters  = {};
+            this.$cartData = null;
+            this.$currentWrap = null;
             $(document).ready(() => {});
         }
 
@@ -57,6 +59,37 @@
         applyFilters(hookName, value, ...args) {
             if (!this.$filters[hookName]) return value;
             return this.$filters[hookName].reduce((v, cb) => cb(v, ...args), value);
+        }
+
+
+
+        getRowData(row, overrideCheck){
+            const type = row.attr('data-type');
+            if('grouped' === type) return false;
+
+            const checkBox    = row.find('input[type="checkbox"]');
+            const qtyField    = row.find('input[type="number"]');
+            if(!overrideCheck && checkBox.length !== 0 && !checkBox.is(':checked')) return false;
+            if(qtyField.length !== 0 && qtyField.val() === 0) return false;
+            
+            let selected = 0;
+            let atts = {};
+            row.find('select').each(function(){
+                const val = $(this).find('option:selected').val();
+                atts[$(this).data('attribute_name')] = val;
+                if(val.length !== 0) selected++;
+            });
+            const total    = row.find('select').length;
+            if(total > 0 && total !== selected) return false;
+
+            const variationId = parseInt(row.attr('data-variation_id'))
+            if(type === 'variable' && (!variationId || variationId === 0)) return false;
+            return {
+                'quantity':     qtyField.length !== 0 ? parseInt(qtyField.val()) : 1,
+                'type':         type,
+                'variation_id': variationId,
+                'attributes':   atts,
+            };
         }
     }
 
