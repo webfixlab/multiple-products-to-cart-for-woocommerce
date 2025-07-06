@@ -310,7 +310,10 @@
             
             if(this.$row.hasClass('variable')){
                 this.setRowData(item);
-                if(!this.$variation) return;
+                if(!this.$variation){
+                    if(checkBox.is(':checked')) checkBox.trigger('click');
+                    return;
+                }
             }
             if(!checkBox.is(':checked')) checkBox.trigger('click');
         }
