@@ -258,45 +258,10 @@
             const checkBox  = row.find('.mpc-product-select input[type="checkbox"]');
             if(checkBox && !checkBox.is(':checked')) return 0;
 
-            const variation = this.getVariation(row);
+            const variation = window.mpcCommon.getVariation(row);
             const price     = variation ? parseFloat(variation['price']) : parseFloat(row.data('price'));
             const qty       = qtyField && qtyField.length !== 0 ? parseInt(qtyField.val()) : 1;
             return price && qty ? price * qty : 0;
-        }
-        getVariation(row){
-            if(row.attr('data-type') !== 'variable') return '';
-
-            const data = row.find('.row-variation-data').data('variation_data');
-            if(!data) return '';
-
-            const atts = {};
-            let total  = 0, hasValue = 0;
-            row.find('select').each(function(){
-                const att = $(this).attr('name').replace('attribute_', '').toLowerCase();
-                atts[att] = $(this).find('option:selected').val();
-
-                total++;
-                if(atts[att]) hasValue++;
-            });
-
-            if(total > 0 && total !== hasValue) return ''; // partial selection shouldn't yield any result.
-
-            let variation = false;
-            for(const id in data){
-                if(!data[id].atts) return false;
-
-                let total = 0, matched = 0;
-                for(const att in data[id].atts){
-                    total++;
-                    const value = data[id].atts[att];
-                    if(!value || atts[att].toLowerCase() === value.toLowerCase()){
-                        matched++;
-                    }
-                }
-
-                if(total > 0 && total === matched) variation = data[id];
-            }
-            return variation;
         }
         hasRowDisputs(row){
             let total = 0, selected = 0;
@@ -325,7 +290,7 @@
 
         setRowData(item){
             this.$row = item.closest('tr.cart_item');
-            this.$variation = this.getVariation(this.$row);
+            this.$variation = window.mpcCommon.getVariation(this.$row);
 
             this.$fields = {
                 'qtyField' : this.$row.find('.mpc-product-quantity input[type="number"]'),

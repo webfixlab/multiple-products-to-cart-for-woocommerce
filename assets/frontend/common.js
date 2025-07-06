@@ -91,6 +91,41 @@
                 'attributes':   atts,
             };
         }
+        getVariation(row){
+            if(row.attr('data-type') !== 'variable') return '';
+
+            const data = row.find('.row-variation-data').data('variation_data');
+            if(!data) return '';
+
+            const atts = {};
+            let total  = 0, hasValue = 0;
+            row.find('select').each(function(){
+                const att = $(this).attr('name').replace('attribute_', '').toLowerCase();
+                atts[att] = $(this).find('option:selected').val();
+
+                total++;
+                if(atts[att]) hasValue++;
+            });
+
+            if(total > 0 && total !== hasValue) return ''; // partial selection shouldn't yield any result.
+
+            let variation = false;
+            for(const id in data){
+                if(!data[id].atts) return false;
+
+                let total = 0, matched = 0;
+                for(const att in data[id].atts){
+                    total++;
+                    const value = data[id].atts[att];
+                    if(!value || atts[att].toLowerCase() === value.toLowerCase()){
+                        matched++;
+                    }
+                }
+
+                if(total > 0 && total === matched) variation = data[id];
+            }
+            return variation;
+        }
     }
 
     window.mpcCommon = new mpcCommon();
