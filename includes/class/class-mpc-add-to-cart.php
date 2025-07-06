@@ -75,14 +75,11 @@ class MPC_Add_To_Cart {
      * @param string $method add to cart method, ajax or not.
      */
     public static function do_add_to_cart( $data, $method ) {
-        if ( empty( $data ) ) {
-            return;
-        }
+        if( empty( $data ) ) return;
 
-        $add_to_cart_missed = false;   // flag to find if any error occured while adding products to cart.
-        $all_products       = array(); // array of product id => quantity.
-        foreach ( $data as $product_id => $product ) {
-            if ( 'grouped' === $product['type'] ) continue;
+        $all_products = array(); // all successfully products added to cart.
+        foreach( $data as $product_id => $product ) {
+            if( 'grouped' === $product['type'] ) continue;
 
             $id           = (int) $product_id;
             $qty          = (int) $product['quantity'];
@@ -90,22 +87,20 @@ class MPC_Add_To_Cart {
             $attributes   = isset( $product['attributes'] ) && !empty( $product['attributes'] ) ? $product['attributes'] : [];
 
             $flag = WC()->cart->add_to_cart( $id, $qty, $variation_id, $attributes );
-
-            if ( false !== $flag ) {
+            if( false !== $flag ) {
                 do_action( 'woocommerce_ajax_added_to_cart', $id );
                 $all_products[ $id ] = $product['quantity'];
             }
-            $add_to_cart_missed = !$flag ? true : $add_to_cart_missed;
 
             do_action( 'mpc_after_add_to_cart', $id, $flag );
         }
 
-        if ( 'ajax' === $method ) {
+        if( 'ajax' === $method ) {
             $resonse                 = self::cart_refreshed_fragments();
             $resonse['req']          = $data;
-            $resonse['cart_message'] = wc_add_to_cart_message( $all_products, true, true );
+            $resonse['cart_message'] = !empty( $all_products ) ? wc_add_to_cart_message( $all_products, true, true ) : '';
 
-            if ( $add_to_cart_missed ) $resonse['error_message'] = self::cart_format_error();
+            if( empty( $all_products ) || count( $data ) !== count( $all_products ) ) $resonse['error_message'] = self::cart_format_error();
 
             wp_send_json( $resonse );
         } else {

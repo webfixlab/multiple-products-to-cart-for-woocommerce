@@ -441,7 +441,7 @@ class MPC_Table_Template {
         </td>
         <?php
     }
-    public static function product_checker(){
+    public static function product_checker( $disabled = false ){
         global $mpc_frontend__;
         $data = $mpc_frontend__['row_data'];
 
@@ -461,7 +461,8 @@ class MPC_Table_Template {
             name="product_ids[]"
             value="<?php echo esc_attr( $data['id'] ); ?>"
             data-price="<?php echo isset( $data['price_'] ) ? esc_attr( $data['price_'] ) : ''; ?>"
-            <?php echo esc_attr( $checked ); ?>>
+            <?php echo esc_attr( $checked ); ?>
+            <?php echo $disabled ? 'disabled' : ''; ?>>
         <?php
     }
 
