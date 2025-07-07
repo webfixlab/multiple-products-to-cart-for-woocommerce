@@ -342,6 +342,10 @@ class MPC_Settings_Page {
         if ( isset( $_POST['mpc_admin_settings'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
             $notice = __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' );
         }
+        
+        if ( isset( $_POST['mpc_col_sort'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_col_sort'] ) ), 'mpc_col_sort_save' ) ) {
+            $notice = __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' );
+        }
 
         if ( empty( $notice ) ) {
             return;

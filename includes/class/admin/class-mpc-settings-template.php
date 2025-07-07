@@ -150,6 +150,7 @@ class MPC_Settings_Template {
         <?php
         printf( '<input class="mpc-sorted-cols" type="hidden" name="wmc_sorted_columns" value="%s">', esc_html( $value ) );
         wp_nonce_field( 'mpc_col_sort_save', 'mpc_col_sort' );
+        // wp_nonce_field( 'mpc_admin_settings_save', 'mpc_admin_settings' );
     }
     public static function export(){
         $pro_cls = false === self::$data['has_pro'] ? 'mpcex-disabled' : '';
