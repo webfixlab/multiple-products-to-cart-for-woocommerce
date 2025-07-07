@@ -285,7 +285,6 @@ class MPC_Shortcode {
             exit();
         }
 
-        self::log( 'shortcode updated' );
         return $update_notice;
     }
     private static function log( $data ) {

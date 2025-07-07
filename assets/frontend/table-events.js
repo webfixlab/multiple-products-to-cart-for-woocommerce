@@ -303,7 +303,7 @@
             if(checkBox.length === 0) return;
 
             const qtyField = this.$row.find('.mpc-product-quantity input[type="number"]');
-            if(qtyField.length !== 0 && (qtyField.val().length === 0 || qtyField.val() === 0)){
+            if(qtyField.length !== 0 && (qtyField.val().length === 0 || qtyField.val() === '0')){
                 if(checkBox.is(':checked')) checkBox.trigger('click');
                 return;
             }
