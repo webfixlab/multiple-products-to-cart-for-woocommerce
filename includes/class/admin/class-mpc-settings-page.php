@@ -99,7 +99,6 @@ class MPC_Settings_Page {
                 </div>
                 <?php self::settings_form_sidebar(); ?>
             </div>
-            <?php wp_nonce_field( 'mpc_admin_settings_save', 'mpc_admin_settings' ); ?>
         </form>
         <?php
     }
@@ -380,6 +379,7 @@ class MPC_Settings_Page {
                 }
             ?>
         </div>
+        <?php wp_nonce_field( 'mpc_admin_settings_save', 'mpc_admin_settings' ); ?>
         <?php
     }
     
