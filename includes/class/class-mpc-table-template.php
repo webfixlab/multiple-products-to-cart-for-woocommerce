@@ -63,7 +63,10 @@ class MPC_Table_Template {
         $title_filter = get_option( 'mpc_show_title_dopdown' );
         $title_filter = !empty( $title_filter ) && 'on' === $title_filter ? true : false;
 
-        $select = $mpc_frontend__['atts']['orderby'] ?? 'menu_order';
+        $atts    = $mpc_frontend__['atts'];
+        $orderby = isset( $atts['orderby'] ) && !empty( $atts['orderby'] ) ? $atts['orderby'] : 'menu_order';
+        $order   = isset( $atts['order'] ) && !empty( $atts['order'] ) ? $atts['order'] : 'DESC';
+        $select  = 'menu_order' === $orderby ? $orderby : sanitize_title("{$orderby}-{$order}");
 
         $options = array(
             'menu_order' => array(
@@ -100,7 +103,7 @@ class MPC_Table_Template {
     }
     public static function orderby_options( $options, $select ){
         foreach( $options as $slug => $option ){
-            $selected = $slug === $select ? 'selected' : '';
+            $selected = sanitize_title($slug) === $select ? 'selected' : '';
             $label    = get_option( $option['key'] );
             $label    = empty( $label ) ? $option['label'] : $label;
             ?>
