@@ -40,8 +40,8 @@ input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{
 	<?php printf( 'background: %s;', esc_html( $btn_background ) ); ?>
 	<?php printf( 'color: %s;', esc_html( $btn_color ) ); ?>
 }
-td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
-	width: <?php echo esc_attr( $image_size ); ?>px;
+.mpcp-gallery, table.mpc-wrap img{
+	max-width: <?php echo esc_attr( $image_size ); ?>px;
 }
 <?php if( isset( $title_color ) && ! empty( $title_color ) ) : ?>
 	.mpc-product-title a{
