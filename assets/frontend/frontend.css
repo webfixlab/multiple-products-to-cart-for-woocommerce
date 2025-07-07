@@ -37,7 +37,6 @@ table.mpc-wrap tbody tr td, .mpc-range del span.woocommerce-Price-amount.amount,
 }
 .mpc-sort{
 	float: left;
-	margin-right: 10px;
 	display: inline-flex;
 }
 .mpc-all-select {
@@ -98,7 +97,6 @@ table.mpc-wrap tbody tr td:last-child{
 	position: fixed;
 	z-index: 999;
 	background: #ffffff;
-	padding: 10px;
 	box-shadow: 0 1px 11px 0 rgb(17 17 17 / 31%);
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
@@ -161,6 +159,9 @@ table.mpc-wrap img:hover {
 }
 .mpc-container select.mpc-orderby:focus, td.mpc-product-variation select:focus{
 	outline: none;
+}
+.mpc-container .mpc-table-header.mpc-fixed-filter select.mpc-orderby{
+	margin: 10px 5px 10px 10px;
 }
 tr.cart_item.mpc-row-marked{
 	border: 1px solid var(--mpc-border-hightlight-color);
