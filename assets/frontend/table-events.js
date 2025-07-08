@@ -15,6 +15,7 @@
             this.$atts      = null;
 
             $(document).ready(() => {
+                console.log(mpc_frontend);
                 this.init();
             });
             $(document).on('mpc_table_loaded', () => {
@@ -57,7 +58,7 @@
                 self.setRowData($(this));
                 self.checkProductStock();
                 self.updateTotalPrice($(this));
-                self.ifAutoCheckProduct($(this));
+                self.disableRow();
             });
             $(document.body).on('click change', '.mpc-product-select input[type="checkbox"]', function(){
                 self.updateTotalPrice($(this));
@@ -69,10 +70,9 @@
                 self.setVariationPrice();
                 self.setVariationDescription();
                 self.addClearVariations();
-                self.disableRow();
-
                 self.checkProductStock();
-                self.ifAutoCheckProduct($(this));
+                
+                self.disableRow();
             });
             $(document.body).on('click', '.mpc-product-variation a.reset_variations', function(e){
                 e.preventDefault();
@@ -233,21 +233,11 @@
                 if(!this.$variation) ability = false;
                 if(this.$variation && (this.$variation.stock_status === 'outofstock' || !this.$variation.price)) ability = false;
             }
-
-            if(ability){
-                if(this.$fields.qtyField.length !== 0) this.$fields.qtyField.prop('disabled', false);
-                if(this.$fields.checkBox.length !== 0){
-                    this.$fields.checkBox.prop('disabled', false);
-                    if(!hasDisput && !this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
-                }
-            }else{
-                if(this.$fields.qtyField.length !== 0){
-                    this.$fields.qtyField.prop('disabled', true);
-                }
-                if(this.$fields.checkBox.length !== 0){
-                    if(this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
-                    this.$fields.checkBox.prop('disabled', true);
-                }
+            !ability ? this.$row.removeClass('mpc-row-disable').addClass('mpc-row-disable') : this.$row.removeClass('mpc-row-disable');
+            if(this.$fields.checkBox.length !== 0){
+                const qty = this.$fields.qtyField.length !== 0 ? this.$fields.qtyField.val() : true;
+                if((!ability || !qty ) && this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
+                if(ability && !this.$fields.checkBox.is(':checked')) this.$fields.checkBox.trigger('click');
             }
         }
 
@@ -295,26 +285,6 @@
                 'qtyField' : this.$row.find('.mpc-product-quantity input[type="number"]'),
                 'checkBox' : this.$row.find('.mpc-product-select input[type="checkbox"]')
             };
-        }
-        ifAutoCheckProduct(item){
-            this.$row = item.closest('tr.cart_item');
-            const checkBox = this.$row.find('.mpc-product-select input[type="checkbox"]');
-            if(checkBox.length === 0) return;
-
-            const qtyField = this.$row.find('.mpc-product-quantity input[type="number"]');
-            if(qtyField.length !== 0 && (qtyField.val().length === 0 || qtyField.val() === '0')){
-                if(checkBox.is(':checked')) checkBox.trigger('click');
-                return;
-            }
-            
-            if(this.$row.hasClass('variable')){
-                this.setRowData(item);
-                if(!this.$variation){
-                    if(checkBox.is(':checked')) checkBox.trigger('click');
-                    return;
-                }
-            }
-            if(!checkBox.is(':checked')) checkBox.trigger('click');
         }
         getAttVal(key){
             const atts = this.$row.closest('.mpc-container').find('.mpc-table-query').data('atts');

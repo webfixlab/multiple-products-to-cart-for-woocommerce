@@ -183,9 +183,6 @@ td.mpc-product-quantity input[type="number"]{
 	box-shadow: none;
 	border-radius: 4px;
 }
-td.mpc-product-quantity input[type="number"]:disabled{
-	opacity: 0.5;
-}
 td.mpc-product-price .mpc-range{
 	display: flex;
 	color: #6d6d6d;
@@ -203,6 +200,10 @@ td.mpc-product-quantity input[type="number"]:focus{
 .mpc-container .mpc-product-select input[type="checkbox"] {
 	vertical-align: middle;
 	margin-right: 7px;
+}
+.mpc-container tr.cart_item.mpc-row-disable .mpc-product-quantity input[type="number"], .mpc-container tr.cart_item.mpc-row-disable .mpc-product-select input[type="checkbox"]{
+	pointer-events: none;
+	opacity: 0.5;
 }
 .mpc-container .mpc-single-price {
 	display: none;

@@ -193,8 +193,9 @@ class MPC_Table_Template {
         $price = $data['price_'] ?? '';
 
         $mpc_frontend__['row_data'] = $data;
+        $disable_cls = apply_filters( 'mpc_disable_table_row', 'simple' === $data['type'] && 'outofstock' === $data['stock_status'] ? 'mpc-row-disable' : '', $data );
         ?>
-        <tr class="cart_item <?php echo esc_attr( $data['type'] ); ?>" data-varaition_id="0" data-type="<?php echo esc_attr( $data['type'] ); ?>" data-id="<?php echo esc_attr( $id ); ?>" stock="<?php echo esc_attr( $data['stock'] ); ?>" data-price="<?php echo esc_attr( $price ); ?>">
+        <tr class="cart_item <?php echo esc_attr( $data['type'] ); ?> <?php echo esc_attr( $disable_cls ); ?>" data-varaition_id="0" data-type="<?php echo esc_attr( $data['type'] ); ?>" data-id="<?php echo esc_attr( $id ); ?>" stock="<?php echo esc_attr( $data['stock'] ); ?>" data-price="<?php echo esc_attr( $price ); ?>">
             <?php self::display_all_columns(); ?>
         </tr>
         <?php
@@ -420,7 +421,6 @@ class MPC_Table_Template {
         $min         = 1;
         $max         = empty( $stock ) ? '' : $stock;
         $default_qty = !empty( $stock ) && $default_qty > $stock ? $stock : $default_qty;
-        $disabled    = 'simple' === $data['type'] && 'outofstock' === $data['stock_status'] ? 'disabled' : '';
         ?>
         <input
             type="number"
@@ -434,8 +434,7 @@ class MPC_Table_Template {
             size="4"
             inputmode="numeric"
             data-default="<?php echo esc_attr( $default_qty ); ?>"
-            data-current_stock="<?php echo esc_attr( $stock ); ?>"
-            <?php echo esc_attr( $disabled ); ?>>
+            data-current_stock="<?php echo esc_attr( $stock ); ?>">
         <?php
     }
 
