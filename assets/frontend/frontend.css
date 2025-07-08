@@ -106,6 +106,9 @@ table.mpc-wrap tbody tr td:last-child{
 .mpc-container .mpc-table-header.mpc-fixed-filter > div, .mpc-container .mpc-table-header.mpc-fixed-filter select, .mpc-container .mpc-fixed-header table, .entry-content .mpc-fixed-header table {
 	margin-bottom: 0;
 }
+.mpc-container .mpc-table-header.mpc-fixed-filter .mpc-all-select{
+	margin: 9px 10px;
+}
 table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
 	background: #444;
 	color: #fff;
@@ -147,7 +150,7 @@ table.mpc-wrap img:hover {
     display: inline-block;
     border-radius: 4px;
 	padding: 5px 10px;
-	margin-bottom: 10px;
+	margin: 0 5px 10px 0;
 	outline: none;
 }
 #brx-content select.mpc-orderby, #brx-content td.mpc-product-variation select{

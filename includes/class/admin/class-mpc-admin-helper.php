@@ -88,12 +88,14 @@ class MPC_Admin_Helper {
         global $mpc__;
         $tab = self::get_tab();
 
-        foreach( $mpc__['fields']['general-settings'] as $section_name => $section ){
+        foreach( $mpc__['fields'] as $section_name => $sections ){
             if( $section_name !== $tab ) continue;
-            foreach( $section['fields'] as $field ){
-                if( 'checkbox' !== $field['type'] ) continue;
-                if( in_array( $field['key'], $post_field_keys, true ) ) continue;
-                delete_option( $field['key'] );
+            foreach( $sections as $section ){
+                foreach( $section['fields'] as $field ){
+                    if( 'checkbox' !== $field['type'] ) continue;
+                    if( in_array( $field['key'], $post_field_keys, true ) ) continue;
+                    delete_option( $field['key'] );
+                }
             }
         }
     }
