@@ -82,7 +82,8 @@
             const total    = row.find('select').length;
             if(total > 0 && total !== selected) return false;
 
-            const variationId = parseInt(row.attr('data-variation_id'))
+            const variationId = parseInt(row.attr('data-variation_id'));
+            console.log('variation id ' . variationId);
             if(type === 'variable' && (!variationId || variationId === 0)) return false;
             return {
                 'quantity':     qtyField.length !== 0 ? parseInt(qtyField.val()) : 1,

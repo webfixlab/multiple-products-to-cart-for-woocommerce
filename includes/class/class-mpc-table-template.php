@@ -195,7 +195,7 @@ class MPC_Table_Template {
         $mpc_frontend__['row_data'] = $data;
         $disable_cls = apply_filters( 'mpc_disable_table_row', 'simple' === $data['type'] && 'outofstock' === $data['stock_status'] ? 'mpc-row-disable' : '', $data );
         ?>
-        <tr class="cart_item <?php echo esc_attr( $data['type'] ); ?> <?php echo esc_attr( $disable_cls ); ?>" data-varaition_id="0" data-type="<?php echo esc_attr( $data['type'] ); ?>" data-id="<?php echo esc_attr( $id ); ?>" stock="<?php echo esc_attr( $data['stock'] ); ?>" data-price="<?php echo esc_attr( $price ); ?>">
+        <tr class="cart_item <?php echo esc_attr( $data['type'] ); ?> <?php echo esc_attr( $disable_cls ); ?>" data-variation_id="0" data-type="<?php echo esc_attr( $data['type'] ); ?>" data-id="<?php echo esc_attr( $id ); ?>" stock="<?php echo esc_attr( $data['stock'] ); ?>" data-price="<?php echo esc_attr( $price ); ?>">
             <?php self::display_all_columns(); ?>
         </tr>
         <?php
@@ -445,17 +445,19 @@ class MPC_Table_Template {
         </td>
         <?php
     }
-    public static function product_checker( $disabled = false ){
+    public static function product_checker(){
         global $mpc_frontend__;
-        $data = $mpc_frontend__['row_data'];
 
+        $data = $mpc_frontend__['row_data'];
         if( 'grouped' === $data['type'] ) return;
 
         $label    = get_option( 'wmc_ct_buy' );
         $label    = empty( $label ) ? __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ) : $label;
 
-        $selected = $mpc_frontend__['atts']['selected'];
+        $selected = $mpc_frontend__['atts']['selected'] ?? [];
+        $selected = array_map( 'intval', $selected );
         $checked  = !empty($selected) && is_array($selected) && in_array( $data['id'], $selected, true ) ? 'checked' : '';
+        $checked  = 'simple' === $data['type'] && 'outofstock' === $data['stock_status'] ? '' : $checked;
         ?>
         <span class="mpc-mobile-only">
             <?php echo esc_html( $label ); ?>
@@ -465,8 +467,7 @@ class MPC_Table_Template {
             name="product_ids[]"
             value="<?php echo esc_attr( $data['id'] ); ?>"
             data-price="<?php echo isset( $data['price_'] ) ? esc_attr( $data['price_'] ) : ''; ?>"
-            <?php echo esc_attr( $checked ); ?>
-            <?php echo $disabled ? 'disabled' : ''; ?>>
+            <?php echo esc_attr( $checked ); ?>>
         <?php
     }
 
