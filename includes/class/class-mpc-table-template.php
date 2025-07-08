@@ -420,6 +420,7 @@ class MPC_Table_Template {
         $min         = 1;
         $max         = empty( $stock ) ? '' : $stock;
         $default_qty = !empty( $stock ) && $default_qty > $stock ? $stock : $default_qty;
+        $disabled    = 'simple' === $data['type'] && 'outofstock' === $data['stock_status'] ? 'disabled' : '';
         ?>
         <input
             type="number"
@@ -433,7 +434,8 @@ class MPC_Table_Template {
             size="4"
             inputmode="numeric"
             data-default="<?php echo esc_attr( $default_qty ); ?>"
-            data-current_stock="<?php echo esc_attr( $stock ); ?>">
+            data-current_stock="<?php echo esc_attr( $stock ); ?>"
+            <?php echo esc_attr( $disabled ); ?>>
         <?php
     }
 

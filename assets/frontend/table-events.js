@@ -242,7 +242,6 @@
                 }
             }else{
                 if(this.$fields.qtyField.length !== 0){
-                    this.$fields.qtyField.val(0);
                     this.$fields.qtyField.prop('disabled', true);
                 }
                 if(this.$fields.checkBox.length !== 0){
