@@ -87,6 +87,7 @@ class MPC_Admin_Helper {
     public static function scrape_checkboxes( $post_field_keys ){
         global $mpc__;
         $tab = self::get_tab();
+        if( empty( $tab ) ) return;
 
         foreach( $mpc__['fields'] as $section_name => $sections ){
             if( $section_name !== $tab ) continue;
