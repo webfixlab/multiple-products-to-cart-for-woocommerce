@@ -455,6 +455,7 @@ class MPC_Table_Template {
         $label    = empty( $label ) ? __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ) : $label;
 
         $selected = $mpc_frontend__['atts']['selected'] ?? [];
+        $selected = !is_array( $selected ) ? explode( ',', str_replace( ' ', '', $selected ) ) : $selected;
         $selected = array_map( 'intval', $selected );
         $checked  = !empty($selected) && is_array($selected) && in_array( $data['id'], $selected, true ) ? 'checked' : '';
         $checked  = 'simple' === $data['type'] && 'outofstock' === $data['stock_status'] ? '' : $checked;
