@@ -13,7 +13,7 @@ global $mpc__;
 
 ?>
 <div class="sidebar_top">
-	<h2><?php echo __( 'Boost your tables to the next level', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
+	<h2><?php echo esc_html__( 'Boost your tables to the next level', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
 	<div class="tagline_side">
 		<?php
 			echo wp_kses_post(
@@ -24,20 +24,20 @@ global $mpc__;
 			);
 			?>
 	</div>
-	<div><a href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo __( 'Get PRO license now', 'multiple-products-to-cart-for-woocommerce' ); ?></a></div>
+	<div><a href="<?php echo esc_url( $mpc__['prolink'] ); ?>" target="_blank"><?php echo esc_html__( 'Get PRO license now', 'multiple-products-to-cart-for-woocommerce' ); ?></a></div>
 </div>
 <div class="site-intro">
-	<h2><?php echo __( 'Missing any features? No worries!', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
-	<a href="https://webfixlab.com/wordpress-offer/" target="_blank"><?php echo __( 'Customize for $99 only', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+	<h2><?php echo esc_html__( 'Missing any features? No worries!', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
+	<a href="https://webfixlab.com/wordpress-offer/" target="_blank"><?php echo esc_html__( 'Customize for $99 only', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
 </div>
 <div class="mpca_sidebar">
-	<h2><?php echo __( 'Dedicated Support Team', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
+	<h2><?php echo esc_html__( 'Dedicated Support Team', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
 	<div class="tagline_side">
-		<?php echo __( 'Our support is what makes us No.1. We are available round the clock for any support.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+		<?php echo esc_html__( 'Our support is what makes us No.1. We are available round the clock for any support.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 	</div>
 	<div>
 		<a href="<?php echo esc_url( $mpc__['plugin']['request_quote'] ); ?>" target="_blank">
-			<?php echo __( 'Send Request', 'multiple-products-to-cart-for-woocommerce' ); ?>
+			<?php echo esc_html__( 'Send Request', 'multiple-products-to-cart-for-woocommerce' ); ?>
 		</a>
 	</div>
 </div>

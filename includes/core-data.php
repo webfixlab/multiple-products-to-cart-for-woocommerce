@@ -17,6 +17,7 @@ $mpc__           = array(
 	'prolink'       => 'https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/',
 	'activate_link' => 'admin.php?page=mpc-shortcodes-pricing',
 	'plugin'        => array(
+		'page_limit'      => 10,
 		'screen'          => array(
 			'toplevel_page_mpc-shortcodes',
 			'multiple-products_page_mpc-shortcode',
@@ -113,8 +114,8 @@ $mpc__['fields'] = array(
 					'label'       => __( 'Add to Cart Button', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => __( 'Choose if you want to remove the Add to Cart button.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
-						'on'  => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
-						'off' => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 					),
 					'pro'         => true,
 				),
@@ -239,6 +240,16 @@ $mpc__['fields'] = array(
 					'pro'         => true,
 				),
 				array(
+					'key'         => 'mpc_show_variation_desc',
+					'type'        => 'checkbox',
+					'label'       => __( 'Variation Descriptions', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose if product variation descriptions should dynamically showed based on variation selection.', 'multiple-products-to-cart-for-woocommerce' ),
+					'switch_text' => array(
+						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
+					),
+				),
+				array(
 					'key'         => 'wmc_show_pagination_text',
 					'type'        => 'checkbox',
 					'label'       => __( 'Display Pagination Text', 'multiple-products-to-cart-for-woocommerce' ),
@@ -263,7 +274,7 @@ $mpc__['fields'] = array(
 					'key'         => 'mpc_show_stock_out',
 					'type'        => 'checkbox',
 					'label'       => __( 'Display Out-of-Stock Products', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Choose to include out-of-stock products in the table. Note: products must be allowed to backorder.', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose to include out-of-stock products in the table.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -287,8 +298,8 @@ $mpc__['fields'] = array(
 					'label'       => __( 'Table Header', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => __( 'Choose whether to hide or display the table headers, which include the column titles.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
-						'on'  => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
-						'off' => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 					),
 					'pro'         => true,
 				),
@@ -296,10 +307,10 @@ $mpc__['fields'] = array(
 					'key'         => 'mpc_show_total_price',
 					'type'        => 'checkbox',
 					'label'       => __( 'Total Price', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Hide or show table total price', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose whether the Total Price should be displayed.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
-						'on'  => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
-						'off' => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 					),
 					'pro'         => true,
 				),
@@ -339,6 +350,14 @@ $mpc__['fields'] = array(
 					'label'       => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
 					'placeholder' => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+				),
+				array(
+					'key'         => 'wmc_reset_button_text',
+					'type'        => 'text',
+					'default'     => '',
+					'label'       => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => '',
+					'placeholder' => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				array(
 					'key'         => 'mpce_single_order_button_text',
@@ -603,7 +622,7 @@ $mpc__['fields'] = array(
 					'default'     => '',
 					'label'       => __( 'Product Image Size (px)', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
-					'placeholder' => '90',
+					'placeholder' => '72',
 					'min'         => 50,
 					'max'         => 152,
 					'class'       => 'number-input',

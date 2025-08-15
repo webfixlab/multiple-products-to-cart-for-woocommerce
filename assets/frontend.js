@@ -1,0 +1,1106 @@
+/**
+ * Frontend JavaScript
+ *
+ * @uses       mpc_frontend
+ *
+ * @package    Wordpress
+ * @subpackage Multiple Products to Cart for Woocommerce
+ * @since      1.0
+ */
+
+(function ($) {
+	function mpc_loading_animation(way, elem) {
+		var wrap = elem.closest('.mpc-container');
+		if (way == 'load') {
+			wrap.find('table').before('<span class="mpc-loader"><img src="' + mpc_frontend.imgassets + 'loader.gif"></span>');
+		} else if (way == 'close') {
+			$('body').find('.mpc-loader').remove();
+		}
+	}
+
+	// for fixed price variable product - handle it's price.
+	function mpc_fixed_price_variable_product(row) {
+		if (row.find('.mpc-range').text() == row.find('.mpc-single-price').text()) {
+			row.find('.mpc-single-price').hide();
+		}
+		if (typeof row.find('.mpc-range ins').text() != 'undefined') {
+			if (row.find('.mpc-range ins').text() == row.find('.mpc-single-price').text()) {
+				row.find('.mpc-single-price').hide();
+			}
+		}
+	}
+
+	// show specific image or default woocommerce one.
+	function mpc_variation_image(row, data) {
+		var img = data['image'];
+		if (img['full'].indexOf('woocommerce-placeholder') != -1) {
+			row.find('.mpc-product-image .mpcpi-wrap img').attr('src', row.find('.mpc-product-image').data('pimg-thumb'));
+			row.find('.mpc-product-image .mpcpi-wrap img').attr('data-fullimage', row.find('.mpc-product-image').data('pimg-full'));
+		} else {
+			row.find('.mpc-product-image .mpcpi-wrap img').attr('src', img['thumbnail']);
+			row.find('.mpc-product-image .mpcpi-wrap img').attr('data-fullimage', img['full']);
+		}
+	}
+
+	// get variation id.
+	function mpc_get_variation_id(row, data) {
+		var total_select = 0, actual_selected = 0, varid = 0;
+		var row_data = {};
+
+		row.find('select.mpc-var-att').each(function(){
+			total_select++;
+			const attName = $(this).attr('class').replace('mpc-var-att ', '');
+			row_data[attName] = $(this).find('option').filter(':selected').attr('data-value');
+		});
+
+		for (var vid in data) {
+			actual_selected = 0;
+			for (var att in data[vid]['attributes']) {
+				if (data[vid]['attributes'][att].length == 0) {
+					actual_selected++;
+				} else if (typeof row_data[att] != 'undefined') {
+					if (data[vid]['attributes'][att] == row_data[att]) {
+						actual_selected++;
+					}
+				}
+			}
+			if (actual_selected == total_select && total_select != 0) {
+				varid = vid;
+			}
+		}
+		return varid;
+	}
+
+	// shows specific price for the selected option.
+	function mpc_row_price_handler(row, price) {
+		if (typeof price == 'undefined') {
+			row.find('.mpc-single-price span.total-price').text('');
+		} else {
+			row.find('.mpc-single-price').show();
+			
+			price = price.toLocaleString(mpc_frontend.locale, {
+				minimumFractionDigits: mpc_frontend.dp,
+				maximumFractionDigits: mpc_frontend.dp,
+				useGrouping: true
+			});
+			row.find('.mpc-single-price span.total-price').text(price);
+			if (!row.find('.mpc-product-price').hasClass('mpc-single-active')) {
+				row.find('.mpc-product-price').addClass('mpc-single-active');
+			}
+		}
+		if (row.find('.mpc-single-price span.total-price').text().length == 0) {
+			row.find('.mpc-single-price').hide();
+			if (row.find('.mpc-product-price').hasClass('mpc-single-active')) {
+				row.find('.mpc-product-price').removeClass('mpc-single-active');
+			}
+		}
+	}
+
+	function mpc_is_variable_product(row) {
+		return row.hasClass('variable') ? true : false;
+	}
+
+	function mpc_get_row_quantity(row) {
+		const qtyField = row.find('.mpc-product-quantity input[type="number"]');
+		return qtyField.length !== 0 ? parseInt(qtyField.val()) : 1;
+	}
+
+	// update variation short description.
+	function mpc_handle_variation_description(row, desc) {
+		var add_desc = false;
+		if (typeof desc != 'undefined' && desc.length > 0) add_desc = true;
+
+		if (add_desc === false) {
+			row.find('.mpc-var-desc').remove();
+		} else {
+			if (row.find('.mpc-var-desc') != 'undefined' && row.find('.mpc-var-desc').length > 0) {
+				row.find('.mpc-var-desc').replaceWith('<p class="mpc-var-desc">' + desc + '</p>');
+			} else {
+				row.find('.mpc-product-variation').append('<p class="mpc-var-desc">' + desc + '</p>');
+			}
+		}
+	}
+
+	function row_in_stock(row) {
+		var data = row.find('.row-variation-data').data('variation_data');
+		var variation_id = mpc_get_variation_id(row, data);
+		var instock = -1;
+		if (variation_id != 0) {
+			if (typeof data[variation_id]['stock_status'] != 'undefined') {
+				if (data[variation_id]['stock_status'] == 'outofstock') {
+					instock = 1;
+				} else if (typeof data[variation_id]['stock'] != 'undefined' && data[variation_id]['stock'].length > 0) {
+					instock = data[variation_id]['stock'];
+				}
+			}
+		}
+		return instock;
+	}
+	function row_stock_handler(row) {
+		var instock = row_in_stock(row);
+		row.find('.out-of-stock, .stock').remove();
+		if (instock == -1 || instock == 1) {
+			if (row.find('.mpc-product-select input').is(':checked')) {
+				row.find('.mpc-product-select input').trigger('click');
+			}
+			if (typeof row.find('.mpce-single-add') != 'undefined') {
+				row.find('.mpce-single-add').prop('disabled', true);
+			}
+			if (instock == 1 && row.find('.mpc-def-stock').length > 0) {
+				row.find('.mpc-def-stock').html(mpc_frontend.outofstock_txt);
+			}
+			if (typeof row.find('input[type="number"]') != 'undefined') {
+				row.find('input[type="number"]').val(0).trigger('change');
+			}
+			row.find('input[type="number"]').prop('disabled', true);
+		} else {
+			row.find('input[type="number"]').prop('disabled', false);
+			if (typeof row.find('.mpce-single-add') != 'undefined') {
+				row.find('.mpce-single-add').prop('disabled', false);
+			}
+			if (row.find('input[type="number"]').length) {
+				if (row.find('input[type="number"]').val() == '0') {
+					row.find('input[type="number"]').val(1).trigger('change');
+				}
+			}
+			row.find('.mpc-def-stock').html('<p class="stock in-stock">' + instock + '</p>');
+		}
+		return instock == -1 || instock == 1 ? false : true;
+	}
+
+	// handle pricing per row.
+	function mpc_dynamic_pricing_for_row(row) {
+		var price = parseFloat(0).toFixed(mpc_frontend.dp);
+		var quantity = mpc_get_row_quantity(row);
+
+		if (mpc_is_variable_product(row)) {
+			var data = row.find('.row-variation-data').data('variation_data');
+			var variation_id = mpc_get_variation_id(row, data);
+			if (variation_id != 0) {
+				mpc_variation_image(row, data[variation_id]);
+				mpc_row_price_handler(row, data[variation_id]['price']);
+				mpc_fixed_price_variable_product(row);
+
+				mpc_handle_variation_description(row, data[variation_id]['desc']);
+
+				if (mpc_if_all_options_selected(row) && typeof data[variation_id]['price'] != 'undefined') {
+					price = parseFloat(data[variation_id]['price']);
+				}
+
+				if (typeof row.find('.mpc-product-sku') != 'undefined' && typeof data[variation_id]['sku'] != 'undefined') {
+					row.find('.mpc-def-sku').hide();
+					row.find('.mpc-var-sku').html(data[variation_id]['sku']);
+				}
+				row.attr('data-variation_id', variation_id);
+				row.attr('data-price', data[variation_id]['price']);
+			} else {
+				mpc_handle_variation_description(row, '');
+				row.attr('data-variation_id', 0);
+				row.attr('data-price', 0);
+				row.find('.mpc-product-image .mpcpi-wrap img').attr('src', row.find('.mpc-product-image').data('pimg-thumb'));
+				row.find('.mpc-product-image .mpcpi-wrap img').attr('data-fullimage', row.find('.mpc-product-image').data('pimg-full'));
+				mpc_row_price_handler(row, '');
+
+				if (typeof row.find('.mpc-product-sku') != 'undefined') {
+					row.find('.mpc-def-sku').show();
+					row.find('.mpc-var-sku').html('');
+				}
+				if (typeof row.find('.mpc-stock') != 'undefined') {
+					row.find('.mpc-def-stock').show();
+					row.find('.mpc-var-stock').html('');
+				}
+			}
+		} else {
+			var type = row.data('type');
+			if (type !== 'grouped') {
+				price = row.data('price');
+			}
+		}
+
+		// if checkbox isn't checked, set price to 0.
+		var checkbox = row.find('.mpc-product-select input');
+		if (typeof checkbox !== 'undefined' && checkbox.length > 0 && !checkbox.is(':checked')) {
+			price = parseFloat(0);
+		}
+
+		return {
+			'price': parseFloat(price),
+			'quantity': quantity
+		};
+	}
+
+	// dynamic total price calculation.
+	function mpc_dynamic_product_pricing() {
+		$('body').find('form.mpc-cart').each(function () {
+			var table = $(this);
+			var total = 0.0;
+			var checked = 0;
+			table.find('.cart_item').each(function () {
+				var value = mpc_dynamic_pricing_for_row($(this));
+				if(value?.price && !isNaN(value.price)){
+					total = total + value.price * value.quantity;
+				}
+				if ($(this).find('.mpc-product-select input[type="checkbox"]').is(':checked')) {
+					checked++;
+				}
+			});
+
+			total = total.toLocaleString(mpc_frontend.locale, {
+				minimumFractionDigits: mpc_frontend.dp,
+				maximumFractionDigits: mpc_frontend.dp,
+				useGrouping: true
+			});
+			table.find('.mpc-total span.total-price').text(total);
+
+			var wrap = table.closest('.mpc-container');
+			if (checked == 0) {
+				wrap.find('.mpc-floating-total').removeClass('active');
+			} else {
+				wrap.find('.mpc-floating-total').addClass('active');
+			}
+			wrap.find('.mpc-floating-total span.total-price').text(total);
+		});
+	}
+
+	// check if all options are selected for a variable product.
+	function mpc_if_all_options_selected(row) {
+		var total = selected = 0;
+		row.find('select.mpc-var-att').each(function () {
+			total++;
+			if ($(this).val().length > 0) selected++;
+		});
+		return total == selected && total != 0 ? true : false;
+	}
+
+	function mpc_render_gallery(item) {
+		var row = item.closest('tr.cart_item');
+		var gallery = row.find('.gallery-items').data('gallery');
+		if (typeof gallery != 'undefined') {
+			var html = '';
+			var found = false;
+			$.each(gallery,function (k, v) {
+				var cls = '';
+				if (v.thumb == item.attr('src') && found == false) {
+					cls = 'mpcgi-selected';
+					found = true;
+				}
+
+				html += '<img class="' + cls + '" src="' + v.thumb + '" data-fullimage="' + v.full + '">';
+			});
+
+			if (typeof $('#mpcpop .mpc-gallery') != 'undefined' && $('#mpcpop .mpc-gallery').length > 0) {
+				$('#mpcpop .mpc-gallery').replaceWith('<div class="mpc-gallery">' + html + '</div>');
+			} else {
+				$('#mpcpop').append('<div class="mpc-gallery">' + html + '</div>');
+			}
+		} else {
+			if (typeof $('.mpc-gallery') != 'undefined' && $('.mpc-gallery').length > 0) {
+				$('.mpc-gallery').remove();
+			}
+		}
+
+	}
+	// load image popup.
+	function mpc_image_popup_loader(item) {
+		var link = item.attr('data-fullimage');
+		if (typeof link != 'undefined' && link.length > 0){}
+		else link = item.attr('data-fullimage');
+
+		var mpop = $('#mpcpop');
+		mpop.find('img').attr('src', link);
+
+		if (typeof image_src != 'undefined' && image_src != '') mpop.find('img').attr('src', image_src);
+
+		mpc_render_gallery(item);
+		mpop.show();
+	}
+
+	/**
+	 * Dynamic select all status handler
+	 * Checks table status. If everythig checked, auto check the select all checkbox. Anything middle will not auto check it.
+	 */
+	function mpc_init_select_all(wrap) {
+		var total = selected = 0;
+		wrap.find('form .mpc-product-select input').each(function () {
+			total++;
+			if ($(this).is(":checked")) selected++;
+		});
+
+		if (selected == 0 && total > 0 && wrap.find('.mpc-check-all').is(':checked')) {
+			wrap.find('.mpc-check-all').prop('checked', false);
+			wrap.find('.mpc-check-all').attr('data-state', 'not');
+		}
+
+		if (total == selected && selected > 0) {
+			// check select all checkbox.
+			wrap.find('.mpc-check-all').prop('checked', true);
+			wrap.find('.mpc-check-all').attr('data-state', 'checked');
+		}
+	}
+
+	function mpc_get_atts(wrap) {
+		var att_data = wrap.find('.mpc-table-query').data('atts');
+
+		var atts = {};
+		if (typeof att_data != 'undefined' && typeof att_data == 'object') {
+			$.each(att_data, function (key, val) {
+				atts[key] = val;
+			});
+		}
+
+		$.each(mpc_frontend.key_fields, function (shortcode_attr, attr_key) {
+			// Shortcode_attr | shortcode attribute key - attr_key | identifier | .something or #something.
+			if (typeof wrap.find(attr_key) != 'undefined' && typeof wrap.find(attr_key).val() != 'undefined') {
+				var attr_value = wrap.find(attr_key).val();
+
+				if (attr_value.length > 0) {
+					if (attr_value.indexOf('ASC') != -1) {
+						attr_value = attr_value.replace('-ASC', '');
+						atts.order = 'ASC';
+					} else if (attr_value.indexOf('DESC') != -1) {
+						attr_value = attr_value.replace('-DESC', '');
+						atts.order = 'DESC';
+					}
+
+					if (attr_key.indexOf('mpcp-cat-filter') != -1 && typeof atts[shortcode_attr] == 'undefined') {
+						atts.origin = 'dropdown_filter';
+					}
+
+					if (attr_value != 'menu_order') {
+						atts[shortcode_attr] = attr_value;
+					}
+				}
+			}
+		});
+
+		return atts;
+	}
+
+	function renderStickyHead(table) {
+		var min = 99999;
+		var html = '';
+		table.find('thead th').each(function () {
+			var th = $(this);
+			if (th.offset().left < min) min = th.offset().left;
+			html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
+		});
+		var width = table[0].offsetWidth;
+		let wrap = table.closest('.mpc-container');
+		html = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
+		html = `<div class="mpc-fixed-header" style="left:${min}px; display: none;">${html}</div>`;
+		wrap.find('.mpc-fixed-header').remove();
+		table.after(html);
+
+		if (window.screen.width > 500) wrap.find('.total-row').css({ 'width': `${width}px` });
+
+		var header = wrap.find('.mpc-table-header');
+		width = width < 401 ? '100%' : `${width}px`;
+		var headerHeight = header[0].offsetHeight;
+		headerHeight = headerHeight > 100 ? 55 : headerHeight;
+		header.css({ 'left': `${min}px`, 'width': width });
+	}
+	function mpc_table_loader_response(wrapper, response) {
+		var rp = JSON.parse(response);
+		if (rp.status) {
+			wrapper.find('.mpc-all-select, .mpc-table-footer').hide();
+		} else {
+			wrapper.find('.mpc-all-select, .mpc-table-footer').show();
+		}
+
+		if (rp.mpc_fragments) {
+			$.each(rp.mpc_fragments, function (k, v) {
+				if (typeof wrapper.find(v.key) == 'undefined' || wrapper.find(v.key).length == 0) {
+					if (typeof v.parent != 'undefined') {
+						if (typeof v.adding_type != 'undefined') {
+							if (v.adding_type == 'prepend') {
+								wrapper.find(v.parent).prepend(v.val);
+							}
+						}
+					} else {
+						wrapper.find(v.key).replaceWith(v.val);
+					}
+				} else {
+					wrapper.find(v.key).replaceWith(v.val);
+				}
+			});
+		}
+
+		wrapper.find('.mpc-fixed-header').remove();
+		renderStickyHead(wrapper.find('table'));
+
+		$('html, body').animate({
+			scrollTop: $(wrapper).offset().top - 80
+		}, 'slow');
+		mpc_dynamic_product_pricing(); // table.
+		mpc_init_select_all(wrapper);
+	}
+
+	// AJAX table loader.
+	function ajax_table_loader(atts, page, wrapper) {
+		$.ajax({
+			method: "POST",
+			url: mpc_frontend.ajaxurl,
+			data: {
+				'action': 'mpc_ajax_table_loader',
+				'page': page,
+				'atts': atts,
+				'table_nonce': mpc_frontend.table_nonce
+			},
+			async: 'false',
+			dataType: 'html',
+			success: function (response) {
+				mpc_loading_animation('close', wrapper);
+				if (response.length == 0) {
+					wrapper.find('.mpc-pageloader').html('');
+					return;
+				}
+				mpc_table_loader_response(wrapper, response);
+			},
+			error: function (errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	}
+	// AJAX table loader pre processing.
+	function mpc_table_loader_request(page, wrapper) {
+		mpc_loading_animation('load', wrapper);
+		var atts = mpc_get_atts(wrapper);
+		ajax_table_loader(atts, page, wrapper);
+	}
+
+	// mpc pagination loader.
+	function mpc_pagination_loader(elm) {
+		var wrap = elm.closest('.mpc-container');
+		var page = parseInt(elm.text());
+		mpc_table_loader_request(page, wrap);
+	}
+
+	// mpc order by table.
+	function mpc_order_by_table(elm) {
+		var wrapper = elm.closest('.mpc-container');
+		mpc_table_loader_request(1, wrapper);
+	}
+
+	// show notification - message for user.
+	function mpc_notify(table, type, msg) {
+		var html = '';
+		if (type == 'error') html = '<p class="woo-err woocommerce-error">' + msg + '</p>';
+
+		if (table.find('.woo-notices').length > 0) table.find('.woo-notices').html(html);
+		else table.prepend('<div class="woo-notices mpc-notice">' + html + '</div>');
+
+		$('html, body').animate({
+			scrollTop: $(table).offset().top - 60
+		}, 'slow');
+
+		setTimeout(function () {
+			$('body').find('.mpc-popify').remove();
+		}, 2000);
+
+		setTimeout(function () {
+			table.find('.woo-notices').remove();
+		}, 5000);
+	}
+
+	function mpc_get_add_to_cart_row_data(row, is_single) {
+		if ('grouped' === row.attr('data-type')) return false;
+
+		var data = {};
+		var chk = 0;
+		var qty = 0;
+		var quantity = 1;
+
+		if (typeof row.find('input[type="checkbox"]') != 'undefined' && row.find('input[type="checkbox"]').length > 0 && !is_single) {
+			chk++;
+			if (row.find('input[type="checkbox"]').is(':checked')) chk++;
+		}
+		if (typeof row.find('input[type="number"]') != 'undefined' && row.find('input[type="number"]').length > 0) {
+			qty++;
+			if (row.find('input[type="number"]').val().length > 0 && parseInt(row.find('input[type="number"]').val()) > 0) {
+				qty++;
+				quantity = parseInt(row.find('input[type="number"]').val());
+			}
+		}
+
+		if ((chk == 0 || chk == 2) && (qty == 0 || qty == 2)) {
+			var id = 0, varid = 0;
+			id = parseInt(row.attr('data-id'));
+			if (typeof row.attr('data-variation_id') != 'undefined' && row.attr('data-variation_id').length > 0) {
+				varid = parseInt(row.attr('data-variation_id'));
+			}
+
+			data[id] = {};
+			data[id]['quantity'] = quantity;
+			data[id]['type'] = row.attr('data-type');
+			if (mpc_is_variable_product(row)) {
+				has_variation = true;
+				var tt = ss = 0;
+				row.find('select.mpc-var-att').each(function () {
+					tt++;
+					if ($(this).val().length > 0) ss++;
+				});
+
+				if (tt == ss && tt != 0) {
+					data[id]['variation_id'] = varid;
+					data[id]['attributes'] = {};
+					row.find('select.mpc-var-att').each(function () {
+						data[id]['attributes'][$(this).attr('data-attribute_name')] = $(this).find('option:selected').val();
+					});
+				} else {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		return data;
+	}
+
+	// validate form/table before sending or adding to cart request.
+	function mpc_get_add_to_cart_request(wrap) {
+		var data = {};
+
+		wrap.find('tr.cart_item').each(function () {
+			var t = mpc_get_add_to_cart_row_data($(this), false);
+			if (t == false) return;
+
+			$.each(t, function (id, d) {
+				data[id] = d;
+			});
+		});
+
+		if ($.isEmptyObject(data)) {
+			mpc_notify(wrap, 'error', mpc_frontend.blank_submit);
+			return false;
+		}
+		return data;
+	}
+
+	// handle response after AJAX added to cart.
+	function mpcajx_add_to_cart_response(table, response) {
+		$(document.body).trigger('updated_cart_totals');
+
+		table.find('.mpc-button a.mpc-loading').remove();
+		table.find('.mpc-button input[type="submit"]').show();
+
+		if (response.fragments) {
+			$.each(response.fragments, function (key, value) {
+				$(key).replaceWith(value);
+			});
+		}
+
+		$('body').find('.mpc-cart-messege').remove();
+
+		var popup = '';
+		var notice = '';
+		if (response.cart_message) {
+			popup = '<div class="woocommerce-message" role="alert">' + response.cart_message + '</div>';
+			notice = '<div class="woocommerce-message" role="alert">' + response.cart_message + '</div>';
+		}
+		if (response.error_message) {
+			popup += '<div class="woo-err woocommerce-error" role="alert">' + response.error_message + '</div>';
+			notice += '<ul class="woocommerce-error" role="alert"><li>' + response.error_message + '</li></ul>';
+		}
+
+		// add popup.
+		$('body').append('<div class="mpc-popup mpc-popify mpc-cart-messege"><div class="woocommerce">' + popup + '</div></div>');
+
+		// add table notice.
+		table.closest('.mpc-container').prepend('<div class="woocommerce-notices-wrapper mpc-cart-messege">' + notice + '</div>');
+
+		setTimeout(function () {
+			$('body').find('.mpc-popify').remove();
+			table.find('input[type="checkbox"]').each(function () {
+				if ($(this).is(':checked')) {
+					$(this).trigger('click');
+				}
+			});
+		}, 2000);
+
+		setTimeout(function () {
+			table.find('.mpc-cart-messege').remove();
+		}, 7000);
+
+	}
+
+	// Example: Dispatching an 'added_to_cart' event to update the mini-cart.
+	const updateMiniCart = () => {
+		const event = new CustomEvent(
+			'wc-blocks_added_to_cart',
+			{
+				bubbles: true,
+				cancelable: true,
+			}
+		);
+		document.body.dispatchEvent(event);
+	};
+
+	function mpc_request_ajax_add_to_cart(wrap, data) {
+		// remove loading animation.
+		mpc_loading_animation('load', wrap);
+		$.ajax({
+			method: "POST",
+			url: mpc_frontend.ajaxurl,
+			data: {
+				'action': 'mpc_ajax_add_to_cart',
+				'mpca_cart_data': data,
+				'cart_nonce': mpc_frontend.cart_nonce
+			},
+			success: function (response) {
+				mpc_loading_animation('close', wrap);
+				mpcajx_add_to_cart_response(wrap, response);
+				updateMiniCart();
+			},
+			error: function (errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+
+	}
+
+	// table add to cart method.
+	function mpc_table_add_to_cart(item, e) {
+		var wrap = item.closest('.mpc-container');
+		var data = mpc_get_add_to_cart_request(wrap);
+		if (!data || (typeof data == 'object' && $.isEmptyObject(data))) {
+			e.preventDefault();
+			return '';
+		}
+		
+		wrap.find('input[name="mpc_cart_data"]').val(JSON.stringify(data));
+		
+		setTimeout(function(){
+			if (mpc_frontend.redirect_url === 'ajax') {
+				e.preventDefault();
+				console.log(JSON.parse(wrap.find('input[name="mpc_cart_data"]').val()));
+				mpc_request_ajax_add_to_cart(wrap, JSON.parse(wrap.find('input[name="mpc_cart_data"]').val()));
+			}
+		}, 250);
+	}
+
+	// floating add to cart button clicked event.
+	$('.mpc-floating-total .float-label').on('click', function (e) {
+		var wrap = $(this).closest('.mpc-container');
+		wrap.find('.mpc-cart .mpc-add-to-cart').trigger('click');
+	});
+
+	// table add to cart button clicked event.
+	$('body').on('click', '.mpc-cart .mpc-add-to-cart', function (e) {
+		mpc_table_add_to_cart($(this), e);
+	});
+
+	// single add to cart.
+	$('body').on('click', '.mpce-single-add', function (e) {
+		e.preventDefault();
+		var row = $(this).closest('tr.cart_item');
+		var wrap = $(this).closest('.mpc-container');
+
+		var data = mpc_get_add_to_cart_row_data(row, true);
+		if (!data || (typeof data == 'object' && $.isEmptyObject(data))) {
+			mpc_notify(wrap, 'error', mpc_frontend.blank_submit);
+		} else {
+			mpc_request_ajax_add_to_cart(wrap, data);
+		}
+	});
+
+	// ajax search.
+	var searchTimer;
+	$('body').on('input', '.mpc-asearch input', function () {
+		var input = $(this);
+		var s = input.val();
+
+		if (s.length) {
+			input.closest('.mpc-asearch').find('.mpc-close-search').show();
+		} else {
+			input.closest('.mpc-asearch').find('.mpc-close-search').hide();
+		}
+
+		clearTimeout(searchTimer);
+
+		searchTimer = setTimeout(function () {
+			if (s.length === 0 || s.length >= 3) {
+				mpc_order_by_table(input);
+			}
+		}, 1000);
+	});
+	$('body').on('click', '.mpc-close-search', function () {
+		$(this).closest('.mpc-asearch').find('input').val('').trigger('change');
+		$(this).hide();
+	});
+
+	// ajax category filter.
+	$('body').on('change', '.mpcp-cat-filter select', function () {
+		mpc_order_by_table($(this));
+	});
+
+	$('body').on('click', '.mpc-cart-messege', function () {
+		if (typeof $('body').find('.mpc-cart-message') != 'undefined') {
+			$('body').find('.mpc-cart-messege').remove();
+		}
+	});
+
+	/**
+	 * One time section after table load
+	 * Handle dynamic all select checkbox status at page load
+	 */
+	$('body').find('.mpc-container').each(function () {
+		mpc_init_select_all($(this));
+	});
+
+	// on document load, calculate price.
+	mpc_dynamic_product_pricing(); // table.
+
+	/**
+	 * User Events section
+	 * On popup box clicked, hide it
+	 */
+	$('#mpcpop').on('click',function (e) {
+		if (e.target.tagName.toLowerCase() == 'img') {
+			$('#mpcpop .image-wrap img').attr('src', $(e.target).attr('data-fullimage'));
+			$('#mpcpop .mpc-gallery img').removeClass('mpcgi-selected');
+			$(e.target).addClass('mpcgi-selected');
+		} else {
+			$('#mpcpop').hide()
+		}
+	});
+
+	// on close button of popup box clicked, hide it.
+	$('body').on('click', 'span.mpcpop-close', function () {
+		$('#mpcpop').hide();
+	});
+
+	// variation option clear button handler.
+	function variation_clear_button(row) {
+		// check if all select boxes are empty. If yes, remove clear button.
+		var has_value = false;
+
+		row.find('select').each(function () {
+			if ($(this).val().length > 0) {
+				has_value = true;
+			}
+		});
+
+		if (has_value == false) {
+			row.find('.clear-button').html('');
+		} else {
+			row.find('.clear-button').html('<a class="reset_variations" href="#">' + mpc_frontend.reset_var + '</a>');
+		}
+	}
+
+	// on variation option change event.
+	$('body').on('change', 'table.mpc-wrap select.mpc-var-att', function () {
+		var row = $(this).closest('tr.cart_item');
+		if (row_stock_handler(row)) {
+			if (mpc_if_all_options_selected(row)) {
+				var chk = row.find('input[type="checkbox"]');
+				chk.prop('checked', true);
+			}
+			mpc_dynamic_product_pricing(); // row.
+		}
+		variation_clear_button(row);
+	});
+
+	$('body').on('click', 'a.reset_variations', function (e) {
+		e.preventDefault();
+
+		// remove all selected values of variation dropdowns.
+		var row = $(this).closest('.mpc-product-variation');
+		row.find('select').each(function () {
+			$(this).find('option:first').prop('selected', true);
+			$(this).trigger('change');
+		});
+
+		row.find('.mpc-var-desc').empty();
+		row.find('a.reset_variations').remove();
+	});
+
+	function quantity_handler(row) {
+		var qty = parseInt(row.find('input[type="number"]').val());
+
+		// filter only integer.
+		if (qty < 0) {
+			row.find('input[type="number"]').val(0);
+		}
+
+		if (mpc_is_variable_product(row)) {
+			// variable product.
+			var instock = row_in_stock(row);
+			if (instock != -1 && instock != 1) {
+				// has stock quantity.
+				instock = instock.replace(/[A-Za-z]/g, '');
+				instock = instock.replace(' ', '');
+
+				if (instock.length > 0) {
+					var stock = parseInt(instock);
+					if (qty > stock) {
+						row.find('input[type="number"]').val(stock);
+					}
+				}
+			}
+		} else {
+			// simple product.
+			var stock = row.attr('stock');
+
+			if (typeof stock != 'undefined' && stock.length > 0) {
+				stock = parseInt(stock);
+
+				if (qty > stock) {
+					row.find('input[type="number"]').val(stock);
+				}
+			}
+		}
+	}
+	// on quantity change event, calculate total price.
+	$('body').on('change paste keyup cut select', '.mpc-product-quantity input[type="number"]', function () {
+		quantity_handler($(this).closest('tr.cart_item'));
+		mpc_dynamic_product_pricing();
+	});
+
+	// on add to cart checkbox checked event, calculate total price.
+	$('body').on('click', 'input[type="checkbox"]', function () {
+		mpc_dynamic_product_pricing();
+	});
+
+	// on click image, show image popup.
+	$('body').on('click', '.mpc-product-image img', function () {
+		mpc_image_popup_loader($(this));
+	});
+	$('body').on('click', '.mpc-product-image .moregallery', function () {
+		mpc_image_popup_loader($(this).closest('.gallery-item').find('img'));
+	});
+
+	// ajax pagination loader.
+	$('body').on('click', '.mpc-pagenumbers span', function () {
+		if (!$(this).hasClass('current')) {
+			mpc_pagination_loader($(this));
+		}
+	});
+
+	// table order by option change event.
+	$('body').on('change', '.mpc-orderby', function () {
+		mpc_order_by_table($(this));
+	});
+
+	// select all handler.
+	function handle_row_select(row, do_select) {
+		var type = row.data('type');
+
+		var input = row.find('input[type="checkbox"]');
+		if (typeof input === 'undefined' || input.length === 0) {
+			return;
+		}
+
+		var input_checked = input.is(':checked');
+
+		if (type === 'variable' && do_select && !mpc_if_all_options_selected(row)) {
+			return;
+		}
+
+		if ((input_checked && do_select) || (!input_checked && !do_select)) {
+			return;
+		}
+
+		input.trigger('click');
+	}
+	$('body').on('click', '.mpc-check-all', function () {
+		var wrap = $(this).closest('.mpc-container');
+		var do_select = wrap.find('.mpc-check-all').attr('data-state');
+
+		if (typeof do_select == 'undefined' || do_select === 'not') {
+			do_select = true;
+		} else {
+			do_select = false;
+		}
+
+		wrap.find('tr.cart_item').each(function () {
+			handle_row_select($(this), do_select);
+		});
+
+		do_select = do_select === false ? 'not' : 'checked';
+
+		wrap.find('.mpc-check-all').attr('data-state', do_select);
+	});
+
+	// reset form.
+	$('body').on('click', '.mpc-reset', function () {
+		window.location.reload();
+	});
+
+	// on ESC key pressed, hide popup box.
+	$(document).on('keyup', function (e) {
+		if (e.keyCode == 27) {
+			$('#mpcpop').hide();
+		}
+	});
+
+	// on category clicked, filter that category products instead of going to archive page.
+	function table_loader_by_tag(id, type, wrapper) {
+		var atts = mpc_get_atts(wrapper);
+		atts[type] = id;
+
+		ajax_table_loader(atts, 1, wrapper);
+	}
+	$(document).on('click', '.mpc-product-category a, .mpc-product-tag a, .mpc-subheader-info a', function (e) {
+		e.preventDefault();
+		var id = parseInt($(this).data('id'));
+		var wrapper = $(this).closest('.mpc-container');
+
+		var type = $(this).closest('td').hasClass('mpc-product-category') ? 'cats' : $(this).closest('td').hasClass('mpc-product-tag') ? 'tags' : '';
+		var select = 'cats' === type ? wrapper.find('.mpc-cat-filter') : wrapper.find('.mpc-tag-filter');
+		if (typeof select !== 'undefined' && select.length > 0) {
+			select.val(id).trigger('change');
+			return;
+		}
+
+		table_loader_by_tag(id, type, wrapper);
+	});
+
+	$('body').on('change', '.mpcp-tag-filter select', function () {
+		table_loader_by_tag(parseInt($(this).find('option:selected').val()), 'tags', $(this).closest('.mpc-container'));
+	});
+
+	// table: sticky header.
+	function prepareStickyTable() {
+		$('body').find('table.mpc-wrap').each(function () {
+			var table = $(this);
+			if (table.find('thead').length && !table.find('thead').is(':hidden')) {
+				renderStickyHead($(this));
+			}
+		});
+	}
+	prepareStickyTable();
+
+	function setStickyTop(wrap) {
+		let top = 0;
+		const adminBar = $(document).find('#wpadminbar');
+		if (typeof adminBar !== undefined && adminBar.length > 0) {
+			if (adminBar.css('position') === 'fixed') {
+				top += adminBar.height();
+			}
+		}
+
+		const elementorSticky = $(document).find('.elementor-sticky.elementor-sticky--active');
+		if (typeof elementorSticky !== undefined && elementorSticky.length > 0) {
+			const device = $(document).find('body').data('elementor-device-mode');
+			elementorSticky.each(function () {
+				if (!$(this).is(':hidden') || (typeof device !== undefined && !$(this).hasClass('elementor-hidden-' + device))) {
+					top += $(this).height();
+				}
+			});
+		}
+
+		const fixedColumns = wrap.find('.mpc-fixed-header');
+		if (typeof fixedColumns !== undefined && !fixedColumns.is(':hidden')) {
+			fixedColumns.css({ 'top': `${top}px` });
+			const fixedColsHeight = fixedColumns.height();
+			if (fixedColsHeight) {
+				top += fixedColsHeight;
+			}
+		}
+
+		const fixedFilters = wrap.find('.mpc-table-header.mpc-fixed-filter');
+		if (typeof fixedFilters !== undefined) {
+			fixedFilters.css({ 'top': `${top}px` });
+		}
+	}
+
+	var screenH = $(window).height();
+	var screenW = window.screen.width;
+
+	var oldScrolls = {};
+	function tableScroll(currentScroll) {
+		var currentScroll = $(window).scrollTop();
+		var cs = currentScroll; // current scroll offset.
+
+		var tk = 0; // table key.
+		$('body').find('table.mpc-wrap').each( function () {
+			var table = $(this);
+			var wrap = table.closest('.mpc-container');
+
+			setStickyTop(wrap);
+
+			var head = table.offset().top + 50;
+			var tail = table.find('tbody tr:last-child').offset().top;
+
+			// table head.
+			let products = table.find('tbody tr');
+			let tableStart = products[1] ? $(products[1]).offset().top : 0;
+			let tableEnd = $(products[products.length - 1]).offset().top + $(products[products.length - 1])[0].offsetHeight;
+			if ((cs + screenH) > tableStart && (cs + screenH) < tableEnd) {
+				wrap.find('.total-row').removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
+				wrap.find('.total-row .mpc-fixed-cart').remove();
+				wrap.find('.total-row').append(`<span class="mpc-fixed-cart">${mpc_frontend.cart_text}</span>`);
+			} else {
+				wrap.find('.total-row').removeClass('mpc-fixed-total-m');
+				wrap.find('.total-row .mpc-fixed-cart').remove();
+			}
+
+			// fixed header.
+			if (screenW > 500) {
+				if (cs > head && cs < tail) {
+					if (table.find('thead').length) {
+						table.closest('form').find('.mpc-fixed-header').show();
+					}
+				}
+				if (cs < head || cs > tail) {
+					if (table.find('thead').length) {
+						table.closest('form').find('.mpc-fixed-header').hide();
+					}
+				}
+			}
+
+			// filter section.
+			if (currentScroll < oldScrolls[tk] && currentScroll > head && currentScroll < tail) {
+				var height = wrap.find('.mpc-table-header')[0].offsetHeight + 20;
+				if (wrap.find('.mpc-all-select').length) {
+					height += 32;
+				}
+
+				if (!wrap.find('.mpc-table-header').hasClass('mpc-fixed-filter')) {
+					wrap.css('margin-top', `${height}px`);
+				}
+
+				wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter').addClass('mpc-fixed-filter');
+			} else {
+				wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter');
+				wrap.css('margin-top', '20px');
+			}
+			oldScrolls[tk] = currentScroll;
+			tk++;
+		});
+	}
+	$(window).on('scroll', function () {
+		tableScroll();
+	});
+
+	function prepareFreeHead() {
+		$('body').find('.mpc-container').each(function () {
+			var wrap = $(this);
+			var elemCount = 0;
+			wrap.find('.mpc-table-header > div').each(function () {
+				elemCount++;
+			});
+			if (elemCount < 3) {
+				wrap.find('.mpc-table-header').removeClass('mpc-free-head').addClass('mpc-free-head');
+			}
+		});
+	}
+	if (screenW < 500) {
+		prepareFreeHead();
+	}
+	$(window).on('resize', function () {
+		prepareStickyTable();
+		tableScroll();
+	});
+
+	$(document).on('click', '.mpc-to-top', function () {
+		var btn = $(this);
+		$('html, body').animate({
+			scrollTop: btn.closest('form').offset().top - 80
+		}, 'slow');
+	});
+	$(document).on('click', '.mpc-fixed-cart', function () {
+		$(this).closest('.mpc-container').find('.mpc-cart .mpc-add-to-cart').trigger('click');
+	});
+})( jQuery );

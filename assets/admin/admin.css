@@ -12,27 +12,19 @@
 	color: #000;
 	font-size: 100%;
 }
-#mpcdp_settings .site-intro{
-	padding: 0;
-}
-#mpcdp_settings .site-intro h2, #mpcdp_settings .site-intro a{
-	margin: 0;
-}
-#mpcdp_settings .site-intro h2{
-	padding: 20px;
-	background-color: #d7b369;
-	border-radius: 4px 4px 0 0;
-}
 #mpcdp_settings .site-intro a{
 	display: block;
-	padding: 15px 20px;
+	margin: 15px -19px -20px;
+	padding: 10px 0px 15px 20px;
 	background: #777777;
 	color: #fff;
-	border-radius: 0 0 4px 4px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 .sidebar_top.mpc-pro-active {
 	background: #739fcf;
 	color: #fff;
+	padding: 30px 20px;
 }
 .sidebar_top h1{
 	padding-bottom: 5px;
@@ -44,7 +36,6 @@
 }
 #right-side .tagline_side{
 	font-size: 14px;
-	padding-bottom: 20px;
 }
 .sidebar_top a{
 	text-decoration: none;
@@ -69,43 +60,32 @@
 .mpca_sidebar .sidebar_bottom li span.dashicons {
 	padding-right: 5px;
 }
+.mpca_sidebar.support{
+	background-color: #98d598;
+}
 #mpcdp_settings{
 	background:white;
 	max-width:97%;
 	margin:40px 0 0 20px;
 	border-radius:5px;
 	overflow:hidden;
-	display:-webkit-box;
-	display:-webkit-flex;
-	display:-ms-flexbox;
 	display:flex;
-	-webkit-box-orient:vertical;
-	-webkit-box-direction:normal;
-	-webkit-flex-direction:column;
-	-ms-flex-direction:column;
 	flex-direction:column;
-	-webkit-box-shadow:0 10px 60px #e4e4e4;
 	box-shadow:0 10px 60px #e4e4e4
 }
-#mpcdp_settings > .mpcdp_row{
+#mpcdp_settings>.mpcdp_row{
 	-webkit-box-flex:1;
 	-webkit-flex:1;
 	-ms-flex:1;
 	flex:1
 }
 #mpcdp_settings_page_header {
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;
 	display: flex;
 	padding: 10px 30px;
 	background: #45494c;
 }
 #mpcdp_logo {
 	margin: 0;
-	-webkit-box-flex: 1;
-	-webkit-flex: 1;
-	-ms-flex: 1;
 	flex: 1;
 	align-items: center;
 	display: flex;
@@ -113,17 +93,8 @@
 	font-size: 1.5em;
 	letter-spacing: 1px;
 }
-#mpcdp_logo span{
-	font-size:7em;
-	color:white
-}
 #mpcdp_toolbar_icons{
-	-webkit-align-self:center;
-	-ms-flex-item-align:center;
 	align-self:center;
-	display:-webkit-box;
-	display:-webkit-flex;
-	display:-ms-flexbox;
 	display:flex
 }
 #mpcdp_toolbar_icons a{
@@ -131,20 +102,17 @@
 	border-radius:50%;
 	padding:.6rem;
 	text-decoration:none;
-	-webkit-transition:all .7s;
-	-o-transition:all .7s;
-	transition:all .7s;
-	-webkit-box-shadow:none;
 	box-shadow:none;
 }
-#mpcdp_toolbar_icons a:focus{
-	outline:none !important
-}
 #mpcdp_toolbar_icons a:hover{
-	background: #ff4b2e;
+	text-decoration: underline;
 }
 #mpcdp_toolbar_icons a span{
 	color:#fff;
+}
+#mpcdp_logo span{
+	font-size:7em;
+	color:white
 }
 .mpcdp_settings_sidebar{
 	background:#f8f8f8;
@@ -158,18 +126,10 @@
 	color:#c7cbce;
 	background:#f8f8f8;
 	font-size:1.2em;
-	display:-webkit-box;
-	display:-webkit-flex;
-	display:-ms-flexbox;
 	display:flex;
-	-webkit-box-align:center;
-	-webkit-align-items:center;
-	-ms-flex-align:center;
 	align-items:center;
 	font-weight:700;
 	cursor:pointer;
-	-webkit-transition:all .2s ease-in-out;
-	-o-transition:all .2s ease-in-out;
 	transition:all .2s ease-in-out
 }
 .mpcdp_settings_sidebar .mpcdp_settings_tab_control:not(.active){
@@ -238,7 +198,6 @@
 	-webkit-box-shadow:0 5px 15px -5px #b4bcc1;
 	box-shadow:0 5px 15px -5px #b4bcc1
 }
-
 .mpcdp_settings_submit button.mpcdp_submit_button:focus{
 	outline:none !important
 }
@@ -287,20 +246,20 @@
 	margin-bottom:25px
 }
 .mpcdp_option_label{
-	font-size:1.2em;
-	color:#182f36;
-	font-weight:600
+	font-size: 1.2em;
+	color: #182f36;
+	font-weight: 600
 }
 .mpcdp_option_description{
-	font-size:1em;
-	padding:5px 30px 0 0;
+	font-size: 1em;
+	padding: 5px 30px 0 0;
 	color: #b3b0b0;
+	transition:all .3s ease-in-out;
+	cursor: default;
 }
 .mpcdp_option_description:hover{
-	color:#2271b1;
-	-webkit-transition:all .3s ease-in-out;
-	-o-transition:all .3s ease-in-out;
-	transition:all .3s ease-in-out
+	color: #000;
+	font-size: 14px;
 }
 .mpcdp_option_description a{
 	text-decoration:none;
@@ -678,8 +637,8 @@ a.mpcasc-reset span.button-secondary {
 	cursor: move;
 	margin-bottom: 10px;
 }
-li.mpc-stone-col {
-	cursor: n-resize !important;
+.mpc-sortable ul li.mpc-stone-col {
+	cursor: ns-resize;
 }
 .mpc-sortable ul li::before {
 	content: "\f545";
@@ -762,9 +721,20 @@ li.mpc-stone-col:before {
 	animation-name: zoom;
 	animation-duration: 0.6s;
 }
+h4.mpcpop-title {
+	color: #fff;
+	margin-top: 5px;
+	margin-bottom: 0;
+}
 .mpc-single-active .mpc-single-price {
 	/*font-size: 130%;*/
 	font-weight: 600;
+}
+p.mpcpop-price {
+	color: #fff;
+}
+select.mpc-highlighter{
+	border: 1px solid #e74c3c;
 }
 .mpc-saved-sca {
 	font-weight: bold;
@@ -779,7 +749,7 @@ li.mpc-stone-col:before {
 	left: 45%;
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-	background-color: #ffffff;
+	background-color: #cdcdcd;
 	padding: 50px 30px 20px 30px;
 	color: #1d2327;
 	width: 500px;
@@ -809,13 +779,11 @@ li.mpc-stone-col:before {
 	font-weight: 500;
 }
 a.mpc-get-pro {
-	font-size: 14px;
-    float: right;
-    margin-top: 3px;
-    background: #2271b1;
-    color: #fff;
-    padding: 10px 30px;
-    border-radius: 25px;
+	color: #000000;
+	font-size: 16px;
+	font-weight: 500;
+	float: right;
+	margin-top: 15px;
 }
 .mpc-focus a:hover {
 	background-color: #1169b1;
@@ -864,19 +832,6 @@ a .mpcasc-reset .button-secondary{
 #export .mpcdp_settings_submit .submit, #export .mpcdp_settings_submit button.mpcdp_submit_button, .mpcdp_settings_submit .submit input#submit, #import .mpcdp_settings_submit .submit, #import .mpcdp_settings_submit button.mpcdp_submit_button, .mpcdp_settings_submit .submit input#submit{
 	margin: 0;
 }
-.mpc-import-wrap input[type="file"]::file-selector-button {
-    background: #f6f6f6;
-    padding: 10px 20px;
-    border: 1px solid #858585;
-    cursor: pointer;
-    border-radius: 5px;
-    outline: none;
-    box-shadow: none;
-}
-.mpcdp_settings_submit.mpc-file button.mpcdp_submit_button {
-    padding: 5px 30px;
-	height: 44px;
-}
 .choicesdp .choices__list--multiple .choices__item{
 	background-color: #787878;
 	border-color: #787878;
@@ -913,10 +868,6 @@ a .mpcasc-reset .button-secondary{
 	color: #fff;
 	cursor: pointer;
 }
-.mpc-opt-sc-btn:focus{
-	outline: none;
-	box-shadow: none;
-}
 .mpc-opt-sc-btn:hover .dashicons{
 	color: #fff;
 }
@@ -930,9 +881,6 @@ a .mpcasc-reset .button-secondary{
 	display: none;
 }
 @media screen and (max-width: 1600px){
-	.first_customizer_field{
-		margin-top:-20px !important
-	}
 	.mpcdp_settings_submit .submit{
 		margin: 5px;
 	}
@@ -1102,7 +1050,7 @@ a .mpcasc-reset .button-secondary{
 		padding-top: 20px;
 	}
 	.mpc-notice.mpcdp_settings_toggle .mpcdp_settings_option:first-child, .mpc-banner.mpcdp_settings_toggle .mpcdp_settings_option:first-child{
-		padding-top: 8px;
+		padding-top: 0;
 	}
 	.mpcdp_settings_section .mpcdp_settings_toggle.mpc-shortcode .mpcdp_settings_option{
 		padding-top: 50px;
