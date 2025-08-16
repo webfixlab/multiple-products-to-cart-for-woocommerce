@@ -89,8 +89,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				return;
 			}
 
-			$add_to_cart_missed = false;   // flag to find if any error occured while adding products to cart.
-			$all_products       = array(); // array of product id => quantity.
+			$all_products = array(); // array of product id => quantity.
 			foreach ( $data as $product_id => $product ) {
 				$key  = '';
 
@@ -98,16 +97,16 @@ if ( ! class_exists( 'MPCTable' ) ) {
 					continue;
 				}
 
-				$cart_data    = array( 'mpc_data' => $product );
-				$variation_id = $product['variation_id'] ?? 0;
+				$quantity     = isset( $product['quantity'] ) && !empty( $product['quantity'] ) ? (int) $product['quantity'] : 1;
+				$variation_id = isset( $product['variation_id'] ) && !empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
 				$variation    = $product['attributes'] ?? [];
 
-				$key = WC()->cart->add_to_cart( $product_id, $product['quantity'], $variation_id, $variation, $cart_data );
+				$cart_data = array( 'mpc_data' => $product );
+
+				$key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation, $cart_data );
 				if ( false !== $key ) {
 					do_action( 'woocommerce_ajax_added_to_cart', $product_id );
-					$all_products[ $product_id ] = $product['quantity'];
-				} else {
-					$add_to_cart_missed = true;
+					$all_products[ $product_id ] = $quantity;
 				}
 
 				do_action( 'mpc_after_add_to_cart', $product_id, $key );
@@ -117,7 +116,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				$resonse                 = $this->cart_refreshed_fragments();
 				$resonse['req']          = $data;
 				$resonse['cart_message'] = wc_add_to_cart_message( $all_products, true, true );
-				if ( $add_to_cart_missed ) {
+				if ( count( $all_products ) !== count( array_keys( $data ) ) ) { // check for any errors.
 					$resonse['error_message'] = $this->cart_format_error();
 				}
 
@@ -127,7 +126,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				$this->cart_redirect();
 			}
 		}
-
 		/**
 		 * Redirect to URL after successful add to cart
 		 *

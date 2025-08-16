@@ -595,16 +595,18 @@
 		var popup = '';
 		var notice = '';
 		if (response.cart_message) {
-			popup = '<div class="woocommerce-message" role="alert">' + response.cart_message + '</div>';
+			popup  = '<div class="woocommerce-message" role="alert">' + response.cart_message + '</div>';
 			notice = '<div class="woocommerce-message" role="alert">' + response.cart_message + '</div>';
 		}
 		if (response.error_message) {
-			popup += '<div class="woo-err woocommerce-error" role="alert">' + response.error_message + '</div>';
+			popup  += '<div class="woo-err woocommerce-error" role="alert">' + response.error_message + '</div>';
 			notice += '<ul class="woocommerce-error" role="alert"><li>' + response.error_message + '</li></ul>';
 		}
 
 		// add popup.
-		$('body').append('<div class="mpc-popup mpc-popify mpc-cart-messege"><div class="woocommerce">' + popup + '</div></div>');
+		if(popup.length > 0){
+			$('body').append('<div class="mpc-popup mpc-popify mpc-cart-messege"><div class="woocommerce">' + popup + '</div></div>');
+		}
 
 		// add table notice.
 		table.closest('.mpc-container').prepend('<div class="woocommerce-notices-wrapper mpc-cart-messege">' + notice + '</div>');
@@ -673,7 +675,6 @@
 		setTimeout(function(){
 			if (mpc_frontend.redirect_url === 'ajax') {
 				e.preventDefault();
-				console.log(JSON.parse(wrap.find('input[name="mpc_cart_data"]').val()));
 				mpc_request_ajax_add_to_cart(wrap, JSON.parse(wrap.find('input[name="mpc_cart_data"]').val()));
 			}
 		}, 250);
