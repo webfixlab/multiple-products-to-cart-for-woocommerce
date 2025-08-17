@@ -20,6 +20,9 @@ table.mpc-wrap {
 #content table.mpc-wrap tbody tr:last-child td, #main-content table.mpc-wrap tbody tr:last-child td, #brx-cotnent table.mpc-wrap tbody tr:last-child td, .entry-content table.mpc-wrap tbody tr:last-child td {
 	border-bottom: 1px solid #e3e3e3;
 }
+table.mpc-wrap thead th, table.mpc-wrap tbody td, .mpc-container .mpc-all-select label, .mpc-pagenumbers span, .mpc-fixed-header table thead th{
+    font-size: 15px;
+}
 table.mpc-wrap thead th, .mpc-fixed-header table thead tr th {
 	background: #444;
 	color: #fff;
@@ -117,8 +120,8 @@ select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .m
 	padding: 5px;
 }
 #brx-content .mpc-asearch input {
-	line-height: 40px;
-	border: 1px solid #dddedf;
+	line-height: 32px;
+	border: 1px solid #666;
 }
 #brx-content .mpc-asearch input:focus {
 	outline: 2px solid currentColor;
@@ -619,6 +622,9 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
 .mpc-table-header.mpc-fixed-filter > div {
 	margin-bottom: 0;
 }
+#brx-content .mpc-table-header.mpc-fixed-filter .mpc-all-select {
+    margin-top: 5px;
+}
 span.mpc-qlower{
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
@@ -689,6 +695,14 @@ td.mpc-product-quantity input[type="number"] {
 td.mpc-product-quantity input[type="number"]:disabled {
 	background-color: #e6e6e6;
     opacity: 0.5;
+}
+td.mpc-product-quantity input[type="number"]::-webkit-outer-spin-button,
+td.mpc-product-quantity input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: initial;
+  margin: 0;
+}
+td.mpc-product-quantity input[type="number"][type="number"] {
+  -moz-appearance: initial;
 }
 table.mpc-wrap tbody tr td:last-child, table.mpc-wrap thead tr th:last-child {
     text-align: right;

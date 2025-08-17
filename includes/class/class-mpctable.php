@@ -656,7 +656,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				// default product attributes - if any of them is selected pre-defined.
 				$default_attributes = $product->get_default_attributes();
-
+				
 				// product attributes.
 				$attributes = $product->get_variation_attributes();
 
@@ -669,6 +669,18 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				// Sort Global Attributes according to backend sequence.
 				foreach ( $attributes as $name => $options ) {
+					$terms = taxonomy_exists( $name ) ? wc_get_product_terms( $id, $name, array( 'fields' => 'all' ) ) : [];
+					$opt = [];
+					if( !empty( $terms ) ){
+						foreach( $terms as $term ){
+							if( !in_array( $term->slug, $options, true ) ) continue;
+							$opt[] = [ 'name' => $term->name, 'slug' => $term->slug, 'value' => $term->slug ];
+						}
+					}else{
+						foreach( $options as $option ){
+							$opt[] = [ 'name' => $option, 'slug' => sanitize_title( $option ), 'value' => sanitize_title( $option ) ];
+						}
+					}
 
 					// Sanitize name.
 					$name_ = sanitize_title( $name );
@@ -676,42 +688,23 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 					// Modified options variable - for storing additional data.
 					$options_ = array();
-					foreach ( $options as $option ) {
-						$option_ = array();
-
-						if ( is_array( $option ) ) {
-							$option_ = array(
-								'name'  => $option['name'],
-								'value' => $option['slug'],
-								'slug'  => $option['slug'],
-							);
-						} else {
-							$option_ = array(
-								'name'  => $option,
-								'value' => $option,
-								'slug'  => $option,
-							);
-						}
-
+					foreach ( $opt as $option ) {
 						// Check if variation option is in stock.
-						$is_in_stock = $this->variation_is_in_stock( $product, $name, $option_['slug'] );
-
+						$is_in_stock = $this->variation_is_in_stock( $product, $name, $option['slug'] );
 						if ( ! $is_in_stock ) {
 							continue;
 						}
 
-						$option_['name'] = esc_html( apply_filters( 'woocommerce_variation_option_name', $option_['name'], null, $name, $product ) );
-
-						$option_['slug'] = sanitize_title( $option_['slug'] );
+						$option['name'] = esc_html( apply_filters( 'woocommerce_variation_option_name', $option['name'], null, $name, $product ) );
 
 						// Check if this option is default.
-						if ( isset( $default_attributes[ $name_ ] ) && sanitize_title( $default_attributes[ $name_ ] ) === $option_['slug'] ) {
-							$option_['is_selected'] = true;
+						if ( isset( $default_attributes[ $name_ ] ) && sanitize_title( $default_attributes[ $name_ ] ) === $option['slug'] ) {
+							$option['is_selected'] = true;
 						} else {
-							$option_['is_selected'] = false;
+							$option['is_selected'] = false;
 						}
 
-						array_push( $options_, $option_ );
+						array_push( $options_, $option );
 					}
 
 					$attributes_[ $name ] = array(
