@@ -12,7 +12,7 @@
  * Tags:                 product table, woocommerce product table,wc product table,products table,woocommerce table
  * Requires Plugins:     woocommerce
  * WC requires at least: 3.6
- * WC tested up to:      10.0.4
+ * WC tested up to:      10.1.0
  * License:              GPL2
  * License URI:          https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:          multiple-products-to-cart-for-woocommerce

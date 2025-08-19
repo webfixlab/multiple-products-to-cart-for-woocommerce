@@ -20,11 +20,11 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 
 **FEATURES**
 
-* NEW! Third-party price customization support
+* NEW! Improved support for Third-party price customization
 * NEW! Better support for custom themes like Avada, Astra, Bricks, Divi and plugins like YITH WooCommerce Dynamic Pricing & Discounts
 * One of the best mobile view for product table for WooCommerce
 * Multiple product types like simple, variable support
-* Costom columns for each table
+* Custom columns for each table
 * Supports default variations with correct attribute ordering
 * Sticky header and total price
 * Add to cart multiple products at once
@@ -40,18 +40,17 @@ https://www.youtube.com/watch?v=bZr8LOo2-q0
 
 **PRO FEATURES**
 
+* NEW! Improved support for WooCommerce All Products for Subscriptions 
 * NEW! Dynamic cart with the table
 * Grouped and Subscription product types support
-* AJAX search box
-* Search custom meta data like SKU
+* AJAX search box with SKU search
 * Add to cart button for each product
-* Custom product order
-* Section by category
+* Select in which order products appear on the table
+* Automatic table section by selected categories
 * Import - export settings and tables
 * Product gallery
-* Category hierarchy dropdown with dynamic product count
-* Import and export tables and settings
-* Category, Tag, SKU, Stock and Rating columns
+* Sophisticated category dropdown
+* Extra table columns like - Category, Tag, SKU, Stock and Rating
 * Redirect to custom page after add to cart
 * Rocket speed 24/7 support
 * [See all PRO features](https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/)
