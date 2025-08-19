@@ -579,6 +579,7 @@
 
 	// handle response after AJAX added to cart.
 	function mpcajx_add_to_cart_response(table, response) {
+		console.log(response);
 		$(document.body).trigger('updated_cart_totals');
 
 		table.find('.mpc-button a.mpc-loading').remove();

@@ -643,16 +643,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 			// For variable products only.
 			if ( false !== strpos( $data['type'], 'variable' ) ) {
-
 				$mpctable__['has_variation'] = true;
-
-				// Variation data - dynamic price handling.
-				$variation_data = $this->get_variation_data( $product );
-
-				// For displaying it frontend, use the following way wc_esc_json( wp_json_encode( $variation_data ) ).
-				if ( $variation_data ) {
-					$data['variation_data'] = $variation_data;
-				}
 
 				// default product attributes - if any of them is selected pre-defined.
 				$default_attributes = $product->get_default_attributes();
@@ -678,7 +669,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 						}
 					}else{
 						foreach( $options as $option ){
-							$opt[] = [ 'name' => $option, 'slug' => sanitize_title( $option ), 'value' => sanitize_title( $option ) ];
+							$opt[] = [ 'name' => $option, 'slug' => $option, 'value' => $option ];
 						}
 					}
 
@@ -715,6 +706,14 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				if ( $attributes_ ) {
 					$data['attributes'] = $attributes_;
+				}
+
+				// Variation data - dynamic price handling.
+				$variation_data = $this->get_variation_data( $product, $attributes_ );
+
+				// For displaying it frontend, use the following way wc_esc_json( wp_json_encode( $variation_data ) ).
+				if ( $variation_data ) {
+					$data['variation_data'] = $variation_data;
 				}
 			} elseif ( 'grouped' !== $data['type'] ) {
 				// Pure price.
@@ -767,7 +766,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 *
 		 * @param object $product product object.
 		 */
-		public function get_variation_data( $product ) {
+		public function get_variation_data( $product, $attributes ) {
 			global $mpctable__;
 
 			$childrens = $product->get_children();
@@ -786,15 +785,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 
 				// get all options per attribute.
-				$atts = $variation->get_attributes();
-
-				// sanitize.
-				$atts_sanitized = array();
-				foreach ( $atts as $key => $value ) {
-					$atts_sanitized[ $key ] = sanitize_title( $value );
-				}
-
-				$c = array( 'attributes' => $atts_sanitized );
+				$c = array( 'attributes' => $variation->get_attributes() );
 
 				// get variation price.
 				$price = $variation->get_price_html();
@@ -822,7 +813,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 
 				// hook for modifying image thumbnail.
-				$img                     = apply_filters(
+				$img = apply_filters(
 					'mpc_table_thumbnail',
 					array(
 						'image_id'   => $image_id,

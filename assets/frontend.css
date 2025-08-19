@@ -696,14 +696,6 @@ td.mpc-product-quantity input[type="number"]:disabled {
 	background-color: #e6e6e6;
     opacity: 0.5;
 }
-td.mpc-product-quantity input[type="number"]::-webkit-outer-spin-button,
-td.mpc-product-quantity input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: initial;
-  margin: 0;
-}
-td.mpc-product-quantity input[type="number"][type="number"] {
-  -moz-appearance: initial;
-}
 table.mpc-wrap tbody tr td:last-child, table.mpc-wrap thead tr th:last-child {
     text-align: right;
 }
