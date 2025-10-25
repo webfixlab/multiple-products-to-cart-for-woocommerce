@@ -103,6 +103,9 @@ table.mpc-wrap td select:last-of-type {
     line-height: 25px;
     padding: 4px 10px;
 }
+.wp-theme-twentytwentyfive .mpc-asearch input{
+	line-height: 22px;
+}
 select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .mpcp-tag-filter select, .mpc-asearch input{
 	border: 1px solid #666;
 }
@@ -304,7 +307,7 @@ span.mpc-close-search {
 	float: right;
 }
 .mpc-all-select input[type="checkbox"] {
-	margin-right: 0;
+	margin: 0;
 }
 .wp-theme-Divi .mpc-all-select input[type="checkbox"] {
 	margin: 0;
@@ -336,16 +339,13 @@ span.mpc-single-add:hover {
 	display: inline-block;
 }
 .mpc-pagenumbers span {
-	min-width: 34px;
-	height: 34px;
-	line-height: 32px;
 	margin-left: 10px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
 	cursor: pointer;
 	display: inline-block;
 	text-align: center;
-	padding: 0 5px;
+	padding: 8px 15px;
 }
 .mpc-pagenumbers span.mpc-divider {
 	border: none;
@@ -496,7 +496,9 @@ table.mpc-wrap tbody tr td {
 .mpc-subheader {
 	display: inline-block;
     padding: 10px 0;
-	width: 100%;
+}
+.wp-theme-twentytwentyfive .mpc-subheader{
+	display: block;
 }
 .mpc-subheader-img {
 	padding: 0 15px 0 0;
@@ -604,7 +606,7 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
     top: 49px;
     z-index: 999;
     background: #ffffff4f;
-    padding: 10px;
+    /* padding: 10px; */
     box-shadow: 0 1px 11px 0 rgb(17 17 17 / 31%);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -620,7 +622,11 @@ form.mpc-cart input[type="search"]::-webkit-search-cancel-button{
 	top: 81px;
 } */
 .mpc-table-header.mpc-fixed-filter > div {
-	margin-bottom: 0;
+	margin: 0;
+	padding: 10px 0 10px 10px;
+}
+.mpc-table-header.mpc-fixed-filter > div:last-child{
+	padding-right: 10px;
 }
 #brx-content .mpc-table-header.mpc-fixed-filter .mpc-all-select {
     margin-top: 5px;
@@ -637,7 +643,7 @@ span.mpc-qhigher{
 	position: fixed;
 	bottom: 0;
 	margin: 0;
-	padding: 8px;
+	/* padding: 8px; */
 	z-index: 9;
 	background: rgb(0 0 0 / 40%);
 	color: #fff;
@@ -657,6 +663,13 @@ span.mpc-fixed-cart {
 }
 .total-row.mpc-fixed-total-m > span {
     vertical-align: middle;
+}
+.total-row.mpc-fixed-total-m span.total-label, .total-row.mpc-fixed-total-m span.mpc-total{
+	line-height: 42px;
+    padding-left: 10px;
+}
+.total-row.mpc-fixed-total-m span.mpc-fixed-cart{
+	margin: 10px;
 }
 .mpcp-loading {
 	position: absolute;
@@ -737,9 +750,6 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	.mpc-table-header.mpc-fixed-filter .mpc-all-select{
 		display: none;
 	}
-	.mpc-table-header.mpc-fixed-filter > div{
-		margin-bottom: 10px;
-	}
 }
 @media screen and (max-width: 767px) {
 	#brx-content .mpc-container{
@@ -779,7 +789,6 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 		top: 0;
 	}
 	.mpc-table-header.mpc-fixed-filter > div {
-		margin-right: 10px;
 		flex: 0 0 auto;
 	}
 	table.mpc-wrap tbody tr.mpc-search-empty {
@@ -836,6 +845,15 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 		padding: 7px;
 		background-color: #f5f5f7;
 		border-radius: 5px;
+	}
+	main table.mpc-wrap tbody tr{
+		padding: 10px;
+	}
+	main table.mpc-wrap tbody tr td{
+		margin-top: 0;
+	}
+	main table.mpc-wrap tbody tr td:last-child{
+		text-align: left;
 	}
 	table.mpc-wrap.mpc-no-image tbody tr {
 		padding-top: 8px;
@@ -926,11 +944,14 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 
 	/* Update: August 01, 2024 */
-	#content table.mpc-wrap tbody tr td.mpc-product-image, #main-content table.mpc-wrap tbody tr td.mpc-product-image, #brx-content table.mpc-wrap tbody tr td.mpc-product-image {
+	#content table.mpc-wrap tbody tr td.mpc-product-image, #main-content table.mpc-wrap tbody tr td.mpc-product-image, #brx-content table.mpc-wrap tbody tr td.mpc-product-image, main table.mpc-wrap tbody tr td.mpc-product-image {
 		position: absolute;
 		top: 7px;
 		padding-left: 0;
 		float: left;
+	}
+	main table.mpc-wrap tbody tr td.mpc-product-image{
+		top: 3px;
 	}
 	button.mpce-single-add{
 		margin: 0 0 0 10px;
@@ -968,8 +989,9 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 	table.mpc-wrap tbody tr.mpc-subhead {
 		min-height: auto;
+		padding: 0;
 	}
-	#content table.mpc-wrap tbody tr.mpc-subhead td, #main-content table.mpc-wrap tbody tr.mpc-subhead td, #brx-content table.mpc-wrap tbody tr.mpc-subhead td{
+	#content table.mpc-wrap tbody tr.mpc-subhead td, #main-content table.mpc-wrap tbody tr.mpc-subhead td, #brx-content table.mpc-wrap tbody tr.mpc-subhead td, #main table.mpc-wrap tbody tr.mpc-subhead td, main table.mpc-wrap tbody tr.mpc-subhead td{
 		padding: 0;
 	}
 	table.mpc-wrap tbody tr.mpc-subhead td:last-child{
@@ -980,9 +1002,6 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 	.hentry .entry-content .mpc-container a {
 		text-decoration: none;
-	}
-	.mpc-table-header.mpc-fixed-filter {
-		padding: 10px 10px 2px;
 	}
 	.mpc-table-header.mpc-fixed-filter.mpc-free-head{
 		display: block;
