@@ -346,7 +346,8 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 					$title = sprintf(
 						'<a href="%s">%s</a>',
 						esc_url( $prod['parent']['url'] ),
-						$prod['parent']['title']
+						// $prod['parent']['title']
+						esc_html__( 'Grouped', 'multiple-products-to-cart-for-woocommerce' )
 					);
 				}
 
