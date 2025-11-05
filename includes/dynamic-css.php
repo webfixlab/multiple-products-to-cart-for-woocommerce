@@ -8,7 +8,7 @@
  */
 
 require_once( dirname( __FILE__, 5 ) . '/wp-load.php' );
-header( "Content-Type: text/css" );
+header( 'Content-Type: text/css' );
 
 // add to cart button color and background color.
 $btn_color      = get_option( 'mpc_button_text_color', '#353535' );

@@ -229,6 +229,20 @@
 		};
 	}
 
+	// format price to WC standard.
+	function priceFormat(price){
+        let number = parseFloat(price);
+        number = number.toFixed(mpc_frontend.dp);
+        let htmlPrice = number.toString().replace('.', mpc_frontend.ds);
+
+        if (mpc_frontend.ts.length > 0) {
+            const parts = htmlPrice.split(mpc_frontend.ds);
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, mpc_frontend.ts);
+            htmlPrice = parts.join(mpc_frontend.ds);
+        }
+		return htmlPrice;
+	}
+
 	// dynamic total price calculation.
 	function mpc_dynamic_product_pricing() {
 		$('body').find('form.mpc-cart').each(function () {
@@ -244,13 +258,7 @@
 					checked++;
 				}
 			});
-
-			total = total.toLocaleString(mpc_frontend.locale, {
-				minimumFractionDigits: mpc_frontend.dp,
-				maximumFractionDigits: mpc_frontend.dp,
-				useGrouping: true
-			});
-			table.find('.mpc-total span.total-price').text(total);
+			table.find('.mpc-total span.total-price').text(priceFormat(total));
 
 			var wrap = table.closest('.mpc-container');
 			if (checked == 0) {

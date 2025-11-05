@@ -740,9 +740,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		public function extract_price_from_html( $price_html ) {
 			if( empty( $price_html ) ) return 0.0;
 
-			$ds = get_option( 'woocommerce_price_decimal_sep', '.' );
-			$ts = get_option( 'woocommerce_price_thousand_sep', ',' );
-
 			$price_text = '';
 			if( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $m ) ) {
 				$price_text = $m[1];
@@ -751,14 +748,9 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			}
 			if( empty( $price_text ) ) return 0.0;
 
-			$price_text = str_replace( get_woocommerce_currency_symbol(), '', $price_text );
 			$price_text = wp_strip_all_tags( $price_text );
 			$price_text = html_entity_decode( $price_text );
-			
-			$price_text = str_replace( $ts, '', $price_text );
-			$price_text = str_replace( $ds, '.', $price_text );
-
-			return (float) $price_text;
+			return (float) wc_format_decimal( $price_text, wc_get_price_decimals() );
 		}
 		
 		/**
