@@ -326,7 +326,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// enqueue style.
 			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.css', array(), MPC_VER, 'all' );
-			wp_enqueue_style( 'mpc-dynamic-css', plugin_dir_url( MPC ) . 'includes/dynamic-css.php', array(), MPC_VER, 'all' );
+			$this->dynamic_css();
 
 			// register script.
 			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.js', array( 'jquery' ), MPC_VER, true );
@@ -388,6 +388,81 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// localize script.
 			wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
+		}
+		public function dynamic_css(){
+			// add to cart button color and background color.
+			$btn_color      = get_option( 'mpc_button_text_color', '#353535' );
+			$btn_background = get_option( 'wmc_button_color', '#d3d3d3' );
+			$btn_color      = empty( $btn_color ) ? '#353535' : $btn_color;
+			$btn_background = empty( $btn_background ) ? '#d3d3d3' : $btn_background;
+
+			// header and pagination color and background color.
+			$hnp_color      = get_option( 'mpc_head_text_color', '#ffffff' );
+			$hnp_background = get_option( 'wmc_thead_back_color', '#535353' );
+			$hnp_color      = empty( $hnp_color ) ? '#ffffff' : $hnp_color;
+			$hnp_background = empty( $hnp_background ) ? '#535353' : $hnp_background;
+
+			// product title color, font size, whether to bold it and also underline it.
+			$title_color     = get_option( 'mpc_protitle_color' );
+			$title_font_size = get_option( 'mpc_protitle_font_size' );
+			$bold_title      = get_option( 'mpc_protitle_bold_font' );
+			$title_underline = get_option( 'mpc_protitle_underline' );
+
+			// product image size.
+			$image_size = get_option( 'mpc_image_size', '90' );
+
+			$css = "
+				.mpc-wrap thead tr th, .mpc-pagenumbers span.current, .mpc-fixed-header table thead tr th{
+					background: {$hnp_background};
+					color: {$hnp_color};
+				}
+				.mpc-button input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{
+					background: {$btn_background};
+					color: {$btn_color};
+				}
+				td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
+					width: {$image_size}px;
+				}
+			";
+			if ( ! empty( $title_color ) ) $css .= "
+				.mpc-product-title a{
+					color: {$title_color};
+				}
+			";
+
+			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) $css .= "
+				.mpc-wrap .variation-group > select{
+					max-width: 100px;
+				}
+				.variation-group select{
+					width: 100px;
+				}
+			";
+			$css .= "
+				.mpc-container .mpc-product-title a{";
+			if( !empty( $title_font_size ) ) $css .= "font-size: {$title_font_size}px;";
+			if( !empty( $bold_title ) && 'on' === $bold_title ) $css .= "font-weight: bold;";
+			if( !empty( $title_underline ) && 'on' === $title_underline ) $css .= "text-decoration: underline;";
+			else $css .= "text-decoration: none;";
+			$tr_height      = $image_size + 17;
+			$gallery_height = $image_size + ceil( ( $image_size * 47 ) / 100 ) + 24;
+			$padding_left   = $image_size + 13;
+			$css .= "
+				}
+				@media screen and (max-width: 767px) {
+					table.mpc-wrap tbody tr{
+						min-height: {$tr_height}px;
+					}
+					table.mpc-wrap tbody tr:has(.gallery-item){
+						min-height: {$gallery_height}px;
+					}
+					#content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td, #brx-content table.mpc-wrap tbody tr td, #main table.mpc-wrap tbody tr td, main table.mpc-wrap tbody tr td{
+						padding-left: {$padding_left}px;
+					}
+				}
+			";
+			do_action( 'mpc_dynamic_css' );
+			wp_add_inline_style( 'mpc-frontend', $css );
 		}
 
 		/**

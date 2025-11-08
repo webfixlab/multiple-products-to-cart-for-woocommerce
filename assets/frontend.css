@@ -188,6 +188,7 @@ span.mpc-total {
 }
 .mpc-button input.mpc-add-to-cart.wc-forward {
 	color: #fff;
+	/* background: #666666; */
 	border-width: 1px;
 	font-size: 16px;
 	padding: 10px 20px;
