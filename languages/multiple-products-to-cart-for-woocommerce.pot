@@ -1,0 +1,1174 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Multiple Products to Cart for WooCommerce\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-08 15:05+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.8.3; php-8.2.27\n"
+"X-Domain: multiple-products-to-cart-for-woocommerce"
+
+#: includes/class/class-mpc-template.php:715
+#, php-format
+msgid "%1$s %2$s of %3$s products"
+msgstr ""
+
+#: includes/class/class-mpctable.php:826
+#, php-format
+msgid "%1$s in stock"
+msgstr ""
+
+#. %1$s mpc plugin with link, %2$s: woocommerce with link.
+#: includes/class/admin/class-mpcloader.php:663
+#, php-format
+msgid ""
+"%1$s plugin can not be active. Please activate the following plugin first - "
+"%2$s"
+msgstr ""
+
+#. %1$s: pro features number, %2$s: pro feature list url.
+#: includes/class/admin/class-mpcloader.php:762
+#, php-format
+msgid ""
+"%1$s Supercharge Your WooCommerce Stores with our light, fast and feature-"
+"rich version. See all %2$s"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:744
+msgid "10+ PRO features available!"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"A truly lightweight EASY to use and super FAST WooCommerce product table "
+"solution to add multiple products to cart at once."
+msgstr ""
+
+#: templates/admin/column-sorting.php:62
+#: includes/class/admin/class-mpcadmintable.php:1142
+msgid "Active Columns"
+msgstr ""
+
+#: includes/core-data.php:368 includes/class/class-mpctable.php:992
+msgid "Add"
+msgstr ""
+
+#: includes/core-data.php:59
+msgid "Add a custom page URL where the customer should be redirected."
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:79
+#: includes/class/admin/class-mpcadmintable.php:80
+msgid "Add a New Product Table"
+msgstr ""
+
+#: includes/core-data.php:722
+msgid "Add New Product Table"
+msgstr ""
+
+#: includes/core-data.php:742
+msgid "Add Product"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:197
+msgid "Add Product Table"
+msgstr ""
+
+#: includes/core-data.php:350 includes/core-data.php:352
+#: includes/class/class-mpctable.php:979
+#: includes/class/admin/class-mpcloader.php:361
+msgid "Add to cart"
+msgstr ""
+
+#: includes/core-data.php:114 includes/core-data.php:680
+msgid "Add to cart Button"
+msgstr ""
+
+#: includes/core-data.php:856
+msgid "All"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:188
+#: includes/class/admin/class-mpcadmintable.php:227
+msgid "All Product Tables"
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:29
+msgid "All Tables"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:721
+msgid "Already Did"
+msgstr ""
+
+#. %1$s: move dashicon html, %2$s: sort dashicon html.
+#. %1$s: move icon html, %2$s: sort icon html.
+#: templates/admin/column-sorting.php:46
+#: includes/class/admin/class-mpcadmintable.php:868
+#, php-format
+msgid ""
+"Also note, %1$s can move up, down, left, right, but %2$s only moves up-down."
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:45
+msgid "Appearence"
+msgstr ""
+
+#: includes/core-data.php:820
+msgid "ASC"
+msgstr ""
+
+#: includes/core-data.php:694 includes/core-data.php:714
+msgid "Background"
+msgstr ""
+
+#: includes/core-data.php:646
+msgid "Bold"
+msgstr ""
+
+#: templates/admin/sidebar.php:16
+msgid "Boost your tables to the next level"
+msgstr ""
+
+#: includes/core-data.php:88 includes/core-data.php:343
+msgid "Buttons"
+msgstr ""
+
+#: includes/core-data.php:421 includes/core-data.php:423
+#: includes/class/class-mpctable.php:973
+#: includes/class/admin/class-mpcadminhelper.php:34
+msgid "Buy"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:723
+#: includes/class/admin/class-mpcloader.php:774
+msgid "Cancel"
+msgstr ""
+
+#: includes/core-data.php:47
+msgid "Cart"
+msgstr ""
+
+#: includes/core-data.php:766
+msgid "Categories"
+msgstr ""
+
+#: includes/core-data.php:429 includes/core-data.php:431
+#: includes/class/class-mpctable.php:974
+#: includes/class/admin/class-mpcadminhelper.php:35
+msgid "Category"
+msgstr ""
+
+#: includes/core-data.php:195
+msgid "Category Filter Dropdown"
+msgstr ""
+
+#: includes/core-data.php:125
+msgid "Checkbox"
+msgstr ""
+
+#: includes/core-data.php:105
+msgid ""
+"Choose if a 'Select All' checkbox should be added at the top right corner of "
+"the product table."
+msgstr ""
+
+#: includes/core-data.php:164
+msgid "Choose if a 'Title' option should be included in the sorting dropdown."
+msgstr ""
+
+#: includes/core-data.php:196
+msgid ""
+"Choose if a Category Filter dropdown should be displayed on the product "
+"table."
+msgstr ""
+
+#: includes/core-data.php:154
+msgid ""
+"Choose if a product sorting dropdown should be displayed at the top of the "
+"product table."
+msgstr ""
+
+#: includes/core-data.php:95
+msgid "Choose if a Reset button should accompany the Add to cart button."
+msgstr ""
+
+#: includes/core-data.php:207
+msgid ""
+"Choose if a Tags Filter dropdown should be displayed on the product table."
+msgstr ""
+
+#: includes/core-data.php:174
+msgid "Choose if an 'SKU' option should be included in the sorting dropdown."
+msgstr ""
+
+#: includes/core-data.php:185
+msgid ""
+"Choose if an Ajax-powered search box should be added to the product table."
+msgstr ""
+
+#: includes/core-data.php:246
+msgid ""
+"Choose if product variation descriptions should dynamically showed based on "
+"variation selection."
+msgstr ""
+
+#: includes/core-data.php:235
+msgid "Choose if you want to display cart at the bottom of the table(s)."
+msgstr ""
+
+#: includes/core-data.php:115
+msgid "Choose if you want to remove the Add to cart button."
+msgstr ""
+
+#: includes/core-data.php:126
+msgid ""
+"Choose if you want to remove the checkboxes from the product table, assuming "
+"customers will purchase all products from the current page of the product "
+"table."
+msgstr ""
+
+#: includes/core-data.php:52
+msgid ""
+"Choose the page to redirect customers to after they've added products to "
+"their cart."
+msgstr ""
+
+#: includes/core-data.php:266
+msgid ""
+"Choose to include additional product gallery images under the featured image "
+"in the product table."
+msgstr ""
+
+#: includes/core-data.php:277
+msgid "Choose to include out-of-stock products in the table."
+msgstr ""
+
+#: includes/core-data.php:843
+msgid ""
+"Choose whether or not product titles should link to their individual product "
+"pages."
+msgstr ""
+
+#: includes/core-data.php:256
+msgid ""
+"Choose whether or not to display text like \"Showing Products 1 - 10 / 75\" "
+"above the pagination."
+msgstr ""
+
+#: includes/core-data.php:310
+msgid "Choose whether the Total Price should be displayed."
+msgstr ""
+
+#: includes/core-data.php:332
+msgid "Choose whether to add a 'Sale' sticker to the featured product image."
+msgstr ""
+
+#: includes/core-data.php:299
+msgid ""
+"Choose whether to hide or display the table headers, which include the "
+"column titles."
+msgstr ""
+
+#: includes/core-data.php:751
+msgid ""
+"Choose which products should be checked by default when the product table "
+"initially loads."
+msgstr ""
+
+#: includes/core-data.php:759
+msgid ""
+"Choose which products should be skipped by default when the product table "
+"initially loads."
+msgstr ""
+
+#: includes/class/class-mpc-template.php:441
+#: includes/class/admin/class-mpcloader.php:359
+msgid "Clear"
+msgstr ""
+
+#: includes/core-data.php:640
+msgid "Color"
+msgstr ""
+
+#: templates/admin/column-sorting.php:21
+#: includes/class/admin/class-mpcsettings.php:49
+msgid "Column Sorting"
+msgstr ""
+
+#: includes/core-data.php:871
+msgid "Columns"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:148
+#: includes/class/admin/class-mpcadmintable.php:594
+msgid "Copy"
+msgstr ""
+
+#. %1$s: new product table crate link.
+#: includes/class/admin/class-mpcadmintable.php:192
+#, php-format
+msgid "Create a product table shortcode %1$s."
+msgstr ""
+
+#: includes/core-data.php:48 includes/core-data.php:821
+msgid "Custom"
+msgstr ""
+
+#: includes/core-data.php:57
+msgid "Custom Page URL"
+msgstr ""
+
+#: includes/core-data.php:63
+msgid "Custom Redirect URL"
+msgstr ""
+
+#: templates/admin/sidebar.php:31
+msgid "Customize for $99 only"
+msgstr ""
+
+#: includes/core-data.php:802
+msgid "Date"
+msgstr ""
+
+#: includes/core-data.php:137
+msgid "Decide if each product should have its own 'Add to cart' button."
+msgstr ""
+
+#: includes/core-data.php:78
+msgid ""
+"Decide whether the quantity field should incorporate a plus-minus selector "
+"style."
+msgstr ""
+
+#: templates/admin/sidebar.php:34
+msgid "Dedicated Support Team"
+msgstr ""
+
+#: includes/core-data.php:480 includes/core-data.php:482
+#: includes/class/class-mpctable.php:963
+msgid "Default sorting"
+msgstr ""
+
+#: includes/core-data.php:578
+msgid "Default: Blank. Example: {Choose} Variation"
+msgstr ""
+
+#: includes/core-data.php:817
+msgid ""
+"Define the display sequence as ascending, descending, or custom. The custom "
+"setting is functional only when you have pre-selected specific products in "
+"the Add Product section."
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:156
+#: includes/class/admin/class-mpcadmintable.php:598
+msgid "Delete"
+msgstr ""
+
+#: includes/core-data.php:819
+msgid "DESC"
+msgstr ""
+
+#: includes/core-data.php:737
+msgid "Description"
+msgstr ""
+
+#: includes/core-data.php:800
+msgid ""
+"Determine the attribute (like price, name, etc.) upon which the product "
+"sorting should be based."
+msgstr ""
+
+#: includes/core-data.php:234
+msgid "Display cart after table"
+msgstr ""
+
+#: includes/core-data.php:276
+msgid "Display Out-of-Stock Products"
+msgstr ""
+
+#: includes/core-data.php:255
+msgid "Display Pagination Text"
+msgstr ""
+
+#: includes/core-data.php:218
+msgid ""
+"Displays products count per category or not. Please note: for sites with "
+"more than 800 products, dynamic products count is OFF. For smaller sites it "
+"will dynamically count products specific to the table."
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:152
+msgid "Edit"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:81
+#: includes/class/admin/class-mpcadmintable.php:772
+msgid "Edit Product Table"
+msgstr ""
+
+#: includes/core-data.php:606
+msgid "Empty Search Result"
+msgstr ""
+
+#: includes/core-data.php:568
+msgid "Empty Value"
+msgstr ""
+
+#: includes/core-data.php:184
+msgid "Enable Ajax Search Box"
+msgstr ""
+
+#: includes/core-data.php:288
+msgid "Enable subscription product types."
+msgstr ""
+
+#: includes/core-data.php:583
+msgid "Error Notice"
+msgstr ""
+
+#. %1$s: plugin name with url, %2$s: WordPress and review url.
+#: includes/class/admin/class-mpcloader.php:709
+#, php-format
+msgid ""
+"Excellent! You've been using %1$s for a while. We'd appreciate if you kindly "
+"rate us on %2$s"
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:53
+msgid "Export"
+msgstr ""
+
+#: templates/admin/export.php:16
+msgid "Export Settings"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:505
+msgid "Export successful!"
+msgstr ""
+
+#: includes/core-data.php:669
+msgid "Font Size (px)"
+msgstr ""
+
+#: includes/core-data.php:729 includes/core-data.php:736
+msgid ""
+"For internal use only, it helps admins identify the table and will not be "
+"shown to customers."
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:37
+msgid "General Settings"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:216
+#: includes/class/admin/class-mpcloader.php:247
+#: includes/class/admin/class-mpcloader.php:772
+msgid "Get PRO"
+msgstr ""
+
+#: templates/admin/sidebar.php:27
+msgid "Get PRO license now"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:536
+msgid "Get PRO Plugin"
+msgstr ""
+
+#. $prod['parent']['title']
+#: includes/core-data.php:859 includes/class/class-mpc-template.php:350
+msgid "Grouped"
+msgstr ""
+
+#: includes/core-data.php:700
+msgid "Header and Pagination"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:186
+msgid "here"
+msgstr ""
+
+#: includes/core-data.php:81 includes/core-data.php:98
+#: includes/core-data.php:108 includes/core-data.php:118
+#: includes/core-data.php:129 includes/core-data.php:140
+#: includes/core-data.php:157 includes/core-data.php:167
+#: includes/core-data.php:177 includes/core-data.php:188
+#: includes/core-data.php:199 includes/core-data.php:210
+#: includes/core-data.php:221 includes/core-data.php:238
+#: includes/core-data.php:249 includes/core-data.php:259
+#: includes/core-data.php:269 includes/core-data.php:280
+#: includes/core-data.php:291 includes/core-data.php:302
+#: includes/core-data.php:313 includes/core-data.php:324
+#: includes/core-data.php:335 includes/core-data.php:650
+#: includes/core-data.php:661 includes/core-data.php:792
+#: includes/core-data.php:835 includes/core-data.php:846
+msgid "Hide"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://webfixlab.com/"
+msgstr ""
+
+#. URI of the plugin
+msgid ""
+"https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-"
+"table/"
+msgstr ""
+
+#: includes/core-data.php:805
+msgid "ID"
+msgstr ""
+
+#: includes/core-data.php:789
+msgid ""
+"If Hide is selected, all products will be shown on a single page without "
+"pagination."
+msgstr ""
+
+#: includes/core-data.php:381 includes/core-data.php:383
+#: includes/class/class-mpctable.php:968
+#: includes/class/admin/class-mpcadminhelper.php:29
+msgid "Image"
+msgstr ""
+
+#: includes/core-data.php:616
+msgid "Images"
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:57
+msgid "Import"
+msgstr ""
+
+#: templates/admin/import.php:20
+msgid "Import Settings"
+msgstr ""
+
+#: includes/class/class-mpctable.php:825
+msgid "In stock"
+msgstr ""
+
+#: templates/admin/column-sorting.php:70
+#: includes/class/admin/class-mpcadmintable.php:1150
+msgid "Inactive Columns"
+msgstr ""
+
+#: includes/core-data.php:136
+msgid "Individual 'Add to cart' Button"
+msgstr ""
+
+#: includes/core-data.php:69
+msgid "Initial Product Quantity"
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:41
+msgid "Labels"
+msgstr ""
+
+#: templates/admin/column-sorting.php:33
+msgid "Manage Product Table Columns"
+msgstr ""
+
+#: templates/admin/sidebar.php:30
+msgid "Missing any features? No worries!"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:89
+msgid "Mpc Product Tables"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:176
+msgid "Multiple Products"
+msgstr ""
+
+#: templates/admin/settings.php:23
+msgid "Multiple Products to Cart"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:196
+msgid "Multiple Products to Cart - Add product table"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:187
+msgid "Multiple Products to Cart - All product tables"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:215
+msgid "Multiple Products to Cart - Get PRO"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:205
+msgid "Multiple Products to Cart - Settings"
+msgstr ""
+
+#. Name of the plugin
+#: includes/class/admin/class-mpcloader.php:691
+#: includes/class/admin/class-mpcloader.php:702
+msgid "Multiple Products to Cart for WooCommerce"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:755
+msgid "Multiple Products to Cart for WooCommerce PRO"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:175
+msgid "Multiple Products to Cart Settings"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:647
+msgid "Multiple Products to Cart – WooCommerce Product Table"
+msgstr ""
+
+#: includes/core-data.php:570 includes/class/class-mpctable.php:988
+msgid "N/A"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:82
+msgid "New Product Table"
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:33
+msgid "New Table"
+msgstr ""
+
+#: includes/class/class-mpctable.php:247
+msgid "No posts found!"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:179
+msgid "No shortcodes found."
+msgstr ""
+
+#: includes/class/class-mpctable.php:228
+msgid "Nonce verification failed."
+msgstr ""
+
+#: includes/core-data.php:46
+msgid "None"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:85
+msgid "Nothing Found"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:86
+msgid "Nothing found in Trash"
+msgstr ""
+
+#: includes/core-data.php:816
+msgid "Order"
+msgstr ""
+
+#: includes/core-data.php:799
+msgid "Order By"
+msgstr ""
+
+#: includes/core-data.php:228 includes/core-data.php:537
+msgid "Others"
+msgstr ""
+
+#: templates/admin/sidebar.php:36
+msgid ""
+"Our support is what makes us No.1. We are available round the clock for any "
+"support."
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:352
+msgid "Out of stock"
+msgstr ""
+
+#: includes/core-data.php:552 includes/core-data.php:788
+msgid "Pagination"
+msgstr ""
+
+#: includes/core-data.php:592 includes/class/class-mpctable.php:985
+#: includes/class/admin/class-mpcloader.php:377
+msgid "Please check one or more products"
+msgstr ""
+
+#: includes/core-data.php:600 includes/class/class-mpctable.php:989
+#: includes/class/admin/class-mpcloader.php:374
+msgid "Please select all options"
+msgstr ""
+
+#. %1$s: pro fiture name.
+#: templates/admin/popup.php:24
+#, php-format
+msgid "Please upgrade to get %1$s and other advanced features."
+msgstr ""
+
+#: templates/admin/export.php:22 includes/class/admin/class-mpcloader.php:504
+msgid "Please wait while we are getting your file ready for download..."
+msgstr ""
+
+#. %1$s: line brake, %2$s: line brake.
+#: templates/admin/sidebar.php:22
+msgid ""
+"Popular PRO features: Product category dropdown, AJAX-powered search, 4 "
+"additional columns, and subscription product support. Upgrade to the PRO "
+"version to unlock the full power of the plugin!"
+msgstr ""
+
+#: includes/class/class-mpctable.php:233
+msgid "POST - page or atts variable not found."
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:77
+msgctxt "post type general name"
+msgid "Mpc Product Tables"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:78
+msgctxt "post type singular name"
+msgid "Product Table"
+msgstr ""
+
+#: includes/core-data.php:576
+msgid "Prepend Placeholder Variation"
+msgstr ""
+
+#: includes/core-data.php:397 includes/core-data.php:399
+#: includes/core-data.php:804 includes/class/class-mpctable.php:970
+#: includes/class/admin/class-mpcadminhelper.php:31
+msgid "Price"
+msgstr ""
+
+#: includes/core-data.php:496 includes/core-data.php:498
+#: includes/class/class-mpctable.php:965
+msgid "Price: High to Low"
+msgstr ""
+
+#: includes/core-data.php:488 includes/core-data.php:490
+#: includes/class/class-mpctable.php:964
+msgid "Price: Low to High"
+msgstr ""
+
+#: templates/admin/import.php:40 templates/admin/export.php:34
+#: templates/admin/column-sorting.php:30
+#: includes/class/admin/class-mpcsettings.php:387
+msgid "PRO"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:750
+msgid "PRO features here"
+msgstr ""
+
+#: includes/core-data.php:389 includes/core-data.php:391
+#: includes/class/class-mpctable.php:969
+#: includes/class/admin/class-mpcadminhelper.php:30
+msgid "Product"
+msgstr ""
+
+#: includes/core-data.php:831
+msgid "Product Description"
+msgstr ""
+
+#: includes/core-data.php:265
+msgid "Product Image Gallery"
+msgstr ""
+
+#: includes/core-data.php:623
+msgid "Product Image Size (px)"
+msgstr ""
+
+#: includes/core-data.php:842
+msgid "Product Link"
+msgstr ""
+
+#: includes/core-data.php:590
+msgid "Product Not Selected"
+msgstr ""
+
+#: includes/core-data.php:153
+msgid "Product Sorting Dropdown"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:357
+#: includes/class/admin/class-mpcadmintable.php:366
+#: includes/class/admin/class-mpcadmintable.php:380
+#: includes/class/admin/class-mpcadmintable.php:566
+msgid "Product Table"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:567
+msgid "Product table shortcode details."
+msgstr ""
+
+#: includes/core-data.php:730
+msgid "Product table title"
+msgstr ""
+
+#: includes/core-data.php:633
+msgid "Product Title"
+msgstr ""
+
+#: includes/core-data.php:652
+msgid "Product Title Bold Font"
+msgstr ""
+
+#: includes/core-data.php:675
+msgid "Product Title Font Size"
+msgstr ""
+
+#: includes/core-data.php:663
+msgid "Product Title Underline"
+msgstr ""
+
+#: includes/core-data.php:853
+msgid "Product Type"
+msgstr ""
+
+#: includes/core-data.php:774
+msgid "Products Per Page"
+msgstr ""
+
+#: includes/core-data.php:413 includes/core-data.php:415
+#: includes/class/class-mpctable.php:972
+#: includes/class/class-mpc-template.php:552
+#: includes/class/admin/class-mpcadminhelper.php:33
+msgid "Quantity"
+msgstr ""
+
+#: includes/core-data.php:77
+msgid "Quantity Selector Design"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:719
+msgid "Rate it"
+msgstr ""
+
+#: includes/core-data.php:465 includes/core-data.php:467
+#: includes/class/class-mpctable.php:978
+#: includes/class/admin/class-mpcadminhelper.php:39
+msgid "Rating"
+msgstr ""
+
+#: templates/admin/popup.php:31
+msgid "Read more"
+msgstr ""
+
+#: includes/core-data.php:39
+msgid "Redirect & Quantity"
+msgstr ""
+
+#: includes/core-data.php:51
+msgid "Redirect After Cart Addition"
+msgstr ""
+
+#: includes/core-data.php:358 includes/core-data.php:360
+#: includes/class/class-mpctable.php:980 templates/admin/new-table.php:22
+msgid "Reset"
+msgstr ""
+
+#: includes/core-data.php:94
+msgid "Reset Button"
+msgstr ""
+
+#: includes/class/class-mpc-template.php:322
+msgid "sale"
+msgstr ""
+
+#: includes/core-data.php:147
+msgid "Search & Filter"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:84
+msgid "Search Mpc Product Tables"
+msgstr ""
+
+#: includes/core-data.php:320
+msgid "Section by Categories"
+msgstr ""
+
+#: includes/core-data.php:104 includes/core-data.php:560
+#: includes/core-data.php:562 includes/class/class-mpctable.php:983
+msgid "Select All"
+msgstr ""
+
+#: includes/core-data.php:743
+msgid ""
+"Select specific products to display if you want to add only certain items in "
+"the product table."
+msgstr ""
+
+#: includes/core-data.php:854
+msgid "Select the types of products you wish to include in the product table."
+msgstr ""
+
+#: includes/core-data.php:750
+msgid "Selected Products"
+msgstr ""
+
+#: templates/admin/sidebar.php:40
+msgid "Send Request"
+msgstr ""
+
+#. %1$s: openning strong tag with css, %2$s: closing strong tag.
+#: includes/core-data.php:777
+#, php-format
+msgid ""
+"Set a limit on the number of products to display per page. This option is "
+"functional only when the Pagination setting is Show. Maximum page limit is "
+"%1$s100.%2$s"
+msgstr ""
+
+#: includes/core-data.php:872
+msgid ""
+"Set table columns (like name, category etc). NOTE: <strong>variation</strong>"
+" is a must have column."
+msgstr ""
+
+#: includes/core-data.php:70
+msgid "Set the starting value for the quantity field for each product."
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:206
+#: includes/class/admin/class-mpcloader.php:529
+msgid "Settings"
+msgstr ""
+
+#: includes/class/admin/class-mpcsettings.php:197
+msgid "Settings Saved"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:524
+msgid "Shortcode created."
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:508
+msgid "Shortcode deleted."
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:387
+msgid "Shortcode updated."
+msgstr ""
+
+#: includes/core-data.php:80 includes/core-data.php:97
+#: includes/core-data.php:107 includes/core-data.php:117
+#: includes/core-data.php:128 includes/core-data.php:139
+#: includes/core-data.php:156 includes/core-data.php:166
+#: includes/core-data.php:176 includes/core-data.php:187
+#: includes/core-data.php:198 includes/core-data.php:209
+#: includes/core-data.php:220 includes/core-data.php:237
+#: includes/core-data.php:248 includes/core-data.php:258
+#: includes/core-data.php:268 includes/core-data.php:279
+#: includes/core-data.php:290 includes/core-data.php:301
+#: includes/core-data.php:312 includes/core-data.php:323
+#: includes/core-data.php:334 includes/core-data.php:649
+#: includes/core-data.php:660 includes/core-data.php:791
+#: includes/core-data.php:834 includes/core-data.php:845
+msgid "Show"
+msgstr ""
+
+#: includes/core-data.php:331
+msgid "Show 'Sale' Label"
+msgstr ""
+
+#: includes/core-data.php:217
+msgid "Show Product Count per Category"
+msgstr ""
+
+#: includes/core-data.php:857
+msgid "Simple"
+msgstr ""
+
+#: includes/core-data.php:366
+msgid "Single Add to cart"
+msgstr ""
+
+#: includes/core-data.php:758
+msgid "Skip Products"
+msgstr ""
+
+#: includes/core-data.php:456 includes/core-data.php:458
+#: includes/core-data.php:806 includes/class/class-mpctable.php:977
+#: includes/class/admin/class-mpcadminhelper.php:38
+msgid "SKU"
+msgstr ""
+
+#: includes/core-data.php:173
+msgid "SKU Sorting Option"
+msgstr ""
+
+#: includes/core-data.php:520 includes/core-data.php:522
+msgid "SKU: A to Z"
+msgstr ""
+
+#: includes/core-data.php:529 includes/core-data.php:531
+msgid "SKU: Z to A"
+msgstr ""
+
+#: includes/core-data.php:608 includes/class/class-mpctable.php:253
+#: includes/class/class-mpctable.php:993
+msgid "Sorry! No products found!"
+msgstr ""
+
+#: includes/core-data.php:473
+msgid "Sorting Option"
+msgstr ""
+
+#: includes/core-data.php:767
+msgid "Specify the product categories to be included in the product table."
+msgstr ""
+
+#: includes/core-data.php:438 includes/core-data.php:440
+#: includes/class/class-mpctable.php:975
+#: includes/class/admin/class-mpcadminhelper.php:36
+msgid "Stock"
+msgstr ""
+
+#: includes/core-data.php:860
+msgid "Subscription"
+msgstr ""
+
+#: templates/admin/settings.php:26 includes/class/admin/class-mpcloader.php:561
+msgid "Support"
+msgstr ""
+
+#: includes/core-data.php:287
+msgid "Support Subscription Products"
+msgstr ""
+
+#: includes/core-data.php:374
+msgid "Table Column Titles"
+msgstr ""
+
+#: includes/core-data.php:735
+msgid "Table Description"
+msgstr ""
+
+#: includes/core-data.php:298
+msgid "Table Header"
+msgstr ""
+
+#: includes/class/class-mpc-template.php:209
+msgid "Table order by"
+msgstr ""
+
+#: includes/core-data.php:728
+msgid "Table Title"
+msgstr ""
+
+#: includes/core-data.php:447 includes/core-data.php:449
+#: includes/class/class-mpctable.php:976
+#: includes/class/admin/class-mpcadminhelper.php:37
+msgid "Tag"
+msgstr ""
+
+#: includes/core-data.php:206
+msgid "Tags Filter Dropdown"
+msgstr ""
+
+#: includes/core-data.php:687 includes/core-data.php:707
+msgid "Text"
+msgstr ""
+
+#: includes/core-data.php:321
+msgid "There must be selected categories in the table to enable this feature."
+msgstr ""
+
+#: includes/class/class-mpctable.php:177
+msgid "There was an error adding to the cart. Please try again."
+msgstr ""
+
+#: includes/core-data.php:832
+msgid "This is the individual product description."
+msgstr ""
+
+#: includes/core-data.php:803
+msgid "Title"
+msgstr ""
+
+#: includes/core-data.php:163
+msgid "Title Sorting Option"
+msgstr ""
+
+#: includes/core-data.php:504 includes/core-data.php:506
+#: includes/class/class-mpc-template.php:192
+msgid "Title: A to Z"
+msgstr ""
+
+#: includes/core-data.php:512 includes/core-data.php:514
+#: includes/class/class-mpc-template.php:198
+msgid "Title: Z to A"
+msgstr ""
+
+#: includes/core-data.php:544 includes/core-data.php:546
+#: includes/class/class-mpctable.php:981
+msgid "Total"
+msgstr ""
+
+#: includes/core-data.php:309
+msgid "Total Price"
+msgstr ""
+
+#: includes/core-data.php:657
+msgid "Underline"
+msgstr ""
+
+#: templates/admin/popup.php:31
+msgid ""
+"Unlock advanced features like custom columns for different tables, support "
+"for more product types, and an 'Add to cart' button with the PRO version. "
+"These tools are designed to streamline your workflow, enhance your "
+"experience, and boost your sales. We're committed to delivering the best "
+"solutions for you, 24/7."
+msgstr ""
+
+#: templates/admin/popup.php:33
+msgid "Upgrade Now"
+msgstr ""
+
+#: templates/admin/column-sorting.php:35
+#: includes/class/admin/class-mpcadmintable.php:858
+msgid ""
+"Utilize the convenient drag-and-drop feature below to rearrange the order of "
+"the product table columns. You also have the ability to activate or "
+"deactivate any columns as needed."
+msgstr ""
+
+#: includes/core-data.php:858
+msgid "Variable"
+msgstr ""
+
+#: includes/core-data.php:861
+msgid "Variable Subscription"
+msgstr ""
+
+#: includes/core-data.php:405 includes/core-data.php:407
+#: includes/class/class-mpctable.php:971
+#: includes/class/admin/class-mpcadminhelper.php:32
+msgid "Variation"
+msgstr ""
+
+#: includes/core-data.php:245
+msgid "Variation Descriptions"
+msgstr ""
+
+#: includes/core-data.php:598
+msgid "Variation Not Selected"
+msgstr ""
+
+#: includes/class/admin/class-mpcadmintable.php:83
+msgid "View Product Table"
+msgstr ""
+
+#. Author of the plugin
+msgid "WebFix Lab"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:653
+msgid "WooCommerce"
+msgstr ""
+
+#: includes/class/admin/class-mpcloader.php:697
+msgid "WordPress.org"
+msgstr ""

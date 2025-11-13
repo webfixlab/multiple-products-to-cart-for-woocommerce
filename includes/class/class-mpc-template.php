@@ -710,12 +710,14 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			?>
 			<div class="mpc-product-range" data-page_limit="<?php echo esc_attr( $mpctable__['attributes']['limit'] ); ?>">
 				<p>
-					<?php echo sprintf(
-						'%1$s <span class="ranges">%2$s</span> of <span class="max_product">%3$s</span> products',
-						esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
-						wp_kses_post( $product_range ),
-						esc_attr( number_format( (int) $mpctable__['query']['total'] ) )
-					); ?>
+					<?php
+						echo sprintf( 
+							__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
+							esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
+							'<span class="ranges">' . esc_html( $product_range ) . '</span>',
+							'<span class="max_product">' . esc_attr( $mpctable__['query']['total'] ) . '</span>'
+						);
+					?>
 				</p>
 			</div>
 			<?php

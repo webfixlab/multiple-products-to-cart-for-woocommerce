@@ -92,7 +92,7 @@ $mpc__['fields'] = array(
 					'key'         => 'wmca_show_reset_btn',
 					'type'        => 'checkbox',
 					'label'       => __( 'Reset Button', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Choose if a Reset button should accompany the Add to Cart button.', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose if a Reset button should accompany the Add to cart button.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -111,8 +111,8 @@ $mpc__['fields'] = array(
 				array(
 					'key'         => 'mpc_show_add_to_cart_button',
 					'type'        => 'checkbox',
-					'label'       => __( 'Add to Cart Button', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Choose if you want to remove the Add to Cart button.', 'multiple-products-to-cart-for-woocommerce' ),
+					'label'       => __( 'Add to cart Button', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Choose if you want to remove the Add to cart button.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -133,8 +133,8 @@ $mpc__['fields'] = array(
 				array(
 					'key'         => 'wmca_single_cart',
 					'type'        => 'checkbox',
-					'label'       => __( 'Individual \'Add to Cart\' Button', 'multiple-products-to-cart-for-woocommerce' ),
-					'desc'        => __( 'Decide if each product should have its own \'Add to Cart\' button.', 'multiple-products-to-cart-for-woocommerce' ),
+					'label'       => __( 'Individual \'Add to cart\' Button', 'multiple-products-to-cart-for-woocommerce' ),
+					'desc'        => __( 'Decide if each product should have its own \'Add to cart\' button.', 'multiple-products-to-cart-for-woocommerce' ),
 					'switch_text' => array(
 						'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 						'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -347,9 +347,9 @@ $mpc__['fields'] = array(
 					'key'         => 'wmc_button_text',
 					'type'        => 'text',
 					'default'     => '',
-					'label'       => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+					'label'       => __( 'Add to cart', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
-					'placeholder' => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+					'placeholder' => __( 'Add to cart', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				array(
 					'key'         => 'wmc_reset_button_text',
@@ -363,7 +363,7 @@ $mpc__['fields'] = array(
 					'key'         => 'mpce_single_order_button_text',
 					'type'        => 'text',
 					'default'     => '',
-					'label'       => __( 'Single Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+					'label'       => __( 'Single Add to cart', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
 					'placeholder' => __( 'Add', 'multiple-products-to-cart-for-woocommerce' ),
 					'pro'         => true,
@@ -557,9 +557,9 @@ $mpc__['fields'] = array(
 					'key'         => 'wmc_select_all_text',
 					'type'        => 'text',
 					'default'     => '',
-					'label'       => __( 'Selelct All', 'multiple-products-to-cart-for-woocommerce' ),
+					'label'       => __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
-					'placeholder' => __( 'Selelct All', 'multiple-products-to-cart-for-woocommerce' ),
+					'placeholder' => __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				array(
 					'key'         => 'wmc_empty_value_text',
@@ -605,7 +605,7 @@ $mpc__['fields'] = array(
 					'default'     => '',
 					'label'       => __( 'Empty Search Result', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
-					'placeholder' => __( 'Sorry! No products found.', 'multiple-products-to-cart-for-woocommerce' ),
+					'placeholder' => __( 'Sorry! No products found!', 'multiple-products-to-cart-for-woocommerce' ),
 					'pro'         => true,
 				),
 			),
@@ -677,7 +677,7 @@ $mpc__['fields'] = array(
 			),
 		),
 		array(
-			'section' => __( 'Add to Cart Button', 'multiple-products-to-cart-for-woocommerce' ),
+			'section' => __( 'Add to cart Button', 'multiple-products-to-cart-for-woocommerce' ),
 			'desc'    => '',
 			'fields'  => array(
 				array(

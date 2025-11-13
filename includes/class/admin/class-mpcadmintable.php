@@ -377,7 +377,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				$a = wp_update_post(
 					array(
 						'ID'           => $post_id,
-						'post_title'   => ! empty( $title ) ? $title : __( 'Product Table #', 'multiple-products-to-cart-for-woocommerce' ) . $post_id,
+						'post_title'   => ! empty( $title ) ? $title : __( 'Product Table', 'multiple-products-to-cart-for-woocommerce' ) . $post_id,
 						'post_content' => $desc,
 					)
 				);
@@ -563,7 +563,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				$desc  = $post->post_content;
 			}
 
-			$title = $title ?? __( 'Product table', 'multiple-products-to-cart-for-woocommerce' );
+			$title = $title ?? __( 'Product Table', 'multiple-products-to-cart-for-woocommerce' );
 			$desc  = $desc ?? __( 'Product table shortcode details.', 'multiple-products-to-cart-for-woocommerce' );
 
 			$delete = admin_url( 'admin.php?page=mpc-shortcodes' );

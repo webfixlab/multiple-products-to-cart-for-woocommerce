@@ -218,14 +218,21 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * Ajax product table loader
 		 */
 		public function product_table_ajax() {
+			
 			global $mpctable__;
 			global $mpc_template__;
-
+			
 			$response = array( 'status' => '' );
-
+			
 			if ( ! isset( $_POST['table_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['table_nonce'] ) ), 'table_nonce_ref' ) ) {
 				$response['status'] = 'error';
 				$response['msg']    = __( 'Nonce verification failed.', 'multiple-products-to-cart-for-woocommerce' );
+			}
+
+			// Switch to the new locale | Multilingual | PolyLang plugin support.
+			$locale = isset( $_POST['locale'] ) ? sanitize_text_field( $_POST['locale'] ) : '';
+			if( !empty( $locale ) ){
+				switch_to_locale( $locale );
 			}
 
 			if ( ! isset( $_POST ) || ( ! isset( $_POST['page'] ) ) ) {
@@ -302,6 +309,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				'val'         => ob_get_clean(),
 			);
 
+			restore_previous_locale();
+
 			wp_send_json(
 				array(
 					'mpc_fragments' => $response,
@@ -360,7 +369,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$products = new WP_Query( $args );
 			wp_reset_postdata();
 
-			// save result attributes for future reference.
 			if ( empty( $products ) ) {
 				return;
 			}
@@ -821,12 +829,11 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				// stock.
 				$c['stock_status'] = $variation->get_stock_status();
-				$c['stock']        = $variation->get_stock_quantity();
-				if ( empty( $c['stock'] ) || '' === $c['stock'] || 0 > $c['stock'] ) {
-					$c['stock'] = __( 'In stock', 'multiple-products-to-cart-for-woocommerce' );
-				} else {
-					$c['stock'] .= __( ' in stock', 'multiple-products-to-cart-for-woocommerce' );
-				}
+				$stock = $variation->get_stock_quantity();
+				$c['stock'] = empty( $stock ) || $stock < 0 ? __( 'In stock', 'multiple-products-to-cart-for-woocommerce' ) : sprintf(
+					__( '%1$s in stock', 'multiple-products-to-cart-for-woocommerce' ),
+					esc_attr( $stock )
+				);
 
 				// variation short description.
 				if ( $mpctable__['options']['mpc_show_variation_desc'] ) {
@@ -977,7 +984,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 					'wmc_ct_tag'                    => __( 'Tag', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_ct_sku'                    => __( 'SKU', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_ct_rating'                 => __( 'Rating', 'multiple-products-to-cart-for-woocommerce' ),
-					'wmc_button_text'               => __( 'Add to Cart', 'multiple-products-to-cart-for-woocommerce' ),
+					'wmc_button_text'               => __( 'Add to cart', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_reset_button_text'         => __( 'Reset', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_total_button_text'         => __( 'Total', 'multiple-products-to-cart-for-woocommerce' ),
 					'wmc_pagination_text'           => '',
@@ -991,7 +998,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 					'wmca_default_quantity'         => 0,
 					'wmc_redirect'                  => '',
 					'mpce_single_order_button_text' => __( 'Add', 'multiple-products-to-cart-for-woocommerce' ),
-					'mpcp_empty_result_text'        => __( 'Sorry! No products found.', 'multiple-products-to-cart-for-woocommerce' ),
+					'mpcp_empty_result_text'        => __( 'Sorry! No products found!', 'multiple-products-to-cart-for-woocommerce' ),
 				),
 				'options'         => array(
 					// checkboxes here.

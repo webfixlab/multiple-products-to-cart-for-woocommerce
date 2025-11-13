@@ -78,11 +78,11 @@
 		} else {
 			row.find('.mpc-single-price').show();
 			
-			price = price.toLocaleString(mpc_frontend.locale, {
-				minimumFractionDigits: mpc_frontend.dp,
-				maximumFractionDigits: mpc_frontend.dp,
-				useGrouping: true
-			});
+			// price = price.toLocaleString(mpc_frontend.locale, {
+			// 	minimumFractionDigits: mpc_frontend.dp,
+			// 	maximumFractionDigits: mpc_frontend.dp,
+			// 	useGrouping: true
+			// });
 			row.find('.mpc-single-price span.total-price').text(price);
 			if (!row.find('.mpc-product-price').hasClass('mpc-single-active')) {
 				row.find('.mpc-product-price').addClass('mpc-single-active');
@@ -259,6 +259,11 @@
 				}
 			});
 			table.find('.mpc-total span.total-price').text(priceFormat(total));
+			// table.find('.mpc-total span.total-price').text(total.toLocaleString(mpc_frontend.locale, {
+			// 	minimumFractionDigits: mpc_frontend.dp,
+			// 	maximumFractionDigits: mpc_frontend.dp,
+			// 	useGrouping: true
+			// }));
 
 			var wrap = table.closest('.mpc-container');
 			if (checked == 0) {
@@ -408,7 +413,12 @@
 		header.css({ 'left': `${min}px`, 'width': width });
 	}
 	function mpc_table_loader_response(wrapper, response) {
+		// sanitize response.
+		const start = response.indexOf('{');
+		if( start !== -1 ) response = response.substring(start);
+		
 		var rp = JSON.parse(response);
+		console.log('rp', rp);
 		if (rp.status) {
 			wrapper.find('.mpc-all-select, .mpc-table-footer').hide();
 		} else {
@@ -445,6 +455,9 @@
 
 	// AJAX table loader.
 	function ajax_table_loader(atts, page, wrapper) {
+		let locale = $(document).find('html').attr('lang');
+		locale = locale.replace( '-', '_' );
+		// console.log('current locale', locale);
 		$.ajax({
 			method: "POST",
 			url: mpc_frontend.ajaxurl,
@@ -452,6 +465,7 @@
 				'action': 'mpc_ajax_table_loader',
 				'page': page,
 				'atts': atts,
+				'locale': locale,
 				'table_nonce': mpc_frontend.table_nonce
 			},
 			async: 'false',
