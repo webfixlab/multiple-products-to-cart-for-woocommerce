@@ -15,8 +15,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 	 */
 	class MPCAdminTable {
 
-
-
 		/**
 		 * Whather any shortcode saved or not
 		 *
@@ -45,16 +43,14 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 */
 		private $notice;
 
-
-
 		/**
 		 * Initialize table class variables
 		 */
 		public function __construct() {
-			$this->has_shortcode = false;
+			$this->notice        = array();
 			$this->post_id       = '';
 			$this->table_id      = '';
-			$this->notice        = array();
+			$this->has_shortcode = false;
 		}
 
 		/**
@@ -69,7 +65,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Register custom post type for table
 		 */
 		public function register_mpc_table() {
-
 			register_post_type(
 				'mpc_product_table',
 				array(
@@ -100,8 +95,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			);
 		}
 
-
-
 		/**
 		 * Table shortcode update and handle notice
 		 */
@@ -114,8 +107,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$this->save_shortcode();
 		}
 
-
-
 		/**
 		 * Display shortcode table item
 		 *
@@ -127,7 +118,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$edit   = admin_url( 'admin.php?page=mpc-shortcode' );
 			$delete = admin_url( 'admin.php?page=mpc-shortcodes' );
 			$nonce  = wp_create_nonce( 'mpc_option_tab' );
-
 			?>
 			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode">
 				<div class="mpcdp_settings_option visible">
@@ -166,11 +156,15 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Display no shortcode message
 		 */
 		public function no_shortcode() {
-
 			if ( true === $this->has_shortcode ) {
 				return;
 			}
 
+			$link = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( admin_url( 'admin.php?page=mpc-shortcode' ) ),
+				__( 'here', 'multiple-products-to-cart-for-woocommerce' )
+			);
 			?>
 			<div class="mpcdp_settings_toggle mpcdp_container" style="margin-top: 30px;">
 				<div class="mpcdp_settings_option visible">
@@ -179,13 +173,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 							<div class="mpcdp_option_label"><?php echo esc_html__( 'No shortcodes found.', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
 							<div class="mpcdp_option_description">
 								<?php
-
-									$link = sprintf(
-										'<a href="%s">%s</a>',
-										esc_url( admin_url( 'admin.php?page=mpc-shortcode' ) ),
-										__( 'here', 'multiple-products-to-cart-for-woocommerce' )
-									);
-
 									echo wp_kses_post(
 										sprintf(
 											// translators: %1$s: new product table crate link.
@@ -193,7 +180,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 											wp_kses_post( $link )
 										)
 									);
-
 								?>
 							</div>
 						</div>
@@ -207,7 +193,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Display all table shortcode list
 		 */
 		public function table_list() {
-
 			$args = array(
 				'post_type'      => 'mpc_product_table',
 				'posts_per_page' => -1,
@@ -229,9 +214,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			);
 
 			if ( ! empty( $tables ) && ! empty( $tables->posts ) ) {
-
 				$this->has_shortcode = true;
-
 				foreach ( $tables->posts as $post ) {
 					$id = get_post_meta( $post->ID, 'table_id', true );
 					$this->list_item( $id, $post->post_title, $post->post_content );
@@ -248,9 +231,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Get table id
 		 */
 		public function table_index() {
-
 			$table_id = '';
-
 			if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
 				return '';
 			}
@@ -270,9 +251,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param int $table_id table id.
 		 */
 		public function cpt_id( $table_id ) {
-
 			$cpt_id = '';
-
 			$args = array(
 				'post_type'      => 'mpc_product_table',
 				'posts_per_page' => -1,
@@ -287,20 +266,16 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			wp_reset_postdata();
 
 			if ( ! empty( $tables ) && ! empty( $tables->posts ) ) {
-
 				foreach ( $tables->posts as $post ) {
 					$id = get_post_meta( $post->ID, 'table_id', true );
-
 					if ( ! empty( $id ) ) {
 						$id = (int) $id;
 					}
-
 					if ( $id === $table_id ) {
 						$cpt_id = $post->ID;
 					}
 				}
 			}
-
 			return $cpt_id;
 		}
 
@@ -308,7 +283,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Save shortcode table item
 		 */
 		public function save_shortcode() {
-
 			if ( ! isset( $_POST ) || empty( $_POST ) ) {
 				return;
 			}
@@ -334,12 +308,10 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$table_id = $this->table_index();
 
 			$flag = '';
-
 			if ( empty( $table_id ) ) {
 				$flag = 'add';
 			} else {
 				$post_id = $this->cpt_id( $table_id );
-
 				if ( empty( $post_id ) ) {
 					$flag = 'add';
 				}
@@ -361,7 +333,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 						'ping_status'    => 'closed',
 					)
 				);
-
 				if ( empty( $title ) ) {
 					$title = ! empty( $title ) ? $title : __( 'Product Table', 'multiple-products-to-cart-for-woocommerce' );
 
@@ -381,7 +352,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 						'post_content' => $desc,
 					)
 				);
-
 				$this->notice = array(
 					'status'  => 'updated',
 					'message' => __( 'Shortcode updated.', 'multiple-products-to-cart-for-woocommerce' ),
@@ -392,7 +362,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				if ( empty( $table_id ) ) {
 					$table_id = $post_id;
 				}
-
 				if ( 'add' === $flag ) {
 					add_post_meta( $post_id, 'shortcode', $sr );
 					add_post_meta( $post_id, 'table_id', $table_id );
@@ -408,7 +377,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				$nonce = wp_create_nonce( 'mpc_option_tab' );
 
 				$url = $page . '&tab=all-tables&mpctable=' . esc_attr( $table_id ) . '&nonce=' . esc_attr( $nonce ) . '&created=yes';
-
 				header( 'Location: ' . $url );
 				exit();
 			}
@@ -418,7 +386,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Handle shortcode table update request
 		 */
 		public function shortcode_request() {
-
 			global $mpc__;
 
 			// vefiry nonce again.
@@ -427,20 +394,16 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			$ds = '';
-
 			foreach ( $mpc__['fields']['new_table'] as $section ) {
 				foreach ( $section['fields'] as $fld ) {
-
 					if ( in_array( $fld['key'], array( 'shortcode_title', 'shortcode_desc' ), true ) ) {
 						continue;
 					}
 
 					$key  = $fld['key'];
 					$item = '';
-
 					if ( isset( $_POST[ $key ] ) && ! empty( $_POST[ $key ] ) ) {
 						$val = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
-
 						// add variation column as it's a must have column.
 						if ( 'columns' === $fld['key'] && strpos( $val, 'variation' ) === false ) {
 							$val .= ! empty( $val ) ? ', variation' : 'variation';
@@ -452,7 +415,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 								$val = 'desc';
 							}
 						}
-
 						$item = $key . '="' . $val . '"';
 					}
 
@@ -482,10 +444,8 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Delete shortcode table item
 		 */
 		public function delete_shortcode() {
-
 			// get table index.
 			$table_id = $this->table_index();
-
 			if ( empty( $table_id ) ) {
 				return;
 			}
@@ -499,7 +459,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			$cpt_id = $this->cpt_id( $table_id );
-
 			if ( ! empty( $cpt_id ) ) {
 				wp_delete_post( $cpt_id, true );
 
@@ -529,7 +488,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			if ( empty( $this->notice ) ) {
 				return;
 			}
-
 			?>
 			<div class="mpc-notice mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
 				<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
@@ -549,8 +507,8 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 */
 		public function show_shortcode() {
 			global $mpc__;
-			$table_id = $this->table_index();
 
+			$table_id = $this->table_index();
 			if ( empty( $table_id ) ) {
 				return;
 			}
@@ -612,18 +570,14 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param string $code shortcode attributes string.
 		 */
 		public function parse_atts_array( $code ) {
-
 			$code = str_replace( '[', '', $code );
 			$code = str_replace( ']', '', $code );
 			$code = str_replace( 'woo-multi-cart', '', $code );
-
 			if ( empty( $code ) && strlen( $code ) < 10 ) {
 				return '';
 			}
 
-			$atts = shortcode_parse_atts( $code );
-
-			return $atts;
+			return shortcode_parse_atts( $code );
 		}
 
 		/**
@@ -632,27 +586,17 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param array $atts shortcode attributes.
 		 */
 		public function redefine_boolean( $atts ) {
-
 			$atts_ = array();
 
 			foreach ( $atts as $name => $value ) {
-
 				if ( false !== strpos( $value, 'true' ) ) {
-
 					$atts_[ $name ] = true;
-
 				} elseif ( false !== strpos( $value, 'false' ) ) {
-
 					$atts_[ $name ] = false;
-
 				} elseif ( is_numeric( $value ) ) {
-
 					$atts_[ $name ] = (int) $value;
-
 				} else {
-
 					$atts_[ $name ] = $value;
-
 				}
 			}
 
@@ -665,9 +609,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param boolean $attribute if yes, return shortcode string, else parsed array.
 		 */
 		public function get_shortcode( $attribute = false ) {
-
 			$table_id = $this->table_index();
-
 			if ( empty( $table_id ) ) {
 				return array();
 			}
@@ -675,12 +617,9 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$code = '';
 
 			$cpt_id = $this->cpt_id( $table_id );
-
 			if ( ! empty( $cpt_id ) ) {
-
 				$this->table_id = $table_id;
 				$this->post_id  = $cpt_id;
-
 				$code = get_post_meta( $cpt_id, 'shortcode', true );
 			} else {
 				/**
@@ -694,20 +633,16 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			$code = wp_unslash( $code );
-
 			if ( false === $attribute ) {
 				return $code;
 			}
 
 			$atts = $this->parse_atts_array( $code );
-
 			if ( empty( $atts ) || ! is_array( $atts ) ) {
 				return array();
 			}
 
-			$atts = $this->redefine_boolean( $atts );
-
-			return $atts;
+			return $this->redefine_boolean( $atts );
 		}
 
 		/**
@@ -717,25 +652,18 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param boolean $attribute return attribute string if yes, else parsed attributes array.
 		 */
 		public function get_frontend_shortcode( $table_id, $attribute = false ) {
-
 			$code = '';
 
 			$cpt_id = $this->cpt_id( $table_id );
-
 			if ( ! empty( $cpt_id ) ) {
-
 				$this->table_id = $table_id;
 				$this->post_id  = $cpt_id;
-
 				$code = get_post_meta( $cpt_id, 'shortcode', true );
-
 			} else {
-
 				/**
 				 * Legacy code - will be deleted in later versions.
 				 */
 				$code = get_option( 'mpcasc_code' . $table_id );
-
 			}
 
 			if ( empty( $code ) ) {
@@ -743,20 +671,16 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			$code = wp_unslash( $code );
-
 			if ( false === $attribute ) {
 				return '[woo-multi-cart ' . $code . ']';
 			}
 
 			$atts = $this->parse_atts_array( $code );
-
 			if ( empty( $atts ) || ! is_array( $atts ) ) {
 				return array();
 			}
 
-			$atts = $this->redefine_boolean( $atts );
-
-			return $atts;
+			return $this->redefine_boolean( $atts );
 		}
 
 
@@ -766,11 +690,10 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 */
 		public function edit_shortcode() {
 			global $mpc__;
-			$atts = $this->get_shortcode( true );
 
+			$atts = $this->get_shortcode( true );
 			foreach ( $mpc__['fields']['new_table'] as $section ) {
 				$title = ! empty( $atts ) ? __( 'Edit Product Table', 'multiple-products-to-cart-for-woocommerce' ) : $section['section'];
-
 				?>
 				<div class="mpcdp_settings_section">
 					<div class="mpcdp_settings_section_title">
@@ -816,7 +739,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			// custom.
 			if ( ! empty( $this->post_id ) ) {
 				$post = get_post( $this->post_id );
-
 				if ( 'shortcode_title' === $fld['key'] ) {
 					$value = $post->post_title;
 				} elseif ( 'shortcode_desc' === $fld['key'] ) {
@@ -825,7 +747,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			if ( in_array( $fld['key'], array( 'ids', 'selected', 'skip_products', 'cats' ), true ) ) {
-
 				?>
 				<div class="mpcdp_row">
 					<div class="mpcdp_settings_option_description col-md-12">
@@ -843,13 +764,10 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 					</div>
 				</div>
 				<?php
-
 				return;
-
 			}
 
 			if ( 'sortable' === $fld['type'] ) {
-
 				?>
 				<div class="mpcdp_row">
 					<div class="mpcdp_settings_option_description col-md-12">
@@ -878,10 +796,8 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 					<?php $this->sortable( $fld, $value ); ?>
 				</div>
 				<?php
-
 				return;
 			}
-
 			?>
 			<div class="mpcdp_row">
 				<div class="mpcdp_settings_option_description col-md-6">
@@ -895,9 +811,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 						<?php
 						if ( 'selectbox' === $fld['type'] ) {
 							printf( '<div class="choicesdp %s">', esc_html( $name ) );
-
 							$this->itembox( $fld, $value );
-
 							echo '</div>';
 						} elseif ( 'checkbox' === $fld['type'] ) {
 							$this->switchbox( $fld, $value );
@@ -920,8 +834,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			<?php
 		}
 
-
-
 		/**
 		 * Display shortcode input field switchbox
 		 *
@@ -929,13 +841,11 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param string $value saved field value.
 		 */
 		public function switchbox( $fld, $value = '' ) {
-
 			if ( 'checkbox' !== $fld['type'] ) {
 				return;
 			}
 
-			$checked = ! empty( $value ) && ( 'on' === $value || true === $value ) ? 'on' : 'off';
-
+			$checked    = ! empty( $value ) && ( 'on' === $value || true === $value ) ? 'on' : 'off';
 			$is_checked = 'on' === $checked ? 'checked' : '';
 
 			printf(
@@ -947,7 +857,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				esc_html( $fld['label'] ),
 				esc_attr( $is_checked )
 			);
-
 			?>
 			<div class="hurkanSwitch hurkanSwitch-switch-plugin-box">
 				<div class="hurkanSwitch-switch-box switch-animated-<?php echo esc_attr( $checked ); ?>">
@@ -977,7 +886,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$type = isset( $fld['content_type'] ) ? $fld['content_type'] : '';
 
 			$values = array();
-
 			if ( is_array( $value ) ) {
 				$values = $value;
 			} else {
@@ -989,7 +897,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			}
 
 			$multiple = isset( $fld['multiple'] ) && $fld['multiple'] ? 'multiple' : '';
-
 			printf(
 				'<select id="%s" class="mpc-sc-itembox" %s>',
 				esc_attr( $name ),
@@ -998,9 +905,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 
 			if ( 'static' === $type ) {
 				foreach ( $fld['options'] as $val => $label ) {
-
 					$is_selected = in_array( $val, $values, true ) ? 'selected' : '';
-
 					if ( ! $mpc__['has_pro'] && isset( $fld['pro_options'] ) && in_array( $val, $fld['pro_options'], true ) ) {
 						$is_selected = 'disabled';
 					}
@@ -1011,7 +916,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 						esc_attr( $is_selected ),
 						esc_html( $label )
 					);
-
 				}
 			} else {
 				foreach ( $values as $id ) {
@@ -1020,9 +924,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 					}
 
 					$id = (int) $id;
-
 					$is_selected = 'selected';
-
 					if ( ! $mpc__['has_pro'] && isset( $fld['pro_options'] ) && in_array( $id, $fld['pro_options'], true ) ) {
 						$is_selected = 'disabled';
 					}
@@ -1061,7 +963,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Ajax search items for dorpdown combo-box
 		 */
 		public function ajax_itembox_search() {
-
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'search_box_nonce' ) ) {
 				return '';
 			}
@@ -1070,9 +971,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			$type   = isset( $_POST['type_name'] ) ? sanitize_text_field( wp_unslash( $_POST['type_name'] ) ) : '';
 
 			$limit = 50; // Limit the number of items.
-
 			if ( 'cats' === $type ) {
-
 				$args = array(
 					'taxonomy'   => 'product_cat',
 					'hide_empty' => false,  // Set this to true if you only want categories with products.
@@ -1082,7 +981,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 
 				$product_categories = get_terms( $args );
 				$categories         = array();
-
 				if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) {
 					foreach ( $product_categories as $category ) {
 						$categories[] = array(
@@ -1093,18 +991,15 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				}
 
 				wp_send_json( $categories );
-
 			} else {
-
 				$args = array(
 					's'              => $search,
 					'post_type'      => 'product',
 					'posts_per_page' => $limit,
 				);
 
-				$query    = new WP_Query( $args );
 				$products = array();
-
+				$query    = new WP_Query( $args );
 				if ( $query->have_posts() ) {
 					while ( $query->have_posts() ) {
 						$query->the_post();
@@ -1116,9 +1011,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				}
 
 				wp_reset_postdata();
-
 				wp_send_json( $products );
-
 			}
 
 			wp_send_json( array() );
@@ -1132,11 +1025,9 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 */
 		public function sortable( $fld, $value ) {
 			$helper_cls = new MPCAdminHelper();
-
 			if ( empty( $value ) ) {
 				$value = get_option( 'wmc_sorted_columns' );
 			}
-
 			?>
 			<div class="mpcdp_settings_option_description col-md-6">
 				<div class="mpcdp_option_label"><?php echo esc_html__( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
@@ -1155,15 +1046,12 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				</div>
 			</div>
 			<?php
-
 			printf(
 				'<input type="hidden" class="mpc-sorted-cols" name="%s" value="%s">',
 				esc_attr( $fld['key'] ),
 				esc_html( $value )
 			);
 		}
-
-
 
 		/**
 		 * DEPRICATED !!!
@@ -1172,21 +1060,16 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param string $return_type wheather return in-between empty table id or find a new one.
 		 */
 		public function legacy_index( $return_type ) {
-
 			$index = (int) get_option( 'mpcasc_counter' );
-
 			if ( ! empty( $index ) ) {
-
 				$i          = 1;
 				$_index     = 1;
 				$empty_slot = 1;
 
 				// at any given non-empty index, check 10 step ahead for safely finding index.
 				while ( $i < ( $_index + 9 ) ) {
-
 					// check if shortcode exists.
 					$shortcode = get_option( 'mpcasc_code' . $i );
-
 					if ( ! empty( $shortcode ) ) {
 						$_index = $i + 1;
 					} elseif ( 1 === $empty_slot ) {
@@ -1209,10 +1092,8 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 					return $_index;
 				}
 			} else {
-
 				update_option( 'mpcasc_counter', 1 );
 				return 1;
-
 			}
 		}
 
@@ -1221,25 +1102,19 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * Display old shortcode table list
 		 */
 		public function display_legacy_list() {
-
 			$index = $this->legacy_index( 'final_index' );
-
 			if ( empty( $index ) || '' === $index ) {
 				return;
 			}
 
 			$index = (int) $index;
-
 			for ( $i = $index; $i > 0; $i-- ) {
-
 				$code = get_option( 'mpcasc_code' . $i );
-
 				if ( empty( $code ) || '' === $code ) {
 					continue;
 				}
 
 				$this->has_shortcode = true;
-
 				$this->list_item( $i, '', '' );
 			}
 		}
@@ -1251,7 +1126,6 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 * @param int $table_id old shortcode table id.
 		 */
 		public function legacy_delete( $table_id ) {
-
 			delete_option( 'mpcasc_code' . $table_id );
 		}
 	}

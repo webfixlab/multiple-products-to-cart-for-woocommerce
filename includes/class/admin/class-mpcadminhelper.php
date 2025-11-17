@@ -15,9 +15,7 @@ if ( ! class_exists( 'MPCAdminHelper' ) ) {
 	 * Admin helper functionalities
 	 */
 	class MPCAdminHelper {
-
-
-
+		
 		/**
 		 * Display active or inactive columns in a list
 		 *

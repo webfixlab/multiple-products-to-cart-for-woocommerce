@@ -10,12 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'MPCLoader' ) ) {
+
 	/**
 	 * Plugin loading class.
 	 */
 	class MPCLoader {
-
-
 
 		/**
 		 * Plugin initialize
@@ -28,17 +27,12 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			add_action( 'before_woocommerce_init', array( $this, 'wc_init' ) );
 		}
 
-
-
 		/**
 		 * Activate plugin
 		 */
 		public function activate() {
-			// main plugin activatio process handler.
-			$this->init_plugin();
-
+			$this->init_plugin(); // main plugin activatio process handler.
 			flush_rewrite_rules();
-
 			$this->init_fields();
 		}
 
@@ -48,8 +42,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		public function deactivate() {
 			flush_rewrite_rules();
 		}
-
-
 
 		/**
 		 * MPC initialize
@@ -93,7 +85,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * MPC Plugin activation
 		 */
 		public function do_activate() {
-
 			// check if is_plugin_active founction not found | rare case.
 			if ( ! function_exists( 'is_plugin_active' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -104,13 +95,10 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			$is_wc_active  = is_plugin_active( $wc );
 			$is_mpc_active = is_plugin_active( $mpc );
-
 			if ( ! $is_wc_active && $is_mpc_active ) {
-
-				// if mpc active while wc is deactive.
 				deactivate_plugins( $mpc );
-				add_action( 'admin_notices', array( $this, 'wc_missing_notice' ) );
 
+				add_action( 'admin_notices', array( $this, 'wc_missing_notice' ) );
 				return false;
 			}
 
@@ -227,7 +215,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * Admin menu styling
 		 */
 		public function admin_menu_css() {
-
 			global $mpc__;
 
 			?>
@@ -272,9 +259,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * Admin settings menu page
 		 */
 		public function admin_settings_page() {
-
 			$tab = $this->get_tab();
-
 			if ( 'new-table' === $tab || 'all-tables' === $tab ) {
 				$tab = 'general-settings';
 			}
@@ -288,6 +273,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * @param string $tab admin settings page template key.
 		 */
 		public function load_settings( $tab ) {
+			global $mpc__;
 
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
@@ -296,16 +282,12 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			// show error/update messages.
 			settings_errors( 'wporg_messages' );
 
-			global $mpc__;
-
 			// set current settings section and tab.
 			$mpc__['settings_tab'] = $tab;
 
 			include MPC_PATH . 'templates/admin/settings.php';
 			require MPC_PATH . 'templates/admin/popup.php';
 		}
-
-
 
 		/**
 		 * Admin menu pro page
@@ -315,8 +297,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			header( 'Location: ' . esc_url( $mpc__['prolink'] ) );
 			exit;
 		}
-
-
 
 		/**
 		 * Plugin frontend scripts and style enqueue
@@ -438,17 +418,17 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					width: 100px;
 				}
 			";
-			$css .= "
-				.mpc-container .mpc-product-title a{";
+
+			$css .= ".mpc-container .mpc-product-title a{";
 			if( !empty( $title_font_size ) ) $css .= "font-size: {$title_font_size}px;";
 			if( !empty( $bold_title ) && 'on' === $bold_title ) $css .= "font-weight: bold;";
-			if( !empty( $title_underline ) && 'on' === $title_underline ) $css .= "text-decoration: underline;";
-			else $css .= "text-decoration: none;";
+			if( !empty( $title_underline ) && 'on' === $title_underline ) $css .= "text-decoration: underline; }";
+			else $css .= "text-decoration: none; }";
+
 			$tr_height      = $image_size + 17;
 			$gallery_height = $image_size + ceil( ( $image_size * 47 ) / 100 ) + 24;
 			$padding_left   = $image_size + 13;
 			$css .= "
-				}
 				@media screen and (max-width: 767px) {
 					table.mpc-wrap tbody tr{
 						min-height: {$tr_height}px;
@@ -461,7 +441,11 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					}
 				}
 			";
+
+			ob_start();
 			do_action( 'mpc_dynamic_css' );
+			$css .= ob_get_clean();
+			
 			wp_add_inline_style( 'mpc-frontend', $css );
 		}
 
@@ -472,9 +456,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			$screen = get_current_screen();
-
-			// multiple-products_page_mpc-shortcodes.
-			if ( ! in_array( $screen->id, $mpc__['plugin']['screen'], true ) ) {
+			if ( ! in_array( $screen->id, $mpc__['plugin']['screen'], true ) ) { // multiple-products_page_mpc-shortcodes.
 				return;
 			}
 
@@ -522,7 +504,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			$action_links = array();
-
 			$action_links['settings'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'admin.php?page=mpc-settings' ) ),
@@ -554,7 +535,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				return $links;
 			}
 
-			$row_meta            = array();
+			$row_meta = array();
 			$row_meta['apidocs'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $mpc__['plugin']['request_quote'] ),
@@ -573,13 +554,10 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_rating_nonce' ) ) {
 				if ( isset( $_GET['mpca_rate_us'] ) ) {
 					$task = sanitize_key( wp_unslash( $_GET['mpca_rate_us'] ) );
-
 					if ( 'done' === $task ) {
-						// never show this notice again.
-						update_option( 'mpca_rate_us', 'done' );
+						update_option( 'mpca_rate_us', 'done' ); // never show again | rate us.
 					} elseif ( 'cancel' === $task ) {
-						// show this notice in a week again.
-						update_option( 'mpca_rate_us', gmdate( 'Y-m-d' ) );
+						update_option( 'mpca_rate_us', gmdate( 'Y-m-d' ) ); // show again in 15 days | rate us.
 					}
 				}
 			} elseif ( isset( $_GET['pinonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['pinonce'] ) ), 'mpc_pro_info_nonce' ) ) {
@@ -591,7 +569,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			} else {
 				if ( $this->date_difference( 'mpca_rate_us', $mpc__['plugin']['notice_interval'], 'done' ) ) {
 					// show notice to rate us after 15 days interval.
-					add_action( 'admin_notices', array( $this, 'ask_feedback_notice' ) );
+					add_action( 'admin_notices', array( $this, 'ask_feedback_notice' ) ); // show again in 15 days | rate us.
 
 				}
 
@@ -599,8 +577,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				if ( empty( $proinfo ) || '' === $proinfo ) {
 					add_action( 'admin_notices', array( $this, 'pro_notice' ) );
 				} elseif ( $this->date_difference( 'mpca_notify_pro', $mpc__['plugin']['notice_interval'], '' ) ) {
-					// show notice to inform about pro version after 15 days interval.
-					add_action( 'admin_notices', array( $this, 'pro_notice' ) );
+					add_action( 'admin_notices', array( $this, 'pro_notice' ) ); // show again in 15 days | pro info.
 				}
 			}
 		}
@@ -611,7 +588,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		 * Store all admin notices to global variable and remove all
 		 */
 		public function admin_notice() {
-
 			global $mpc__;
 
 			// only apply to admin MPC setting page.
@@ -622,11 +598,8 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// Buffer only the notices.
 			ob_start();
-
 			do_action( 'admin_notices' );
-
-			$content = ob_get_contents();
-			ob_get_clean();
+			$content = ob_get_clean();
 
 			// Keep the notices in global $mpc__.
 			array_push( $mpc__['notice'], $content );
@@ -652,7 +625,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				esc_url( $mpc__['plugin']['woo_url'] ),
 				__( 'WooCommerce', 'multiple-products-to-cart-for-woocommerce' )
 			);
-
 			?>
 			<div class="error">
 				<p>
@@ -679,39 +651,32 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// get current page.
 			$page = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
-			// dynamic extra parameter adding beore adding new url parameters.
 			$page .= strpos( $page, '?' ) !== false ? '&' : '?';
-
-			$nonce = wp_create_nonce( 'mpc_rating_nonce' );
 
 			$plugin = sprintf(
 				'<strong><a href="%s">%s</a></strong>',
 				esc_url( $mpc__['plugin']['review_link'] ),
 				__( 'Multiple Products to Cart for WooCommerce', 'multiple-products-to-cart-for-woocommerce' )
 			);
-
 			$review = sprintf(
 				'<strong><a href="%s">%s</a></strong>',
 				esc_url( $mpc__['plugin']['review_link'] ),
 				__( 'WordPress.org', 'multiple-products-to-cart-for-woocommerce' )
 			);
-
+			$nonce = wp_create_nonce( 'mpc_rating_nonce' );
 			?>
 			<div class="notice notice-info is-dismissible">
 				<h3><?php echo esc_html__( 'Multiple Products to Cart for WooCommerce', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
 				<p>
 					<?php
-
-					echo wp_kses_post(
-						sprintf(
-							// translators: %1$s: plugin name with url, %2$s: WordPress and review url.
-							__( 'Excellent! You\'ve been using %1$s for a while. We\'d appreciate if you kindly rate us on %2$s', 'multiple-products-to-cart-for-woocommerce' ),
-							wp_kses_post( $plugin ),
-							wp_kses_post( $review )
-						)
-					);
-
+						echo wp_kses_post(
+							sprintf(
+								// translators: %1$s: plugin name with url, %2$s: WordPress and review url.
+								__( 'Excellent! You\'ve been using %1$s for a while. We\'d appreciate if you kindly rate us on %2$s', 'multiple-products-to-cart-for-woocommerce' ),
+								wp_kses_post( $plugin ),
+								wp_kses_post( $review )
+							)
+						);
 					?>
 				</p>
 				<p>
@@ -735,36 +700,30 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// get current page.
 			$page = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
-			// dynamic extra parameter adding beore adding new url parameters.
 			$page .= strpos( $page, '?' ) !== false ? '&' : '?';
 
 			$pro_feature = sprintf(
 				'<strong>%s</strong>',
 				__( '10+ PRO features available!', 'multiple-products-to-cart-for-woocommerce' )
 			);
-
 			$pro_link = sprintf(
 				'<a href="%s" target="_blank">%s</a>',
 				esc_url( $mpc__['prolink'] ),
 				__( 'PRO features here', 'multiple-products-to-cart-for-woocommerce' )
 			);
-
 			?>
 			<div class="notice notice-warning is-dismissible">
 				<h3><?php echo esc_html__( 'Multiple Products to Cart for WooCommerce PRO', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
 				<p>
 					<?php
-
-					echo wp_kses_post(
-						sprintf(
-							// translators: %1$s: pro features number, %2$s: pro feature list url.
-							__( '%1$s Supercharge Your WooCommerce Stores with our light, fast and feature-rich version. See all %2$s', 'multiple-products-to-cart-for-woocommerce' ),
-							wp_kses_post( $pro_feature ),
-							wp_kses_post( $pro_link )
-						)
-					);
-
+						echo wp_kses_post(
+							sprintf(
+								// translators: %1$s: pro features number, %2$s: pro feature list url.
+								__( '%1$s Supercharge Your WooCommerce Stores with our light, fast and feature-rich version. See all %2$s', 'multiple-products-to-cart-for-woocommerce' ),
+								wp_kses_post( $pro_feature ),
+								wp_kses_post( $pro_link )
+							)
+						);
 					?>
 				</p>
 				<p>
@@ -787,7 +746,6 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			$tab = 'new-table';
-
 			if ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) {
 				if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) &&
 					wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
@@ -795,11 +753,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				}
 			}
 
-			if ( isset( $mpc__['settings_tab'] ) && ! empty( $mpc__['settings_tab'] ) ) {
-				$tab = sanitize_title( $mpc__['settings_tab'] );
-			}
-
-			return $tab;
+			return isset( $mpc__['settings_tab'] ) && !empty( $mpc__['settings_tab'] ) ? sanitize_title( $mpc__['settings_tab'] ) : $tab;
 		}
 
 		/**
@@ -808,11 +762,8 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		public function check_pro() {
 			global $mpc__;
 
-			// don't have pro.
-			$mpc__['has_pro'] = false;
-
-			// Pro state.
-			$mpc__['prostate'] = 'none';
+			$mpc__['has_pro']  = false; // don't have pro.
+			$mpc__['prostate'] = 'none'; // Pro state.
 
 			// change states.
 			do_action( 'mpca_change_pro_state' );
@@ -829,12 +780,10 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			$value = get_option( $key );
 
 			if ( empty( $value ) || '' === $value ) {
-
 				// if skip value is meta value - return false.
 				if ( '' !== $skip_ && $skip_ === $value ) {
 					return false;
 				} else {
-
 					$c   = date_create( gmdate( 'Y-m-d' ) );
 					$d   = date_create( $value );
 					$dif = date_diff( $c, $d );

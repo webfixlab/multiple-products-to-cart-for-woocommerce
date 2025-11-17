@@ -16,8 +16,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 	 */
 	class MPC_Template {
 
-
-
 		/**
 		 * Frontend table data
 		 *
@@ -32,8 +30,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 		 */
 		private $id;
 
-
-
 		/**
 		 * Update class data regularly
 		 */
@@ -43,8 +39,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			$this->data = $mpctable__;
 			$this->id   = isset( $this->data['psid'] ) ? $this->data['psid'] : '';
 		}
-
-
 
 		/**
 		 * Initialization
@@ -77,8 +71,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			add_action( 'mpc_table_footer', array( $this, 'table_footer' ), 10 );
 		}
 
-
-		
 		/**
 		 * Display table image popup
 		 */
@@ -88,7 +80,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			if ( ! isset( $this->data['products'] ) || empty( $this->data['products'] ) ) {
 				return;
 			}
-
 			?>
 			<div id="mpcpop" class="mpc-popup">
 				<div class="image-wrap">
@@ -121,8 +112,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			return $path;
 		}
 
-
-
 		/**
 		 * Keep a copy of shortcode for ajax pagination or filtering purpose
 		 */
@@ -133,7 +122,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			if ( isset( $this->data['attributes__'] ) && ! empty( $this->data['attributes__'] ) ) {
 				$atts = $this->data['attributes__'];
 			}
-
 			?>
 			<div class="mpc-table-query" data-atts="<?php echo wc_esc_json( wp_json_encode( $atts ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
 			<?php
@@ -156,19 +144,18 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			if ( ! isset( $this->data['columns_list'] ) || empty( $this->data['columns_list'] ) ) {
 				return '';
 			}
-
 			?>
 			<thead>
 				<tr>
 					<?php
-					foreach ( $this->data['columns_list'] as $key ) {
-						printf(
-							'<th for="%s" class="mpc-product-%s">%s</th>',
-							esc_attr( $key ),
-							esc_attr( str_replace( 'wmc_ct_', '', $key ) ),
-							esc_html( $this->data['labels'][ $key ] )
-						);
-					}
+						foreach ( $this->data['columns_list'] as $key ) {
+							printf(
+								'<th for="%s" class="mpc-product-%s">%s</th>',
+								esc_attr( $key ),
+								esc_attr( str_replace( 'wmc_ct_', '', $key ) ),
+								esc_html( $this->data['labels'][ $key ] )
+							);
+						}
 					?>
 				</tr>
 			</thead>
@@ -187,7 +174,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			}
 
 			if ( ! isset( $this->data['options']['mpc_show_title_dopdown'] ) || $this->data['options']['mpc_show_title_dopdown'] ) {
-
 				// add title sorting option if needed.
 				$this->data['orderby_options']['title-ASC'] = __( 'Title: A to Z', 'multiple-products-to-cart-for-woocommerce' );
 				$a = get_option( 'mpc_sddt_title_asc' );
@@ -203,21 +189,20 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			}
 
 			$saved_slug = $this->data['attributes']['orderby'] . '-' . $this->data['attributes']['order'];
-
 			?>
 			<div class="mpc-sort">
 				<select name="mpc_orderby" class="mpc-orderby" title="<?php echo esc_html__( 'Table order by', 'multiple-products-to-cart-for-woocommerce' ); ?>">
 					<?php
-					foreach ( $this->data['orderby_options'] as $slug => $label ) {
-						$selected = sanitize_title( $slug ) === $saved_slug ? 'selected' : '';
+						foreach ( $this->data['orderby_options'] as $slug => $label ) {
+							$selected = sanitize_title( $slug ) === $saved_slug ? 'selected' : '';
 
-						printf(
-							'<option value="%s" %s>%s</option>',
-							esc_attr( $slug ),
-							esc_attr( $selected ),
-							esc_html( $label )
-						);
-					}
+							printf(
+								'<option value="%s" %s>%s</option>',
+								esc_attr( $slug ),
+								esc_attr( $selected ),
+								esc_html( $label )
+							);
+						}
 					?>
 				</select>
 				<input type="hidden" name="paged" value="1" />
@@ -245,7 +230,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			if ( ! in_array( 'wmc_ct_buy', $this->data['columns_list'], true ) ) {
 				$checked_n_disabled = 'checked disabled';
 			}
-
 			?>
 			<div class="mpc-all-select">
 				<label><?php echo esc_html( $this->data['labels']['wmc_select_all_text'] ); ?></label>
@@ -253,8 +237,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			</div>
 			<?php
 		}
-
-
 
 		/**
 		 * Display table body with all the rows
@@ -268,7 +250,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 				$mpctable__['psid'] = $id;
 
 				$this->table_row( $id );
-
 				do_action( 'mpc_table_row' );
 			}
 		}
@@ -300,8 +281,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			echo '</tr>';
 		}
 
-
-
 		/**
 		 * Display table image column
 		 */
@@ -313,7 +292,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			// Get actual dynamic image sizes (registered).
 			$thumb = $this->data['image_sizes']['thumb'];
 			$full  = $this->data['image_sizes']['full'];
-
 			?>
 			<td for="image" class="mpc-product-image" data-pimg-thumb="<?php echo esc_url( $prod['images'][ $thumb ] ); ?>" data-pimg-full="<?php echo esc_url( $prod['images'][ $full ] ); ?>">
 				<div class="mpcpi-wrap">
@@ -373,7 +351,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 					$prod['desc']
 				);
 			}
-
 			?>
 			<td for="title" class="mpc-product-name">
 				<div class="mpc-product-title">
@@ -390,15 +367,13 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			$this->class_data();
 
 			$prod = $this->data['products'][ $this->id ];
-
 			?>
 			<td for="price" class="mpc-product-price">
 				<div class="mpc-single-price" style="display:none;">
 					<?php
-						// for variable products only.
-					if ( strpos( $prod['type'], 'variable' ) !== false ) {
-						$this->total_price();
-					}
+						if ( strpos( $prod['type'], 'variable' ) !== false ) { // for variable products only.
+							$this->total_price();
+						}
 					?>
 				</div>
 				<div class="mpc-range">
@@ -452,7 +427,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			$this->class_data();
 
 			$prod = $this->data['products'][ $this->id ];
-
 			if ( false === strpos( $prod['type'], 'simple' ) ) {
 				return;
 			}
@@ -538,7 +512,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 				$maximum_qty = 1;
 				$default_qty = 1;
 			}
-
 			?>
 			<td for="quantity" class="mpc-product-quantity">
 				<?php
@@ -618,8 +591,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			<?php
 		}
 
-
-
 		/**
 		 * Display total price template | WooCommerce
 		 *
@@ -651,7 +622,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 
 			// display total price.
 			do_action( 'mpc_table_total' );
-
 			?>
 			<div class="mpc-button">
 				<?php $this->display_table_pagination_range(); ?>
@@ -759,7 +729,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 
 			// current pages counter.
 			$total_pages = count( $pages );
-
 			?>
 			<div class="mpc-pagenumbers" data-max_page="<?php echo esc_attr( $mpctable__['query']['max_page'] ); ?>">
 				<?php
@@ -772,10 +741,10 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 						echo '<span class="mpc-divider">...</span>';
 					}
 					?>
-						<span <?php echo $pages[ $i ] === $paged ? 'class="current"' : ''; ?>>
-						<?php echo esc_attr( $pages[ $i ] ); ?>
-						</span>
-						<?php
+					<span <?php echo $pages[ $i ] === $paged ? 'class="current"' : ''; ?>>
+					<?php echo esc_attr( $pages[ $i ] ); ?>
+					</span>
+					<?php
 				}
 				?>
 			</div>

@@ -16,8 +16,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 	 */
 	class MPCTable {
 
-
-
 		/**
 		 * Initialize table hooks and actions
 		 */
@@ -33,8 +31,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			add_action( 'wp_ajax_mpc_ajax_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 			add_action( 'wp_ajax_nopriv_mpc_ajax_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 		}
-
-
 
 		/**
 		 * Add to cart handler
@@ -126,6 +122,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				$this->cart_redirect();
 			}
 		}
+
 		/**
 		 * Redirect to URL after successful add to cart
 		 *
@@ -189,15 +186,12 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			return $result;
 		}
 
-
-
 		/**
 		 * Product table shortcode loader
 		 *
 		 * @param array $atts product table shortcode attributes.
 		 */
 		public function product_table( $atts ) {
-
 			// if no products found from shortcode return.
 			if ( ! $this->get_table( $atts ) ) {
 				return;
@@ -218,12 +212,10 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * Ajax product table loader
 		 */
 		public function product_table_ajax() {
-			
 			global $mpctable__;
 			global $mpc_template__;
 			
 			$response = array( 'status' => '' );
-			
 			if ( ! isset( $_POST['table_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['table_nonce'] ) ), 'table_nonce_ref' ) ) {
 				$response['status'] = 'error';
 				$response['msg']    = __( 'Nonce verification failed.', 'multiple-products-to-cart-for-woocommerce' );
@@ -317,8 +309,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				)
 			);
 		}
-
-
 
 		/**
 		 * Get product table data
@@ -850,6 +840,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 			return $data;
 		}
+
 		private function log( $data ) {
 			if ( true === WP_DEBUG ) {
 				if ( is_array( $data ) || is_object( $data ) ) {
@@ -868,7 +859,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param string $sanitize_name product attribute name | sanitized.
 		 */
 		public function sort_variation_options( $options, $product, $sanitize_name ) {
-
 			// Check if this is a Global Attributes.
 			if ( false === strpos( $sanitize_name, 'pa_' ) ) {
 				return $options;
@@ -883,11 +873,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				);
 			}
 
-			if ( empty( $terms ) ) {
-				return $options;
-			}
-
-			return $terms;
+			return empty( $terms ) ? $options : $terms;
 		}
 
 		/**
@@ -915,12 +901,9 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				$variation = wc_get_product( $child_id );
 
 				foreach ( $variation->get_attributes() as $name => $option ) {
-
 					// for checking given option of current attribute.
 					if ( sanitize_title( $name ) === $attr_name ) {
-
 						if ( empty( $option ) || sanitize_title( $option ) === $attr_value ) {
-
 							// keep variation id in $variation_id.
 							$variation_id = $child_id;
 
@@ -931,9 +914,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 							// modify flag for third party interjection.
 							$is_in_stock = apply_filters( 'mpc_variation_status', $is_in_stock, $variation );
 							break;
-
 						} elseif ( empty( $option ) ) {
-
 							// if "any option" enabled | nothing more.
 							$is_in_stock = true;
 							break;
@@ -942,11 +923,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 			}
 
-			if ( false === $return_type ) {
-				return $variation_id;
-			} else {
-				return $is_in_stock;
-			}
+			return false === $return_type ? $variation_id : $is_in_stock;
 		}
 
 
@@ -955,7 +932,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * Initialize product table data
 		 */
 		public function init_fields() {
-
 			global $mpctable__;
 
 			$mpctable__ = array(
@@ -1134,7 +1110,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param array $atts shortcode attributes.
 		 */
 		public function parse_atts( $atts ) {
-
 			// Reference attributes.
 			$ref_atts = array(
 				'table'         => '',
@@ -1163,7 +1138,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$cs_atts = array( 'selected', 'ids', 'skip_products', 'cats', 'tags', 'type', 'columns' );
 
 			foreach ( $cs_atts as $type ) {
-
 				// for selected all, skip.
 				if ( 'selected' === $type && 'all' === $atts[ $type ] ) {
 					continue;
@@ -1197,7 +1171,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		 * @param array $atts shortcode attributes.
 		 */
 		public function sanitize_boolean( $atts ) {
-
 			if ( false === is_array( $atts ) ) {
 				return $atts;
 			}

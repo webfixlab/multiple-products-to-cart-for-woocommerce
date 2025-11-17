@@ -16,14 +16,11 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 	 */
 	class MPCSettings {
 
-
-
 		/**
 		 * Dsiplay admin settings page menu
 		 */
 		public function menu() {
-			$tab = $this->get_tab();
-
+			$tab   = $this->get_tab();
 			$menus = array(
 				array(
 					'tab'  => __( 'All Tables', 'multiple-products-to-cart-for-woocommerce' ),
@@ -94,11 +91,9 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 		 * Display admin settings page save button(s)
 		 */
 		public function save_btn() {
-			$tab = $this->get_tab();
-
+			$tab   = $this->get_tab();
 			$long  = 'Save Changes';
 			$short = 'Save';
-
 			if ( 'new-table' === $tab ) {
 				$long  = 'Create Table';
 				$short = 'Create';
@@ -200,7 +195,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			if ( empty( $notice ) ) {
 				return;
 			}
-
 			?>
 			<div class="mpc-notice mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
 				<div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
@@ -214,8 +208,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			</div>
 			<?php
 		}
-
-
 
 		/**
 		 * Pre-process saving settings field data
@@ -294,7 +286,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			$name  = isset( $fld['key'] ) ? $fld['key'] : '';
 			$label = isset( $fld['label'] ) ? $fld['label'] : '';
 			$desc  = isset( $fld['desc'] ) ? $fld['desc'] : '';
-
 			?>
 			<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="<?php echo esc_attr( $name ); ?>">
 				<div class="mpcdp_settings_option visible" data-field-id="<?php echo esc_attr( $name ); ?>">
@@ -362,8 +353,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			endforeach;
 		}
 
-
-
 		/**
 		 * Settings field PRO ribbon
 		 *
@@ -381,7 +370,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			if ( isset( $mpc__['has_pro'] ) && true === $mpc__['has_pro'] ) {
 				return;
 			}
-
 			?>
 			<div class="mpcdp_settings_option_ribbon mpcdp_settings_option_ribbon_new">
 				<?php echo esc_html__( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
@@ -516,7 +504,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			}
 
 			$checked = ! empty( $value ) && ( 'on' === $value || true === $value ) ? 'on' : 'off';
-
 			?>
 			<div class="hurkanSwitch hurkanSwitch-switch-plugin-box">
 				<div class="hurkanSwitch-switch-box switch-animated-<?php echo esc_attr( $checked ); ?>">
@@ -533,8 +520,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			<?php
 		}
 
-
-
 		/**
 		 * Get settings tab
 		 */
@@ -542,7 +527,6 @@ if ( ! class_exists( 'MPCSettings' ) ) {
 			global $mpc__;
 
 			$tab = 'new-table';
-
 			if ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) {
 				if ( isset( $_GET['nonce'] ) && ! empty( $_GET['nonce'] ) &&
 					wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ) {
