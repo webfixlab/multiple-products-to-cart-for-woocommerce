@@ -35,7 +35,7 @@ button.mpce-single-add {
 }
 .wp-theme-hardware-tools-store button.mpce-single-add{
 	padding: 8px 20px;
-	margin: 0;
+	margin: 0 0 0 10px;
 }
 #brx-content button.mpce-single-add {
 	padding: 10px 20px;
@@ -44,9 +44,18 @@ button.mpce-single-add {
 	color: #0f834d;
 }
 table.mpc-wrap tbody tr td {
-	padding: 1em;
+	padding: 0.5em;
 	vertical-align: middle;
 	color: #333;
+}
+table.mpc-wrap tbody tr td:last-child, table.mpc-wrap thead tr th:last-child {
+    text-align: right;
+}
+#content table.mpc-wrap.mpc-no-image tbody tr td, #main-content table.mpc-wrap.mpc-no-image tbody tr td, #brx-content table.mpc-wrap.mpc-no-image tbody tr td, #main table.mpc-wrap.mpc-no-image tbody tr td, main table.mpc-wrap.mpc-no-image tbody tr td{
+	padding-left: 0;
+}
+table.mpc-wrap tbody tr.mpc-subhead td:last-child, table.mpc-wrap thead tr.mpc-subhead th:last-child {
+    text-align: left;
 }
 table.mpc-wrap tbody tr:nth-child(2n).cart_item td {
 	background: #f5f5f5;
@@ -64,7 +73,7 @@ table.mpc-wrap tbody tr:nth-child(2n) td .qty {
 table.mpc-wrap img {
 	max-width: none;
 	border-radius: 4px;
-	border: 1px solid #e8e8e8;
+	border: 1px solid #c9c9c9;
 }
 table.mpc-wrap img:hover {
 	cursor: pointer;
@@ -85,6 +94,7 @@ select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .m
     display: inline-block;
     border-radius: 4px;
 	padding: 6px 10px;
+	max-height: 35px;
 }
 #brx-content select.mpc-orderby, #brx-content td.mpc-product-variation select, #brx-content .mpcp-cat-filter select, #brx-content .mpcp-tag-filter select {
 	padding: 0 25px 0 10px;
@@ -140,14 +150,13 @@ select.mpc-orderby, td.mpc-product-variation select, .mpcp-cat-filter select, .m
 .total-row {
 	text-align: right;
 	margin-bottom: 10px;
+	font-size: 16px;
 }
 span.mpc-total {
 	padding-left: 5px;
-    font-weight: bold;
-    font-size: 20px;
 }
-.total-label {
-	font-size: 15px;
+span.mpc-total .total-price{
+	font-weight: bold;
 }
 .mpc-button {
 	text-align: right;
@@ -276,7 +285,7 @@ h4.mpcpop-title {
 	display: block;
 }
 .mpc-sort, .mpcp-cat-filter, .mpc-asearch, .mpcp-tag-filter {
-	float: left;
+	/* float: left; */
 	margin-right: 10px;
 	display: inline-flex;
 }
@@ -347,7 +356,11 @@ span.mpc-single-add:hover {
 	cursor: pointer;
 	display: inline-block;
 	text-align: center;
-	padding: 8px 15px;
+	padding: 8px 14px;
+	line-height: 20px;
+}
+.mpc-pagenumbers span:first-child{
+	margin-left: 0;
 }
 .mpc-pagenumbers span.mpc-divider {
 	border: none;
@@ -427,9 +440,6 @@ span.mpc-loader img {
 	top: 38%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-}
-table.mpc-wrap tbody tr td {
-	padding: 0.5em;
 }
 .mpc-popup ins {
 	background: none;
@@ -593,11 +603,11 @@ span.mpc-fixed-cart {
     vertical-align: middle;
 }
 .total-row.mpc-fixed-total-m span.total-label, .total-row.mpc-fixed-total-m span.mpc-total{
-	line-height: 42px;
+	line-height: 37px;
     padding-left: 10px;
 }
 .total-row.mpc-fixed-total-m span.mpc-fixed-cart{
-	margin: 10px;
+	margin: 5px;
 }
 .mpcp-loading {
 	position: absolute;
@@ -636,12 +646,6 @@ td.mpc-product-quantity input[type="number"] {
 td.mpc-product-quantity input[type="number"]:disabled {
 	background-color: #e6e6e6;
     opacity: 0.5;
-}
-table.mpc-wrap tbody tr td:last-child, table.mpc-wrap thead tr th:last-child {
-    text-align: right;
-}
-table.mpc-wrap tbody tr.mpc-subhead td:last-child, table.mpc-wrap thead tr.mpc-subhead th:last-child {
-    text-align: left;
 }
 /* Avada theme support start */
 body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-theme-Avada .mpc-subheader-info{
@@ -683,18 +687,14 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	#brx-content .mpc-container{
 		padding: 0 10px;
 	}
-	#content table.mpc-wrap tbody tr:last-child, #main-content table.mpc-wrap tbody tr:last-child, #brx-content table.mpc-wrap tbody tr:last-child{
+	#content table.mpc-wrap tbody tr:last-child, #main-content table.mpc-wrap tbody tr:last-child, #brx-content table.mpc-wrap tbody tr:last-child, main table.mpc-wrap tbody tr:last-child{
 		margin-bottom: 0;
 	}
-	#content table.mpc-wrap tbody tr:last-child td, #main-content table.mpc-wrap tbody tr:last-child td, #brx-content table.mpc-wrap tbody tr:last-child td, .entry-content table.mpc-wrap tbody tr:last-child td {
+	#content table.mpc-wrap tbody tr:last-child td, #main-content table.mpc-wrap tbody tr:last-child td, #brx-content table.mpc-wrap tbody tr:last-child td, .entry-content table.mpc-wrap tbody tr:last-child td, main table.mpc-wrap tbody tr:last-child td {
 		border-bottom: none;
 	}
-	#content table.mpc-wrap tbody tr td:last-child, #main-content table.mpc-wrap tbody tr td:last-child, #brx-content table.mpc-wrap tbody tr td:last-child {
-		text-align: left;
-	}
-	#content table.mpc-wrap tr, #main-content table.mpc-wrap tr, #brx-content table.mpc-wrap tr{
-		border-bottom: 1px solid #c1c1c1;
-        box-shadow: 0 0 8px rgb(205 205 205 / 70%);
+	#content table.mpc-wrap tr, #main-content table.mpc-wrap tr, #brx-content , main table.mpc-wrap tr{
+		border: 1px solid #cdcdcd;
 	}
 	.total-row.mpc-fixed-total-m {
 		bottom: 0;
@@ -727,19 +727,16 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 	table.mpc-wrap tbody tr td{
 		margin-top: 10px;
+		border: none;
+		padding: 0 0 10px 0;
 	}
 	table.mpc-wrap tbody tr td:last-child{
-		margin-bottom: 5px;
+		margin-bottom: 0;
+		padding-bottom: 0;
+		text-align: left;
 	}
 	table.mpc-wrap tbody tr td:nth-child(-n + 2) {
 		margin-top: 0;
-	}
-	/* table.mpc-wrap tbody tr td.mpc-product-quantity{
-		height: 34px;
-	} */
-	#content table.mpc-wrap tbody tr td.mpc-product-quantity{
-		/* height: 44px; */
-		margin-bottom: 20px;
 	}
 	.mpc-container input[type="checkbox"]{
 		margin: 0;
@@ -769,19 +766,19 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 	table.mpc-wrap tbody tr, #main-content table.mpc-wrap tbody tr, #brx-content table.mpc-wrap tbody tr {
 		position: relative;
-		margin-bottom: 25px;
+		margin-bottom: 30px;
 		padding: 7px;
 		background-color: #f5f5f7;
 		border-radius: 5px;
+	}
+	table.mpc-wrap tbody tr:last-child, #main-content table.mpc-wrap tbody tr:last-child, #brx-content table.mpc-wrap tbody tr:last-child {
+		margin-bottom: 0;
 	}
 	main table.mpc-wrap tbody tr{
 		padding: 10px;
 	}
 	main table.mpc-wrap tbody tr td{
 		margin-top: 0;
-	}
-	main table.mpc-wrap tbody tr td:last-child{
-		text-align: left;
 	}
 	table.mpc-wrap.mpc-no-image tbody tr {
 		padding-top: 8px;
@@ -797,13 +794,9 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	table.mpc-wrap tbody td.mpc-product-select {
 		position: static;
 	}
-	table.mpc-wrap.mpc-no-image tbody td.mpc-product-select {
-		position: absolute;
-		top: 4px;
-		right: 10px;
-	}
-	#content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td, #brx-content table.mpc-wrap tbody tr td{
+	#content table.mpc-wrap tbody tr td, #main-content table.mpc-wrap tbody tr td, #brx-content table.mpc-wrap tbody tr td, main table.mpc-wrap tbody tr td{
 		padding: 0;
+		margin-bottom: 10px;
 		text-align: left;
 		background-color: #f5f5f7;
 	}
@@ -819,6 +812,9 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	table.mpc-wrap tbody tr:nth-child td .qty {
 		background: #f2f2f2;
 	}
+	#content table.mpc-wrap tbody tr td:last-child, #main-content table.mpc-wrap tbody tr td:last-child, #brx-content table.mpc-wrap tbody tr td:last-child, main table.mpc-wrap tbody tr td:last-child{
+		margin-bottom: 0;
+	}
 	table.mpc-wrap tbody tr.total-row {
 		text-align: right;
 	}
@@ -827,7 +823,7 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 		text-align: left;
 	}
 	.mpc-pagination {
-		margin: 30px 0;
+		margin: 20px 0 0 0;
 	}
 	.table-query {
 		display: initial;
@@ -858,7 +854,7 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 		width: 100%;
 	}
 	.mpc-all-select {
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 	}
 	#mpcpop .mpcpop-close {
 		font-size: 16px;
@@ -872,14 +868,9 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 
 	/* Update: August 01, 2024 */
-	#content table.mpc-wrap tbody tr td.mpc-product-image, #main-content table.mpc-wrap tbody tr td.mpc-product-image, #brx-content table.mpc-wrap tbody tr td.mpc-product-image, main table.mpc-wrap tbody tr td.mpc-product-image {
-		position: absolute;
-		top: 7px;
+	#content table.mpc-wrap tbody tr td.mpc-product-image, #main-content table.mpc-wrap tbody tr td.mpc-product-image, #brx-content table.mpc-wrap tbody tr td.mpc-product-image, #main table.mpc-wrap tbody tr td.mpc-product-image, main table.mpc-wrap tbody tr td.mpc-product-image {
 		padding-left: 0;
 		float: left;
-	}
-	main table.mpc-wrap tbody tr td.mpc-product-image{
-		top: 3px;
 	}
 	button.mpce-single-add{
 		margin: 0 0 0 10px;
@@ -889,11 +880,9 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 		padding: 5px 30px;
 	}
 	span.mpc-mobile-only {
-		display: block;
-		float: left;
-		padding-right: 10px;
-		font-size: 16px;
-		color: #6d6d6d;
+		display: inline-block;
+		margin-right: 5px;
+		font-size: 14px;
 	}
 	form.mpc-cart select, form.mpc-cart input[type="search"]{
 		border-radius: 5px;
@@ -943,6 +932,7 @@ body.wp-theme-Avada .mpc-container a, .wp-theme-Avada .mpc-asearch input, .wp-th
 	}
 	.wp-theme-Avada table.mpc-wrap bdi{
 		text-align: left;
+		padding-top: 0;
 	}
 	/* Avada theme support end */
 }

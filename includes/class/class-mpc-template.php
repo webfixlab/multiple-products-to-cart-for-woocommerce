@@ -554,11 +554,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			$prod = $this->data['products'][ $this->id ];
 
 			printf(
-				'<span class="mpc-mobile-only">%s</span>',
-				esc_html( $mpctable__['labels']['wmc_ct_buy'] ) . ': '
-			);
-
-			printf(
 				'<input type="checkbox" name="product_ids[]" value="%s" %s %s>',
 				esc_attr( $this->id ),
 				true === $prod['is_selected'] ? 'checked="checked"' : '',
@@ -679,16 +674,14 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			}
 			?>
 			<div class="mpc-product-range" data-page_limit="<?php echo esc_attr( $mpctable__['attributes']['limit'] ); ?>">
-				<p>
-					<?php
-						echo sprintf( 
-							__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
-							esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
-							'<span class="ranges">' . esc_html( $product_range ) . '</span>',
-							'<span class="max_product">' . esc_attr( $mpctable__['query']['total'] ) . '</span>'
-						);
-					?>
-				</p>
+				<?php
+					echo sprintf( 
+						__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
+						esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
+						'<span class="ranges">' . esc_html( $product_range ) . '</span>',
+						'<span class="max_product">' . esc_attr( $mpctable__['query']['total'] ) . '</span>'
+					);
+				?>
 			</div>
 			<?php
 		}

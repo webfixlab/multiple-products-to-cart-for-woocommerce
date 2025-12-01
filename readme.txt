@@ -2,8 +2,8 @@
 Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
-Tested up to: 6.8.2
-Stable tag: 7.4.8
+Tested up to: 6.8.3
+Stable tag: 7.5.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,8 +20,11 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 
 **FEATURES**
 
-* NEW! Improved support for Third-party price customization
-* NEW! Better support for custom themes like Avada, Astra, Bricks, Divi and plugins like YITH WooCommerce Dynamic Pricing & Discounts
+* 10 new languages support - French, Italian, Spanish, Portuguese, German, Norwegian, Dutch, Polish, Russian, Chinese
+* **Multilingual plugins** support like WPML, PolyLang
+* Translation ready: you can translate the plugin using Loco Translate, TranslatePress
+* Support for custom themes like Avada, Astra, Bricks, Divi and plugins like YITH WooCommerce Dynamic Pricing & Discounts
+* Support for Third-party price customization
 * One of the best mobile view for product table for WooCommerce
 * Multiple product types like simple, variable support
 * Custom columns for each table
@@ -40,8 +43,9 @@ https://www.youtube.com/watch?v=bZr8LOo2-q0
 
 **PRO FEATURES**
 
-* NEW! Improved support for WooCommerce All Products for Subscriptions 
-* NEW! Dynamic cart with the table
+* NEW! Multilingual plugin support with 10 new languages
+* Support for WooCommerce All Products for Subscriptions 
+* Dynamic cart with the table
 * Grouped and Subscription product types support
 * AJAX search box with SKU search
 * Add to cart button for each product

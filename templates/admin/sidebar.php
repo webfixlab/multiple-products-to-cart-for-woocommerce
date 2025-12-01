@@ -37,7 +37,7 @@ global $mpc__;
 	</div>
 	<div>
 		<a href="<?php echo esc_url( $mpc__['plugin']['request_quote'] ); ?>" target="_blank">
-			<?php echo esc_html__( 'Send Request', 'multiple-products-to-cart-for-woocommerce' ); ?>
+			<?php echo esc_html__( 'Contact us', 'multiple-products-to-cart-for-woocommerce' ); ?>
 		</a>
 	</div>
 </div>

@@ -418,7 +418,6 @@
 		if( start !== -1 ) response = response.substring(start);
 		
 		var rp = JSON.parse(response);
-		console.log('rp', rp);
 		if (rp.status) {
 			wrapper.find('.mpc-all-select, .mpc-table-footer').hide();
 		} else {
@@ -457,7 +456,6 @@
 	function ajax_table_loader(atts, page, wrapper) {
 		let locale = $(document).find('html').attr('lang');
 		locale = locale.replace( '-', '_' );
-		// console.log('current locale', locale);
 		$.ajax({
 			method: "POST",
 			url: mpc_frontend.ajaxurl,
@@ -601,7 +599,6 @@
 
 	// handle response after AJAX added to cart.
 	function mpcajx_add_to_cart_response(table, response) {
-		console.log(response);
 		$(document.body).trigger('updated_cart_totals');
 
 		table.find('.mpc-button a.mpc-loading').remove();

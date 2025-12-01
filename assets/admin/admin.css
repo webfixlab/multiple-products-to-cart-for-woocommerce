@@ -36,14 +36,13 @@
 }
 #right-side .tagline_side{
 	font-size: 14px;
+	margin-bottom: 20px;
 }
 .sidebar_top a{
-	text-decoration: none;
 	background-color: #007cba;
 	color: #fff;
-	padding: 5px 20px;
+	padding: 4px 15px 8px;
 	border-radius: 25px;
-	font-size: 110%;
 }
 .sidebar_top a:hover{
 	background-color: #0171a9;
@@ -186,8 +185,7 @@
 	text-shadow:unset;
 	-webkit-box-shadow:unset;
 	box-shadow:unset;
-	padding:12px 20px;
-	height:50px;
+	padding: 10px 20px;
 	margin:50px 0;
 	background: #858585;
 }
@@ -281,7 +279,7 @@
 	border: 1px solid #dfdfdf;
 	background-color:#fff;
 	color:#32373c;
-	padding:10px 20px;
+	padding: 6px 20px;
 	border-radius: 5px;
 	width:100%;
 	margin:0
@@ -881,12 +879,6 @@ a .mpcasc-reset .button-secondary{
 	display: none;
 }
 @media screen and (max-width: 1600px){
-	.mpcdp_settings_submit .submit{
-		margin: 5px;
-	}
-	.mpcdp_settings_submit button.mpcdp_submit_button, .mpcdp_settings_submit .submit input#submit{
-		padding: 5px 10px;
-	}
 	#mpcdp_settings{
 		max-width:95% !important
 	}
