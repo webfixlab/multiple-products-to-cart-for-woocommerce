@@ -49,8 +49,9 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			add_filter( 'mpc_template_loader', array( $this, 'template_loader' ), 10, 1 );
 
 			add_action( 'mpc_table_header', array( $this, 'before_table' ), 10 );
-			add_action( 'mpc_table_header_content', array( $this, 'table_orderby' ), 10 );
-			add_action( 'mpc_table_header_content', array( $this, 'table_check_all' ), 30 );
+
+			add_action( 'mpc_table_filters', array( $this, 'table_orderby' ), 10 );
+			add_action( 'mpc_table_actions', array( $this, 'table_check_all' ), 10 );
 
 			add_action( 'mpc_table_title_columns', array( $this, 'table_header' ), 10 );
 			add_action( 'mpc_table_body', array( $this, 'table_body' ), 10 );
@@ -132,33 +133,13 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 		 */
 		public function before_table() {
 			$this->class_data();
-			do_action( 'mpc_table_header_content' );
-		}
-
-		/**
-		 * Display table header columns
-		 */
-		public function table_header() {
-			$this->class_data();
-
-			if ( ! isset( $this->data['columns_list'] ) || empty( $this->data['columns_list'] ) ) {
-				return '';
-			}
 			?>
-			<thead>
-				<tr>
-					<?php
-						foreach ( $this->data['columns_list'] as $key ) {
-							printf(
-								'<th for="%s" class="mpc-product-%s">%s</th>',
-								esc_attr( $key ),
-								esc_attr( str_replace( 'wmc_ct_', '', $key ) ),
-								esc_html( $this->data['labels'][ $key ] )
-							);
-						}
-					?>
-				</tr>
-			</thead>
+			<div class="mpc-filters">
+				<?php do_action( 'mpc_table_filters' ); ?>
+			</div>
+			<div class="mpc-all-actions">
+				<?php do_action( 'mpc_table_actions' ); ?>
+			</div>
 			<?php
 		}
 
@@ -235,6 +216,33 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 				<label><?php echo esc_html( $this->data['labels']['wmc_select_all_text'] ); ?></label>
 				<input type="checkbox" class="mpc-check-all" <?php echo esc_html( $checked_n_disabled ); ?>>
 			</div>
+			<?php
+		}
+
+		/**
+		 * Display table header columns
+		 */
+		public function table_header() {
+			$this->class_data();
+
+			if ( ! isset( $this->data['columns_list'] ) || empty( $this->data['columns_list'] ) ) {
+				return '';
+			}
+			?>
+			<thead>
+				<tr>
+					<?php
+						foreach ( $this->data['columns_list'] as $key ) {
+							printf(
+								'<th for="%s" class="mpc-product-%s">%s</th>',
+								esc_attr( $key ),
+								esc_attr( str_replace( 'wmc_ct_', '', $key ) ),
+								esc_html( $this->data['labels'][ $key ] )
+							);
+						}
+					?>
+				</tr>
+			</thead>
 			<?php
 		}
 
@@ -430,11 +438,9 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			if ( false === strpos( $prod['type'], 'simple' ) ) {
 				return;
 			}
-
-			printf(
-				'<span>%s</span>',
-				esc_html( $this->data['labels']['wmc_empty_value_text'] )
-			);
+			?>
+			<span class="mpc-empty-var"><?php echo esc_html( $this->data['labels']['wmc_empty_value_text'] ); ?></span>
+			<?php
 		}
 
 		/**
@@ -566,11 +572,13 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 		 */
 		public function table_total() {
 			$this->class_data();
-
 			?>
 			<div class="total-row">
-				<span class="total-label"><?php echo esc_html( $this->data['labels']['wmc_total_button_text'] ); ?></span>
-				<span class="mpc-total"><?php $this->total_price(); ?></span>
+				<div class="total-price">
+					<span class="total-label"><?php echo esc_html( $this->data['labels']['wmc_total_button_text'] ); ?></span>
+					<span class="mpc-total"><?php $this->total_price(); ?></span>
+				</div>
+				<span class="mpc-fixed-cart"><?php echo esc_html( $this->data['labels']['wmc_button_text'] ); ?></span>
 			</div>
 			<?php
 		}
@@ -619,7 +627,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			do_action( 'mpc_table_total' );
 			?>
 			<div class="mpc-button">
-				<?php $this->display_table_pagination_range(); ?>
 				<div>
 					<input type="hidden" name="add_more_to_cart" value="1">
 					<?php if ( true === $mpctable__['options']['wmca_show_reset_btn'] ) : ?>
@@ -695,12 +702,12 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			if ( ! $mpctable__['attributes']['pagination'] || $mpctable__['query']['total'] <= $mpctable__['attributes']['limit'] ) {
 				return;
 			}
-
 			?>
 			<div class="mpc-pagination">
 				<div class="mpc-inner-pagination">
 					<?php $this->numbered_pagination(); ?>
 				</div>
+				<?php $this->display_table_pagination_range(); ?>
 			</div>
 			<?php
 		}

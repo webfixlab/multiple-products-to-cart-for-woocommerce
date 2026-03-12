@@ -2,8 +2,8 @@
 Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
-Tested up to: 6.8.3
-Stable tag: 7.5.3
+Tested up to: 6.9.1
+Stable tag: 8.0.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,20 +20,24 @@ A truly lightweight and simple yet powerful plugin without any unnecessary featu
 
 **FEATURES**
 
-* 10 new languages support - French, Italian, Spanish, Portuguese, German, Norwegian, Dutch, Polish, Russian, Chinese
-* **Multilingual plugins** support like WPML, PolyLang
-* Translation ready: you can translate the plugin using Loco Translate, TranslatePress
-* Support for custom themes like Avada, Astra, Bricks, Divi and plugins like YITH WooCommerce Dynamic Pricing & Discounts
-* Support for Third-party price customization
-* One of the best mobile view for product table for WooCommerce
-* Multiple product types like simple, variable support
-* Custom columns for each table
-* Supports default variations with correct attribute ordering
+* Lightweight product table for **heavy WooCommerce stores**
+* 200,000 products with 2000 product categories? We are **optimized** to handle it.
+* With **great mobile view**
+* Supports simple, variable products
+* Add new, remove or sort product table columns
+* Table **filter by price, title and date**
+* Supports correct variation attribute ordering
 * Sticky header and total price
-* Add to cart multiple products at once
 * Pre-selected products and skip products
-* Works on MULTISITE
+* Default table sorting option
 * AJAX & non-ajax add to cart method
+* Add to cart multiple products at once
+* Works on MULTISITE
+* Support for Third-party price customization
+* Support for custom themes like Avada, Astra, Bricks, Divi and plugins like YITH WooCommerce Dynamic Pricing & Discounts
+* **Multilingual plugins** support like WPML, PolyLang
+* Translations available in - French, Italian, Spanish, Portuguese, German, Norwegian, Dutch, Polish, Russian, Chinese
+* Translation ready: you can translate the plugin using Loco Translate, TranslatePress plugins
 * Truly lightweight and extremely fast, almost no impact on page speed
 * [See all features](https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/)
 
@@ -43,19 +47,18 @@ https://www.youtube.com/watch?v=bZr8LOo2-q0
 
 **PRO FEATURES**
 
-* NEW! Multilingual plugin support with 10 new languages
-* Support for WooCommerce All Products for Subscriptions 
-* Dynamic cart with the table
-* Grouped and Subscription product types support
-* AJAX search box with SKU search
+* Add Category, Tag, SKU, Stock and Rating on the table
+* **AJAX search box with SKU search**
 * Add to cart button for each product
-* Select in which order products appear on the table
-* Automatic table section by selected categories
 * Import - export settings and tables
+* **Section by category**
+* Add **Cart** to your table with direct **Proceed to checkout**
+* **Grouped and Subscription** product types support
+* Filter by category
 * Product gallery
-* Sophisticated category dropdown
-* Extra table columns like - Category, Tag, SKU, Stock and Rating
 * Redirect to custom page after add to cart
+* Multilingual plugin support with 10 new languages
+* Support for **WooCommerce All Products for Subscriptions**
 * Rocket speed 24/7 support
 * [See all PRO features](https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/)
 
@@ -102,12 +105,74 @@ Most of our PRO customer’s problem solved within 24 hours of their first conta
 
 Yes, just send your [request here](https://webfixlab.com/contact/).
 
-
 == Screenshots ==
 
-1. Frontend view of only simple products
-2. Frontend view of only variable products
+1. Product table
+2. Product table with variation selected
 3. Mobile view
-4. Admin settings
-5. All tables page
-6. Edit table
+4. Edit product table complete view
+5. Cart section with proceed to checkout (PRO)
+6. Grouped products - Desktop and mobile view (PRO)
+7. Export settings and tables with Import (PRO)
+
+== Changelog ==
+
+= 8.0.0 2026-02-18 =
+
+**Multiple Products to Cart for WooCommerce**
+
+* Update - Query arguments set to use product *ids* fields now.
+* Update - Added two new hooks *mpc_table_filters* and *mpc_table_actions*
+* Update - Removed *mpc_table_header_content* hook
+* Update - New hook added to modify products query *mpc_modify_get_products*
+* Update - Added new HTML structure for header filters and actions
+* Update - More dynamic fixed table header and total price
+* Update - WP_Query results fields set to only IDs
+* Update - Frontend JS on doc load event
+* Fix - Fronent CSS conflict
+
+= 4.0.0 2026-02-18 =
+
+**Multiple Products to Cart for WooCommerce PRO**
+
+* Update - Category dropdown products count logic
+* Update - Removed count of non-empty childs parent category
+* Update - Single add to cart moved to front
+* Update - Auto select variation attributes
+* Update - AJAX search to include simple product SKU
+* Update - AJAX search field changed to text field
+* Fix - Category loader CSS
+
+= 7.5.6 2026-01-29 =
+
+**Multiple Products to Cart for WooCommerce**
+
+* Fix - Dynamic inline CSS
+* Update - Add to cart popup notice CSS
+* Fix - Minor CSS issues
+
+= 3.0.6 2026-01-29 =
+
+**Multiple Products to Cart for WooCommerce PRO**
+
+* Fix - Proper plugin loader hook
+* Fix - Quantity selector CSS
+* Update - SKU search condition
+
+
+= 7.5.4 2026-01-19 =
+
+**Multiple Products to Cart for WooCommerce**
+
+* Update - Add to cart button color and background.
+* Update - Add to cart popup and notice CSS.
+* Update - Description, N/A and variation dropdown font color.
+* Fix - Variation price on mobile view.
+
+= 3.0.5 2026-01-19 =
+
+**Multiple Products to Cart for WooCommerce PRO**
+
+* Fix - Cart section same product added more than once issue.
+* Update - Cart table title added.
+* Update - Cart table header and proceed button CSS.

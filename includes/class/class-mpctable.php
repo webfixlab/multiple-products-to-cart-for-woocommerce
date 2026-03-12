@@ -356,8 +356,13 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			remove_all_filters( 'posts_orderby' );
 
 			// get products from query.
-			$products = new WP_Query( $args );
+			$result = new WP_Query( $args );
 			wp_reset_postdata();
+
+			$mpctable__['query']['total']    = $result->found_posts ?? 0;
+			$mpctable__['query']['max_page'] = $result->max_num_pages ?? 0;
+
+			$products = apply_filters( 'mpc_modify_get_products', $result->posts, $args );
 
 			if ( empty( $products ) ) {
 				return;
@@ -367,13 +372,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$this->get_table_data( $products );
 
 			$this->get_columns();
-
-			if ( ! $mpctable__['attributes']['pagination'] ) {
-				return;
-			}
-
-			$mpctable__['query']['total']    = $products->found_posts;
-			$mpctable__['query']['max_page'] = $products->max_num_pages;
 		}
 
 		/**
@@ -386,6 +384,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$args = array(
 				'post_type'      => 'product',
 				'post_status'    => 'publish',
+				'fields'         => 'ids',
 				'posts_per_page' => (int) $atts['limit'],
 				'paged'          => $paged,
 			);
@@ -548,23 +547,21 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$mpctable__['has_variation'] = false;
 			$data                        = array();
 
-			foreach ( $products->posts as $ppost ) {
-				$id = $ppost->ID;
-
+			foreach ( $products as $post_id ) {
 				// Get product object.
-				$product = wc_get_product( $id );
-
-				if ( ! $product ) {
+				$product = wc_get_product(  $post_id );
+				
+				if ( empty( $product ) ) {
 					continue;
 				}
 
-				$product_data = $this->product_data( $id, $product );
+				$product_data = $this->product_data( $post_id, $product );
 				if ( false === $product_data || empty( $product_data ) ) {
 					continue;
 				}
 
 				// handle 3rd party codes.
-				$data[ $id ] = apply_filters( 'mpcp_modify_product_data', $product_data, $product );
+				$data[ $post_id ] = apply_filters( 'mpcp_modify_product_data', $product_data, $product );
 			}
 
 			// update columns list if no variation exists.
@@ -791,6 +788,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 				$c['price'] = $price;
 
+				$c['image'] = [];
 				// get variation image, if no image set woocommerce default image.
 				$image_id = get_post_meta( $child_id, '_thumbnail_id', true );
 				if ( $image_id ) {
@@ -839,16 +837,6 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			}
 
 			return $data;
-		}
-
-		private function log( $data ) {
-			if ( true === WP_DEBUG ) {
-				if ( is_array( $data ) || is_object( $data ) ) {
-					error_log( print_r( $data, true ) );
-				} else {
-					error_log( $data );
-				}
-			}
 		}
 
 		/**

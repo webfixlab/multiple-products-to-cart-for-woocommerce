@@ -16,7 +16,7 @@
 	display: block;
 	margin: 15px -19px -20px;
 	padding: 10px 0px 15px 20px;
-	background: #777777;
+	background: #429cc8;
 	color: #fff;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
@@ -186,7 +186,6 @@
 	-webkit-box-shadow:unset;
 	box-shadow:unset;
 	padding: 10px 20px;
-	margin:50px 0;
 	background: #858585;
 }
 #left-side .mpcdp_settings_submit button.mpcdp_submit_button, #left-side .mpcdp_settings_submit .submit input#submit{
@@ -905,7 +904,7 @@ a .mpcasc-reset .button-secondary{
 		padding-bottom: 20px;
 	}
 	.mpcdp_settings_sidebar .mpcdp_settings_tab_control, .mpcdp_settings_sidebar .mpcdp_settings_tab_control.active{
-		padding: 10px 5px;
+		padding: 14px 5px;
 		font-size: 13px;
 	}
 	#mpcdp_settings .mpcdp_settings_option_field_theme_customizer{

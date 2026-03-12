@@ -371,10 +371,8 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		}
 		public function dynamic_css(){
 			// add to cart button color and background color.
-			$btn_color      = get_option( 'mpc_button_text_color', '#353535' );
-			$btn_background = get_option( 'wmc_button_color', '#d3d3d3' );
-			$btn_color      = empty( $btn_color ) ? '#353535' : $btn_color;
-			$btn_background = empty( $btn_background ) ? '#d3d3d3' : $btn_background;
+			$btn_color      = get_option( 'mpc_button_text_color', '' );
+			$btn_background = get_option( 'wmc_button_color', '' );
 
 			// header and pagination color and background color.
 			$hnp_color      = get_option( 'mpc_head_text_color', '#ffffff' );
@@ -396,14 +394,18 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					background: {$hnp_background};
 					color: {$hnp_color};
 				}
-				.mpc-button input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{
-					background: {$btn_background};
-					color: {$btn_color};
-				}
 				td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 					width: {$image_size}px;
 				}
 			";
+			
+			// cart button css.
+			$cart_btn = !empty( $btn_color ) ? 'color: ' . esc_html( $btn_color ) . ';' : '';
+			$cart_btn .= !empty( $btn_background ) ? 'background: ' . esc_html( $btn_background ) . ';' : '';
+			if( !empty( $cart_btn ) ){
+				$css .= ".mpc-button input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{{$cart_btn}}";
+			}
+
 			if ( ! empty( $title_color ) ) $css .= "
 				.mpc-product-title a{
 					color: {$title_color};

@@ -163,7 +163,7 @@
 					row.find('input[type="number"]').val(1).trigger('change');
 				}
 			}
-			row.find('.mpc-def-stock').html('<p class="stock in-stock">' + instock + '</p>');
+			row.find('.mpc-def-stock').html('<span class="stock in-stock">' + instock + '</span>');
 		}
 		return instock == -1 || instock == 1 ? false : true;
 	}
@@ -259,11 +259,6 @@
 				}
 			});
 			table.find('.mpc-total span.total-price').text(priceFormat(total));
-			// table.find('.mpc-total span.total-price').text(total.toLocaleString(mpc_frontend.locale, {
-			// 	minimumFractionDigits: mpc_frontend.dp,
-			// 	maximumFractionDigits: mpc_frontend.dp,
-			// 	useGrouping: true
-			// }));
 
 			var wrap = table.closest('.mpc-container');
 			if (checked == 0) {
@@ -390,27 +385,26 @@
 	}
 
 	function renderStickyHead(table) {
-		var min = 99999;
-		var html = '';
-		table.find('thead th').each(function () {
-			var th = $(this);
-			if (th.offset().left < min) min = th.offset().left;
-			html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
-		});
-		var width = table[0].offsetWidth;
-		let wrap = table.closest('.mpc-container');
-		html = `<table style="width:${width}px;"><thead><tr>${html}</tr></thead></table>`;
-		html = `<div class="mpc-fixed-header" style="left:${min}px; display: none;">${html}</div>`;
+		const wrap = table.closest('.mpc-container');
+		const vpw = window.innerWidth || document.documentElement.clientWidth; // viewPort width.
+		
+		let min = table.find('tbody tr:first-child td:first-child').offset().left;
+		min = vpw < 768 ? 0 : min;
+
 		wrap.find('.mpc-fixed-header').remove();
-		table.after(html);
-
-		if (window.screen.width > 500) wrap.find('.total-row').css({ 'width': `${width}px` });
-
-		var header = wrap.find('.mpc-table-header');
-		width = width < 401 ? '100%' : `${width}px`;
-		var headerHeight = header[0].offsetHeight;
-		headerHeight = headerHeight > 100 ? 55 : headerHeight;
-		header.css({ 'left': `${min}px`, 'width': width });
+		if(vpw > 767){
+			var html = '';
+			table.find('thead th').each(function () {
+				var th = $(this);
+				html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
+			});
+			html = `<table style="width:${table[0].offsetWidth}px;"><thead><tr>${html}</tr></thead></table>`;
+			table.after(`<div class="mpc-fixed-header" style="left:${min}px;display:none;">${html}</div>`);
+		}
+		
+		let width = vpw < 768 ? '100%' : `${table[0].offsetWidth}px`;
+		wrap.find('.total-row').css({ 'width': `${width}` }); // fixed total section.
+		wrap.find('.mpc-table-header').css({ 'left': `${min}px`, 'width': width }); // filter section.
 	}
 	function mpc_table_loader_response(wrapper, response) {
 		// sanitize response.
@@ -475,6 +469,7 @@
 					return;
 				}
 				mpc_table_loader_response(wrapper, response);
+				$(document.body).trigger('mpc_table_loader', [wrapper]);
 			},
 			error: function (errorThrown) {
 				console.log(errorThrown);
@@ -984,10 +979,7 @@
 	// table: sticky header.
 	function prepareStickyTable() {
 		$('body').find('table.mpc-wrap').each(function () {
-			var table = $(this);
-			if (table.find('thead').length && !table.find('thead').is(':hidden')) {
-				renderStickyHead($(this));
-			}
+			renderStickyHead($(this));
 		});
 	}
 	prepareStickyTable();
@@ -1050,11 +1042,8 @@
 			let tableEnd = $(products[products.length - 1]).offset().top + $(products[products.length - 1])[0].offsetHeight;
 			if ((cs + screenH) > tableStart && (cs + screenH) < tableEnd) {
 				wrap.find('.total-row').removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
-				wrap.find('.total-row .mpc-fixed-cart').remove();
-				wrap.find('.total-row').append(`<span class="mpc-fixed-cart">${mpc_frontend.cart_text}</span>`);
 			} else {
 				wrap.find('.total-row').removeClass('mpc-fixed-total-m');
-				wrap.find('.total-row .mpc-fixed-cart').remove();
 			}
 
 			// fixed header.
