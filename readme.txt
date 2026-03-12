@@ -117,6 +117,13 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 == Changelog ==
 
+= 8.0.1 2026-03-12 =
+
+**Multiple Products to Cart for WooCommerce**
+
+* Update - Pagination divider design.
+* Fix - Add plugin review URL.
+
 = 8.0.0 2026-02-18 =
 
 **Multiple Products to Cart for WooCommerce**
@@ -127,7 +134,7 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 * Update - New hook added to modify products query *mpc_modify_get_products*
 * Update - Added new HTML structure for header filters and actions
 * Update - More dynamic fixed table header and total price
-* Update - WP_Query results fields set to only IDs
+* Update - WP_Query results set to query only IDs
 * Update - Frontend JS on doc load event
 * Fix - Fronent CSS conflict
 

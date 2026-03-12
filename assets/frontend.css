@@ -334,6 +334,7 @@ span.mpc-single-add:hover {
 	border: none;
 	font-weight: bold;
 	letter-spacing: 3px;
+	cursor: default;
 }
 .mpc-pagenumbers span.current {
 	color: white;
@@ -717,5 +718,9 @@ span.mpc-empty-var {
 	}
 	.mpc-pagination {
 		margin: 20px 0 0 0;
+	}
+	.mpc-pagenumbers span.mpc-divider{
+		margin-left: -5px;
+		margin-right: -20px;
 	}
 }

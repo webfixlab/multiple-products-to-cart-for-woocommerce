@@ -87,15 +87,15 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 			$all_products = array(); // array of product id => quantity.
 			foreach ( $data as $product_id => $product ) {
-				$key  = '';
+				$key = '';
 
 				if ( 'grouped' === $product['type'] ) {
 					continue;
 				}
 
-				$quantity     = isset( $product['quantity'] ) && !empty( $product['quantity'] ) ? (int) $product['quantity'] : 1;
-				$variation_id = isset( $product['variation_id'] ) && !empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
-				$variation    = $product['attributes'] ?? [];
+				$quantity     = isset( $product['quantity'] ) && ! empty( $product['quantity'] ) ? (int) $product['quantity'] : 1;
+				$variation_id = isset( $product['variation_id'] ) && ! empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
+				$variation    = $product['attributes'] ?? array();
 
 				$cart_data = array( 'mpc_data' => $product );
 
@@ -198,7 +198,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			}
 
 			ob_start();
-			
+
 			// Load main table template file.
 			include apply_filters( 'mpc_template_loader', MPC_PATH . 'templates/listing-list.php' );
 
@@ -214,7 +214,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		public function product_table_ajax() {
 			global $mpctable__;
 			global $mpc_template__;
-			
+
 			$response = array( 'status' => '' );
 			if ( ! isset( $_POST['table_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['table_nonce'] ) ), 'table_nonce_ref' ) ) {
 				$response['status'] = 'error';
@@ -222,8 +222,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			}
 
 			// Switch to the new locale | Multilingual | PolyLang plugin support.
-			$locale = isset( $_POST['locale'] ) ? sanitize_text_field( $_POST['locale'] ) : '';
-			if( !empty( $locale ) ){
+			$locale = isset( $_POST['locale'] ) ? sanitize_text_field( wp_unslash( $_POST['locale'] ) ) : '';
+			if ( ! empty( $locale ) ) {
 				switch_to_locale( $locale );
 			}
 
@@ -549,8 +549,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 			foreach ( $products as $post_id ) {
 				// Get product object.
-				$product = wc_get_product(  $post_id );
-				
+				$product = wc_get_product( $post_id );
+
 				if ( empty( $product ) ) {
 					continue;
 				}
@@ -626,8 +626,8 @@ if ( ! class_exists( 'MPCTable' ) ) {
 			$thumb = isset( $mpctable__['image_sizes'] ) ? $mpctable__['image_sizes']['thumb'] : 'thumb';
 			$full  = isset( $mpctable__['image_sizes'] ) ? $mpctable__['image_sizes']['full'] : 'full';
 
-			$data['images'][$thumb] = !empty( $imgid ) ? wp_get_attachment_image_url( $imgid, $thumb ) : $mpctable__['default_imgs']['thumb'];
-			$data['images'][$full]  = !empty( $imgid ) ? wp_get_attachment_image_url( $imgid, $full ) : $mpctable__['default_imgs']['full'];
+			$data['images'][ $thumb ] = ! empty( $imgid ) ? wp_get_attachment_image_url( $imgid, $thumb ) : $mpctable__['default_imgs']['thumb'];
+			$data['images'][ $full ]  = ! empty( $imgid ) ? wp_get_attachment_image_url( $imgid, $full ) : $mpctable__['default_imgs']['full'];
 
 			// If this product is checked/selected.
 			if ( ( is_array( $mpctable__['attributes']['selected'] ) && in_array( $id, $mpctable__['attributes']['selected'], true ) ) || 'all' === $mpctable__['attributes']['selected'] ) {
@@ -642,7 +642,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				// default product attributes - if any of them is selected pre-defined.
 				$default_attributes = $product->get_default_attributes();
-				
+
 				// product attributes.
 				$attributes = $product->get_variation_attributes();
 
@@ -655,22 +655,31 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				// Sort Global Attributes according to backend sequence.
 				foreach ( $attributes as $name => $options ) {
-					$terms = taxonomy_exists( $name ) ? wc_get_product_terms( $id, $name, array( 'fields' => 'all' ) ) : [];
-					$opt = [];
-					if( !empty( $terms ) ){
-						foreach( $terms as $term ){
-							if( !in_array( $term->slug, $options, true ) ) continue;
-							$opt[] = [ 'name' => $term->name, 'slug' => $term->slug, 'value' => $term->slug ];
+					$terms = taxonomy_exists( $name ) ? wc_get_product_terms( $id, $name, array( 'fields' => 'all' ) ) : array();
+					$opt   = array();
+					if ( ! empty( $terms ) ) {
+						foreach ( $terms as $term ) {
+							if ( ! in_array( $term->slug, $options, true ) ) {
+								continue;
+							}
+							$opt[] = array(
+								'name'  => $term->name,
+								'slug'  => $term->slug,
+								'value' => $term->slug,
+							);
 						}
-					}else{
-						foreach( $options as $option ){
-							$opt[] = [ 'name' => $option, 'slug' => $option, 'value' => $option ];
+					} else {
+						foreach ( $options as $option ) {
+							$opt[] = array(
+								'name'  => $option,
+								'slug'  => $option,
+								'value' => $option,
+							);
 						}
 					}
 
 					// Sanitize name.
 					$name_ = sanitize_title( $name );
-					// $options = $this->sort_variation_options( $options, $product, $name_ );
 
 					// Modified options variable - for storing additional data.
 					$options_ = array();
@@ -704,7 +713,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 
 				// Variation data - dynamic price handling.
-				$variation_data = $this->get_variation_data( $product, $attributes_ );
+				$variation_data = $this->get_variation_data( $product );
 
 				// For displaying it frontend, use the following way wc_esc_json( wp_json_encode( $variation_data ) ).
 				if ( $variation_data ) {
@@ -729,31 +738,35 @@ if ( ! class_exists( 'MPCTable' ) ) {
 		/**
 		 * Extract float price from WooCommerce HTML price
 		 *
-		 * @param string $price_html
+		 * @param string $price_html Product price html.
 		 * @return float
 		 */
 		public function extract_price_from_html( $price_html ) {
-			if( empty( $price_html ) ) return 0.0;
+			if ( empty( $price_html ) ) {
+				return 0.0;
+			}
 
 			$price_text = '';
-			if( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $m ) ) {
+			if ( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $m ) ) {
 				$price_text = $m[1];
-			} elseif( preg_match( '/<bdi[^>]*>(.*?)<\/bdi>/is', $price_html, $m ) ) {
+			} elseif ( preg_match( '/<bdi[^>]*>(.*?)<\/bdi>/is', $price_html, $m ) ) {
 				$price_text = $m[1];
 			}
-			if( empty( $price_text ) ) return 0.0;
+			if ( empty( $price_text ) ) {
+				return 0.0;
+			}
 
 			$price_text = wp_strip_all_tags( $price_text );
 			$price_text = html_entity_decode( $price_text );
 			return (float) wc_format_decimal( $price_text, wc_get_price_decimals() );
 		}
-		
+
 		/**
 		 * Get product variation data | JSON
 		 *
 		 * @param object $product product object.
 		 */
-		public function get_variation_data( $product, $attributes ) {
+		public function get_variation_data( $product ) {
 			global $mpctable__;
 
 			$childrens = $product->get_children();
@@ -788,7 +801,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 				$c['price'] = $price;
 
-				$c['image'] = [];
+				$c['image'] = array();
 				// get variation image, if no image set woocommerce default image.
 				$image_id = get_post_meta( $child_id, '_thumbnail_id', true );
 				if ( $image_id ) {
@@ -801,7 +814,7 @@ if ( ! class_exists( 'MPCTable' ) ) {
 				}
 
 				// hook for modifying image thumbnail.
-				$img = apply_filters(
+				$img                     = apply_filters(
 					'mpc_table_thumbnail',
 					array(
 						'image_id'   => $image_id,
@@ -817,9 +830,10 @@ if ( ! class_exists( 'MPCTable' ) ) {
 
 				// stock.
 				$c['stock_status'] = $variation->get_stock_status();
-				$stock = $variation->get_stock_quantity();
-				$c['stock'] = empty( $stock ) || $stock < 0 ? __( 'In stock', 'multiple-products-to-cart-for-woocommerce' ) : sprintf(
-					__( '%1$s in stock', 'multiple-products-to-cart-for-woocommerce' ),
+				$stock             = $variation->get_stock_quantity();
+				$c['stock']        = empty( $stock ) || $stock < 0 ? __( 'In stock', 'multiple-products-to-cart-for-woocommerce' ) : sprintf(
+					// translators: %s: available stock.
+					esc_html__( '%s in stock', 'multiple-products-to-cart-for-woocommerce' ),
 					esc_attr( $stock )
 				);
 

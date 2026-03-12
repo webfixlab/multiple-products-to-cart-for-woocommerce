@@ -24,7 +24,7 @@ $mpc__           = array(
 			'multiple-products_page_mpc-settings',
 			'multiple-products_page_mpca_license',
 		),
-		'review_link'     => 'https://wordpress.org/support/plugin/multiple-products-to-cart-for-woocommerce/reviews/?rate=5#new-post',
+		'review_link'     => 'https://wordpress.org/support/plugin/multiple-products-to-cart-for-woocommerce/reviews/',
 		'support'         => 'https://webfixlab.com/contact/',
 		'request_quote'   => 'https://webfixlab.com/contact/',
 		'woo_url'         => 'https://wordpress.org/plugins/woocommerce/',
@@ -551,7 +551,7 @@ $mpc__['fields'] = array(
 					'default'     => '',
 					'label'       => __( 'Pagination', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'        => '',
-					'placeholder' => __( '', 'multiple-products-to-cart-for-woocommerce' ),
+					'placeholder' => '',
 				),
 				array(
 					'key'         => 'wmc_select_all_text',

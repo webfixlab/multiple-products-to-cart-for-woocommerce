@@ -369,7 +369,11 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			// localize script.
 			wp_localize_script( 'mpc-frontend', 'mpc_frontend', $localaized_values );
 		}
-		public function dynamic_css(){
+
+		/**
+		 * Inline CSS for dynamic CSS property values
+		 */
+		public function dynamic_css() {
 			// add to cart button color and background color.
 			$btn_color      = get_option( 'mpc_button_text_color', '' );
 			$btn_background = get_option( 'wmc_button_color', '' );
@@ -398,39 +402,50 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 					width: {$image_size}px;
 				}
 			";
-			
+
 			// cart button css.
-			$cart_btn = !empty( $btn_color ) ? 'color: ' . esc_html( $btn_color ) . ';' : '';
-			$cart_btn .= !empty( $btn_background ) ? 'background: ' . esc_html( $btn_background ) . ';' : '';
-			if( !empty( $cart_btn ) ){
+			$cart_btn  = ! empty( $btn_color ) ? 'color: ' . esc_html( $btn_color ) . ';' : '';
+			$cart_btn .= ! empty( $btn_background ) ? 'background: ' . esc_html( $btn_background ) . ';' : '';
+			if ( ! empty( $cart_btn ) ) {
 				$css .= ".mpc-button input.mpc-add-to-cart.wc-forward, button.mpce-single-add, span.mpc-fixed-cart{{$cart_btn}}";
 			}
 
-			if ( ! empty( $title_color ) ) $css .= "
+			if ( ! empty( $title_color ) ) {
+				$css .= "
 				.mpc-product-title a{
 					color: {$title_color};
 				}
 			";
+			}
 
-			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) $css .= "
+			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) {
+				$css .= '
 				.mpc-wrap .variation-group > select{
 					max-width: 100px;
 				}
 				.variation-group select{
 					width: 100px;
 				}
-			";
+			';
+			}
 
-			$css .= ".mpc-container .mpc-product-title a{";
-			if( !empty( $title_font_size ) ) $css .= "font-size: {$title_font_size}px;";
-			if( !empty( $bold_title ) && 'on' === $bold_title ) $css .= "font-weight: bold;";
-			if( !empty( $title_underline ) && 'on' === $title_underline ) $css .= "text-decoration: underline; }";
-			else $css .= "text-decoration: none; }";
+			$css .= '.mpc-container .mpc-product-title a{';
+			if ( ! empty( $title_font_size ) ) {
+				$css .= "font-size: {$title_font_size}px;";
+			}
+			if ( ! empty( $bold_title ) && 'on' === $bold_title ) {
+				$css .= 'font-weight: bold;';
+			}
+			if ( ! empty( $title_underline ) && 'on' === $title_underline ) {
+				$css .= 'text-decoration: underline; }';
+			} else {
+				$css .= 'text-decoration: none; }';
+			}
 
 			$tr_height      = $image_size + 17;
 			$gallery_height = $image_size + ceil( ( $image_size * 47 ) / 100 ) + 24;
 			$padding_left   = $image_size + 13;
-			$css .= "
+			$css           .= "
 				@media screen and (max-width: 767px) {
 					table.mpc-wrap tbody tr{
 						min-height: {$tr_height}px;
@@ -447,7 +462,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			ob_start();
 			do_action( 'mpc_dynamic_css' );
 			$css .= ob_get_clean();
-			
+
 			wp_add_inline_style( 'mpc-frontend', $css );
 		}
 
@@ -505,7 +520,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		public function plugin_extra_link( $links ) {
 			global $mpc__;
 
-			$action_links = array();
+			$action_links             = array();
 			$action_links['settings'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'admin.php?page=mpc-settings' ) ),
@@ -537,7 +552,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				return $links;
 			}
 
-			$row_meta = array();
+			$row_meta            = array();
 			$row_meta['apidocs'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $mpc__['plugin']['request_quote'] ),
@@ -652,7 +667,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			// get current page.
-			$page = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$page  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 			$page .= strpos( $page, '?' ) !== false ? '&' : '?';
 
 			$plugin = sprintf(
@@ -665,7 +680,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				esc_url( $mpc__['plugin']['review_link'] ),
 				__( 'WordPress.org', 'multiple-products-to-cart-for-woocommerce' )
 			);
-			$nonce = wp_create_nonce( 'mpc_rating_nonce' );
+			$nonce  = wp_create_nonce( 'mpc_rating_nonce' );
 			?>
 			<div class="notice notice-info is-dismissible">
 				<h3><?php echo esc_html__( 'Multiple Products to Cart for WooCommerce', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
@@ -701,14 +716,14 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 			global $mpc__;
 
 			// get current page.
-			$page = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$page  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 			$page .= strpos( $page, '?' ) !== false ? '&' : '?';
 
 			$pro_feature = sprintf(
 				'<strong>%s</strong>',
 				__( '10+ PRO features available!', 'multiple-products-to-cart-for-woocommerce' )
 			);
-			$pro_link = sprintf(
+			$pro_link    = sprintf(
 				'<a href="%s" target="_blank">%s</a>',
 				esc_url( $mpc__['prolink'] ),
 				__( 'PRO features here', 'multiple-products-to-cart-for-woocommerce' )
@@ -755,7 +770,7 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				}
 			}
 
-			return isset( $mpc__['settings_tab'] ) && !empty( $mpc__['settings_tab'] ) ? sanitize_title( $mpc__['settings_tab'] ) : $tab;
+			return isset( $mpc__['settings_tab'] ) && ! empty( $mpc__['settings_tab'] ) ? sanitize_title( $mpc__['settings_tab'] ) : $tab;
 		}
 
 		/**

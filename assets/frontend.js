@@ -888,7 +888,7 @@
 
 	// ajax pagination loader.
 	$('body').on('click', '.mpc-pagenumbers span', function () {
-		if (!$(this).hasClass('current')) {
+		if (!$(this).hasClass('current') && !$(this).hasClass('mpc-divider')) {
 			mpc_pagination_loader($(this));
 		}
 	});

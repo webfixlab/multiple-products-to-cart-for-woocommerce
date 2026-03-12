@@ -252,7 +252,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 		 */
 		public function cpt_id( $table_id ) {
 			$cpt_id = '';
-			$args = array(
+			$args   = array(
 				'post_type'      => 'mpc_product_table',
 				'posts_per_page' => -1,
 			);
@@ -345,7 +345,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 				}
 			} else {
 				// update shortcode.
-				$a = wp_update_post(
+				$a            = wp_update_post(
 					array(
 						'ID'           => $post_id,
 						'post_title'   => ! empty( $title ) ? $title : __( 'Product Table', 'multiple-products-to-cart-for-woocommerce' ) . $post_id,
@@ -620,7 +620,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			if ( ! empty( $cpt_id ) ) {
 				$this->table_id = $table_id;
 				$this->post_id  = $cpt_id;
-				$code = get_post_meta( $cpt_id, 'shortcode', true );
+				$code           = get_post_meta( $cpt_id, 'shortcode', true );
 			} else {
 				/**
 				 * Legacy code - will be deleted in later versions.
@@ -658,7 +658,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 			if ( ! empty( $cpt_id ) ) {
 				$this->table_id = $table_id;
 				$this->post_id  = $cpt_id;
-				$code = get_post_meta( $cpt_id, 'shortcode', true );
+				$code           = get_post_meta( $cpt_id, 'shortcode', true );
 			} else {
 				/**
 				 * Legacy code - will be deleted in later versions.
@@ -923,7 +923,7 @@ if ( ! class_exists( 'MPCAdminTable' ) ) {
 						continue;
 					}
 
-					$id = (int) $id;
+					$id          = (int) $id;
 					$is_selected = 'selected';
 					if ( ! $mpc__['has_pro'] && isset( $fld['pro_options'] ) && in_array( $id, $fld['pro_options'], true ) ) {
 						$is_selected = 'disabled';

@@ -174,16 +174,16 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			<div class="mpc-sort">
 				<select name="mpc_orderby" class="mpc-orderby" title="<?php echo esc_html__( 'Table order by', 'multiple-products-to-cart-for-woocommerce' ); ?>">
 					<?php
-						foreach ( $this->data['orderby_options'] as $slug => $label ) {
-							$selected = sanitize_title( $slug ) === $saved_slug ? 'selected' : '';
+					foreach ( $this->data['orderby_options'] as $slug => $label ) {
+						$selected = sanitize_title( $slug ) === $saved_slug ? 'selected' : '';
 
-							printf(
-								'<option value="%s" %s>%s</option>',
-								esc_attr( $slug ),
-								esc_attr( $selected ),
-								esc_html( $label )
-							);
-						}
+						printf(
+							'<option value="%s" %s>%s</option>',
+							esc_attr( $slug ),
+							esc_attr( $selected ),
+							esc_html( $label )
+						);
+					}
 					?>
 				</select>
 				<input type="hidden" name="paged" value="1" />
@@ -232,14 +232,14 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			<thead>
 				<tr>
 					<?php
-						foreach ( $this->data['columns_list'] as $key ) {
-							printf(
-								'<th for="%s" class="mpc-product-%s">%s</th>',
-								esc_attr( $key ),
-								esc_attr( str_replace( 'wmc_ct_', '', $key ) ),
-								esc_html( $this->data['labels'][ $key ] )
-							);
-						}
+					foreach ( $this->data['columns_list'] as $key ) {
+						printf(
+							'<th for="%s" class="mpc-product-%s">%s</th>',
+							esc_attr( $key ),
+							esc_attr( str_replace( 'wmc_ct_', '', $key ) ),
+							esc_html( $this->data['labels'][ $key ] )
+						);
+					}
 					?>
 				</tr>
 			</thead>
@@ -332,7 +332,6 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 					$title = sprintf(
 						'<a href="%s">%s</a>',
 						esc_url( $prod['parent']['url'] ),
-						// $prod['parent']['title']
 						esc_html__( 'Grouped', 'multiple-products-to-cart-for-woocommerce' )
 					);
 				}
@@ -379,9 +378,9 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			<td for="price" class="mpc-product-price">
 				<div class="mpc-single-price" style="display:none;">
 					<?php
-						if ( strpos( $prod['type'], 'variable' ) !== false ) { // for variable products only.
-							$this->total_price();
-						}
+					if ( strpos( $prod['type'], 'variable' ) !== false ) { // for variable products only.
+						$this->total_price();
+					}
 					?>
 				</div>
 				<div class="mpc-range">
@@ -420,7 +419,7 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 				<?php $show_clear = $this->variation_options(); // display variation attributes. ?>
 				<?php do_action( 'mpcp_custom_variation_html' ); // add custom variation html content. ?>
 				<div class="clear-button">
-					<?php if( $show_clear ): ?>
+					<?php if ( $show_clear ) : ?>
 						<a class="reset_variations" href="#"><?php echo esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
 					<?php endif; ?>
 				</div>
@@ -450,7 +449,9 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			$this->class_data();
 			$prod = $this->data['products'][ $this->id ];
 
-			if ( ! isset( $prod['attributes'] ) ) return;
+			if ( ! isset( $prod['attributes'] ) ) {
+				return;
+			}
 
 			$option_label = ! empty( $this->data['labels']['wmc_option_text'] ) ? $this->data['labels']['wmc_option_text'] . ' ' : '';
 			?>
@@ -463,21 +464,21 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 				++$total;
 				?>
 				<select class="mpc-var-att <?php echo esc_attr( $name_ ); ?>" name="attribute_<?php echo esc_attr( $name_ . $this->id ); ?>" data-attribute_name="attribute_<?php echo esc_attr( $name_ ); ?>">
-					<option value=""><?php echo esc_html( $option_label . $data['label'] ) ;?></option>
+					<option value=""><?php echo esc_html( $option_label . $data['label'] ); ?></option>
 					<?php
-						foreach ( $data['options'] as $option ) {
-							if ( true === $option['is_selected'] ) {
-								++$checked;
-							}
-
-							printf(
-								'<option data-value="%s" value="%s" %s>%s</option>',
-								esc_attr( $option['slug'] ),
-								esc_html( $option['value'] ),
-								true === $option['is_selected'] ? 'selected' : '',
-								esc_html( $option['name'] )
-							);
+					foreach ( $data['options'] as $option ) {
+						if ( true === $option['is_selected'] ) {
+							++$checked;
 						}
+
+						printf(
+							'<option data-value="%s" value="%s" %s>%s</option>',
+							esc_attr( $option['slug'] ),
+							esc_html( $option['value'] ),
+							true === $option['is_selected'] ? 'selected' : '',
+							esc_html( $option['name'] )
+						);
+					}
 					?>
 				</select>
 				<?php
@@ -607,11 +608,13 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			?>
 			<span class="woocommerce-Price-amount amount">
 				<bdi>
-					<?php echo sprintf(
-						get_woocommerce_price_format(),
-						'<span class="woocommerce-Price-currencySymbol">' . get_woocommerce_currency_symbol() . '</span>',
+					<?php
+					printf(
+						esc_attr( get_woocommerce_price_format() ),
+						'<span class="woocommerce-Price-currencySymbol">' . esc_attr( get_woocommerce_currency_symbol() ) . '</span>',
 						'<span class="total-price">' . esc_attr( $total ) . '</span>'
-					); ?>
+					);
+					?>
 				</bdi>
 			</span>
 			<?php
@@ -682,8 +685,9 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			?>
 			<div class="mpc-product-range" data-page_limit="<?php echo esc_attr( $mpctable__['attributes']['limit'] ); ?>">
 				<?php
-					echo sprintf( 
-						__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
+					printf(
+						// translators: $1$s: saved prefix, $2$s: starting range, %3$s: where the pagination ends.
+						esc_html__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
 						esc_html( $mpctable__['labels']['wmc_pagination_text'] ),
 						'<span class="ranges">' . esc_html( $product_range ) . '</span>',
 						'<span class="max_product">' . esc_attr( $mpctable__['query']['total'] ) . '</span>'
@@ -738,7 +742,7 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 					}
 
 					if ( $i > 0 && abs( $pages[ ( $i - 1 ) ] - $pages[ $i ] ) > 1 ) {
-						echo '<span class="mpc-divider">...</span>';
+						echo '<span class="mpc-divider">-</span>';
 					}
 					?>
 					<span <?php echo $pages[ $i ] === $paged ? 'class="current"' : ''; ?>>
