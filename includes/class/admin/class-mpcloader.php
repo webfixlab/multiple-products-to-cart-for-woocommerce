@@ -304,13 +304,16 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 		public function frontend_script() {
 			global $mpc__;
 
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
 			// enqueue style.
-			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.css', array(), MPC_VER, 'all' );
+			wp_enqueue_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend' . $suffix . '.css', array(), MPC_VER, 'all' );
+
 			$this->dynamic_css();
 
 			// register script.
-			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.js', array( 'jquery' ), MPC_VER, true );
-			wp_register_script( 'mpc-table-var', plugin_dir_url( MPC ) . 'assets/js/table-variations.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend' . $suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-var', plugin_dir_url( MPC ) . 'assets/js/table-variations' . $suffix . '.js', array( 'jquery' ), MPC_VER, true );
 			
 			wp_enqueue_script( 'mpc-frontend' );
 			wp_enqueue_script( 'mpc-table-var' );
@@ -480,15 +483,17 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 				return;
 			}
 
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
 			// enqueue style.
-			wp_register_style( 'mpc_admin_style', plugin_dir_url( MPC ) . 'assets/admin/admin.css', array(), MPC_VER );
+			wp_register_style( 'mpc_admin_style', plugin_dir_url( MPC ) . 'assets/admin/admin' . $suffix . '.css', array(), MPC_VER );
 			wp_enqueue_style( 'mpc_admin_style' );
 
 			// colorpicker style.
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker' );
 
-			wp_register_script( 'mpc_admin_script', plugin_dir_url( MPC ) . 'assets/admin/admin.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
+			wp_register_script( 'mpc_admin_script', plugin_dir_url( MPC ) . 'assets/admin/admin' . $suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
 			wp_enqueue_script( 'mpc_admin_script' );
 
 			// Choices JS.

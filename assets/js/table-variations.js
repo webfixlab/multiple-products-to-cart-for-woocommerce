@@ -97,16 +97,17 @@
 		}
 		filterAvailableVariation( attName, el ){
 			const dropDown = el.closest( 'td.mpc-product-variation' ).find( 'select.' + attName );
-			console.log( dropDown );
 			if ( ! dropDown || 0 === dropDown.length ) {
 				return;
 			}
+
+			const hasValue = dropDown.find( 'option:selected' ).val();
 
 			dropDown.find( 'option' ).each(
 				( _, cel ) =>
 				{
 					const attValue = $( cel ).val();
-					if ( attValue && attValue.length > 0 && -1 === this.$state.available[ attName ].indexOf( attValue ) ) {
+					if ( ! hasValue && attValue && attValue.length > 0 && -1 === this.$state.available[ attName ].indexOf( attValue ) ) {
 						$( cel ).hide();
 					} else {
 						$( cel ).show();
