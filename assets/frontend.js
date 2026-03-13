@@ -816,21 +816,7 @@
 		}
 		variation_clear_button(row);
 	});
-
-	$('body').on('click', 'a.reset_variations', function (e) {
-		e.preventDefault();
-
-		// remove all selected values of variation dropdowns.
-		var row = $(this).closest('.mpc-product-variation');
-		row.find('select').each(function () {
-			$(this).find('option:first').prop('selected', true);
-			$(this).trigger('change');
-		});
-
-		row.find('.mpc-var-desc').empty();
-		row.find('a.reset_variations').remove();
-	});
-
+	
 	function quantity_handler(row) {
 		var qty = parseInt(row.find('input[type="number"]').val());
 

@@ -310,7 +310,10 @@ if ( ! class_exists( 'MPCLoader' ) ) {
 
 			// register script.
 			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.js', array( 'jquery' ), MPC_VER, true );
-			wp_enqueue_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/frontend.js', array( 'jquery' ), MPC_VER, false );
+			wp_register_script( 'mpc-table-var', plugin_dir_url( MPC ) . 'assets/js/table-variations.js', array( 'jquery' ), MPC_VER, true );
+			
+			wp_enqueue_script( 'mpc-frontend' );
+			wp_enqueue_script( 'mpc-table-var' );
 
 			// handle localized variables.
 			$redirect_url = get_option( 'wmc_redirect' );

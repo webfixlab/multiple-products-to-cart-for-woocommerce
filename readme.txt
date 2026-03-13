@@ -117,10 +117,11 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 == Changelog ==
 
-= 8.0.1 2026-03-12 =
+= 8.1.0 2026-03-12 =
 
 **Multiple Products to Cart for WooCommerce**
 
+* Update - **Filter available variations automatically added**.
 * Update - Pagination divider design.
 * Fix - Add plugin review URL.
 
