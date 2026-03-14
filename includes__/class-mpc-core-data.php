@@ -16,12 +16,6 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 	 */
 	class MPC_Core_Data {
 
-		/**
-		 * If we have pro plugin
-		 * @var bool
-		 */
-		public static $has_pro = false;
-
 		public static function get_plugin(){
 			return array(
 				'plugin_url'      => 'https://wordpress.org/plugins/multiple-products-to-cart-for-woocommerce/',
@@ -30,17 +24,8 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				'wc_plugin_url'   => 'https://wordpress.org/plugins/woocommerce/',
 				'notice_interval' => 15, // days.
 				'notice'          => array(),
-				'page_limit'      => 10,
 				'pro_plugin_url'  => 'https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/',
 				'activate_link'   => 'admin.php?page=mpc-shortcodes-pricing',
-				'has_pro'         => false,
-				'prostate'        => 'none',
-				'screen'          => array(
-					'toplevel_page_mpc-shortcodes',
-					'multiple-products_page_mpc-shortcode',
-					'multiple-products_page_mpc-settings',
-					'multiple-products_page_mpca_license',
-				),
 			);
 		}
 		public static function get_general_settings(){

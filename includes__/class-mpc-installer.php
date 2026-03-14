@@ -37,10 +37,6 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 			register_activation_hook( MPC, array( __CLASS__, 'activate' ) );
 			register_deactivation_hook( MPC, array( __CLASS__, 'deactivate' ) );
 
-			// add extra links right under plug.
-			add_filter( 'plugin_action_links_' . plugin_basename( MPC ), array( __CLASS__, 'action_links' ) );
-			add_filter( 'plugin_row_meta', array( __CLASS__, 'desc_meta' ), 10, 2 );
-
 			return true;
 		}
 
@@ -117,56 +113,6 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 		 */
 		public static function deactivate() {
 			flush_rewrite_rules();
-		}
-
-		/**
-		 * Add plugin action links on all plugins page
-		 *
-		 * @param array $links current plugin action links.
-		 */
-		public static function action_links( $links ) {
-			$action_links = array();
-
-			$action_links['settings'] = sprintf(
-				'<a href="%s">%s</a>',
-				admin_url( 'admin.php?page=mpc-settings' ),
-				esc_html__( 'Settings', 'multiple-products-to-cart-for-woocommerce' )
-			);
-
-            if ( ! in_array( 'activated', explode( ' ', self::$plugin_data[ 'pro_state' ] ), true ) ) {
-				$action_links['premium'] = sprintf(
-					'<a href="%s" style="font-weight: bold;background: linear-gradient(94deg, #0090F7, #BA62FC, #F2416B, #F55600);background-clip: text;color: transparent;">%s</a>',
-					esc_url( self::$plugin_data[ 'pro_plugin_url' ] ),
-					__( 'Get PRO Plugin', 'multiple-products-to-cart-for-woocommerce' )
-				);
-			}
-
-			return array_merge( $action_links, $links );
-		}
-
-		/**
-		 * Add plugin description meta data on all plugins page
-		 *
-		 * @param array  $links all meta data.
-		 * @param string $file  plugin base file name.
-		 */
-		public static function desc_meta( $links, $file ) {
-			global $svsw__;
-
-			// if it's not Role Based Product plugin, return.
-			if ( plugin_basename( MPC ) !== $file ) {
-				return $links;
-			}
-
-			$row_meta = array();
-
-			$row_meta['apidocs'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( self::$plugin_data[ 'contact_us_url' ] ),
-				esc_html__( 'Support', 'multiple-products-to-cart-for-woocommerce' )
-			);
-
-			return array_merge( $links, $row_meta );
 		}
 	}
 }
