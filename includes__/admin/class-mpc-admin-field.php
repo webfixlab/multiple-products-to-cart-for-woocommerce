@@ -29,6 +29,12 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
         private static $pro_state;
 
         /**
+         * Current field value
+         * @var string
+         */
+        private static $field_value = '';
+
+        /**
          * Display settings option field
          *
          * @param array  $field     Input field data.
@@ -37,6 +43,8 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
         public static function init( $field, $pro_state ){
             self::$field     = $field;
             self::$pro_state = $pro_state;
+
+            self::$field_value = get_option( $field['key'], $field['default'] ?? '' );
 			?>
 			<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="<?php echo esc_attr( $field['key'] ); ?>">
 				<div class="mpcdp_settings_option visible" data-field-id="<?php echo esc_attr( $field['key'] ); ?>">
@@ -46,7 +54,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
 						<?php self::render_field(); ?>
 					</div>
 				</div>
-				<?php // $this->field_followup( $field ); ?>
+				<?php self::render_field_followup( $field ); ?>
 			</div>
 			<?php
         }
@@ -68,7 +76,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
 
         private static function field_title(){
             ?>
-            <div class="mpcdp_settings_option_description col-md-6">
+            <divplaceholder class="mpcdp_settings_option_description col-md-6">
                 <div class="mpcdp_option_label"><?php echo esc_html( self::$field['label'] ); ?></div>
                 <?php self::field_description(); ?>
             </div>
@@ -113,7 +121,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     type="text"
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
-                    value="<?php echo esc_attr( get_option( $field['key'], $field['default'] ?? '' ) ); ?>"
+                    value="<?php echo esc_attr( self::$field_value ); ?>"
                     placeholder="<?php echo esc_html( $field['placeholder'] ); ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
                     title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>">
@@ -127,7 +135,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     type="number"
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
-                    value="<?php echo esc_attr( get_option( $field['key'], $field['default'] ?? '' ) ); ?>"
+                    value="<?php echo esc_attr( self::$field_value ); ?>"
                     placeholder="<?php echo esc_html( $field['placeholder'] ); ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
                     title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>"
@@ -144,14 +152,13 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                         type="text"
                         name="<?php echo esc_attr( $field['key'] ); ?>"
                         class="mpc-colorpicker <?php echo esc_html( implode( ' ', $classes ) ); ?>"
-                        value="<?php echo esc_attr( get_option( $field['key'], $field['default'] ?? '' ) ); ?>"
+                        value="<?php echo esc_attr( self::$field_value ); ?>"
                         data-default-color="">
                 </div>
             </div>
             <?php
         }
         private static function render_field_radio( $field, $classes ){
-            $value = get_option( $field['key'] );
             ?>
             <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
                 <div class="switch-field">
@@ -161,7 +168,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                                 'value'   => $opt_value,
                                 'label'   => $opt_label,
                                 'classes' => $classes,
-                                'checked' => $opt_value === $value ? 'checked' : ''
+                                'checked' => $opt_value === self::$field_value ? 'checked' : ''
                             ));
                         }
                     ?>
@@ -184,25 +191,24 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
             <?php
         }
         private static function render_field_checkbox( $field, $classes ){
-            $value = get_option( $field['key'], $field['default'] ?? '' );
             ?>
             <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
                 <input
                     type="checkbox"
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
-                    value="<?php echo esc_attr( $value ); ?>"
+                    value="<?php echo esc_attr( self::$field_value ); ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
                     title="<?php echo esc_html( $field['label'] ); ?>"
                     data-on-title="<?php echo esc_html( $field['switch_text']['on'] ); ?>"
                     data-off-title="<?php echo esc_html( $field['switch_text']['off'] ); ?>"
-                    <?php echo 'on' === $value ? 'checked' : ''; ?>>
+                    <?php echo 'on' === self::$field_value ? 'checked' : ''; ?>>
 			</div>
             <?php
-            self::render_field_checkbox_switch( $field, $value );
+            self::render_field_checkbox_switch( $field );
         }
-        private static function render_field_checkbox_switch( $field, $value ){
-            $value = empty( $value ) ? 'off' : $value;
+        private static function render_field_checkbox_switch( $field ){
+            $value = empty( self::$field_value ) ? 'off' : self::$field_value;
             ?>
 			<div class="hurkanSwitch hurkanSwitch-switch-plugin-box">
 				<div class="hurkanSwitch-switch-box switch-animated-<?php echo esc_attr( $value ); ?>">
@@ -217,6 +223,48 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
 				</div>
 			</div>
 			<?php
+        }
+
+        private static function render_field_followup( $field ){
+            if( ! isset( $field['followup'] ) || empty( $field['followup'] ) ){
+                return;
+            }
+
+            $display = isset( $field['followup_depends'] ) && $field['followup_depends'] === self::$field_value ? 'block' : 'none';
+
+            foreach( $field['followup'] as $field_followup ){
+                self::render_followup_field( $field_followup, $display );
+            }
+        }
+        private static function render_followup_field( $field, $display ){
+            ?>
+            <div
+                class="mpcdp_settings_option"
+                data-field-id="<?php echo esc_attr( $field['key'] ); ?>"
+                data-depends-on-<?php echo esc_attr( $field['key'] ); ?>="on"
+                data-depends-on="<?php echo esc_attr( $field['key'] ); ?>"
+                data-visible="false"
+                style="display: <?php echo esc_attr( $display ); ?>;">
+                <div class="mpcdp_row">
+                    <div class="mpcdp_settings_option_description col-md-6">
+                        <div class="mpcdp_option_label"><?php echo esc_html( $field['label'] ); ?></div>
+                        <?php if ( ! empty( $field['desc'] ) ) : ?>
+                            <div class="mpcdp_option_description">
+                                <?php echo wp_kses_post( $field['desc'] ); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
+                        <input
+                            type="text"
+                            name="<?php echo esc_attr( $field['key'] ); ?>"
+                            id="<?php echo esc_attr( $field['key'] ); ?>"
+                            value="<?php echo esc_html( self::$field_value ); ?>"
+                            placeholder="<?php echo esc_html( $field['placeholder'] ); ?>">
+                    </div>
+                </div>
+            </div>
+            <?php
         }
 	}
 }
