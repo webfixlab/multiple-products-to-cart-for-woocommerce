@@ -78,9 +78,6 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
          * Show admin notices
          */
         public static function saved_settings_notice(){
-			if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
-                return;
-            }
 			?>
 			<div class="mpc-notice mpcdp_settings_toggle mpcdp_container">
 				<div class="mpcdp_settings_option visible">
@@ -94,7 +91,7 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			</div>
 			<?php
         }
-        
+
         public static function sidebar( $plugin_data ){
             ?>
             <div class="sidebar_top">

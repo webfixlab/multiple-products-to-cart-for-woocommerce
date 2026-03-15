@@ -202,21 +202,21 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 		 * Saved tables admin menu page
 		 */
 		public static function all_tables_page() {
-			MPC_Admin_Page::render_page( 'all-tables', self::$pro_state );
+			MPC_Admin_Page::init( 'all-tables', self::$pro_state );
 		}
 
 		/**
 		 * New table admin menu page
 		 */
 		public static function create_new_table_page() {
-            MPC_Admin_Page::render_page( 'new-table', self::$pro_state );
+            MPC_Admin_Page::init( 'new-table', self::$pro_state );
 		}
 
 		/**
 		 * Admin settings menu page
 		 */
 		public static function admin_settings_page() {
-            MPC_Admin_Page::render_page( '', self::$pro_state );
+            MPC_Admin_Page::init( '', self::$pro_state );
 		}
 
 		/**

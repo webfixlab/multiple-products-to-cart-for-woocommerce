@@ -40,7 +40,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
          * @param string $tab       Settings tab.
          * @param string $pro_state Pro plugin status.
 		 */
-		public static function render_page( $tab, $pro_state ) {
+		public static function init( $tab, $pro_state ) {
             if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -170,7 +170,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 				return;
 			}
             
-            MPC_Admin_Template::saved_settings_notice();
+            // self::process_from_submit( $fields );
 
 			foreach ( $fields as $section ) {
                 ?>
@@ -181,6 +181,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
                 <?php
 			}
         }
+
         private static function display_section( $section ){
             foreach ( $section['fields'] as $fld ) {
                 // $this->saving_field( $fld );
