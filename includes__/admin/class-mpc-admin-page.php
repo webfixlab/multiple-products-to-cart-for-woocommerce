@@ -110,6 +110,10 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             </div>
             <?php
         }
+
+        /**
+         * Render all admin settings page menues
+         */
         private static function navigation(){
             ?>
             <div class="mpcdp_settings_sidebar" data-sticky-container="" style="position: relative;">
@@ -122,6 +126,10 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             </div>
             <?php
         }
+
+        /**
+         * Display menu item
+         */
         private static function navigation_items(){
             $nonce = wp_create_nonce( 'mpc_option_tab' );
 
@@ -139,6 +147,9 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 			}
         }
 
+        /**
+         * Display settings page main content
+         */
         private static function main_content(){
             ?>
             <div class="mpcdp_settings_content">
@@ -148,8 +159,14 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             </div>
             <?php
         }
+
+        /**
+         * Navigate settings based on given tab
+         */
         private static function navigate_settings(){
             $tab = self::$settings_tab;
+
+            // load settings template for these tabs.
 			if ( in_array( $tab, array( 'new-table', 'all-tables', 'column-sorting', 'import', 'export' ), true ) ) {
 				if ( file_exists( MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php' ) ) {
 					include MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php';
@@ -157,7 +174,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 				return;
 			}
 
-            $fields = array();
+            $fields = array(); // get settings input fields.
             if( 'general-settings' === $tab ) {
                 $fields = MPC_Core_Data::get_general_settings();
             } elseif( 'labels' === $tab ) {
@@ -170,7 +187,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 				return;
 			}
             
-            // self::process_from_submit( $fields );
+            self::save_settings_fields( $fields );
 
 			foreach ( $fields as $section ) {
                 ?>
@@ -180,6 +197,70 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
                 </div>
                 <?php
 			}
+        }
+
+        /**
+         * Save admin settings fields
+         *
+         * @param array $fields All input fields on this tab.
+         */
+        private static function save_settings_fields( $fields ){
+            if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
+                return;
+            }
+
+            $followup_fields = array(); // nested fields inside of a field.
+
+            foreach( $fields as $field ){
+                // handle followup fields.
+                if( isset( $field['followup'] ) && ! empty( $field['followup'] ) ){
+                    $followup_fields[] = $field['followup'];
+                }
+
+                if( isset( $field['pro'] ) && empty( self::$pro_state ) ) {
+                    continue;
+                }
+
+                $key   = $field['key'];
+                $value = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'on' : 'no' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+
+                self::save_settings_field( $field, $value );
+            }
+
+            // process followup fields, if any exists.
+            foreach( $followup_fields as $field ){
+                if( isset( $field['pro'] ) && empty( self::$pro_state ) ) {
+                    continue;
+                }
+
+                $key   = $field['key'];
+                $value = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'on' : 'no' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+
+                self::save_settings_field( $field, $value );
+            }
+
+            // show settings saved notice.
+            MPC_Admin_Template::saved_settings_notice();
+        }
+
+        /**
+         * Save settings field
+         *
+         * @param array  $field Input field data.
+         * @param string $value Input field value, sanitized.
+         */
+        private static function save_settings_field( $field, $value ){
+            if( 'checkbox' === $field['type'] ) {
+                update_option( $field['key'], $value );
+                return;
+            }
+
+            if( empty( $value ) ){
+                delete_option( $field['key'] );
+                return;
+            }
+
+            update_option( $field['key'], $value );
         }
 
         private static function display_section( $section ){
