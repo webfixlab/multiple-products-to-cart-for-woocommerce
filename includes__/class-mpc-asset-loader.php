@@ -27,6 +27,12 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
          * @var string
          */
         private static $pro_state;
+
+		/**
+         * Plugin core data
+         * @var array
+         */
+        private static $plugin_data;
         
         /**
          * Init asset loader class
@@ -34,9 +40,9 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
          * @param string $pro_state Pro plugin status.
          */
         public static function init( $pro_state ){
-            self::$pro_state = $pro_state;
-
-            self::$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+            self::$pro_state   = $pro_state;
+            self::$suffix      = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			self::$plugin_data = MPC_Core_Data::get_plugin();
 
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'frontend_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ) );
@@ -212,12 +218,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 
         private static function admin_in_scope(){
             $screen = get_current_screen();
-            return in_array( $screen->id, array(
-                'toplevel_page_mpc-shortcodes',
-                'multiple-products_page_mpc-shortcode',
-                'multiple-products_page_mpc-settings',
-                'multiple-products_page_mpca_license',
-            ), true );
+            return in_array( $screen->id, self::$plugin_data[ 'admin_scopes' ], true );
         }
 
         private static function admin_script_data(){

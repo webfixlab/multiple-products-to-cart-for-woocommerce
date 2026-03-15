@@ -55,7 +55,9 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		 */
 		public static function includes() {
 			// admin functions.
-			include MPC_PATH . 'includes__/class-mpc-admin-loader.php';
+			include MPC_PATH . 'includes__/admin/class-mpc-admin-template.php';
+			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
+			include MPC_PATH . 'includes__/admin/class-mpc-admin-loader.php';
 
 			// asset files handler.
 			include MPC_PATH . 'includes__/class-mpc-asset-loader.php';

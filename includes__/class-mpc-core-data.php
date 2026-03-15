@@ -26,6 +26,48 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				'notice'          => array(),
 				'pro_plugin_url'  => 'https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/',
 				'activate_link'   => 'admin.php?page=mpc-shortcodes-pricing',
+				'admin_scopes'    => array(
+					'toplevel_page_mpc-shortcodes',
+					'multiple-products_page_mpc-shortcode',
+					'multiple-products_page_mpc-settings',
+					'multiple-products_page_mpca_license',
+				)
+			);
+		}
+		public static function navigation_data(){
+			return array(
+				'all-tables' => array(
+					'tab'  => __( 'All Tables', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-saved',
+				),
+				'new-table' => array(
+					'tab'  => __( 'New Table', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-shortcode',
+				),
+				'general-settings' => array(
+					'tab'  => __( 'General Settings', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-admin-settings',
+				),
+				'labels' => array(
+					'tab'  => __( 'Labels', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-text',
+				),
+				'appearence' => array(
+					'tab'  => __( 'Appearence', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-admin-appearance',
+				),
+				'column-sorting' => array(
+					'tab'  => __( 'Column Sorting', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-sort',
+				),
+				'export' => array(
+					'tab'  => __( 'Export', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-download',
+				),
+				'import' => array(
+					'tab'  => __( 'Import', 'multiple-products-to-cart-for-woocommerce' ),
+					'icon' => 'dashicons-upload',
+				),
 			);
 		}
 		public static function get_general_settings(){

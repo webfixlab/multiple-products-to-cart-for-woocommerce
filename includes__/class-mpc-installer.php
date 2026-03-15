@@ -26,7 +26,7 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 		 * Plugin installation handler
 		 */
 		public static function install() {
-            self::setup();
+            self::$plugin_data = MPC_Core_Data::get_plugin();
 
 			if ( ! self::has_wc() ) {
 				add_action( 'admin_notices', array( __CLASS__, 'missing_wc' ) );
@@ -39,13 +39,6 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 
 			return true;
 		}
-
-        /**
-         * Setup plugin core data
-         */
-        private static function setup(){
-            self::$plugin_data = MPC_Core_Data::get_plugin();
-        }
 
 		/**
 		 * Checks if base plugin is active or not
