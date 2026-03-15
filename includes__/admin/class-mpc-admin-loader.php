@@ -29,12 +29,6 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
         private static $pro_state;
 
 		/**
-		 * Admin notices moved to this variable
-		 * @var array
-		 */
-		private static $notices;
-
-		/**
 		 * Plugin installation handler
          *
          * @param string $pro_state Pro plugin status.
@@ -145,11 +139,6 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 				return;
 			}
 
-			// Buffer only the notices.
-			ob_start();
-			do_action( 'admin_notices' );
-			self::$notices = ob_get_clean();
-
 			// Remove all admin notices as we don't need to display in it's place.
 			remove_all_actions( 'admin_notices' );
 		}
@@ -213,21 +202,21 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 		 * Saved tables admin menu page
 		 */
 		public static function all_tables_page() {
-			MPC_Admin_Page::render_page( 'all-tables', self::$pro_state, self::$notices );
+			MPC_Admin_Page::render_page( 'all-tables', self::$pro_state );
 		}
 
 		/**
 		 * New table admin menu page
 		 */
 		public static function create_new_table_page() {
-            MPC_Admin_Page::render_page( 'new-table', self::$pro_state, self::$notices );
+            MPC_Admin_Page::render_page( 'new-table', self::$pro_state );
 		}
 
 		/**
 		 * Admin settings menu page
 		 */
 		public static function admin_settings_page() {
-            MPC_Admin_Page::render_page( '', self::$pro_state, self::$notices );
+            MPC_Admin_Page::render_page( '', self::$pro_state );
 		}
 
 		/**

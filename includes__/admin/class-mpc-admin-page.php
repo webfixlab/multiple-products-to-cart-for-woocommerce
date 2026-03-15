@@ -34,20 +34,13 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
          */
         private static $settings_tab;
 
-        /**
-         * Admin notices
-         * @var array
-         */
-        private static $notices;
-
 		/**
 		 * Plugin installation handler
          *
          * @param string $tab       Settings tab.
          * @param string $pro_state Pro plugin status.
-         * @param array  $notices   Admin notices.
 		 */
-		public static function render_page( $tab, $pro_state, $notices ) {
+		public static function render_page( $tab, $pro_state ) {
             if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -60,9 +53,6 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 
             // get settings tab.
             self::$settings_tab = empty( $tab ) ? self::get_tab() : $tab;
-
-            // process admin notices.
-            self::$notices = $notices;
 
             self::settings_form();
 		}
@@ -179,23 +169,19 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 			if ( empty( $fields ) ) {
 				return;
 			}
+            
+            MPC_Admin_Template::saved_settings_notice();
 
-			$notice_delivered = false; // if notice is already delivered or displayed.
 			foreach ( $fields as $section ) {
                 ?>
                 <div class="mpcdp_settings_section">
-                    <?php self::display_section( $section, $notice_delivered ); ?>
+                    <?php printf( '<div class="mpcdp_settings_section_title">%s</div>', esc_html( $section['section'] ) ); ?>
+                    <?php self::display_section( $section ); ?>
                 </div>
                 <?php
-                $notice_delivered = true;
 			}
         }
-        private static function display_section( $section, $notice_delivered ){
-            printf( '<div class="mpcdp_settings_section_title">%s</div>', esc_html( $section['section'] ) );
-            if ( ! $notice_delivered ) {
-                $notice_done = true;
-                // $this->show_notice();
-            }
+        private static function display_section( $section ){
             foreach ( $section['fields'] as $fld ) {
                 // $this->saving_field( $fld );
                 // $this->field_settings( $fld );
