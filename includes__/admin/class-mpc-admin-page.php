@@ -168,6 +168,8 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 
             // load settings template for these tabs.
 			if ( in_array( $tab, array( 'new-table', 'all-tables', 'column-sorting', 'import', 'export' ), true ) ) {
+                // save settings for these tabs.
+                
 				if ( file_exists( MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php' ) ) {
 					include MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php';
 				}
@@ -193,7 +195,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
                 ?>
                 <div class="mpcdp_settings_section">
                     <?php printf( '<div class="mpcdp_settings_section_title">%s</div>', esc_html( $section['section'] ) ); ?>
-                    <?php self::display_section( $section ); ?>
+                    <?php self::display_settings_section( $section ); ?>
                 </div>
                 <?php
 			}
@@ -263,10 +265,14 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             update_option( $field['key'], $value );
         }
 
-        private static function display_section( $section ){
-            foreach ( $section['fields'] as $fld ) {
-                // $this->saving_field( $fld );
-                // $this->field_settings( $fld );
+        /**
+         * Display admin settings section
+         *
+         * @param array $section All input fields in this section.
+         */
+        private static function display_settings_section( $section ){
+            foreach ( $section['fields'] as $field ) {
+                MPC_Admin_Field::init( $field, self::$pro_state );
             }
         }
 	}
