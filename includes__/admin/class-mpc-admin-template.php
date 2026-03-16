@@ -92,6 +92,61 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			<?php
         }
 
+        /**
+		 * Display shortcode table item
+		 *
+		 * @param int    $id    table id.
+		 * @param string $title table title.
+		 * @param string $desc  table description.
+		 */
+		public static function display_shortcode( $id, $title, $desc ) {
+			?>
+			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode">
+				<div class="mpcdp_settings_option visible">
+					<div class="mpcdp_row">
+						<?php self::display_shortcode_title( $title, $desc ); ?>
+					</div>
+					<div class="mpcdp_row">
+						<?php self::display_shortcode_details( $id ); ?>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+        private static function display_shortcode_title( $title, $desc ){
+            ?>
+            <div class="mpcdp_settings_option_description col-md-12">
+                <div class="mpcdp_option_label"><?php echo esc_html( $title ); ?></div><div class="mpcdp_option_description">
+                    <?php echo ! empty( $desc ) ? wp_kses_post( $desc ) : ''; ?>
+                </div>
+            </div>
+            <?php
+        }
+        private static function display_shortcode_details( $id ){
+            $edit   = admin_url( 'admin.php?page=mpc-shortcode' );
+			$delete = admin_url( 'admin.php?page=mpc-shortcodes' );
+			$nonce  = wp_create_nonce( 'mpc_option_tab' );
+            ?>
+            <div class="mpcdp_settings_option_description col-md-12">
+                <textarea class="mpc-opt-sc" readonly >[woo-multi-cart table="<?php echo esc_attr( $id ); ?>"]</textarea>
+            </div>
+            <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-4 mpc-sc-btns">
+                <span class="mpc-opt-sc-btn copy">
+                    <span class="dashicons dashicons-admin-page"></span>
+                    <span class="mpc-sc-label"><?php echo __( 'Copy', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+                </span>
+                <a class="mpc-opt-sc-btn edit" href="<?php echo esc_url( $edit . '&tab=all-tables&mpctable=' . esc_attr( $id ) . '&nonce=' . $nonce ); ?>">
+                    <span class="dashicons dashicons-welcome-write-blog"></span>
+                    <span class="mpc-sc-label"><?php echo __( 'Edit', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+                </a>
+                <a class="mpc-opt-sc-btn delete" href="<?php echo esc_url( $delete . '&tab=all-tables&mpcscdlt=' . esc_attr( $id ) . '&nonce=' . $nonce ); ?>">
+                    <span class="dashicons dashicons-trash"></span>
+                    <span class="mpc-sc-label"><?php echo __( 'Delete', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+                </a>
+            </div>
+            <?php
+        }
+
         public static function sidebar( $plugin_data ){
             ?>
             <div class="sidebar_top">

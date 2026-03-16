@@ -169,7 +169,16 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             $tab = self::$settings_tab;
 
             // load settings template for these tabs.
-			if ( in_array( $tab, array( 'new-table', 'all-tables', 'column-sorting', 'import', 'export' ), true ) ) {
+            if( 'new-table' === $tab || 'all-tables' === $tab ){
+                if( 'all-tables' === $tab ){
+                    self::display_all_tables();
+                }elseif( 'new-tables' === $tab ){
+                    self::display_new_table();
+                }
+                return;
+            }
+
+			if ( in_array( $tab, array( 'column-sorting', 'import', 'export' ), true ) ) {
 				if ( file_exists( MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php' ) ) {
 					include MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php';
 				}
@@ -197,6 +206,75 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
                 </div>
                 <?php
 			}
+        }
+
+        private static function display_all_tables(){
+            $has_shortcode = false; // has any shortcodes saved;
+            ?>
+            <div class="mpcdp_settings_section">
+                <div class="mpcdp_settings_section_title">
+                    <?php echo __( 'All Product Tables', 'multiple-products-to-cart-for-woocommerce' ); ?>
+                </div>
+                <?php $has_shortcode = $has_shortcode || self::get_all_cpt_tables(); ?>
+                <?php $has_shortcode = $has_shortcode || self::get_legacy_tables(); ?>
+            </div>
+            <?php
+        }
+        private static function get_all_cpt_tables(){
+            $args = array(
+				'post_type'      => 'mpc_product_table',
+				'posts_per_page' => -1,
+			);
+
+			// remove hooks for nuiscense.
+			remove_all_filters( 'pre_get_posts' );
+			remove_all_filters( 'posts_orderby' );
+
+			// get products from query.
+			$tables = new WP_Query( $args );
+			wp_reset_postdata();
+
+            if( !isset( $tables->posts ) || empty( $tables->posts ) ){
+                return false;
+            }
+
+            foreach ( $tables->posts as $post ) {
+                // $id = get_post_meta( $post->ID, 'table_id', true );
+                MPC_Admin_Template::display_shortcode( $post->ID, $post->post_title, $post->post_content );
+            }
+
+            return true;
+        }
+        private static function get_legacy_tables(){
+            global $wpdb;
+            $res = $wpdb->get_results( "SELECT `option_name`, `option_value` FROM {$wpdb->options} WHERE `option_name` LIKE 'mpcasc_cod%'" );
+
+            if( ! $res ){
+                return false;
+            }
+
+            foreach( $res as $row ){
+                $table_id = (int) str_replace( 'mpcasc_code', '', $row->option_name );
+                // $value = maybe_unserialize( $row->option_value );
+                MPC_Admin_Template::display_shortcode( $table_id, '', '' );
+            }
+
+            return true;
+        }
+        private static function display_new_table(){
+            ?>
+            <div class="mpcdp_settings_section">
+                <?php // $mpc_opt_sc->edit_shortcode(); ?>
+            </div>
+            <div class="mpca-content new-table">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=mpc-shortcode' ) ); ?>" class="mpcasc-reset">
+                    <span class="button-secondary">
+                        <?php echo esc_html__( 'Reset', 'multiple-products-to-cart-for-woocommerce' ); ?>
+                    </span>
+                </a>
+            </div>
+            <?php
+            wp_nonce_field( 'mpc_opt_sc_save', 'mpc_opt_sc' );
         }
 
         /**
