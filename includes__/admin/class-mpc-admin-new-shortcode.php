@@ -68,7 +68,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			$shortcode = str_replace( ']', '', $shortcode );
 			$shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
 
-			self::$atts = ! empty( $shortcode ) && strlen( $shortcode ) > 10 ? shortcode_parse_atts( $code ) : array();
+			self::$atts = ! empty( $shortcode ) && strlen( $shortcode ) > 10 ? shortcode_parse_atts( $shortcode ) : array();
 			self::$atts = is_array( self::$atts ) ? self::$atts : array();
 		}
 		private static function render_fields(){
@@ -127,14 +127,11 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			}
 		}
 		private static function render_field_sortable( $field ){
-			$key = $field['key'];
-
-			$all_columns = MPC_Core_Data::get_columns();
-			
+			$key   = $field['key'];
 			$value = !isset( self::$atts[ $key ] ) || empty( self::$atts[ $key ] ) ? get_option( 'wmc_sorted_columns' ) : self::$atts[ $key ];
-
-			// get saved columns.
-			$active_columns = !empty( $value ) && !is_array( $value ) ? explode( str_replace( array( ' ', 'wmc_ct_' ), '', $value ) ) : array( 'image', 'product', 'price', 'variation', 'quantity', 'buy' );
+			
+			$column_labels  = MPC_Core_Data::get_columns();
+			$active_columns = !empty( $value ) && !is_array( $value ) ? explode( ',', str_replace( array( ' ', 'wmc_ct_' ), '', $value ) ) : array( 'image', 'product', 'price', 'variation', 'quantity', 'buy' );
 
 			// remove pro columns on free version.
 			$active_columns = empty( self::$pro_state ) ? array_diff( $active_columns, array( 'category', 'stock', 'tag', 'sku', 'rating' ) ) : $active_columns;
@@ -148,42 +145,35 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 				<div class="mpcdp_settings_option_description col-md-6">
 					<div class="mpcdp_option_label"><?php echo esc_html__( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
 					<div class="mpc-sortable mpca-sorted-options">
-						<?php self::display_columns( $all_columns, $active_columns, true ); ?>
+						<ul id="active-mpc-columns" class="connectedSortable ui-sortable">
+							<?php self::display_columns( $active_columns, $column_labels ); ?>
+						</ul>
 					</div>
 				</div>
 				<div class="mpcdp_settings_option_description col-md-6">
 					<div class="mpcdp_option_label"><?php echo esc_html__( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
 					<div class="mpc-sortable mpca-sorted-options">
-						<?php self::display_columns( $all_columns, $active_columns, false ); ?>
+						<ul id="inactive-mpc-columns" class="connectedSortable ui-sortable">
+							<?php self::display_columns( array_diff( $active_columns, array_keys( $column_labels ) ), $column_labels ); ?>
+						</ul>
 					</div>
 				</div>
 			</div>
 			<?php
 		}
-		private static function display_columns( $all_columns, $active_columns, $is_active ){
-			$active_columns = $is_active ? $active_columns : array_diff( array_keys( $all_columns ), $active_columns );
-			?>
-			<ul id="<?php echo $is_active ? 'active' : 'inactive'; ?>-mpc-columns" class="connectedSortable ui-sortable">
-				<?php
-					foreach( $active_columns as $column ){
-						self::display_column( $column );
-					}
-				?>
-			</ul>
-			<?php
-		}
-		private static function display_column( $column ){
-			$label = get_option( 'wmc_ct_' . esc_attr( $col ) );
-			if ( empty( $label ) ) {
-				$label = $labels[ $col ];
+		private static function display_columns( $columns, $column_labels ){
+			foreach( $columns as $column ){
+				self::display_column( $column_labels, $column );
 			}
-
+		}
+		private static function display_column( $column_labels, $column ){
+			$label = get_option( 'wmc_ct_' . esc_attr( $column ), $column_labels[ $column ] );
 			$class = 'variation' === $column || ( empty( self::$pro_state ) && in_array( $column, array( 'category', 'stock', 'tag', 'sku', 'rating' ), true ) ) ? 'mpc-stone-col' : 'ui-state-default';
 			?>
 			<li
 				class="ui-sortable-handle <?php echo esc_attr( $class ); ?>"
 				data-meta_key="wmc_ct_<?php echo esc_attr( $column ); ?>">
-				<?php echo esc_html( $all_columns[ $column ] ); ?>
+				<?php echo esc_html( $label ); ?>
 			</li>
 			<?php
 		}

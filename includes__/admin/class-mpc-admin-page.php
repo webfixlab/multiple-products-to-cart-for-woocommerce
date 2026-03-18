@@ -169,16 +169,18 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             $tab = self::$settings_tab;
 
             // load settings template for these tabs.
-            if( 'new-table' === $tab || 'all-tables' === $tab ){
-                if( 'all-tables' === $tab ){
-                    self::display_all_tables();
-                }elseif( 'new-tables' === $tab ){
-                    self::display_new_table();
-                }
+            if( 'all-tables' === $tab ){
+                self::display_all_tables();
+                return;
+            }elseif( 'new-table' === $tab ){
+                self::display_new_table();
+                return;
+            }elseif( 'column-sorting' === $tab ){
+                MPC_Admin_Template::column_sorting( self::$pro_state );
                 return;
             }
 
-			if ( in_array( $tab, array( 'column-sorting', 'import', 'export' ), true ) ) {
+			if ( in_array( $tab, array( 'import', 'export' ), true ) ) {
 				if ( file_exists( MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php' ) ) {
 					include MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php';
 				}

@@ -167,6 +167,100 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			<?php
         }
 
+        public static function column_sorting( $pro_state ){
+            $value = get_option( 'wmc_sorted_columns' );
+
+            $column_labels  = MPC_Core_Data::get_columns();
+            $active_columns = !empty( $value ) && !is_array( $value ) ? explode( ',', str_replace( array( ' ', 'wmc_ct_' ), '', $value ) ) : array( 'image', 'product', 'price', 'variation', 'quantity', 'buy' );
+
+            // remove pro columns on free version.
+			$active_columns = empty( $pro_state ) ? array_diff( $active_columns, array( 'category', 'stock', 'tag', 'sku', 'rating' ) ) : $active_columns;
+            ?>
+            <div class="mpcdp_settings_section">
+                <div class="mpcdp_settings_section_title"><?php echo __( 'Column Sorting', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                <?php // $cls->show_notice(); ?>
+                <div class="mpc-banner mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
+                    <div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
+                        <div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
+                            <?php self::column_sorting_desc( $pro_state ); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="mpcdp_settings_toggle mpcdp_container" id="column-sorting">
+                    <div class="mpcdp_settings_option visible">
+                        <div class="mpcdp_row">
+                            <?php self::display_sorted_columns( $active_columns, $column_labels, true ); ?>
+                            <?php self::display_sorted_columns( array_diff( $active_columns, array_keys( $column_labels ) ), $column_labels, false ); ?>
+                        </div>
+                    </div>
+                </div>
+                <input
+                    class="mpc-sorted-cols"
+                    type="hidden"
+                    name="wmc_sorted_columns"
+                    value="<?php echo esc_html( $value ); ?>">
+            </div>
+            <?php
+            wp_nonce_field( 'mpc_col_sort_save', 'mpc_col_sort' );
+        }
+        private static function column_sorting_desc( $pro_state ){
+            ?>
+            <span class="theme_customizer_icon dashicons dashicons-list-view"></span>
+            <div class="mpcdp_settings_option_description">
+                <?php self::pro_ribbon( $pro_state ); ?>
+                <div class="mpcdp_option_label"><?php echo esc_html__( 'Manage Product Table Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                <div class="mpcdp_option_description">
+                    <?php echo __( 'Utilize the convenient drag-and-drop feature below to rearrange the order of the product table columns. You also have the ability to activate or deactivate any columns as needed.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+                    <br>
+                    <br>
+                    <?php printf(
+                        // translators: %1$s: move dashicon html, %2$s: sort dashicon html.
+                        __( 'Also note, %1$s can move up, down, left, right, but %2$s only moves up-down.', 'multiple-products-to-cart-for-woocommerce' ),
+                        '<span class="dashicons dashicons-move"></span>',
+                        '<span class="dashicons dashicons-sort"></span>'
+                    ); ?>
+                </div>
+            </div>
+            <?php
+        }
+        private static function pro_ribbon( $pro_state ){
+            if( ! empty( $pro_state ) ) {
+                return;
+            }
+            ?>
+            <div class="mpcdp_settings_option_ribbon mpcdp_settings_option_ribbon_new">
+                <?php echo esc_html__( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
+            </div>
+            <?php
+        }
+        private static function display_sorted_columns( $columns, $column_labels, $is_active ){
+            ?>
+            <div class="mpcdp_settings_option_description col-md-6">
+                <div class="mpcdp_option_label"><?php echo $is_active ? __( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Inactive Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                <div class="mpc-sortable mpca-sorted-options">
+                    <ul id="<?php echo $is_active ? 'active' : 'inactive'; ?>-mpc-columns" class="connectedSortable ui-sortable">
+                        <?php
+                            foreach( $columns as $column ){
+                                self::display_column_widget( $column, $column_labels );
+                            }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+            <?php
+        }
+        private static function display_column_widget( $column, $column_labels ){
+			$label = get_option( 'wmc_ct_' . esc_attr( $column ), $column_labels[ $column ] );
+			$class = 'variation' === $column || ( empty( self::$pro_state ) && in_array( $column, array( 'category', 'stock', 'tag', 'sku', 'rating' ), true ) ) ? 'mpc-stone-col' : 'ui-state-default';
+			?>
+			<li
+				class="ui-sortable-handle <?php echo esc_attr( $class ); ?>"
+				data-meta_key="wmc_ct_<?php echo esc_attr( $column ); ?>">
+				<?php echo esc_html( $label ); ?>
+			</li>
+			<?php
+		}
+
         public static function sidebar( $plugin_data ){
             ?>
             <div class="sidebar_top">
