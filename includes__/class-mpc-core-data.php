@@ -919,5 +919,20 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				),
 			);
 		}
+		public static function get_columns(){
+			return array(
+				'image'     => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
+				'product'   => __( 'Product', 'multiple-products-to-cart-for-woocommerce' ),
+				'price'     => __( 'Price', 'multiple-products-to-cart-for-woocommerce' ),
+				'variation' => __( 'Variation', 'multiple-products-to-cart-for-woocommerce' ),
+				'quantity'  => __( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ),
+				'buy'       => __( 'Buy', 'multiple-products-to-cart-for-woocommerce' ),
+				'category'  => __( 'Category', 'multiple-products-to-cart-for-woocommerce' ),
+				'stock'     => __( 'Stock', 'multiple-products-to-cart-for-woocommerce' ),
+				'tag'       => __( 'Tag', 'multiple-products-to-cart-for-woocommerce' ),
+				'sku'       => __( 'SKU', 'multiple-products-to-cart-for-woocommerce' ),
+				'rating'    => __( 'Rating', 'multiple-products-to-cart-for-woocommerce' ),
+			);
+		}
 	}
 }

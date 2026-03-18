@@ -146,6 +146,26 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
             </div>
             <?php
         }
+        public static function no_shortcode_notices(){
+            $link = '<a href="' . esc_url( admin_url( 'admin.php?page=mpc-shortcode' ) ) . '">' . __( 'here', 'multiple-products-to-cart-for-woocommerce' ) . '</a>';
+			?>
+			<div class="mpcdp_settings_toggle mpcdp_container" style="margin-top: 30px;">
+				<div class="mpcdp_settings_option visible">
+					<div class="mpcdp_row">
+						<div class="mpcdp_settings_option_description col-md-6">
+							<div class="mpcdp_option_label"><?php echo esc_html__( 'No shortcodes found.', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+							<div class="mpcdp_option_description"><?php printf(
+                                // translators: %s: new product table crate link.
+                                __( 'Create a product table shortcode %s.', 'multiple-products-to-cart-for-woocommerce' ),
+                                wp_kses_post( $link )
+                            );?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+        }
 
         public static function sidebar( $plugin_data ){
             ?>

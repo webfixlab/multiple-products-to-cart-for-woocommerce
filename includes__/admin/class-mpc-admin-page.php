@@ -219,6 +219,9 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
                 <?php $has_shortcode = $has_shortcode || self::get_legacy_tables(); ?>
             </div>
             <?php
+            if( ! $has_shortcode ){
+                MPC_Admin_Template::no_shortcode_notices();
+            }
         }
         private static function get_all_cpt_tables(){
             $args = array(
@@ -264,7 +267,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
         private static function display_new_table(){
             ?>
             <div class="mpcdp_settings_section">
-                <?php // $mpc_opt_sc->edit_shortcode(); ?>
+                <?php MPC_Admin_New_Shortcode::init_new_table( self::$pro_state ); ?>
             </div>
             <div class="mpca-content new-table">
                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=mpc-shortcode' ) ); ?>" class="mpcasc-reset">

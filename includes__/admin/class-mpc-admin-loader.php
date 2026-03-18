@@ -43,6 +43,9 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 
             add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 			add_action( 'admin_head', array( __CLASS__, 'admin_head' ) );
+
+			self::register_cpt();
+			add_action( 'wp_ajax_mpc_admin_search_box', array( __CLASS__, 'ajax_itembox_search' ) );
 		}
 
 		/**
@@ -225,6 +228,98 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 		public static function pro_page() {
 			header( 'Location: ' . esc_url( self::$plugin_data[ 'pro_plugin_url' ] ) );
 			exit;
+		}
+
+		/**
+		 * Register custom post type for table
+		 */
+		public static function register_cpt() {
+			register_post_type(
+				'mpc_product_table',
+				array(
+					'labels'              => array(
+						'name'               => _x( 'Mpc Product Tables', 'post type general name', 'multiple-products-to-cart-for-woocommerce' ),
+						'singular_name'      => _x( 'Product Table', 'post type singular name', 'multiple-products-to-cart-for-woocommerce' ),
+						'add_new'            => __( 'Add a New Product Table', 'multiple-products-to-cart-for-woocommerce' ),
+						'add_new_item'       => __( 'Add a New Product Table', 'multiple-products-to-cart-for-woocommerce' ),
+						'edit_item'          => __( 'Edit Product Table', 'multiple-products-to-cart-for-woocommerce' ),
+						'new_item'           => __( 'New Product Table', 'multiple-products-to-cart-for-woocommerce' ),
+						'view_item'          => __( 'View Product Table', 'multiple-products-to-cart-for-woocommerce' ),
+						'search_items'       => __( 'Search Mpc Product Tables', 'multiple-products-to-cart-for-woocommerce' ),
+						'not_found'          => __( 'Nothing Found', 'multiple-products-to-cart-for-woocommerce' ),
+						'not_found_in_trash' => __( 'Nothing found in Trash', 'multiple-products-to-cart-for-woocommerce' ),
+						'parent_item_colon'  => '',
+					),
+					'description'         => __( 'Mpc Product Tables', 'multiple-products-to-cart-for-woocommerce' ),
+					'public'              => true, // All the relevant settings below inherit from this setting.
+					'exclude_from_search' => false, // When a search is conducted through search.php, should it be excluded?
+					'publicly_queryable'  => true, // When a parse_request() search is conducted, should it be included?
+					'show_ui'             => false, // Should the primary admin menu be displayed?
+					'show_in_nav_menus'   => false, // Should it show up in Appearance > Menus?
+					'show_in_menu'        => false, // This inherits from show_ui, and determines *where* it should be displayed in the admin.
+					'show_in_admin_bar'   => false, // Should it show up in the toolbar when a user is logged in?
+					'has_archive'         => 'mpc_product_tables',
+					'rewrite'             => array( 'slug' => 'mpc_product_table' ),
+				)
+			);
+		}
+
+		/**
+		 * Ajax search items for dorpdown combo-box
+		 */
+		public static function ajax_itembox_search() {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'search_box_nonce' ) ) {
+				return '';
+			}
+
+			$search = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+			$type   = isset( $_POST['type_name'] ) ? sanitize_text_field( wp_unslash( $_POST['type_name'] ) ) : '';
+
+			$limit = 50; // Limit the number of items.
+			if ( 'cats' === $type ) {
+				$args = array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => false,  // Set this to true if you only want categories with products.
+					'name__like' => $search,  // Search by category name.
+					'number'     => $limit,  // Limit the number of categories.
+				);
+
+				$product_categories = get_terms( $args );
+				$categories         = array();
+				if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) {
+					foreach ( $product_categories as $category ) {
+						$categories[] = array(
+							'id'   => $category->term_id,
+							'name' => $category->name,
+						);
+					}
+				}
+
+				wp_send_json( $categories );
+			} else {
+				$args = array(
+					's'              => $search,
+					'post_type'      => 'product',
+					'posts_per_page' => $limit,
+				);
+
+				$products = array();
+				$query    = new WP_Query( $args );
+				if ( $query->have_posts() ) {
+					while ( $query->have_posts() ) {
+						$query->the_post();
+						$products[] = array(
+							'id'   => get_the_ID(),
+							'name' => get_the_title(),
+						);
+					}
+				}
+
+				wp_reset_postdata();
+				wp_send_json( $products );
+			}
+
+			wp_send_json( array() );
 		}
 	}
 }

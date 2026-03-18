@@ -57,7 +57,10 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// admin functions.
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-save-settings.php';
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-field.php';
+
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-template.php';
+			include MPC_PATH . 'includes__/admin/class-mpc-admin-new-shortcode.php';
+
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-loader.php';
 
