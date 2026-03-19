@@ -178,14 +178,10 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             }elseif( 'column-sorting' === $tab ){
                 MPC_Admin_Template::column_sorting( self::$pro_state );
                 return;
+            }elseif( 'export' === $tab || 'import' === $tab ){
+                MPC_Admin_Migration_Template::render_template( $tab, self::$pro_state );
+                return;
             }
-
-			if ( in_array( $tab, array( 'import', 'export' ), true ) ) {
-				if ( file_exists( MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php' ) ) {
-					include MPC_PATH . 'templates/admin/' . esc_attr( $tab ) . '.php';
-				}
-				return;
-			}
 
             $fields = array(); // get settings input fields.
             if( 'general-settings' === $tab ) {
