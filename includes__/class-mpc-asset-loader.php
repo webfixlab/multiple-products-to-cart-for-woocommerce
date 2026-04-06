@@ -4,7 +4,7 @@
  *
  * @package    WordPress
  * @subpackage Multiple Products to Cart for WooCommerce
- * @since      8.1.0
+ * @since      9.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -196,40 +196,74 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
                 return;
             }
 
-			// enqueue style.
-			wp_register_style( 'mpc_admin_style', plugin_dir_url( MPC ) . 'assets/css/admin' . self::$suffix . '.css', array(), MPC_VER );
-			wp_register_script( 'mpc_admin_script', plugin_dir_url( MPC ) . 'assets/js/admin' . self::$suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
-            
-			// colorpicker style.
-			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'wp-color-picker' );
-            
-			wp_enqueue_style( 'mpc_admin_style' );
-			wp_enqueue_script( 'mpc_admin_script' );
-            wp_localize_script( 'mpc_admin_script', 'mpca_obj', self::admin_script_data() );
+			// register assets.
+			wp_register_style( 'mpc-admin', plugin_dir_url( MPC ) . 'assets/css/admin' . self::$suffix . '.css', array(), MPC_VER );
+			wp_register_script( 'mpc-admin', plugin_dir_url( MPC ) . 'assets/js/admin' . self::$suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
 
-			// Choices JS.
-			wp_register_style( 'choices-css', plugin_dir_url( MPC ) . 'assets/lib/choices-js/choices.min.css', array(), MPC_VER );
-			wp_enqueue_style( 'choices-css' );
+			// enqueue assets.
+			wp_enqueue_style( 'mpc-admin' );
+			wp_enqueue_script( 'mpc-admin' );
 
-			wp_register_script( 'choices-js', plugin_dir_url( MPC ) . 'assets/lib/choices-js/choices.min.js', array( 'jquery' ), MPC_VER, true );
-			wp_enqueue_script( 'choices-js' );
+            wp_localize_script( 'mpc-admin', 'mpca_obj', self::admin_script_data() );
+            
+			// add support libraries.
+			self::admin_libraries();
+			
+			// handle export.
+			self::admin_script_export();
 		}
 
+		/**
+		 * Checks if admin in scope.
+		 */
         private static function admin_in_scope(){
             $screen = get_current_screen();
             return in_array( $screen->id, self::$plugin_data[ 'admin_scopes' ], true );
         }
 
+		/**
+		 * Get admin localized data
+		 */
         private static function admin_script_data(){
 			return apply_filters( 'mpca_local_var', array(
 				'nonce'        => wp_create_nonce( 'search_box_nonce' ),
 				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-                'has_pro'      => false,
+                'has_pro'      => empty( self::$pro_state ),
+			) );
+        }
+
+		/**
+		 * Add support libraries for admin
+		 */
+		private static function admin_libraries(){
+			// colorpicker style.
+			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker' );
+
+			// Choices JS.
+			wp_register_style( 'choices-css', plugin_dir_url( MPC ) . 'assets/lib/choices-js/choices.min.css', array(), MPC_VER );
+			wp_register_script( 'choices-js', plugin_dir_url( MPC ) . 'assets/lib/choices-js/choices.min.js', array( 'jquery' ), MPC_VER, true );
+
+			wp_enqueue_style( 'choices-css' );
+			wp_enqueue_script( 'choices-js' );
+		}
+
+		/**
+		 * Enqueue admin export script
+		 */
+		private static function admin_script_export(){
+			wp_register_script( 'mpc-admin-export', plugin_dir_url( MPC ) . 'assets/js__/admin/admin-export' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+
+			wp_enqueue_script( 'mpc-admin-export' );
+
+            wp_localize_script( 'mpc-admin-export', 'mpc_export', array(
+				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+                'has_pro'      => empty( self::$pro_state ),
 				'export_ok'    => __( 'Export successful!', 'multiple-products-to-cart-for-woocommerce' ),
 				'export_text'  => __( 'Please wait while we are getting your file ready for download...', 'multiple-products-to-cart-for-woocommerce' ),
 				'export_nonce' => wp_create_nonce( 'mpc_export_nonce' ),
+				'failed'       => __( 'Export failed!', 'multiple-products-to-cart-for-woocommerce' )
 			) );
-        }
+		}
 	}
 }

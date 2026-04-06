@@ -4,7 +4,7 @@
  *
  * @package    WordPress
  * @subpackage Multiple Products to Cart for WooCommerce
- * @since      8.1.0
+ * @since      9.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,8 +20,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		 * Initialize plugin loader
 		 */
 		public static function init_plugin() {
-			include MPC_PATH . 'includes__/class-mpc-core-data.php';
-			include MPC_PATH . 'includes__/class-mpc-installer.php';
+			self::include_installers();
 
 			if ( ! MPC_Installer::install() ) {
 				return;
@@ -29,6 +28,14 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 
 			add_action( 'init', array( __CLASS__, 'init' ) );
 			add_action( 'before_woocommerce_init', array( __CLASS__, 'wc_init' ) );
+		}
+
+		/**
+		 * Include plugin installation files
+		 */
+		private static function include_installers(){
+			include MPC_PATH . 'includes__/class-mpc-core-data.php';
+			include MPC_PATH . 'includes__/class-mpc-installer.php';
 		}
 
 		/**

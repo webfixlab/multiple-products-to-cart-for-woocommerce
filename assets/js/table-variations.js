@@ -10,9 +10,9 @@
 	class MPCVariationHandler{
 		constructor(){
 			this.$state = {}; // current event and functionality state.
-			$( () => this.initSwatchs() );
+			$( () => this.initVariationEventTriggers() );
 		}
-		initSwatchs(){
+		initVariationEventTriggers(){
 			$( document ).on(
 				'change',
 				'.mpc-var-att',
