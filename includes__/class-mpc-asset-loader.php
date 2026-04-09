@@ -56,7 +56,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			wp_register_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/css/frontend' . self::$suffix . '.css', array(), MPC_VER, 'all' );
 			wp_enqueue_style( 'mpc-frontend' );
 
-			self::dynamic_css();
+			self::add_inline_css();
 
 			// register script.
 			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/js/frontend' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
@@ -69,6 +69,10 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			wp_localize_script( 'mpc-frontend', 'mpc_frontend', self::front_script_data() );
 		}
 
+		/**
+		 * Get frontend script localized data
+		 * @return array
+		 */
         private static function front_script_data(){
 			return apply_filters( 'mpca_update_local_vars', array(
 				'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
@@ -95,7 +99,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 		/**
 		 * Inline CSS for dynamic CSS property values
 		 */
-		public static function dynamic_css() {
+		public static function add_inline_css() {
 			// add to cart button color and background color.
 			$btn_color      = get_option( 'mpc_button_text_color', '' );
 			$btn_background = get_option( 'wmc_button_color', '' );

@@ -67,7 +67,7 @@
             }, 250 );
         }
         mpc_request_ajax_add_to_cart(wrap, data) {
-            $( document ).trigger( 'mpc_loader', [ 'load', wrap ] );
+            $( document ).trigger( 'mpc_spinner', [ 'load', wrap ] );
             // remove loading animation.
             $.ajax({
                 method: "POST",
@@ -78,7 +78,7 @@
                     cart_nonce: mpc_frontend.cart_nonce
                 },
                 success: ( response ) => {
-                    $( document ).trigger( 'mpc_loader', [ 'close', wrap ] );
+                    $( document ).trigger( 'mpc_spinner', [ 'close', wrap ] );
                     this.mpcajx_add_to_cart_response( wrap, response );
                     this.updateMiniCart();
                 },

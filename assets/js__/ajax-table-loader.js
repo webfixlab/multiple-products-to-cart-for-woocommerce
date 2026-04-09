@@ -17,37 +17,28 @@
 		initEventTriggers(){
             // trigger table loader with table state.
             // on click table filters + category + tag + search.
-            $( document ).on( 'mpc_table_loader', () => this.mpcTableLoader() );
+            $( document ).on( 'mpc_ajax_table_loaded', ( wrap, response ) => this.mpcTableLoaded( wrap, response ) );
 
-
-
-            const self = this;
-            $('body').on('change', '.mpc-orderby', function () {
-                mpc_order_by_table($(this));
-            });
-            $('body').on('click', '.mpc-pagenumbers span', function () {
-                if (!$(this).hasClass('current') && !$(this).hasClass('mpc-divider')) {
-                    self.mpc_pagination_loader($(this));
-                }
-            });
-            $('body').on('click', '.mpc-reset', function () {
-                window.location.reload();
-            });
+            $( 'body' ).on( 'change', '.mpc-orderby', ( e ) => mpc_order_by_table( $( e.currentTarget ) ) );
+            $( 'body' ).on( 'click', '.mpc-pagenumbers span', ( e ) => this.mpc_pagination_loader( $( e.currentTarget ) ) );
+            $( 'body' ).on( 'click', '.mpc-reset', () => window.location.reload() );
         }
-        mpcTableLoader(){
-            //
+        mpcTableLoaded( wrap, response ){
+            $( document ).trigger( 'mpc_spinner', [ 'close', wrap ] );
+            if( ! response || 0 === response.length ){
+                wrap.find('.mpc-pageloader').html('');
+                return;
+            }
+            this.mpc_table_loader_response(wrap, response);
         }
-        
-
-
         mpc_order_by_table(elm) {
             var wrapper = elm.closest('.mpc-container');
-            mpc_table_loader_request(1, wrapper);
+            this.mpc_table_loader_request(1, wrapper);
         }
         mpc_table_loader_request(page, wrap) {
-            $( document ).trigger( 'mpc_loader', [ 'load', wrap ] );
-            var atts = mpc_get_atts(wrap);
-            ajax_table_loader(atts, page, wrap);
+            $( document ).trigger( 'mpc_spinner', [ 'load', wrap ] );
+            var atts = this.mpc_get_atts(wrap);
+            this.ajax_table_loader(atts, page, wrap);
         }
         mpc_get_atts(wrap) {
             var att_data = wrap.find('.mpc-table-query').data('atts');
@@ -87,7 +78,7 @@
             return atts;
         }
         ajax_table_loader(atts, page, wrap) {
-            let locale = $(document).find('html').attr('lang');
+            let locale = $(document).find('html').attr('lang'); // get current locale for AJAX translation.
             locale = locale.replace( '-', '_' );
             $.ajax({
                 method: "POST",
@@ -102,13 +93,7 @@
                 async: 'false',
                 dataType: 'html',
                 success: function (response) {
-                    $( document ).trigger( 'mpc_loader', [ 'close', wrap ] );
-                    if (response.length == 0) {
-                        wrap.find('.mpc-pageloader').html('');
-                        return;
-                    }
-                    mpc_table_loader_response(wrap, response);
-                    $(document.body).trigger('mpc_table_loader', [wrap]);
+                    $( document.body ).trigger( 'mpc_ajax_table_loaded', [ wrap, response ] );
                 },
                 error: function (errorThrown) {
                     console.log(errorThrown);
@@ -145,10 +130,11 @@
                 });
             }
         }
-        mpc_pagination_loader(elm) {
-            var wrap = elm.closest('.mpc-container');
-            var page = parseInt(elm.text());
-            mpc_table_loader_request(page, wrap);
+        mpc_pagination_loader( elm ) {
+            if ( elm.hasClass( 'current' ) || elm.hasClass( 'mpc-divider' ) ) {
+                return;
+            }
+            this.mpc_table_loader_request( parseInt( elm.text() ), elm.closest( '.mpc-container' ) );
         }
 	}
 	new MPCFrontTableLoader();

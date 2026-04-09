@@ -273,11 +273,12 @@ if ( ! class_exists( 'MPC_Template' ) ) {
 			$product = $this->data['products'][ $id ]; // get product data of the table row.
 
 			printf(
-				'<tr class="cart_item %s" data-variation_id="0" data-type="%s" data-id="%s" stock="%s" data-price="%s">',
+				'<tr class="cart_item %s" data-variation_id="0" data-type="%s" data-id="%s" stock="%s" stock_status="%s" data-price="%s">',
 				esc_attr( $product['type'] ),
 				esc_attr( $product['type'] ),
 				esc_attr( $id ),
 				esc_attr( $product['stock'] ),
+				esc_attr( $product['stock_status'] ),
 				isset( $product['price_'] ) ? esc_attr( $product['price_'] ) : ''
 			);
 
