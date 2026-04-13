@@ -292,7 +292,7 @@ h4.mpcpop-title {
 #mpcpop .mpcpop-close:hover:before{
 	cursor: pointer;
 }
-.mpc-single-active .mpc-single-price {
+.mpc-single-price {
 	/*font-size: 130%;*/
 	font-weight: 600;
 }

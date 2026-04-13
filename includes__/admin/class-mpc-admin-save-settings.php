@@ -89,6 +89,7 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
             }
 
             self::save_shortcode_meta( $form_data, $table_id );
+            // update_post_meta( $table_id, 'table_id', $table_id ); // to accomodate legacy table.
         }
 
         /**

@@ -32,10 +32,12 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
          * Export settings and tables template
          */
         public static function render_template( $tab, $pro_state ){
-            self::$tab       = $tab;
-            self::$pro_state = $pro_state;
+            self::$settings_tab = $tab;
+            self::$pro_state    = $pro_state;
 
-            self::progress_notice();
+            if( 'import' === $tab ){
+                do_action( 'mpc_pro_import' );
+            }
             ?>
             <div class="mpcdp_settings_section">
                 <?php self::page_title(); ?>
@@ -56,33 +58,6 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
             </div>
             <?php
             wp_nonce_field( "mpc_{$tab}_nonce", "mpc_{$tab}" );
-        }
-
-        /**
-         * Display export progress notice
-         * 
-         * 
-         * NOT COMPLETE !!!
-         */
-        private static function progress_notice(){
-            do_action( 'mpc_pro_export' );
-
-
-
-            do_action( 'mpc_migration_progress_notice' );
-            return;
-            ?>
-            <div class="mpcdp_settings_toggle mpcdp_container" id="export-success">
-                <div class="mpcdp_settings_option visible">
-                    <div class="mpcdp_settings_option_field_theme_customizer first_customizer_field mpc-export-notice">
-                        <span class="theme_customizer_icon dashicons dashicons-saved"></span>
-                        <div class="mpcdp_settings_option_description">
-                            <div class="mpcdp_option_label"><?php echo __( 'Please wait while we are getting your file ready for download...', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php
         }
 
         /**

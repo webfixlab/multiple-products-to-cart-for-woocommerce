@@ -20,12 +20,14 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		 * Initialize plugin loader
 		 */
 		public static function init_plugin() {
-			self::include_installers();
+			self::include_loader();
 
 			if ( ! MPC_Installer::install() ) {
 				return;
 			}
 
+			MPC_Admin_Ajax::init();
+			
 			self::includes();
 
 			add_action( 'init', array( __CLASS__, 'init' ) );
@@ -33,21 +35,21 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		}
 
 		/**
-		 * Include plugin installation files
+		 * Include plugin loader files
 		 */
-		private static function include_installers(){
-			include MPC_PATH . 'includes__/class-mpc-core-data.php';
-			include MPC_PATH . 'includes__/class-mpc-installer.php';
+		private static function include_loader(){
+			include MPC_PATH . 'includes__/loader/class-mpc-core-data.php';
+			include MPC_PATH . 'includes__/loader/class-mpc-installer.php';
+
+			include MPC_PATH . 'includes__/loader/class-mpc-admin-ajax.php';
+			include MPC_PATH . 'includes__/loader/class-mpc-asset-loader.php';
+			include MPC_PATH . 'includes__/loader/class-mpc-admin-loader.php';
 		}
 
 		/**
 		 * Include necessary plugin files.
 		 */
 		public static function includes() {
-			// asset files handler.
-			include MPC_PATH . 'includes__/admin/class-mpc-asset-loader.php';
-
-			// admin functions.
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-save-settings.php';
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-field.php';
 
@@ -56,7 +58,6 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-new-shortcode.php';
 
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-loader.php';
 		}
 
 		/**
