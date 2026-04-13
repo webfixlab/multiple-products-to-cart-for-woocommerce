@@ -14,7 +14,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 	/**
 	 * Plugin admin new shortcode table class
 	 */
-	class MPC_Admin_New__Shortcode{
+	class MPC_Admin_New_Shortcode{
 
 		/**
          * Pro plugin status

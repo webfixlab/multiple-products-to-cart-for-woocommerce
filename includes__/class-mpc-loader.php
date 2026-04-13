@@ -26,6 +26,8 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 				return;
 			}
 
+			self::includes();
+
 			add_action( 'init', array( __CLASS__, 'init' ) );
 			add_action( 'before_woocommerce_init', array( __CLASS__, 'wc_init' ) );
 		}
@@ -39,28 +41,12 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		}
 
 		/**
-		 * Plugin activation process
-		 */
-		public static function init() {
-			load_plugin_textdomain( 'multiple-products-to-cart-for-woocommerce', false, plugin_basename( dirname( MPC ) ) . '/languages' );
-
-			// include required files.
-			self::includes();
-
-			// check if pro plugin exists.
-			$pro_state = apply_filters( 'mpca_change_pro_state', '' );
-
-			// load admin navigations and pages.
-			MPC_Admin_Loader::init( $pro_state );
-
-			// load plugin assets.
-			MPC_Asset_Loader::init( $pro_state );
-		}
-
-		/**
 		 * Include necessary plugin files.
 		 */
 		public static function includes() {
+			// asset files handler.
+			include MPC_PATH . 'includes__/admin/class-mpc-asset-loader.php';
+
 			// admin functions.
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-save-settings.php';
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-field.php';
@@ -71,9 +57,22 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-loader.php';
+		}
 
-			// asset files handler.
-			include MPC_PATH . 'includes__/class-mpc-asset-loader.php';
+		/**
+		 * Plugin activation process
+		 */
+		public static function init() {
+			load_plugin_textdomain( 'multiple-products-to-cart-for-woocommerce', false, plugin_basename( dirname( MPC ) ) . '/languages' );
+
+			// check if pro plugin exists.
+			$pro_state = apply_filters( 'mpca_change_pro_state', '' );
+
+			// load admin navigations and pages.
+			MPC_Admin_Loader::init( $pro_state );
+
+			// load plugin assets.
+			MPC_Asset_Loader::init( $pro_state );
 		}
 
 		/**

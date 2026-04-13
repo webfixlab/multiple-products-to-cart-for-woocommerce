@@ -41,32 +41,39 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
          */
         public static function init( $pro_state ){
             self::$pro_state   = $pro_state;
-            self::$suffix      = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+            // self::$suffix      = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+            self::$suffix      = '';
+
 			self::$plugin_data = MPC_Core_Data::get_plugin();
 
-            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'frontend_scripts' ) );
-			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ) );
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_frontend_assets' ) );
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'load_admin_assets' ) );
         }
 
         /**
 		 * Plugin frontend scripts and style enqueue
 		 */
-		public static function frontend_script() {
-			// enqueue style.
+		public static function load_frontend_assets() {
 			wp_register_style( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/css/frontend' . self::$suffix . '.css', array(), MPC_VER, 'all' );
 			wp_enqueue_style( 'mpc-frontend' );
 
 			self::add_inline_css();
 
-			// register script.
-			wp_register_script( 'mpc-frontend', plugin_dir_url( MPC ) . 'assets/js/frontend' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
-			wp_register_script( 'mpc-table-var', plugin_dir_url( MPC ) . 'assets/js/table-variations' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-add-to-cart', plugin_dir_url( MPC ) . 'assets/js__/add-to-cart' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-ajax-table-loader', plugin_dir_url( MPC ) . 'assets/js__/ajax-table-loader' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-page-events', plugin_dir_url( MPC ) . 'assets/js__/page-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-product-events', plugin_dir_url( MPC ) . 'assets/js__/product-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
 			
-			wp_enqueue_script( 'mpc-frontend' );
-			wp_enqueue_script( 'mpc-table-var' );
+			wp_enqueue_script( 'mpc-add-to-cart' );
+			wp_enqueue_script( 'mpc-ajax-table-loader' );
+			wp_enqueue_script( 'mpc-page-events' );
+			wp_enqueue_script( 'mpc-product-events' );
 
-			// localize script.
-			wp_localize_script( 'mpc-frontend', 'mpc_frontend', self::front_script_data() );
+			$localized_data = self::front_script_data();
+			wp_localize_script( 'mpc-add-to-cart', 'mpc_frontend', $localized_data );
+			wp_localize_script( 'mpc-ajax-table-loader', 'mpc_frontend', $localized_data );
+			wp_localize_script( 'mpc-page-events', 'mpc_frontend', $localized_data );
+			wp_localize_script( 'mpc-product-events', 'mpc_frontend', $localized_data );
 		}
 
 		/**
@@ -119,15 +126,14 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			// product image size.
 			$image_size = get_option( 'mpc_image_size', '90' );
 
-			$css = "
+			$css = '
 				.mpc-wrap thead tr th, .mpc-pagenumbers span.current, .mpc-fixed-header table thead tr th{
-					background: {$hnp_background};
-					color: {$hnp_color};
+					background: {$hnp_background}; color: {$hnp_color};
 				}
 				td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 					width: {$image_size}px;
 				}
-			";
+			';
 
 			// cart button css.
 			$cart_btn  = ! empty( $btn_color ) ? 'color: ' . esc_html( $btn_color ) . ';' : '';
@@ -137,22 +143,11 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			}
 
 			if ( ! empty( $title_color ) ) {
-				$css .= "
-				.mpc-product-title a{
-					color: {$title_color};
-				}
-			";
+				$css .= '.mpc-product-title a{ color: {$title_color}; }';
 			}
 
 			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) {
-				$css .= '
-				.mpc-wrap .variation-group > select{
-					max-width: 100px;
-				}
-				.variation-group select{
-					width: 100px;
-				}
-			';
+				$css .= '.mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }';
 			}
 
 			$css .= '.mpc-container .mpc-product-title a{';
@@ -195,25 +190,28 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 		/**
 		 * Admin scripts and style enqueue
 		 */
-		public static function admin_script() {
-            if( ! self::admin_in_scope() ){
+		public static function load_admin_assets() {
+            if( ! is_admin() || ! self::admin_in_scope() ){
                 return;
             }
 
-			// register assets.
 			wp_register_style( 'mpc-admin', plugin_dir_url( MPC ) . 'assets/css/admin' . self::$suffix . '.css', array(), MPC_VER );
-			wp_register_script( 'mpc-admin', plugin_dir_url( MPC ) . 'assets/js/admin' . self::$suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
-
-			// enqueue assets.
 			wp_enqueue_style( 'mpc-admin' );
-			wp_enqueue_script( 'mpc-admin' );
 
-            wp_localize_script( 'mpc-admin', 'mpca_obj', self::admin_script_data() );
+			wp_register_script( 'mpc-page-events', plugin_dir_url( MPC ) . 'assets/js__/admin/page-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-settings-events', plugin_dir_url( MPC ) . 'assets/js__/admin/settings-events' . self::$suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
+			wp_register_script( 'mpc-shortcode-events', plugin_dir_url( MPC ) . 'assets/js__/admin/shortcode-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+
+			wp_enqueue_script( 'mpc-page-events' );
+			wp_enqueue_script( 'mpc-settings-events' );
+			wp_enqueue_script( 'mpc-shortcode-events' );
+
+			$localized_data = self::admin_script_data();
+            wp_localize_script( 'mpc-page-events', 'mpca_obj', $localized_data );
+            wp_localize_script( 'mpc-settings-events', 'mpca_obj', $localized_data );
+            wp_localize_script( 'mpc-shortcode-events', 'mpca_obj', $localized_data );
             
-			// add support libraries.
 			self::admin_libraries();
-			
-			// handle export.
 			self::admin_script_export();
 		}
 

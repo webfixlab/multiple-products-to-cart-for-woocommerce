@@ -106,7 +106,6 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'label'       => __( 'Initial Product Quantity', 'multiple-products-to-cart-for-woocommerce' ),
 							'desc'        => __( 'Set the starting value for the quantity field for each product.', 'multiple-products-to-cart-for-woocommerce' ),
 							'placeholder' => '0',
-							'class'       => 'number-input',
 						),
 						array(
 							'key'         => 'mpc_show_new_quantity_box',
@@ -666,7 +665,6 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'placeholder' => '72',
 							'min'         => 50,
 							'max'         => 152,
-							'class'       => 'number-input',
 						),
 					),
 				),
@@ -712,7 +710,6 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'placeholder' => '10',
 							'min'         => 10,
 							'max'         => 50,
-							'class'       => 'number-input',
 							'pro_label'   => __( 'Product Title Font Size', 'multiple-products-to-cart-for-woocommerce' ),
 						),
 					),

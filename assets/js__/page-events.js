@@ -11,21 +11,19 @@
 		constructor(){
             this.oldScrolls = {};
 
-            this.screenH = $(window).height();
+            this.screenH = $( window ).height();
             this.screenW = window.screen.width;
 
-			$(document).ready(
-				() => this.initEvents()
-			);
+			$(document).ready( () => this.initEvents() );
 		}
 		initEvents(){
             this.prepareStickyTable();
 
-            $(window).on('scroll', () => this.tableScroll());
+            $( window ).on('scroll', () => this.tableScroll() );
             if (this.screenW < 500) {
                 this.prepareFreeHead();
             }
-            $(window).on('resize', () => {
+            $( window ).on('resize', () => {
                 this.prepareStickyTable();
                 this.tableScroll();
             });
@@ -70,7 +68,7 @@
         }
         tableScroll() {
             const self = this;
-            var currentScroll = $(window).scrollTop();
+            var currentScroll = $( window ).scrollTop();
             var cs = currentScroll; // current scroll offset.
 
             var tk = 0; // table key.

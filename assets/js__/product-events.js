@@ -66,9 +66,7 @@
             }
             const productId = parseInt( row.attr( 'data-id' ) );
             this.state[ tableId ][ productId ] = productData;
-
             
-
             // apply this product data too !!!
             // like, disable qty field if product is outofstock.
             // validate stock - limit quantity.
@@ -93,13 +91,10 @@
             ); // -1 = unlimited, 0 = out of stock
         }
         qtyChangeEventHandler( qtyField ){
-            this.updateState( qtyField, 'qty', parseInt( qtyField.val() ) );
-            this.validateStock( qtyField );
-            // calculate total price.
-        }
-        updateState( field, key, value ){
             const target = this.identifyTarget( field );
-            this.state[ target.tableId ][ target.productId ][ key ] = value;
+            this.updateState( target, 'qty', parseInt( qtyField.val() ) );
+            this.validateStock( qtyField );
+            this.setTableTotal( qtyField, target );
         }
         identifyTarget( target ){
             return {
@@ -107,6 +102,9 @@
                 productId: parseInt( target.closest( 'tr.cart_item' ).attr( 'data-id' ) )
             };
         }
+        updateState( target, key, value ){
+            this.state[ target.tableId ][ target.productId ][ key ] = value;
+        }    
         validateStock( field ){
             const target = this.identifyTarget( field );
             const stock  = this.state[ target.tableId ][ target.productId ]['stock'];
@@ -123,26 +121,46 @@
                 qtyField.val( validQty );
             }
         }
+        setTableTotal( field, target ){
+            // I could use wc_price here.
+            const tableTotal = field.closest( '.mpc-container' ).find( '.mpc-total span.total-price' );
+            if( ! tableTotal || 0 === tableTotal.length ){
+                return;
+            }
+
+            const tableData = this.state[ target.tableId ];
+            const total = tableData && tableData.length > 0 ? Object.values( tableData ).reduce( ( sum, item ) => {
+                const price = item.checked ? item.price : 0;
+                return sum + price;
+            }, 0 ) : 0;
+            tableTotal.text( this.priceFormat( total ) );
+        }
+        priceFormat( price ){
+            return parseFloat( price ).toLocaleString( mpc_frontend.locale, {
+                minimumFractionDigits: mpc_frontend.dp,
+                maximumFractionDigits: mpc_frontend.dp,
+                useGrouping: true
+            } );
+        }
         variationAttchangeEventHandler( attDropDown ){
+            const target = this.identifyTarget( field );
+
             const variation = this.getCurrentVariation( row );
+            this.updateState( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
             if( variation && variation.stock_status ){
-                this.updateState( attDropDown, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
-                this.updateState( attDropDown, 'stock', this.sanitizeStock( variation.stock, variation.stock_status ) );
+                this.updateState( target, 'stock', this.sanitizeStock( variation.stock, variation.stock_status ) );
             }
             
             this.validateStock( attDropDown );
             // handle image.
             // description.
 
-            // calculate total price.
+            this.setTableTotal( attDropDown, target );
         }
         productCheckEventHandler( checkBox ){
-            this.updateState( checkBox, 'checked', checkBox.is( ':checked' ) );
-
-            // calculate total price.
-        }
-        updateTabletotal( item ){ // key identifier of the table.
-            //
+            const target = this.identifyTarget( field );
+            this.updateState( target, 'checked', checkBox.is( ':checked' ) );
+            this.setTableTotal( checkBox, target );
         }
         
 
@@ -357,18 +375,6 @@
                     row.find('.mpc-product-variation').append('<p class="mpc-var-desc">' + desc + '</p>');
                 }
             }
-        }
-        priceFormat(price){
-            let number = parseFloat(price);
-            number = number.toFixed(mpc_frontend.dp);
-            let htmlPrice = number.toString().replace('.', mpc_frontend.ds);
-
-            if (mpc_frontend.ts.length > 0) {
-                const parts = htmlPrice.split(mpc_frontend.ds);
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, mpc_frontend.ts);
-                htmlPrice = parts.join(mpc_frontend.ds);
-            }
-            return htmlPrice;
         }
 
 
