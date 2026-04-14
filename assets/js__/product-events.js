@@ -10,7 +10,6 @@
 	class MPCFrontProductEvents{
 		constructor(){
             this.tableCounter = 1;
-            this.state = {}; // all table states with product data.
 			$( document ).ready( () => this.initEvents() );
 		}
 		initEvents(){
@@ -61,12 +60,11 @@
                 productData['price'] = simplePrice ? parseFloat( simplePrice ) : 0;
                 productData['stock'] = this.sanitizeStock( row.attr( 'stock' ), row.attr( 'stock_status' ) );
             }
-            
-            if( ! this.state[ tableId ] ){
-                this.state[ tableId ] = [];
-            }
-            const productId = parseInt( row.attr( 'data-id' ) );
-            this.state[ tableId ][ productId ] = productData;
+
+            window.mpcTables.updateProductState( {
+                tableId:   tableId,
+                productId: parseInt( row.attr( 'data-id' ) )
+            }, productData );
 
             // apply this product data too !!!
             // like, disable qty field if product is outofstock.
@@ -127,34 +125,16 @@
         }
 
         qtyChangeEventHandler( qtyField ){
-            const target = this.identifyTarget( field );
-            this.updateState( target, 'qty', parseInt( qtyField.val() ) );
+            const target = window.mpcTables.identifyTarget( field );
+            window.mpcTables.updateProductMeta( target, 'qty', parseInt( qtyField.val() ) );
             this.validateStock( qtyField );
             this.setTableTotal( qtyField, target );
-        }
-        identifyTarget( target ){
-            return {
-                tableId:   parseInt( target.closest( 'table.mpc-wrap' ).attr( 'data-table_id' ) ),
-                productId: parseInt( target.closest( 'tr.cart_item' ).attr( 'data-id' ) )
-            };
-        }
-        updateState( target, key, value ){
-            this.state[ target.tableId ][ target.productId ][ key ] = value;
-        }    
+        }   
         validateStock( field ){
-            const target = this.identifyTarget( field );
-            const stock  = this.state[ target.tableId ][ target.productId ]['stock'];
-            let qty      = this.state[ target.tableId ][ target.productId ]['qty'];
-
-            // validate quantity.
-            qty = stock && 0 === stock ? 0 : (
-                stock && qty > stock ? stock : qty
-            );
-            this.state[ target.tableId ][ target.productId ]['qty'] = validQty;
-
+            const qty      = window.mpcTables.getValidStockQuantity( field );
             const qtyField = field.closest( 'tr.cart_item' ).find( '.mpc-product-quantity input[type="number"]' );
             if( qtyField && qtyField.length > 0 ){
-                qtyField.val( validQty );
+                qtyField.val( qty );
             }
         }
         setTableTotal( field, target ){
@@ -164,11 +144,7 @@
                 return;
             }
 
-            const tableData = this.state[ target.tableId ];
-            const total = tableData && tableData.length > 0 ? Object.values( tableData ).reduce( ( sum, item ) => {
-                const price = item.checked ? item.price : 0;
-                return sum + price;
-            }, 0 ) : 0;
+            const total = window.mpcTables.getTableTotal( target );
             tableTotal.text( this.priceFormat( total ) );
         }
         priceFormat( price ){
@@ -180,14 +156,14 @@
         }
 
         variationAttchangeEventHandler( attDropDown ){
-            const target = this.identifyTarget( field );
+            const target = window.mpcTables.identifyTarget( field );
             const row    = attDropDown.closest( 'tr.cart_item' );
     
             const variation = this.getCurrentVariation( row );
-            this.updateState( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
+            window.mpcTables.updateProductMeta( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
             if( variation && variation.stock ){
                 variation.stock = this.sanitizeStock( variation.stock, variation.stock_status );
-                this.updateState( target, 'stock', variation.stock );
+                window.mpcTables.updateProductMeta( target, 'stock', variation.stock );
             }
 
             this.clearVariationButton( row );
@@ -245,8 +221,8 @@
         }
 
         productCheckEventHandler( checkBox ){
-            const target = this.identifyTarget( field );
-            this.updateState( target, 'checked', checkBox.is( ':checked' ) );
+            const target = window.mpcTables.identifyTarget( field );
+            window.mpcTables.updateProductMeta( target, 'checked', checkBox.is( ':checked' ) );
             this.setTableTotal( checkBox, target );
         }
 	}

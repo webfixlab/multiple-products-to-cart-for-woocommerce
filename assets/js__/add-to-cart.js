@@ -7,11 +7,9 @@
  */
 
 ( function ( $, window, document ) {
-	class MPCFrontTableCart{
+	class MPCFrontAddToCart{
 		constructor(){
-			$( document ).ready(
-				() => this.initEvents()
-			);
+			$( document ).ready( () => this.initEvents() );
 		}
 		initEvents(){
             const self = this;
@@ -242,5 +240,5 @@
             document.body.dispatchEvent(event);
         }
 	}
-	new MPCFrontTableCart();
+	new MPCFrontAddToCart();
 } )( jQuery, window, document );
