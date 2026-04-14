@@ -31,7 +31,7 @@
 			const elm     = $( e.currentTarget );
 			const section = elm.closest( '.mpcdp_settings_option' );
 			section.closest( '.mpcdp_container' ).find( '.mpcdp_settings_option' ).each( ( _, dep ) => {
-				if ( $( dep ).data( 'depends-on' ) === section.data( 'field-id' ) && mpca_obj.has_pro ) {
+				if ( $( dep ).data( 'depends-on' ) === section.data( 'field-id' ) && mpc_admin.has_pro ) {
 					$( dep ).slideToggle( 'slow', 'custom' === elm.val() );
 				}
 			} );
@@ -39,7 +39,7 @@
 		toggleSwitch( e ) {
 			const section  = $( e.currentTarget ).closest( '.mpcdp_settings_option' );
 			const checkBox = section.find( 'input[type="checkbox"]' );
-			if ( checkBox.hasClass( 'mpcex-disabled' ) && ! mpca_obj.has_pro ) {
+			if ( checkBox.hasClass( 'mpcex-disabled' ) && ! mpc_admin.has_pro ) {
 				e.preventDefault();
 				$( '#mpcpop .mpc-focus span' ).text( checkBox.attr( 'title' ) );
 				$( '#mpcpop' ).show();

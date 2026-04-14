@@ -27,15 +27,15 @@
                 this.prepareStickyTable();
                 this.tableScroll();
             });
-            $( document ).on( 'mpc_ajax_table_loaded', ( wrap, response ) => {
+            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => {
                 this.renderStickyHead( wrap );
                 wrap.find('.mpc-fixed-header').remove();
                 $('html, body').animate({
                     scrollTop: $(wrap).offset().top - 80
                 }, 'slow');
-            });
+            } );
 
-            $( document ).on( 'mpc_spinner', ( action, wrap ) => this.tableLoadingSpinner( action, wrap ) );
+            window.mpcHooks.doAction( 'mpc_spinner', ( action, wrap ) => this.tableLoadingSpinner( action, wrap ) );
 
             // image popup section.
             $( 'body' ).on( 'click', '.mpc-product-image img', ( e ) => this.mpc_image_popup_loader( $(e.currentTarget ) ) );

@@ -29,5 +29,6 @@ defined( 'ABSPATH' ) || exit;
 define( 'MPC', __FILE__ );
 define( 'MPC_VER', '8.0.0' );
 define( 'MPC_PATH', plugin_dir_path( MPC ) );
+define( 'MPC_URL', plugin_dir_url( MPC ) );
 
 require MPC_PATH . 'includes/class/admin/class-mpcloader.php';

@@ -52,7 +52,7 @@
 					data.append( 'action', 'mpc_admin_search_box' );
 					data.append( 'search', event.detail.value );
 					data.append( 'type_name', key );
-					data.append( 'nonce', mpca_obj.nonce );
+					data.append( 'nonce', mpc_admin.nonce );
 
 					this.sendSearchRequest( data, choiceItem, key );
 				}, 1000 );
@@ -93,7 +93,7 @@
 		sendSearchRequest( data, choiceItem, key ){
 			const single = 'cats' === key ? 'category' : 'product';
 			$.ajax( {
-				url: mpca_obj.ajaxurl,
+				url: mpc_admin.ajaxurl,
 				method: 'POST',
 				data: data,
 				dataType: 'json',

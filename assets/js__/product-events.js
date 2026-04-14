@@ -15,12 +15,14 @@
 		}
 		initEvents(){
             // trigger new custom events from this free version with arguments and use it on pro.
-            $( document ).on( 'mpc_ajax_table_loaded', ( wrap, response ) => this.tableEvents( wrap ) );
+            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableEvents( response, wrap ) );
 
             $( 'body' ).on( 'click', '.mpc-check-all', ( e ) => this.allCheckEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'change paste keyup cut select', '.mpc-product-quantity input[type="number"]', ( e ) => this.qtyChangeEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'change', 'table.mpc-wrap select.mpc-var-att', ( e ) => this.variationAttChanged( $( e.currentTarget ) ) );
             $( 'body' ).on( 'click', 'table.mpc-wrap input[type="checkbox"]', ( e ) => this.productCheckEventHandler( $( e.currentTarget ) ) );
+
+            $( 'body' ).on( 'click', '.mpc-reset', () => window.location.reload() );
 
             $( 'body' ).find( '.mpc-container' ).each( ( _, el ) => this.tableEvents( $( el ) ) );
         }
@@ -195,7 +197,7 @@
             this.updateVariationDesc( row, variation );
             this.updateVariationPrice( row, variation );
 
-            $( document ).trigger( 'mpc_variation_changed', [ row, variation ] );
+            window.mpcHooks.doAction( 'mpc_variation_changed', row, variation );
 
             this.setTableTotal( attDropDown, target );
         }

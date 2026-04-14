@@ -67,7 +67,7 @@
             }, 250 );
         }
         mpc_request_ajax_add_to_cart(wrap, data) {
-            $( document ).trigger( 'mpc_spinner', [ 'load', wrap ] );
+            window.mpcHooks.addAction( 'mpc_spinner', 'load', wrap );
             // remove loading animation.
             $.ajax({
                 method: "POST",
@@ -78,7 +78,7 @@
                     cart_nonce: mpc_frontend.cart_nonce
                 },
                 success: ( response ) => {
-                    $( document ).trigger( 'mpc_spinner', [ 'close', wrap ] );
+                    window.mpcHooks.addAction( 'mpc_spinner', 'close', wrap );
                     this.mpcajx_add_to_cart_response( wrap, response );
                     this.updateMiniCart();
                 },
@@ -109,7 +109,7 @@
 
         // handle response after AJAX added to cart.
         mpcajx_add_to_cart_response(table, response) {
-            $(document.body).trigger('updated_cart_totals');
+            window.mpcHooks.addAction( 'updated_cart_totals' );
 
             table.find('.mpc-button a.mpc-loading').remove();
             table.find('.mpc-button input[type="submit"]').show();

@@ -142,7 +142,7 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 				'manage_options',
 				'mpc-shortcodes',
 				array( __CLASS__, 'all_tables_page' ),
-				plugin_dir_url( MPC ) . 'assets/images/admin-icon.svg',
+				MPC_URL . 'assets/images/admin-icon.svg',
 				56
 			);
 
