@@ -17,6 +17,8 @@
 			$(document).ready( () => this.initEvents() );
 		}
 		initEvents(){
+            window.mpcHooks.addAction( 'mpc_spinner', ( action, wrap ) => this.tableLoadingSpinner( action, wrap ) );
+
             this.prepareStickyTable();
 
             $( window ).on('scroll', () => this.tableScroll() );
@@ -34,8 +36,6 @@
                     scrollTop: $(wrap).offset().top - 80
                 }, 'slow');
             } );
-
-            window.mpcHooks.doAction( 'mpc_spinner', ( action, wrap ) => this.tableLoadingSpinner( action, wrap ) );
 
             // image popup section.
             $( 'body' ).on( 'click', '.mpc-product-image img', ( e ) => this.mpc_image_popup_loader( $(e.currentTarget ) ) );
@@ -65,6 +65,14 @@
                     scrollTop: btn.closest('form').offset().top - 80
                 }, 'slow');
             });
+        }
+        tableLoadingSpinner( way, elem ) {
+            var wrap = elem.closest('.mpc-container');
+            if (way == 'load') {
+                wrap.find('table').before('<span class="mpc-loader"><img src="' + mpc_frontend.imgassets + 'loader.gif"></span>');
+            } else if (way == 'close') {
+                $('body').find('.mpc-loader').remove();
+            }
         }
         tableScroll() {
             const self = this;
@@ -188,14 +196,6 @@
             let width = vpw < 768 ? '100%' : `${table[0].offsetWidth}px`;
             wrap.find('.total-row').css({ 'width': `${width}` }); // fixed total section.
             wrap.find('.mpc-table-header').css({ 'left': `${min}px`, 'width': width }); // filter section.
-        }
-        tableLoadingSpinner( way, elem ) {
-            var wrap = elem.closest('.mpc-container');
-            if (way == 'load') {
-                wrap.find('table').before('<span class="mpc-loader"><img src="' + mpc_frontend.imgassets + 'loader.gif"></span>');
-            } else if (way == 'close') {
-                $('body').find('.mpc-loader').remove();
-            }
         }
         mpc_image_popup_loader(item) {
             var link = item.attr('data-fullimage');

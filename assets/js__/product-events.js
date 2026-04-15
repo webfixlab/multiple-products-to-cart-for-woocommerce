@@ -37,6 +37,10 @@
             this.tableCounter++;
         }
         initTableRowState( tableId, row ){
+            if( 'grouped' === row.attr( 'data-type' ) ){
+                return;
+            }
+            
             const productData = {
                 type: row.attr( 'data-type' )
             };
@@ -55,6 +59,7 @@
                 const variation = this.getCurrentVariation( row );
                 productData['price'] = variation && variation.price ? parseFloat( variation.price) : 0;
                 productData['stock'] = variation && variation.stock_status ? this.sanitizeStock( variation.stock, variation.stock_status ) : -1; // -1 = unlimited.
+                productData['variation'] = variation;
             }else{
                 const simplePrice = row.attr( 'data-price' );
                 productData['price'] = simplePrice ? parseFloat( simplePrice ) : 0;
@@ -160,7 +165,9 @@
             const row    = attDropDown.closest( 'tr.cart_item' );
     
             const variation = this.getCurrentVariation( row );
+            window.mpcTables.updateProductMeta( target, 'variation', variation ? variation : {} );
             window.mpcTables.updateProductMeta( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
+            
             if( variation && variation.stock ){
                 variation.stock = this.sanitizeStock( variation.stock, variation.stock_status );
                 window.mpcTables.updateProductMeta( target, 'stock', variation.stock );

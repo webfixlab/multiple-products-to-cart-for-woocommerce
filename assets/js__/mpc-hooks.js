@@ -72,6 +72,15 @@
                         const price = item.checked ? item.price : 0;
                         return sum + price;
                     }, 0 ) : 0;
+                },
+                getCartData: function( target ){
+                    const tableData = this.state[ target.tableId ];
+                    return Object.entries( tableData ).filter( ( [ id, data ] ) => data.checked );
+                },
+                getProductData: function( target ){
+                    const productItemData = {};
+                    productItemData[ target.productId ] = this.state[ target.tableId ][ target.productId ];
+                    return productItemData;
                 }
             };
         }

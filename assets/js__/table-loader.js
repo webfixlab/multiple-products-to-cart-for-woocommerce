@@ -17,8 +17,6 @@
 
             $( 'body' ).on( 'change', '.mpc-orderby', ( e ) => this.loadTableEventHandler( e, 'orderby' ) );
             $( 'body' ).on( 'click', '.mpc-pagenumbers span', ( e ) => this.loadTableEventHandler( e, 'pagination' ) );
-
-            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableResponseHandler( response, wrap ) );
         }
         loadTableEventHandler( e, type ){
             window.mpcHooks.doAction( 'mpc_load_table', e, type );
@@ -50,7 +48,7 @@
             return window.mpcHooks.applyFilters( 'mpc_table_args', args, wrap );
         }
         requestNewTable( args, wrap ){
-            window.mpcHooks.addAction( 'mpc_spinner', 'load', wrap );
+            window.mpcHooks.doAction( 'mpc_spinner', 'load', wrap );
             $.ajax({
                 method: "POST",
                 url: mpc_frontend.ajaxurl,
@@ -64,6 +62,7 @@
                 async: 'false',
                 dataType: 'html',
                 success: ( response ) => {
+                    this.tableResponseHandler( response, wrap );
                     window.mpcHooks.doAction( 'mpc_table_loaded', response, wrap );
                 },
                 error: function (errorThrown) {
@@ -76,7 +75,7 @@
             return $( document ).find( 'html' ).attr( 'lang' ).replace( '-', '_' );
         }
         tableResponseHandler( response, wrap ){
-            window.mpcHooks.addAction( 'mpc_spinner', 'close', wrap );
+            window.mpcHooks.doAction( 'mpc_spinner', 'close', wrap );
 
             // sanitize response.
             const start = response.indexOf( '{' );
