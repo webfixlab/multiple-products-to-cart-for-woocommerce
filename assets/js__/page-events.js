@@ -10,233 +10,171 @@
 	class MPCFrontPageEvents{
 		constructor(){
             this.oldScrolls = {};
-
             this.screenH = $( window ).height();
             this.screenW = window.screen.width;
+
+
+            this.allWraps  = null; // all table wrappers.
+            this.scrollTop = 0; // current scroll top.
+            this.prevScrollTop = 0; // keep old scroll position to find scroll direction.
+            this.height    = $( window ).height();
+            this.adminBar = 0; // all things that are sticky and not of our plugin.
 
 			$(document).ready( () => this.initEvents() );
 		}
 		initEvents(){
             window.mpcHooks.addAction( 'mpc_spinner', ( action, wrap ) => this.tableLoadingSpinner( action, wrap ) );
+            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableLoadedEventHandler( wrap ) );
 
-            this.prepareStickyTable();
+            $( 'body' ).on( 'click', '.mpc-product-image img', ( e ) => this.handleImagePopup( e ) );
+            $( document ).on( 'keyup', ( e ) => this.hidePopup( e ) );
+            $( 'body' ).on( 'click', 'span.mpcpop-close', ( e ) => this.hidePopup( e ) );
 
-            $( window ).on('scroll', () => this.tableScroll() );
-            if (this.screenW < 500) {
-                this.prepareFreeHead();
-            }
-            $( window ).on('resize', () => {
-                this.prepareStickyTable();
-                this.tableScroll();
-            });
-            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => {
-                this.renderStickyHead( wrap );
-                wrap.find('.mpc-fixed-header').remove();
-                $('html, body').animate({
-                    scrollTop: $(wrap).offset().top - 80
-                }, 'slow');
-            } );
+            this.allWraps = $( document.body ).find( '.mpc-container' );
 
-            // image popup section.
-            $( 'body' ).on( 'click', '.mpc-product-image img', ( e ) => this.mpc_image_popup_loader( $(e.currentTarget ) ) );
-            $( 'body' ).on( 'click', '.mpc-product-image .moregallery', ( e ) => this.mpc_image_popup_loader( $( e.currentTarget ).closest( '.gallery-item' ).find( 'img' ) ) );
-            $( document ).on( 'keyup', ( e ) => {
-                if ( 27 === e.keyCode ) { // esc key presed.
-                    $( '#mpcpop' ).hide();
-                }
-            } );
-            $('#mpcpop').on('click',function (e) {
-                if (e.target.tagName.toLowerCase() == 'img') {
-                    $('#mpcpop .image-wrap img').attr('src', $(e.target).attr('data-fullimage'));
-                    $('#mpcpop .mpc-gallery img').removeClass('mpcgi-selected');
-                    $(e.target).addClass('mpcgi-selected');
-                } else {
-                    $('#mpcpop').hide()
-                }
-            });
-
-            // on close button of popup box clicked, hide it.
-            $( 'body' ).on( 'click', 'span.mpcpop-close', () => $( '#mpcpop' ).hide() );
-
-            // does this still exist?
-            $(document).on('click', '.mpc-to-top', function () {
-                var btn = $(this);
-                $('html, body').animate({
-                    scrollTop: btn.closest('form').offset().top - 80
-                }, 'slow');
-            });
+            $( window ).on( 'resize', () => this.screenResizeEventHandler() );
+            $( window ).on( 'scroll', () => this.windowScrollEventHandler() );
+            this.renderAllTablesStickyElements();
+            this.getAdminBarHeight();
         }
-        tableLoadingSpinner( way, elem ) {
-            var wrap = elem.closest('.mpc-container');
-            if (way == 'load') {
-                wrap.find('table').before('<span class="mpc-loader"><img src="' + mpc_frontend.imgassets + 'loader.gif"></span>');
-            } else if (way == 'close') {
-                $('body').find('.mpc-loader').remove();
+        tableLoadingSpinner( way, wrap ) {
+            const loaderWrap = wrap.find( '.mpc-loader' );
+            if( 'load' && ! loaderWrap && 0 === loaderWrap.length ){
+                wrap.find( 'table.mpc-wrap' ).before( `<span class="mpc-loader"><img src="${ mpc_frontend.imgassets }loader.gif"></span>` );
+            }else{
+                loaderWrap.remove();
             }
         }
-        tableScroll() {
-            const self = this;
-            var currentScroll = $( window ).scrollTop();
-            var cs = currentScroll; // current scroll offset.
+        handleImagePopup( e ) {
+            const item = $( e.currentTarget );
+            window.mpcHooks.doAction( 'mpc_image_popup', e );
 
-            var tk = 0; // table key.
-            $('body').find('table.mpc-wrap').each( function () {
-                var table = $(this);
-                var wrap = table.closest('.mpc-container');
-
-                self.setStickyTop(wrap);
-
-                var head = table.offset().top + 50;
-                var tail = table.find('tbody tr:last-child').offset().top;
-
-                // table head.
-                let products = table.find('tbody tr');
-                let tableStart = products[1] ? $(products[1]).offset().top : 0;
-                let tableEnd = $(products[products.length - 1]).offset().top + $(products[products.length - 1])[0].offsetHeight;
-                if ((cs + self.screenH) > tableStart && (cs + self.screenH) < tableEnd) {
-                    wrap.find('.total-row').removeClass('mpc-fixed-total-m').addClass('mpc-fixed-total-m');
-                } else {
-                    wrap.find('.total-row').removeClass('mpc-fixed-total-m');
-                }
-
-                // fixed header.
-                if (this.screenW > 500) {
-                    if (cs > head && cs < tail) {
-                        if (table.find('thead').length) {
-                            table.closest('form').find('.mpc-fixed-header').show();
-                        }
-                    }
-                    if (cs < head || cs > tail) {
-                        if (table.find('thead').length) {
-                            table.closest('form').find('.mpc-fixed-header').hide();
-                        }
-                    }
-                }
-
-                // filter section.
-                if (currentScroll < self.oldScrolls[tk] && currentScroll > head && currentScroll < tail) {
-                    var height = wrap.find('.mpc-table-header')[0].offsetHeight + 20;
-                    if (wrap.find('.mpc-all-select').length) {
-                        height += 32;
-                    }
-
-                    if (!wrap.find('.mpc-table-header').hasClass('mpc-fixed-filter')) {
-                        wrap.css('margin-top', `${height}px`);
-                    }
-
-                    wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter').addClass('mpc-fixed-filter');
-                } else {
-                    wrap.find('.mpc-table-header').removeClass('mpc-fixed-filter');
-                    wrap.css('margin-top', '20px');
-                }
-                self.oldScrolls[tk] = currentScroll;
-                tk++;
-            });
+            const imgSrc = item.attr( 'data-fullimage' );
+            const popup  = $( '#mpcpop img' );
+            if( popup && popup.length > 0 && imgSrc && imgSrc.length > 0 ){
+                popup.attr( 'src', imgSrc ).show();
+            }else{
+                this.hidePopup( e );
+            }
         }
-        setStickyTop(wrap) {
-            let top = 0;
-            const adminBar = $(document).find('#wpadminbar');
-            if (typeof adminBar !== undefined && adminBar.length > 0) {
-                if (adminBar.css('position') === 'fixed') {
-                    top += adminBar.height();
-                }
+        hidePopup( e ){
+            if( e.keyCode && 27 !== e.keyCode ){
+                return;
+            }
+            $( '#mpcpop' ).hide();
+        }
+
+        tableLoadedEventHandler( wrap ){
+            this.renderStickyElements( wrap );
+            wrap.find( '.mpc-fixed-header' ).remove();
+
+            $( 'html, body' ).animate( {
+                scrollTop: wrap.offset().top - 80
+            }, 'slow' );
+        }
+
+
+
+        screenResizeEventHandler(){
+            this.renderAllTablesStickyElements();
+            this.windowScrollEventHandler();
+        }
+        renderAllTablesStickyElements(){
+            if( ! this.allWraps || 0 === this.allWraps.length ){
+                return;
             }
 
-            const elementorSticky = $(document).find('.elementor-sticky.elementor-sticky--active');
-            if (typeof elementorSticky !== undefined && elementorSticky.length > 0) {
-                const device = $(document).find('body').data('elementor-device-mode');
-                elementorSticky.each(function () {
-                    if (!$(this).is(':hidden') || (typeof device !== undefined && !$(this).hasClass('elementor-hidden-' + device))) {
-                        top += $(this).height();
-                    }
+            $.each( this.allWraps, ( _, el ) => this.renderStickyElements( $( el ) ) );
+        }
+        renderStickyElements( wrap ){
+            const viewPort   = window.innerWidth || document.documentElement.clientWidth;
+            let positionLeft = wrap.find( 'tbody tr:first-child td:first-child' ).offset().left;
+            positionLeft = viewPort > 768 ? positionLeft : 0;
+
+            this.renderStickyHeader( wrap, positionLeft );
+
+            wrap.find( '.mpc-table-header' ).css( { 'left': `${ positionLeft }px` } ); // filter section.
+            wrap.find( '.total-row' ).css( { 'width': vpw < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' ).offsetWidth }px` } ); // fixed total section.
+        }
+        renderStickyHeader( wrap, positionLeft ){
+            wrap.find( '.mpc-fixed-header' ).remove();
+
+            const tableHeaders = wrap.find( 'table.mpc-wrap thead th' );
+            if( ! tableHeaders || 0 === tableHeaders.length || 0 === positionLeft ){
+                return; // skip if no headers or it's mobile view.
+            }
+
+            let tableHeaderHtml = '';
+            tableHeaders.each( ( _, el ) => {
+                tableHeaderHtml += `<th style="width:${ $( el ).offsetWidth }px;">${ $( el ).text() }</th>`;
+            });
+
+            wrap.find( 'table.mpc-wrap' ).after( `<div class="mpc-fixed-header" style="left:${ positionLeft }px;display:none;"><table><thead><tr>${ tableHeaderHtml }</tr></thead></table></div>` );
+        }
+
+
+        windowScrollEventHandler(){
+            if( ! this.allWraps || 0 === this.allWraps.length ){
+                return;
+            }
+
+            this.scrollTop = $( window ).scrollTop();
+
+            $.each( this.allWraps, ( _, el ) => {
+                const wrap = $( el );
+                const scrollState = this.setupTableOffsets( wrap );
+                
+                this.hasStickyHeaderEvent( wrap, scrollState );
+                this.hasStickyFilterEvent( wrap, scrollState );
+                this.hasStickyFooterEvent( wrap, scrollState );
+            });
+
+            this.prevScrollTop = this.scrollTop;
+        }
+        setupTableOffsets( wrap, scrollState ){
+            const rows    = wrap.find( 'table.mpc-wrap tbody tr' );
+            const lastRow = rows[ rows.length - 1 ];
+            return {
+                isStickyFooter:  this.scrollTop + this.height < lastRow.offset().top + lastRow.offsetHeight,
+                isStickyColumns: this.scrollTop > rows[0].offset().top + 50 && this.scrollTop < lastRow.offset().top,
+                isStickyFilter:  this.scrollTop < this.prevScrollTop && rows[0].offset().top && this.scrollTop < lastRow.offset().top
+            };
+        }
+        hasStickyFilterEvent( wrap, scrollState ){
+            // when scrolling up and scrolling within table.
+            let height = wrap.find( '.mpc-table-header' )[0].offsetHeight + 20;
+            wrap.css( 'margin-top', scrollState.isStickyFilter ? `${height}px` : '20px' );
+
+            const tableFilters = wrap.find( '.mpc-table-header' );
+            tableFilters.toggleClass( 'mpc-fixed-filter', scrollState.isStickyFilter );
+            tableFilters.css( { 'top': scrollState.isStickyColumns ? this.adminBar + wrap.find( '.mpc-fixed-header' ).height() : this.adminBar } );
+        }
+        hasStickyHeaderEvent( wrap, scrollState ){
+            if( this.screenW < 500 ){
+                return;
+            }
+
+            // show sticky header when we're past scrolling table header.
+            const tableHeader = wrap.find( '.mpc-fixed-header' );
+            tableHeader.css( { 'top': `${this.adminBar}px` } );
+            tableHeader.toggle( scrollState.isStickyColumns );
+        }
+        hasStickyFooterEvent( wrap, scrollState ){
+            // if current scroll + screen height < total row offset top.
+            wrap.find( '.total-row' ).toggleClass( 'mpc-fixed-total-m', scrollState.isStickyFooter );
+        }
+        getAdminBarHeight(){
+            const adminBar = $( document.body ).find( '#wpadminbar' );
+            if( adminBar && adminBar.length > 0 ){
+                this.adminBar = 'fixed' === adminBar.css( 'position' ) ? adminBar.height() : 0;
+            }
+
+            const device = $( document ).find( 'body' ).data( 'elementor-device-mode' );
+            const elementorItems = $( document ).find( '.elementor-sticky.elementor-sticky--active' );
+            if ( elementorItems && elementorItems.length > 0 && device && device.length > 0 ) {
+                elementorItems.each( ( _, el ) => {
+                    this.adminBar = ! $( el ).is( ':hidden' ) || ! $( el ).hasClass( `elementor-hidden-${device}` ) ? this.adminBar + $( el ).height() : this.adminBar;
                 });
-            }
-
-            const fixedColumns = wrap.find('.mpc-fixed-header');
-            if (typeof fixedColumns !== undefined && !fixedColumns.is(':hidden')) {
-                fixedColumns.css({ 'top': `${top}px` });
-                const fixedColsHeight = fixedColumns.height();
-                if (fixedColsHeight) {
-                    top += fixedColsHeight;
-                }
-            }
-
-            const fixedFilters = wrap.find('.mpc-table-header.mpc-fixed-filter');
-            if (typeof fixedFilters !== undefined) {
-                fixedFilters.css({ 'top': `${top}px` });
-            }
-        }
-        prepareFreeHead() {
-            $('body').find('.mpc-container').each(( _, el) => {
-                var elemCount = $( el ).find('.mpc-table-header > div').length;
-                $( el ).find('.mpc-table-header').toggleClass('mpc-free-head', elemCount > 3);
-            });
-        }
-        prepareStickyTable() {
-            $('body').find('table.mpc-wrap').each(( _, el) => this.renderStickyHead($(el)));
-        }
-        renderStickyHead(table) {
-            const wrap = table.closest('.mpc-container');
-            const vpw = window.innerWidth || document.documentElement.clientWidth; // viewPort width.
-            
-            let min = table.find('tbody tr:first-child td:first-child').offset().left;
-            min = vpw < 768 ? 0 : min;
-
-            wrap.find('.mpc-fixed-header').remove();
-            if(vpw > 767){
-                var html = '';
-                table.find('thead th').each(function () {
-                    var th = $(this);
-                    html += `<th style="width:${th[0].offsetWidth}px;">${th.text()}</th>`;
-                });
-                html = `<table style="width:${table[0].offsetWidth}px;"><thead><tr>${html}</tr></thead></table>`;
-                table.after(`<div class="mpc-fixed-header" style="left:${min}px;display:none;">${html}</div>`);
-            }
-            
-            let width = vpw < 768 ? '100%' : `${table[0].offsetWidth}px`;
-            wrap.find('.total-row').css({ 'width': `${width}` }); // fixed total section.
-            wrap.find('.mpc-table-header').css({ 'left': `${min}px`, 'width': width }); // filter section.
-        }
-        mpc_image_popup_loader(item) {
-            var link = item.attr('data-fullimage');
-            if (typeof link != 'undefined' && link.length > 0){}
-            else link = item.attr('data-fullimage');
-
-            var mpop = $('#mpcpop');
-            mpop.find('img').attr('src', link);
-
-            if (typeof image_src != 'undefined' && image_src != '') mpop.find('img').attr('src', image_src);
-
-            this.mpc_render_gallery(item);
-            mpop.show();
-        }
-
-        // should be moved to pro.
-        mpc_render_gallery(item) {
-            var row = item.closest('tr.cart_item');
-            var gallery = row.find('.gallery-items').data('gallery');
-            if (typeof gallery != 'undefined') {
-                var html = '';
-                var found = false;
-                $.each(gallery,function (k, v) {
-                    var cls = '';
-                    if (v.thumb == item.attr('src') && found == false) {
-                        cls = 'mpcgi-selected';
-                        found = true;
-                    }
-
-                    html += '<img class="' + cls + '" src="' + v.thumb + '" data-fullimage="' + v.full + '">';
-                });
-
-                if (typeof $('#mpcpop .mpc-gallery') != 'undefined' && $('#mpcpop .mpc-gallery').length > 0) {
-                    $('#mpcpop .mpc-gallery').replaceWith('<div class="mpc-gallery">' + html + '</div>');
-                } else {
-                    $('#mpcpop').append('<div class="mpc-gallery">' + html + '</div>');
-                }
-            } else {
-                if (typeof $('.mpc-gallery') != 'undefined' && $('.mpc-gallery').length > 0) {
-                    $('.mpc-gallery').remove();
-                }
             }
         }
 	}
