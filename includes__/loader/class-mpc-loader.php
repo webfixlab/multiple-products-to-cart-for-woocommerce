@@ -27,6 +27,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			}
 
 			MPC_Admin_Ajax::init();
+			MPC_Add_To_Cart::init();
 			
 			self::includes();
 
@@ -44,6 +45,8 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			include MPC_PATH . 'includes__/loader/class-mpc-admin-ajax.php';
 			include MPC_PATH . 'includes__/loader/class-mpc-asset-loader.php';
 			include MPC_PATH . 'includes__/loader/class-mpc-admin-loader.php';
+
+			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
 		}
 
 		/**
