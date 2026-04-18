@@ -60,7 +60,7 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
                 exit;
             }
 		}
-
+ 
         /**
 		 * Add to cart process
 		 *

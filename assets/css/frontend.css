@@ -107,9 +107,6 @@ table.mpc-wrap tbody tr td {
 	vertical-align: middle;
 	color: #333;
 }
-#content table.mpc-wrap.mpc-no-image tbody tr td, #main-content table.mpc-wrap.mpc-no-image tbody tr td, #brx-content table.mpc-wrap.mpc-no-image tbody tr td, #main table.mpc-wrap.mpc-no-image tbody tr td, main table.mpc-wrap.mpc-no-image tbody tr td{
-	padding-left: 0;
-}
 table.mpc-wrap tbody tr:nth-child(2n).cart_item td {
 	background: #f5f5f5;
 }
@@ -616,9 +613,6 @@ span.mpc-empty-var {
 	main table.mpc-wrap tbody tr{
 		padding: 10px;
 	}
-	table.mpc-wrap.mpc-no-image tbody tr {
-		padding-top: 8px;
-	}
 	table.mpc-wrap tbody tr:after {
 		content: "";
 		display: table;
@@ -648,14 +642,8 @@ span.mpc-empty-var {
 		display: inline-block;
 		text-align: left;
 	}
-	table.mpc-wrap.mpc-no-image tbody tr td {
-		text-align: left;
-	}
 	table.mpc-wrap tbody td.mpc-product-select {
 		position: static;
-	}
-	table.mpc-wrap.mpc-no-image tbody tr td.mpc-product-name {
-		margin-right: 80px;
 	}
 	table.mpc-wrap tbody tr:nth-child(2n) td {
 		background: #f5f5f7;

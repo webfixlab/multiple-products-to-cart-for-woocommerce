@@ -14,12 +14,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-do_action( 'mpc_after_wrap' );
-
+do_action( 'mpc_before_wrap' );
 ?>
 <div class="woocommerce-page woocommerce mpc-container">
 	<?php do_action( 'mpc_before_table' ); ?>
-	<form class="mpc-cart" method="post" enctype="multipart/form-data" data-current_page="1">
+	<form class="mpc-cart" method="post" enctype="multipart/form-data">
 		<div class="mpc-table-header">
 			<?php do_action( 'mpc_table_header' ); ?>
 		</div>    
@@ -33,5 +32,4 @@ do_action( 'mpc_after_wrap' );
 	<?php do_action( 'mpc_after_table' ); ?>
 </div>
 <?php
-
 do_action( 'mpc_after_wrap' );
