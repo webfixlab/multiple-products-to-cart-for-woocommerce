@@ -35,6 +35,9 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$products = apply_filters( 'mpc_modify_get_products', $result->posts, $args );
 
 			return array(
+				'paged'    => $paged,
+				'atts'     => $atts,
+				'args'     => $args,
 				'products' => $products,
 				'total'    => $result->found_posts,
 				'max_page' => $result->max_num_pages
@@ -114,6 +117,50 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			}
 
 			return apply_filters( 'mpc_query_args', $args, $atts );
+		}
+
+		// public static function get_product_data( $product ){
+		// 	$product_data = array(
+		// 		'price_amount' => self::extract_price_from_html( $product->get_price_html() )
+		// 	);
+
+		// 	return apply_filters( 'mpcp_modify_product_data', $product_data, $product );
+		// }
+
+		/**
+		 * Extract price from price html
+		 *
+		 * @param object $product Product object.
+		 * @return float
+		 */
+		public static function get_price_amount( $product ){
+			return self::extract_price_from_html( $product->get_price_html() );
+		}
+
+		/**
+		 * Extract float price from WooCommerce HTML price
+		 *
+		 * @param string $price_html Product price html.
+		 * @return float
+		 */
+		private static function extract_price_from_html( $price_html ) {
+			if ( empty( $price_html ) ) {
+				return 0.0;
+			}
+
+			$price_text = '';
+			if ( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $m ) ) {
+				$price_text = $m[1];
+			} elseif ( preg_match( '/<bdi[^>]*>(.*?)<\/bdi>/is', $price_html, $m ) ) {
+				$price_text = $m[1];
+			}
+			if ( empty( $price_text ) ) {
+				return 0.0;
+			}
+
+			$price_text = wp_strip_all_tags( $price_text );
+			$price_text = html_entity_decode( $price_text );
+			return (float) wc_format_decimal( $price_text, wc_get_price_decimals() );
 		}
 	}
 }

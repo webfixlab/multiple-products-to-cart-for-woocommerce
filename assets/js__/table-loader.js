@@ -55,7 +55,7 @@
                 data: {
                     'action':      'mpc_ajax_table_loader',
                     'page':        args.page,
-                    'atts':        args,
+                    'atts':        JSON.stringify( args ),
                     'locale':      this.getLocale(),
                     'table_nonce': mpc_frontend.table_nonce
                 },

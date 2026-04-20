@@ -17,7 +17,12 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'mpc_before_wrap' );
 ?>
 <div class="woocommerce-page woocommerce mpc-container">
-	<?php do_action( 'mpc_before_table' ); ?>
+	<div class="mpc-filters">
+		<?php do_action( 'mpc_table_filters' ); ?>
+	</div>
+	<div class="mpc-all-actions">
+		<?php do_action( 'mpc_table_actions' ); ?>
+	</div>
 	<form class="mpc-cart" method="post" enctype="multipart/form-data">
 		<div class="mpc-table-header">
 			<?php do_action( 'mpc_table_header' ); ?>

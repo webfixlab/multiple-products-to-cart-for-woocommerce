@@ -64,10 +64,12 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
 
 			// frontend files.
-			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
-
+			include MPC_PATH . 'includes__/class-mpc-front-data.php';
 			include MPC_PATH . 'includes__/class-mpc-product-data.php';
 			include MPC_PATH . 'includes__/class-mpc-table-template.php';
+			
+			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
+			include MPC_PATH . 'includes__/class-mpc-ajax-table-loader.php';
 			include MPC_PATH . 'includes__/class-mpc-shortcode.php';
 		}
 

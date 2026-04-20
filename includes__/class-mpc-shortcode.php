@@ -21,6 +21,7 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 */
 		public static function init() {
 			add_shortcode( 'woo-multi-cart', array( __CLASS__, 'product_table' ) );
+			add_filter( 'mpc_template_loader', array( __CLASS__, 'template_loader' ), 10, 1 );
 		}
 
 		/**
@@ -29,6 +30,8 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 * @param array $atts product table shortcode attributes.
 		 */
 		public function product_table( array $atts ) {
+			global $mpc_table__;
+			
 			$atts = self::extract_shortcode_atts( $atts );
 			if( empty( $atts ) ){
 				return;
@@ -38,6 +41,8 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 			if( empty( $data ) || empty( $data['products'] ) ){
 				return;
 			}
+
+			MPC_Front_Data::setup_frontend_data( $atts, $data );
 
 			ob_start();
 
@@ -72,6 +77,28 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 			$shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
 
 			return empty( $shortcode ) ? '' : shortcode_parse_atts( $shortcode );
+		}
+
+		/**
+		 * Override default product table template
+		 *
+		 * @param string $path override if given, else use default template file.
+		 */
+		public static function template_loader( $path = '' ) {
+			// Extract the filename from the path.
+			$filename = basename( $path );
+
+			// Construct the path to the file in the theme directory.
+			$path_override = get_stylesheet_directory() . '/templates/' . $filename;
+
+			// Check if the file exists in the theme directory.
+			if ( file_exists( $path_override ) ) {
+				// Return the path to the file in the theme directory.
+				return $path_override;
+			}
+
+			// If the file doesn't exist in the theme directory, return the original path.
+			return $path;
 		}
 	}
 }
