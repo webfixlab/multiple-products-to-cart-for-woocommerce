@@ -41,9 +41,9 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
             ?>
             <div class="mpcdp_settings_section">
                 <?php self::page_title(); ?>
-                <div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
+                <div class="mpcdp_settings_toggle mpcdp_container">
                     <div class="mpcdp_settings_option visible">
-                        <div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
+                        <div class="mpcdp_settings_option_field_theme_customizer">
                             <?php self::page_desc(); ?>
                         </div>
                     </div>
@@ -174,8 +174,8 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
                             id="mpc-<?php echo esc_attr( self::$settings_tab ); ?>"
                             class="mpcdp_submit_button <?php echo empty( self::$pro_state ) ? 'mpcex-disabled' : ''; ?>"
                             title="<?php echo 'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?>">
-                            <div class="save-text"><?php 'export' === self::$settings_tab ? __( 'Export settings', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                            <div class="save-text save-text-mobile"><?php 'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                            <div class="save-text"><?php echo 'export' === self::$settings_tab ? __( 'Export settings', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                            <div class="save-text save-text-mobile"><?php echo 'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
                         </button>
                     </div>
                 </div>

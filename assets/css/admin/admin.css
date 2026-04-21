@@ -659,9 +659,6 @@ li.mpc-stone-col:before {
 .mpc-sortable ul li:hover {
 	border: 1px solid #2271b1;
 }
-.mpca-sorted-options ul {
-	min-height: 605px;
-}
 #mpcdp_settings .mpcdp_settings_toggle .mpcdp_settings_option .mpc-colorp button.button {
 	padding: 0px;
 	padding-left: 60px;

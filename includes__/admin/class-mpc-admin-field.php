@@ -76,7 +76,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
 
         private static function field_title(){
             ?>
-            <divplaceholder class="mpcdp_settings_option_description col-md-6">
+            <div class="mpcdp_settings_option_description col-md-6">
                 <div class="mpcdp_option_label"><?php echo esc_html( self::$field['label'] ); ?></div>
                 <?php self::field_description(); ?>
             </div>
@@ -195,6 +195,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
             <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
                 <input
                     type="checkbox"
+                    style="display:none;"
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
                     value="<?php echo esc_attr( self::$field_value ); ?>"
@@ -203,9 +204,9 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     data-on-title="<?php echo esc_html( $field['switch_text']['on'] ); ?>"
                     data-off-title="<?php echo esc_html( $field['switch_text']['off'] ); ?>"
                     <?php echo 'on' === self::$field_value ? 'checked' : ''; ?>>
+                    <?php self::render_field_checkbox_switch( $field ); ?>
 			</div>
             <?php
-            self::render_field_checkbox_switch( $field );
         }
         private static function render_field_checkbox_switch( $field ){
             $value = empty( self::$field_value ) ? 'off' : self::$field_value;

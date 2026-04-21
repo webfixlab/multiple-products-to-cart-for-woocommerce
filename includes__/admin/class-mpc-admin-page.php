@@ -54,8 +54,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             // get settings tab.
             self::$settings_tab = empty( $tab ) ? self::get_tab() : $tab;
 
-            MPC_Admin_Save_Settings::init( $tab, $pro_state );
-
+            MPC_Admin_Save_Settings::init( self::$settings_tab, $pro_state );
             self::settings_form();
 		}
 
@@ -138,7 +137,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 			foreach ( MPC_Core_Data::navigation_data() as $slug => $nav ) {
                 $page_slug = 'all-tables' === $slug ? 'mpc-shortcodes' : ( 'new-table' === $slug ? 'mpc-shortcode' : 'mpc-settings' );
                 
-                $page_url  = admin_url( "admin.php?php={$page_slug}" );
+                $page_url  = admin_url( "admin.php?page={$page_slug}" );
                 $page_url  = in_array( $slug, array( 'all-tables', 'new-table' ), true ) ? $page_url : "{$page_url}&tab={$slug}&nonce={$nonce}";
 
                 MPC_Admin_Template::navigation_item( array_merge( $nav, array(
@@ -189,7 +188,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             } elseif( 'labels' === $tab ) {
                 $fields = MPC_Core_Data::get_labels();
             } elseif( 'appearence' === $tab ) {
-                $fields = MPC_Core_Data::get_labels();
+                $fields = MPC_Core_Data::get_appearence();
             }
 
 			if ( empty( $fields ) ) {

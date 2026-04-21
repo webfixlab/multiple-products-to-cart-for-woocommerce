@@ -23,15 +23,11 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			self::include_loader();
 
 			if ( ! MPC_Installer::install() ) {
+				error_log( 'installation failed' );
 				return;
 			}
 
-			MPC_Admin_Ajax::init();
-			
 			self::includes();
-			
-			MPC_Add_To_Cart::init();
-			MPC_Ajax_Table_Loader::init();
 
 			add_action( 'init', array( __CLASS__, 'init' ) );
 			add_action( 'before_woocommerce_init', array( __CLASS__, 'wc_init' ) );
@@ -43,16 +39,14 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		private static function include_loader(){
 			include MPC_PATH . 'includes__/loader/class-mpc-core-data.php';
 			include MPC_PATH . 'includes__/loader/class-mpc-installer.php';
-
-			include MPC_PATH . 'includes__/loader/class-mpc-admin-ajax.php';
-			include MPC_PATH . 'includes__/loader/class-mpc-asset-loader.php';
-			include MPC_PATH . 'includes__/loader/class-mpc-admin-loader.php';
 		}
 
 		/**
 		 * Include necessary plugin files.
 		 */
 		public static function includes() {
+			include MPC_PATH . 'includes__/loader/class-mpc-admin-ajax.php';
+
 			// admin files.
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-save-settings.php';
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-field.php';
@@ -63,13 +57,17 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 
 			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
 
+			include MPC_PATH . 'includes__/loader/class-mpc-asset-loader.php';
+			include MPC_PATH . 'includes__/loader/class-mpc-admin-loader.php';
+
 			// frontend files.
 			include MPC_PATH . 'includes__/class-mpc-front-data.php';
 			include MPC_PATH . 'includes__/class-mpc-product-data.php';
 			include MPC_PATH . 'includes__/class-mpc-table-template.php';
-			
-			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
+
 			include MPC_PATH . 'includes__/class-mpc-ajax-table-loader.php';
+			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
+
 			include MPC_PATH . 'includes__/class-mpc-shortcode.php';
 		}
 
@@ -82,11 +80,16 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			// check if pro plugin exists.
 			$pro_state = apply_filters( 'mpca_change_pro_state', '' );
 
+			// load plugin assets.
+			MPC_Asset_Loader::init( $pro_state );
+
+			MPC_Admin_Ajax::init();
+			
 			// load admin navigations and pages.
 			MPC_Admin_Loader::init( $pro_state );
 
-			// load plugin assets.
-			MPC_Asset_Loader::init( $pro_state );
+			MPC_Add_To_Cart::init();
+			MPC_Ajax_Table_Loader::init();
 
 			MPC_Shortcode::init();
 		}

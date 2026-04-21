@@ -39,7 +39,7 @@
 			}
 
 			const choiceItem = new Choices(
-				document.querySelector( `# ${key}` ),
+				document.querySelector( `#${key}` ),
 				this.getQueryArgs( key )
 			);
 

@@ -20,8 +20,8 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 * Class initialization function
 		 */
 		public static function init() {
-			add_shortcode( 'woo-multi-cart', array( __CLASS__, 'product_table' ) );
 			add_filter( 'mpc_template_loader', array( __CLASS__, 'template_loader' ), 10, 1 );
+			add_shortcode( 'woo-multi-cart', array( __CLASS__, 'product_table' ) );
 		}
 
 		/**
@@ -29,16 +29,16 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 *
 		 * @param array $atts product table shortcode attributes.
 		 */
-		public function product_table( array $atts ) {
-			global $mpc_table__;
-			
+		public static function product_table( $atts ) {
 			$atts = self::extract_shortcode_atts( $atts );
 			if( empty( $atts ) ){
+				error_log( 'no atts found' );
 				return;
 			}
 
 			$data = MPC_Product_Data::get_products( $atts, 1 );
 			if( empty( $data ) || empty( $data['products'] ) ){
+				error_log( 'no product data found' );
 				return;
 			}
 
@@ -60,21 +60,26 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 *
 		 * @param array $atts table shortcode.
 		 */
-		private function extract_shortcode_atts( array $atts ) {
+		private static function extract_shortcode_atts( $atts ) {
 			if ( ! isset( $atts['table'] ) || empty( $atts['table'] ) ) {
 				return $atts;
 			}
 
-			$table_id = (int) $atts['table'];
-			$shortcode = get_post_meta( $table_id, 'shortcode', true );
+			$table_id  = (int) $atts['table'];
+			$cpt_id    = get_post_meta( $table_id, 'table_id', true );
+			$shortcode = get_post_meta( $cpt_id, 'shortcode', true );
 			$shortcode = empty( $shortcode ) ? get_option( "mpcasc_code{$table_id}" ) : $shortcode; // legacy option.
-			if ( empty( $shortcode ) ) {
-				return '';
-			}
+			error_log( 'cpt id ' . $cpt_id );
+			error_log( 'shortcode. ' . $shortcode );
+			// if ( empty( $shortcode ) ) {
+			// 	error_log( 'no shortcode saved' );
+			// 	return '';
+			// }
 
-			$shortcode = str_replace( '[', '', $shortcode );
-			$shortcode = str_replace( ']', '', $shortcode );
-			$shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
+			// $shortcode = str_replace( '[', '', $shortcode );
+			// $shortcode = str_replace( ']', '', $shortcode );
+			// $shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
+			// error_log( 'shortcode - ' . $shortcode );
 
 			return empty( $shortcode ) ? '' : shortcode_parse_atts( $shortcode );
 		}

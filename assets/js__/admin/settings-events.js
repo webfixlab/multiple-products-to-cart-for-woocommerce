@@ -26,6 +26,8 @@
 				connectWith: '.connectedSortable',
 				remove: ( event, ui ) => this.makeMoreSpace( event, ui )
 			} );
+
+			this.setDynamicSortableArea();
 		}
 		redirectOptionsHandler( e ){
 			const elm     = $( e.currentTarget );
@@ -63,18 +65,21 @@
 		}
 		makeMoreSpace( event, ui ) {
 			if ( ui.item.hasClass( 'mpc-stone-col' ) ) {
-				return;
+				return false;
 			}
 			
-			const wrapTo   = ui.item.closest( 'ul' );
-			const wrapFrom = $( event.target );
+			this.setDynamicSortableArea();
+		}
+		setDynamicSortableArea(){
+			const activeCols   = $( '#active-mpc-columns' );
+			const inActiveCols = $( '#inactive-mpc-columns' );
 
-			const heightBase    = wrapTo.find( 'li' )[0].offsetHeight;
-			const fromMinHeight = ( wrapFrom.find( 'li' ).length + 1 ) * heightBase;
-			const toMinHeight   = ( wrapTo.find( 'li' ).length + 1 ) * heightBase;
+			const baseHeight =$( '#active-mpc-columns, #inactive-mpc-columns' ).find( 'li' )[0].offsetHeight;
+			// const baseHeight = 'undefined' !== typeof activeCols.find( 'li' ) ? activeCols.find( 'li' )[0].offsetHeight : activeCols.find( 'li' )[0].offsetHeight;
+			const maxHeight  = Math.max( ( activeCols.find( 'li' ).length + 1 ) * baseHeight, ( inActiveCols.find( 'li' ).length + 1 ) * baseHeight );
 
-			wrapFrom.css( { 'min-height': fromMinHeight + 'px' } );
-			wrapTo.css( { 'min-height': toMinHeight + 'px' } );
+			activeCols.css( { 'min-height': `${maxHeight}px` } );
+			inActiveCols.css( { 'min-height': `${maxHeight}px` } );
 		}
 		setSortedColumns() {
 			const allActiveCols = $( '#active-mpc-columns li' ).map( ( _, el ) => $( el ).data( 'meta_key' ) ).get();

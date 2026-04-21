@@ -27,12 +27,6 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
          * @var array
          */
         private static $atts = array();
-
-		/**
-         * Shortcode field item data
-         * @var array
-         */
-        private static $field;
         
 		public static function init_new_table( $pro_state ){
 			self::$pro_state = $pro_state;
@@ -83,6 +77,13 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			}
 		}
 		private static function render_field( $field ){
+			if( in_array( $field['key'], array( 'ids', 'selected', 'skip_products', 'cats', 'columns' ), true ) ){
+				self::render_full_width_field( $field );
+			}else{
+				self::render_half_width_field( $field );
+			}
+		}
+		private static function render_full_width_field( $field ){
 			?>
 			<div class="mpcdp_row">
 				<div class="mpcdp_settings_option_description col-md-12">
@@ -96,9 +97,20 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			</div>
 			<?php
 		}
+		private static function render_half_width_field( $field ){
+			?>
+			<div class="mpcdp_row row-<?php echo esc_attr( $field['key'] ); ?>">
+				<div class="mpcdp_settings_option_description col-md-6">
+					<?php self::field_title( $field ); ?>
+				</div>
+				<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
+					<?php self::navigate_field( $field ); ?>
+				</div>
+			</div>
+			<?php
+		}
 
 		private static function field_title( $field ){
-			$label = $field['label'];
 			?>
 			<div class="mpcdp_option_label"><?php echo esc_html( $field['label'] ); ?></div>
 			<div class="mpcdp_option_description">
@@ -151,7 +163,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 					</div>
 				</div>
 				<div class="mpcdp_settings_option_description col-md-6">
-					<div class="mpcdp_option_label"><?php echo esc_html__( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+					<div class="mpcdp_option_label"><?php echo esc_html__( 'Inactive Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
 					<div class="mpc-sortable mpca-sorted-options">
 						<ul id="inactive-mpc-columns" class="connectedSortable ui-sortable">
 							<?php self::display_columns( array_diff( $active_columns, array_keys( $column_labels ) ), $column_labels ); ?>
@@ -185,7 +197,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 					type="hidden"
 					class="choicesdp-field"
 					name="<?php echo esc_html( $key ); ?>"
-					value="<?php echo isset( self::$atts[ $key ] ) ? esc_html( self::$atts[ $key ] ) : ( isset( $field['default'] ) ? esc_html( $field['default'] ) : '' ); ?>"
+					value="<?php echo isset( self::$atts[ $key ] ) ? esc_html( self::$atts[ $key ] ) : ( isset( $field['default'] ) ? esc_html( $field['default'] ) : '' ); ?>">
 				<select
 					id="<?php echo esc_html( $key ); ?>"
 					class="mpc-sc-itembox"
@@ -200,11 +212,14 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			$key = $field['key'];
 
 			$saved = isset( self::$atts[ $key ] ) ? self::$atts[ $key ] : '';
-			$saved = is_array( $saved ) ? $saved : explode( ',', str_replace( ' ', '', $saved ) );
+			$saved = is_array( $saved ) ? $saved : ( ! empty( $saved ) ? explode( ',', str_replace( ' ', '', $saved ) ) : array() );
 
 			$pro_options = 'static' === $field['content_type'] && empty( self::$pro_state ) && isset( $field['pro_options'] ) ? $field['pro_options'] : array(); // pro options, which aren't allowed in free.
 
 			$options = 'static' === $field['content_type'] ? $field['options'] : $saved;
+			if( empty( $options ) ){
+				return;
+			}
 			foreach( $options as $value => $label ){
 				$class = 'static' === $field['content_type'] ? (
 					in_array( $value, $pro_options, true ) ? 'disabled' : (
@@ -219,6 +234,9 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			}
 		}
 		private static function get_selectbox_option_label( $field, $option ){
+			if( empty( $option ) ){
+				return;
+			}
 			if( 'cats' === $field['key'] ){
 				$term = get_term( (int) $option );
 				return $term->name;
@@ -267,7 +285,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 				name="<?php echo esc_attr( $key ); ?>"
 				id="<?php echo esc_attr( $key ); ?>"
 				value="<?php echo isset( self::$atts[ $key ] ) ? esc_html( self::$atts[ $key ] ) : ( isset( $field['default'] ) ? esc_html( $field['default'] ) : '' ); ?>"
-				class="<?php echo esc_attr( $field['class'] ); ?>"
+				class="<?php echo isset( $field['class'] ) ? esc_attr( $field['class'] ) : ''; ?>"
 				placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"
 				<?php echo isset( $field['min'] ) ? 'min="' . esc_attr( $field['min'] ) . '"' : "" ?>
 				<?php echo isset( $field['max'] ) ? 'max="' . esc_attr( $field['max'] ) . '"' : "" ?>>

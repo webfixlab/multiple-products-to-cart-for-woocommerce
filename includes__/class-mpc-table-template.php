@@ -134,9 +134,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 
 
-
-
-
 		/**
 		 * Display table header columns
 		 */
@@ -203,8 +200,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		}
 
 
-
-
+		
 		/**
 		 * Display product image
 		 *
@@ -318,8 +314,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 
 
-
-
 		/**
 		 * Display product variations
 		 *
@@ -415,10 +409,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			<?php
 		}
 
-		
-
-
-
 
 
 		/**
@@ -473,11 +463,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			</td>
 			<?php
 		}
-
-
-
-
-
 
 
 

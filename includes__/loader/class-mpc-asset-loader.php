@@ -197,7 +197,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
                 return;
             }
 
-			wp_register_style( 'mpc-admin', MPC_URL . 'assets/css/admin' . self::$suffix . '.css', array(), MPC_VER );
+			wp_register_style( 'mpc-admin', MPC_URL . 'assets/css/admin/admin' . self::$suffix . '.css', array(), MPC_VER );
 			wp_enqueue_style( 'mpc-admin' );
 
 			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js__/admin/page-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
