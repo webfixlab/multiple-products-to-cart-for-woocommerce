@@ -128,14 +128,14 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			// product image size.
 			$image_size = get_option( 'mpc_image_size', '90' );
 
-			$css = '
+			$css = "
 				.mpc-wrap thead tr th, .mpc-pagenumbers span.current, .mpc-fixed-header table thead tr th{
 					background: {$hnp_background}; color: {$hnp_color};
 				}
 				td.mpc-product-image, .mpcp-gallery, table.mpc-wrap img{
 					width: {$image_size}px;
 				}
-			';
+			";
 
 			// cart button css.
 			$cart_btn  = ! empty( $btn_color ) ? 'color: ' . esc_html( $btn_color ) . ';' : '';
@@ -145,11 +145,11 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			}
 
 			if ( ! empty( $title_color ) ) {
-				$css .= '.mpc-product-title a{ color: {$title_color}; }';
+				$css .= ".mpc-product-title a{ color: {$title_color}; }";
 			}
 
 			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) {
-				$css .= '.mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }';
+				$css .= ".mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }";
 			}
 
 			$css .= '.mpc-container .mpc-product-title a{';

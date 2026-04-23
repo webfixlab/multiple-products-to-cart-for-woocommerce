@@ -41,6 +41,10 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 				'labels' => array(
 					'variation_prefix' => get_option( 'wmc_option_text' ),
 				),
+				'settings' => array(
+					'stock' => get_option( 'mpc_show_stock_out' ),
+					'desc'  => get_option( 'mpc_show_variation_desc' ),
+				),
 			);
 
 			if( isset( $atts['selected' ] ) && ! empty( $atts['selected'] ) ){
@@ -61,9 +65,9 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 		 */
         private static function get_table_columns( $atts, $data ){
             $columns = isset( $atts['columns'] ) ? $atts['columns'] : get_option( 'wmc_sorted_columns' );
-			$columns = explode( ',', str_replace( ' ', '', $columns ) );
+			$columns = empty( $columns ) ? array() : explode( ',', str_replace( ' ', '', $columns ) );
 
-            if( false === strpos( $columns[0], 'wmc_ct_' ) ){
+            if( ! empty( $columns ) && false === strpos( $columns[0], 'wmc_ct_' ) ){
                 $columns = array_map( function ( $col ) {
                     return 'wmc_ct_' . $col;
                 }, $columns );
@@ -73,9 +77,9 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 			
             // remove variation column if no variable products in the query results.
             $default = self::has_variable_products( $data['products'] ) ? $default : array_diff( $default, array( 'wmc_ct_variation' ) );
-
+			
             // filter out extra columns.
-            $columns = array_intersect( $default, $columns );
+            $columns = empty( $columns ) ? $default : array_intersect( $default, $columns );
 
             $labels = array(
                 'wmc_ct_image'     => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
@@ -90,6 +94,7 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
             foreach( $columns as $col ){
                 $cols[ $col ] = $labels[ $col ];
             }
+			
             return $cols;
         }
 

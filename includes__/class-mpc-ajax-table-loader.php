@@ -27,17 +27,19 @@ if ( ! class_exists( 'MPC_Ajax_Table_Loader' ) ) {
 		/**
 		 * Ajax product table loader
 		 */
-		public function product_table_ajax() {
+		public static function product_table_ajax() {
 			check_ajax_referer( 'table_nonce_ref', 'table_nonce' );
 
 			$locale = isset( $_POST['locale'] ) ? sanitize_text_field( wp_unslash( $_POST['locale'] ) ) : '';
+			$paged  = isset( $_POST['page'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['page'] ) ) : 1;
+
 			$atts   = sanitize_text_field( wp_unslash( $_POST['atts'] ) );
 			$atts   = json_decode( $atts, true );
 			if( empty( $atts ) ){
 				wp_send_json_error( array( 'msg' => __( 'Sorry! There was an error.', 'multiple-products-to-cart-for-woocommerce' ) ) );
 			}
 
-			$data = MPC_Product_Data::get_products( $atts, 1 );
+			$data = MPC_Product_Data::get_products( $atts, $paged );
 			if( empty( $data ) || empty( $data['products'] ) ){
 				wp_send_json( array(
 					'status'        => 'error',
@@ -65,16 +67,12 @@ if ( ! class_exists( 'MPC_Ajax_Table_Loader' ) ) {
 					),
 				),
 				array(
-					'key'         => '.mpc-product-range',
-					'parent'      => '.mpc-button', // if key element not found add to parent.
-					'adding_type' => 'prepend',
-					'val'         => '',
+					'key' => '.mpc-product-range',
+					'val' => '',
 				),
 				array(
-					'key'         => '.mpc-pagenumbers',
-					'parent'      => '.mpc-inner-pagination',
-					'adding_type' => 'prepend',
-					'val'         => '',
+					'key' => '.mpc-pagenumbers',
+					'val' => '',
 				),
 			);
 		}
@@ -100,21 +98,17 @@ if ( ! class_exists( 'MPC_Ajax_Table_Loader' ) ) {
 			);
 
 			ob_start();
-			// $mpc_template__->display_table_pagination_range();
+			MPC_Table_Template::display_pagination_numbers();
 			$response[] = array(
-				'key'         => '.mpc-product-range',
-				'parent'      => '.mpc-button', // if key element not found add to parent.
-				'adding_type' => 'prepend',
-				'val'         => ob_get_clean(),
+				'key' => '.mpc-pagenumbers',
+				'val' => '<div class="mpc-pagenumbers">' . ob_get_clean() . '</div>',
 			);
 
 			ob_start();
-			// $mpc_template__->numbered_pagination();
+			MPC_Table_Template::display_pagination_range();
 			$response[] = array(
-				'key'         => '.mpc-pagenumbers',
-				'parent'      => '.mpc-inner-pagination',
-				'adding_type' => 'prepend',
-				'val'         => ob_get_clean(),
+				'key' => '.mpc-product-range',
+				'val' => '<div class="mpc-product-range">' . ob_get_clean() . '</div>',
 			);
 
 			restore_previous_locale(); // switch back to default admin locale.

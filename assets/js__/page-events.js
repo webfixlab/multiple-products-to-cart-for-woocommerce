@@ -94,7 +94,7 @@
             this.renderStickyHeader( wrap, positionLeft );
 
             wrap.find( '.mpc-table-header' ).css( { 'left': `${ positionLeft }px` } ); // filter section.
-            wrap.find( '.total-row' ).css( { 'width': vpw < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' ).offsetWidth }px` } ); // fixed total section.
+            wrap.find( '.total-row' ).css( { 'width': viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' ).offsetWidth }px` } ); // fixed total section.
         }
         renderStickyHeader( wrap, positionLeft ){
             wrap.find( '.mpc-fixed-header' ).remove();
@@ -132,12 +132,12 @@
             this.prevScrollTop = this.scrollTop;
         }
         setupTableOffsets( wrap, scrollState ){
-            const rows    = wrap.find( 'table.mpc-wrap tbody tr' );
-            const lastRow = rows[ rows.length - 1 ];
+            const firstRow = wrap.find( 'table.mpc-wrap tbody tr:first-child' );
+            const lastRow  = wrap.find( 'table.mpc-wrap tbody tr:last-child' );
             return {
                 isStickyFooter:  this.scrollTop + this.height < lastRow.offset().top + lastRow.offsetHeight,
-                isStickyColumns: this.scrollTop > rows[0].offset().top + 50 && this.scrollTop < lastRow.offset().top,
-                isStickyFilter:  this.scrollTop < this.prevScrollTop && rows[0].offset().top && this.scrollTop < lastRow.offset().top
+                isStickyColumns: this.scrollTop > firstRow.offset().top + 50 && this.scrollTop < lastRow.offset().top,
+                isStickyFilter:  this.scrollTop < this.prevScrollTop && firstRow.offset().top && this.scrollTop < lastRow.offset().top
             };
         }
         hasStickyFilterEvent( wrap, scrollState ){

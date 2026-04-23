@@ -26,9 +26,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * Initialize table actions and filters.
 		 */
 		public static function init(){
-			self::setup_frontend_data();
-
 			// header.
+			add_action( 'mpc_table_header', array( __CLASS__, 'display_table_filters' ), 10 );
 			add_action( 'mpc_table_filters', array( __CLASS__, 'table_orderby' ), 10 );
 			add_action( 'mpc_table_actions', array( __CLASS__, 'table_check_all' ), 10 );
 			
@@ -50,7 +49,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			add_action( 'mpc_table_footer', array( __CLASS__, 'table_footer' ), 10 );
 			add_action( 'mpc_table_total', array( __CLASS__, 'table_total' ), 10 );
 			add_action( 'mpc_table_add_to_cart_button', array( __CLASS__, 'add_to_cart_btn_all' ), 10 );
-			
 
 			add_action( 'wp_footer', array( __CLASS__, 'image_popup' ) );
 		}
@@ -61,7 +59,21 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		private static function setup_frontend_data(){
 			global $mpc_table__;
 
-			$data = &$mpc_table__;
+			self::$data = &$mpc_table__;
+		}
+
+		/**
+		 * Display table filters and actions
+		 */
+		public static function display_table_filters(){
+			?>
+			<div class="mpc-filters">
+				<?php do_action( 'mpc_table_filters' ); ?>
+			</div>
+			<div class="mpc-all-actions">
+				<?php do_action( 'mpc_table_actions' ); ?>
+			</div>
+			<?php
 		}
 
 		/**
@@ -71,7 +83,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 
 			$show_filter = get_option( 'wmc_show_products_filter' );
-			if( ! empty( $show_filter ) || 'on' !== $show_filter ){
+			if( ! empty( $show_filter ) && 'on' !== $show_filter ){
 				return;
 			}
 
@@ -88,7 +100,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				<select
 					name="mpc_orderby"
 					class="mpc-orderby"
-					title="<?php echo esc_html__( 'Table order by', 'multiple-products-to-cart-for-woocommerce' ); ?>">
+					title="<?php echo esc_html__( 'Table orderby', 'multiple-products-to-cart-for-woocommerce' ); ?>">
 					<?php self::table_orderby_options(); ?>
 				</select>
 			</div>
@@ -152,6 +164,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * Display table columns with labels
 		 */
 		private static function display_table_header_columns(){
+			self::setup_frontend_data();
+			
 			foreach ( self::$data['columns'] as $slug => $label ) {
 				?>
 				<th
@@ -167,7 +181,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		public static function display_table_body() {
 			self::setup_frontend_data();
 
-			foreach ( self::$data['products'] as $product_id ) {
+			foreach( self::$data['products'] as $product_id ) {
 				self::display_table_row( $product_id );
 				do_action( 'mpc_table_row' );
 			}
@@ -183,7 +197,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			?>
 			<tr
 				class="cart_item"
-				data-variation_id="0"
 				data-type="<?php echo esc_attr( $product->get_type() ); ?>"
 				data-id="<?php echo esc_attr( $product_id ); ?>"
 				stock="<?php echo esc_attr( $product->get_stock_quantity() ); ?>"
@@ -193,6 +206,12 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			</tr>
 			<?php
 		}
+
+		/**
+		 * Add table columns specific actions
+		 *
+		 * @param object $product Product object.
+		 */
 		private static function add_row_columns_action( $product ){
 			foreach ( self::$data['columns'] as $slug => $label ) {
 				do_action( 'mpc_table_column_' . str_replace( 'wmc_ct_', '', $slug ), $product );
@@ -323,9 +342,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 			?>
 			<td for="variation" class="mpc-product-variation">
-				<div
-					class="row-variation-data"
-					data-variation_data="<?php echo wc_esc_json( wp_json_encode( $product->get_available_variations( 'array' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
 				<?php self::display_variation_attributes( $product ); ?>
 				<?php do_action( 'mpcp_custom_variation_html' ); // add custom variation html content. ?>
 			</td>
@@ -338,12 +354,21 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * @param object $product Product object.
 		 */
 		private static function display_variation_attributes( $product ) {
-			$attributes = $product->get_variation_attributes();
-			if( 'variable' !== $product->get_type() || empty( $attributes ) || ! is_array( $attributes ) ){
+			if( 'variable' !== $product->get_type() ){
 				self::no_variation_text();
 				return;
 			}
-			
+
+			$attributes = $product->get_variation_attributes();
+			if( empty( $attributes ) || ! is_array( $attributes ) ){
+				return;
+			}
+			?>
+			<div
+				class="row-variation-data"
+				data-variation_data="<?php echo wc_esc_json( wp_json_encode( MPC_Product_Data::get_available_variations( $product, self::$data['settings'] ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
+				<!-- data-variation_data="<?php // echo wc_esc_json( wp_json_encode( $product->get_available_variations( 'array' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div> -->
+			<?php
 			$default_atts = $product->get_default_attributes();
 
 			foreach( $attributes as $att_name => $options ){
@@ -475,11 +500,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			do_action( 'mpc_table_total' );
 			?>
 			<div class="mpc-button">
-				<div>
-					<input type="hidden" name="add_more_to_cart" value="1">
-					<?php self::table_reset_btn(); ?>
-					<?php do_action( 'mpc_table_add_to_cart_button' ); ?>
-				</div>
+				<?php self::table_reset_btn(); ?>
+				<?php do_action( 'mpc_table_add_to_cart_button' ); ?>
 			</div>
 			<?php self::display_pagination(); ?>
 			<div
@@ -571,11 +593,13 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			?>
 			<div class="mpc-pagination">
 				<div class="mpc-inner-pagination">
-					<div class="mpc-pagenumbers" data-max_page="<?php echo esc_attr( self::$data['max_page'] ); ?>">
+					<div class="mpc-pagenumbers">
 						<?php self::display_pagination_numbers(); ?>
 					</div>
 				</div>
-				<?php self::display_pagination_range(); ?>
+				<div class="mpc-product-range">
+					<?php self::display_pagination_range(); ?>
+				</div>
 			</div>
 			<?php
 		}
@@ -583,7 +607,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Display pagination numbers
 		 */
-		private static function display_pagination_numbers() {
+		public static function display_pagination_numbers() {
 			if( 1 === self::$data['max_page'] ){
 				return;
 			}
@@ -608,8 +632,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 					echo '<span class="mpc-divider">-</span>';
 				}
 				?>
-				<span
-					class="<?php echo $page === $paged ? 'current' : ''; ?>"><?php echo esc_attr( $page ); ?></span>
+				<span class="<?php echo $page === $paged ? 'current' : ''; ?>"><?php echo esc_attr( $page ); ?></span>
 				<?php
 			}
 		}
@@ -617,7 +640,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Display current products range of total
 		 */
-		private static function display_pagination_range() {
+		public static function display_pagination_range() {
 			$show_range = get_option( 'wmc_show_pagination_text' );
 			if( ! empty( $show_range ) && 'on' !== $show_range ){
 				return;
@@ -626,22 +649,17 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$paged = self::$data['paged'];
 			$limit = isset( self::$data['atts']['limit'] ) ? (int) self::$data['atts']['limit'] : 10;
 
-			$range_start   = max( 1, ( $paged - 1 ) * $limit );
+			$range_start   = max( 1, ( $paged - 1 ) * $limit + 1 );
 			$range_end     = min( $paged * $limit, self::$data['total'] );
 			$product_range = number_format( $range_start ) . ' - ' . number_format( $range_end );
-			?>
-			<div class="mpc-product-range" data-page_limit="<?php echo esc_attr( $limit ); ?>">
-				<?php
-					printf(
-						// translators: $1$s: saved prefix, $2$s: starting range, %3$s: where the pagination ends.
-						esc_html__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
-						esc_html( get_option( 'wmc_pagination_text' ) ),
-						'<span class="ranges">' . esc_html( $product_range ) . '</span>',
-						'<span class="max_product">' . esc_attr( self::$data['total'] ) . '</span>'
-					);
-				?>
-			</div>
-			<?php
+
+			printf(
+				// translators: $1$s: saved prefix, $2$s: starting range, %3$s: where the pagination ends.
+				esc_html__( '%1$s %2$s of %3$s products', 'multiple-products-to-cart-for-woocommerce' ),
+				esc_html( get_option( 'wmc_pagination_text' ) ),
+				'<span class="ranges">' . esc_html( $product_range ) . '</span>',
+				'<span class="max_product">' . esc_attr( self::$data['total'] ) . '</span>'
+			);
 		}
 
 		/**

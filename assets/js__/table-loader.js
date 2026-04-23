@@ -9,22 +9,26 @@
 ( function ( $, window, document ) {
 	class MPCFrontTableLoader{
 		constructor(){
-            // this.$tableState = {}; // current table state.
 			$( document ).ready( () => this.initEventTriggers() );
 		}
 		initEventTriggers(){
             window.mpcHooks.addAction( 'mpc_load_table', ( e, type ) => this.ajaxTableLoader( e, type ) );
 
-            $( 'body' ).on( 'change', '.mpc-orderby', ( e ) => this.loadTableEventHandler( e, 'orderby' ) );
-            $( 'body' ).on( 'click', '.mpc-pagenumbers span', ( e ) => this.loadTableEventHandler( e, 'pagination' ) );
+            $( document ).on( 'change', '.mpc-orderby', ( e ) => this.loadTableEventHandler( e, 'orderby' ) );
+            $( document ).on( 'click', '.mpc-pagenumbers span', ( e ) => this.loadTableEventHandler( e, 'pagination' ) );
         }
         loadTableEventHandler( e, type ){
+            if( 'pagination' === type ){
+                $( e.currentTarget ).closest( '.mpc-pagenumbers' ).find( 'span' ).each( ( _, el ) => $( el ).removeClass( 'current' ) );
+                $( e.currentTarget ).addClass( 'current' );
+            }
             window.mpcHooks.doAction( 'mpc_load_table', e, type );
         }
         ajaxTableLoader( e, type ){
             const elm  = $( e.currentTarget );
             const wrap = elm.closest( '.mpc-container' );
             const args = this.getArgs( wrap, type );
+            
             this.requestNewTable( args, wrap );
         }
         getArgs( wrap, type ){
@@ -34,16 +38,7 @@
             if( filterWrap && filterWrap.length > 0 ){
                 args[ 'orderby' ] = filterWrap.find( 'option:selected' ).val();
             }
-
-            args[ 'page' ] = 1;
-            const pageWrap = wrap.find( '.mpc-pagenumbers span' );
-            if( 'pagination' === type && pageWrap && pageWrap.length > 0 ){
-                pageWrap.each( ( _, el ) => {
-                    if( $( el ).hasClass( 'current' ) || $( el ).hasClass( 'mpc-divider' ) ){
-                        args[ 'page' ] = parseInt( $( el ).text() );
-                    }
-                } );
-            }
+            args[ 'page' ] = parseInt( wrap.find( '.mpc-pagenumbers span.current' ).text() );
 
             return window.mpcHooks.applyFilters( 'mpc_table_args', args, wrap );
         }
@@ -88,14 +83,8 @@
                 return;
             }
 
-            $.each( rp.mpc_fragments, function ( k, v ) {
-                let elm = wrap.find( v.key );
-                elm = ! elm || 0 === elm.length ? wrap.find( 'v.parent' ) : elm;
-                if( 'prepend' === v.adding_type ){
-                    elm.prepend( v.val );
-                }else{
-                    elm.replaceWith( v.val );
-                }
+            Object.keys( rp.mpc_fragments ).forEach( key => {
+                wrap.find( rp.mpc_fragments[key].key ).replaceWith( rp.mpc_fragments[key].val );
             });
         }
 	}

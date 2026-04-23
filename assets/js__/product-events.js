@@ -14,11 +14,11 @@
 		}
 		initEvents(){
             // trigger new custom events from this free version with arguments and use it on pro.
-            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableEvents( response, wrap ) );
+            window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableEvents( wrap ) );
 
             $( 'body' ).on( 'click', '.mpc-check-all', ( e ) => this.allCheckEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'change paste keyup cut select', '.mpc-product-quantity input[type="number"]', ( e ) => this.qtyChangeEventHandler( $( e.currentTarget ) ) );
-            $( 'body' ).on( 'change', 'table.mpc-wrap select.mpc-var-att', ( e ) => this.variationAttChanged( $( e.currentTarget ) ) );
+            $( 'body' ).on( 'change', 'table.mpc-wrap select.mpc-var-att', ( e ) => this.variationAttchangeEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'click', 'table.mpc-wrap input[type="checkbox"]', ( e ) => this.productCheckEventHandler( $( e.currentTarget ) ) );
 
             $( 'body' ).on( 'click', '.mpc-reset', () => window.location.reload() );
@@ -31,12 +31,14 @@
             // set table total price.
         }
         initTablesState( wrap ){
+            console.log('wrap', wrap);
             const table = wrap.find( 'table.mpc-wrap' );
             table.attr( 'data-table_id', this.tableCounter );
             table.find( 'tr.cart_item' ).each( ( _, row ) => this.initTableRowState( $( row ) ) );
             this.tableCounter++;
+            console.log( 'table state updated' );
         }
-        initTableRowState( tableId, row ){
+        initTableRowState( row ){
             if( 'grouped' === row.attr( 'data-type' ) ){
                 return;
             }
@@ -46,7 +48,7 @@
             };
             const qty = row.find( '.mpc-product-quantity input[type="number"]' );
             if( qty && qty.length > 0 ){
-                productData['qty'] = parseInt( qty );
+                productData['qty'] = parseInt( qty.val() );
             }
 
             const checkBox = row.find( 'input[type="checkbox"]' );
@@ -67,7 +69,7 @@
             }
 
             window.mpcTables.updateProductState( {
-                tableId:   tableId,
+                tableId:   this.tableCounter,
                 productId: parseInt( row.attr( 'data-id' ) )
             }, productData );
 
@@ -80,14 +82,16 @@
             const variation = Object.values( variations ).find( variation => {
                 let hasNoIssue = true; // if any attribute value is missed.
                 for( const [attName, attVal] of Object.entries( variation.attributes ) ){
-                    const foundAttVal = row.find( `select.${attName} option:selected` ).attr( 'data-value' ); // could you just :selected.
-                    if( attVal && attVal.length > 0 && attVal !== foundAttVal ){
+                    const attNameSanitized = attName.replace( 'attribute_', '' );
+                    const foundAttVal      = row.find( `select.${attNameSanitized} option:selected` ).attr( 'data-value' ); // could you just :selected.
+
+                    if( !foundAttVal || 0 === foundAttVal.length || attVal && attVal.length > 0 && attVal !== foundAttVal ){
                         hasNoIssue = false;
                     }
                 }
                 return hasNoIssue;
             });
-            return variation || null
+            return variation || null;
         }
         sanitizeStock( stock, stockStatus ){
             return 'outofstock' === stockStatus ? 0 : (
@@ -130,7 +134,7 @@
         }
 
         qtyChangeEventHandler( qtyField ){
-            const target = window.mpcTables.identifyTarget( field );
+            const target = window.mpcTables.identifyTable( qtyField );
             window.mpcTables.updateProductMeta( target, 'qty', parseInt( qtyField.val() ) );
             this.validateStock( qtyField );
             this.setTableTotal( qtyField, target );
@@ -161,12 +165,13 @@
         }
 
         variationAttchangeEventHandler( attDropDown ){
-            const target = window.mpcTables.identifyTarget( field );
+            const target = window.mpcTables.identifyTable( attDropDown );
             const row    = attDropDown.closest( 'tr.cart_item' );
     
             const variation = this.getCurrentVariation( row );
             window.mpcTables.updateProductMeta( target, 'variation', variation ? variation : {} );
             window.mpcTables.updateProductMeta( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
+            console.log( 'variation', variation );
             
             if( variation && variation.stock ){
                 variation.stock = this.sanitizeStock( variation.stock, variation.stock_status );
@@ -195,7 +200,7 @@
                 return;
             }
             const full  = variation.image.full ? variation.image.full : '';
-            const thumb = variation.image.thumbnail ? variation.image.thumbnail : '';
+            const thumb = variation.image.thumb ? variation.image.thumb : '';
             if( ! full || ! thumb ){
                 return;
             }
@@ -213,22 +218,19 @@
             }
         }
         updateVariationPrice( row, variation ){
-            const priceWrap = row.find( '.mpc-product-price' );
+            const priceWrap = row.find( '.mpc-product-price .mpc-single-price' );
             if( ! priceWrap || 0 === priceWrap.length ){
                 return;
             }
             const price = variation && variation.price ? variation.price : '';
-            const variationPriceWrap = priceWrap.find( '.mpc-single-price' );
-            // we will assume variation price wrapper exists.
-            if( price && price.length > 0 && row.attr( 'data-price' ) !== price ){
-                variationPriceWrap.find( 'span.total-price' ).text( this.priceFormat( price ) );
-            }
-            variationPriceWrap.toggle( price && price.length > 0 && row.attr( 'data-price' ) !== price );
-            priceWrap.find( '.mpc-range' ).toggle( ! price || 0 === price.length || row.attr( 'data-price' ) === price );
+
+            priceWrap.find( 'span.total-price' ).text( price && ! isNaN( price ) ? this.priceFormat( price ) : '' );
+            priceWrap.toggle( price && ! isNaN( price ) );
+            row.attr( 'data-price', price );
         }
 
         productCheckEventHandler( checkBox ){
-            const target = window.mpcTables.identifyTarget( field );
+            const target = window.mpcTables.identifyTable( checkBox );
             window.mpcTables.updateProductMeta( target, 'checked', checkBox.is( ':checked' ) );
             this.setTableTotal( checkBox, target );
         }

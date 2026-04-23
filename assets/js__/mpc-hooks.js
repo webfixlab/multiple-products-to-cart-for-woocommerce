@@ -25,11 +25,15 @@
                     }
                 },
                 addFilter: function( tag, callback ) {
-                    if ( ! this.filters[ tag ] ) this.filters[ tag ] = [];
+                    if ( ! this.filters[ tag ] ) {
+                        this.filters[ tag ] = [];
+                    }
                     this.filters[ tag ].push( callback );
                 },
                 applyFilters: function( tag, data, ...args ) {
-                    if ( ! this.filters[ tag ] ) return data;
+                    if ( ! this.filters[ tag ] ) {
+                        return data;
+                    }
                     return this.filters[ tag ].reduce( ( currentData, callback ) => {
                         return callback( currentData, ...args );
                     }, data );
@@ -58,12 +62,22 @@
                     const target = this.identifyTable( field );
                     const stock  = this.state[ target.tableId ][ target.productId ]['stock'];
                     let qty      = this.state[ target.tableId ][ target.productId ]['qty'];
+                    
+                    const oldstate = this.state[ target.tableId ][ target.productId ];
+                    
 
                     // validate quantity.
-                    qty = stock && 0 === stock ? 0 : (
-                        stock && qty > stock ? stock : qty
+                    qty = 'number' === typeof stock && 0 === stock ? 0 : (
+                        -1 === stock ? qty : (
+                            stock > qty ? qty : stock
+                        )
                     );
+                    // qty = stock && 0 === stock ? 0 : (
+                    //     stock && qty > stock ? stock : qty
+                    // );
                     this.state[ target.tableId ][ target.productId ]['qty'] = qty;
+
+                    console.log( 'stock', stock, 'qty', qty, oldstate );
                     return qty;
                 },
                 getTableTotal: function( target ) {

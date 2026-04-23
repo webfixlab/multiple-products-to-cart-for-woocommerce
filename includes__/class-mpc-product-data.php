@@ -119,14 +119,6 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			return apply_filters( 'mpc_query_args', $args, $atts );
 		}
 
-		// public static function get_product_data( $product ){
-		// 	$product_data = array(
-		// 		'price_amount' => self::extract_price_from_html( $product->get_price_html() )
-		// 	);
-
-		// 	return apply_filters( 'mpcp_modify_product_data', $product_data, $product );
-		// }
-
 		/**
 		 * Extract price from price html
 		 *
@@ -161,6 +153,73 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$price_text = wp_strip_all_tags( $price_text );
 			$price_text = html_entity_decode( $price_text );
 			return (float) wc_format_decimal( $price_text, wc_get_price_decimals() );
+		}
+
+		/**
+		 * Get available product variations data
+		 *
+		 * @param object $product Product object.
+		 * @param array  $options Settings options.
+		 * @return array
+		 */
+		public static function get_available_variations( $product, $options ) {
+			$variation_ids = $product->get_children();
+			if ( empty( $variation_ids ) ) {
+				return array();
+			}
+
+			$options['type'] = $product->get_type();
+
+			$available_variations = array();
+			foreach ( $variation_ids as $variation_id ) {
+				$variation_data = self::get_variation_data( $variation_id, $options );
+				if( ! empty( $variation_data ) ){
+					$available_variations[] = $variation_data;
+				}
+			}
+
+			return $available_variations;
+		}
+
+		/**
+		 * Get variation data for frontend use
+		 *
+		 * @param int   $variation_id Variation ID.
+		 * @param array $options      Admin settings options.
+		 * @return array
+		 */
+		private static function get_variation_data( $variation_id, $options ){
+			$variation = wc_get_product( $variation_id );
+
+			$price   = self::extract_price_from_html( $variation->get_price_html() );
+			$sub_fee = false !== strpos( $options['type'], 'subscription' ) ? get_post_meta( $variation_id, '_subscription_sign_up_fee', true ) : 0;
+			$stock   = $variation->get_stock_quantity();
+
+			$data = array(
+				'attributes'   => $variation->get_attributes(),
+				'price'        => empty( $sub_fee ) ? $price : $price + (float) $sub_fee,
+				'sku'          => $variation->get_sku(),
+				'stock_status' => $variation->get_stock_status(),
+				'stock'        => empty( $stock ) ? '' : $stock,
+				'stock_txt'    => __( 'In stock', 'multiple-products-to-cart-for-woocommerce' ),
+			);
+
+			$image_id = get_post_meta( $variation_id, '_thumbnail_id', true );
+			if( ! empty( $image_id ) ){
+				$data['image'] = array(
+					'thumb' => wp_get_attachment_image_src( $image_id, 'thumbnail' )[0],
+					'full'  => wp_get_attachment_image_src( $image_id, 'large' )[0]
+				);
+			}
+
+			if( empty( $options['desc'] ) || 'on' === $options['desc'] ){
+				$desc = $variation->get_description();
+				if ( ! empty( $desc ) ) {
+					$data['desc'] = strlen( $desc ) > 70 ? substr( $desc, 0, 70 ) . '...' : $desc;
+				}
+			}
+
+			return $data;
 		}
 	}
 }

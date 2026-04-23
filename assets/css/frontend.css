@@ -179,9 +179,7 @@ table.mpc-wrap td select:last-of-type {
 .mpc-button {
 	text-align: right;
 	margin-bottom: 10px;
-}
-.mpc-button > div {
-	display: inline-block;
+	display: block;
 }
 .mpc-product-range {
 	font-size: 14px;
@@ -335,6 +333,7 @@ span.mpc-single-add:hover {
 }
 .mpc-pagenumbers span.current {
 	color: white;
+	background: #535353;
 }
 .table-query{
 	display: initial;

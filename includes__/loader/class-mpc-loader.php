@@ -23,7 +23,6 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			self::include_loader();
 
 			if ( ! MPC_Installer::install() ) {
-				error_log( 'installation failed' );
 				return;
 			}
 
@@ -65,9 +64,10 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			include MPC_PATH . 'includes__/class-mpc-product-data.php';
 			include MPC_PATH . 'includes__/class-mpc-table-template.php';
 
+			include MPC_PATH . 'includes__/functions.php';
+
 			include MPC_PATH . 'includes__/class-mpc-ajax-table-loader.php';
 			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
-
 			include MPC_PATH . 'includes__/class-mpc-shortcode.php';
 		}
 
@@ -89,8 +89,9 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			MPC_Admin_Loader::init( $pro_state );
 
 			MPC_Add_To_Cart::init();
-			MPC_Ajax_Table_Loader::init();
 
+			MPC_Table_Template::init();
+			MPC_Ajax_Table_Loader::init();
 			MPC_Shortcode::init();
 		}
 

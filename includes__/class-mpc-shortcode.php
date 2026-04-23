@@ -30,15 +30,15 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 * @param array $atts product table shortcode attributes.
 		 */
 		public static function product_table( $atts ) {
+			global $mpc_table__;
+
 			$atts = self::extract_shortcode_atts( $atts );
 			if( empty( $atts ) ){
-				error_log( 'no atts found' );
 				return;
 			}
 
 			$data = MPC_Product_Data::get_products( $atts, 1 );
 			if( empty( $data ) || empty( $data['products'] ) ){
-				error_log( 'no product data found' );
 				return;
 			}
 
@@ -65,23 +65,44 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 				return $atts;
 			}
 
+			return self::extract_saved_shortcode( $atts );
+		}
+
+		/**
+		 * Get saved shortcode 
+		 *
+		 * @param array $atts Shortcode attributes.
+		 * @return array
+		 */
+		private static function extract_saved_shortcode( $atts ){
 			$table_id  = (int) $atts['table'];
 			$cpt_id    = get_post_meta( $table_id, 'table_id', true );
 			$shortcode = get_post_meta( $cpt_id, 'shortcode', true );
-			$shortcode = empty( $shortcode ) ? get_option( "mpcasc_code{$table_id}" ) : $shortcode; // legacy option.
-			error_log( 'cpt id ' . $cpt_id );
-			error_log( 'shortcode. ' . $shortcode );
-			// if ( empty( $shortcode ) ) {
-			// 	error_log( 'no shortcode saved' );
-			// 	return '';
-			// }
 
-			// $shortcode = str_replace( '[', '', $shortcode );
-			// $shortcode = str_replace( ']', '', $shortcode );
-			// $shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
-			// error_log( 'shortcode - ' . $shortcode );
+			$shortcode = str_replace( '[', '', $shortcode );
+			$shortcode = str_replace( ']', '', $shortcode );
+			$shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
 
-			return empty( $shortcode ) ? '' : shortcode_parse_atts( $shortcode );
+			$shortcode_atts = ! empty( $shortcode ) ? shortcode_parse_atts( $shortcode ) : array(); // shortcode attributes.
+
+			$reference_atts = apply_filters( 'mpc_filter_attributes', array(
+				'table'         => '',
+				'limit'         => 10,
+				'orderby'       => '',
+				'order'         => 'DESC',
+				'ids'           => '',
+				'skip_products' => '',
+				'cats'          => '',
+				'tags'          => '',
+				'type'          => 'all',
+				'link'          => 'true',
+				'description'   => 'false',
+				'selected'      => '',
+				'pagination'    => 'true',
+				'columns'       => '',
+			) );
+
+			return shortcode_atts( $reference_atts, $shortcode_atts, 'woo-multi-cart' );
 		}
 
 		/**
