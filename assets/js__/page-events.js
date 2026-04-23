@@ -26,9 +26,11 @@
             window.mpcHooks.addAction( 'mpc_spinner', ( action, wrap ) => this.tableLoadingSpinner( action, wrap ) );
             window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableLoadedEventHandler( wrap ) );
 
-            $( 'body' ).on( 'click', '.mpc-product-image img', ( e ) => this.handleImagePopup( e ) );
+            window.mpcHooks.addAction( 'mpc_image_popup', ( e ) => this.renderImagePopup( e ) );
+            $( '.mpc-container' ).on( 'click', '.mpc-product-image img', ( e ) => this.handleImagePopup( e ) );
+
+            $( 'span.mpcpop-close' ).on( 'click', ( e ) => this.hidePopup( e ) );
             $( document ).on( 'keyup', ( e ) => this.hidePopup( e ) );
-            $( 'body' ).on( 'click', 'span.mpcpop-close', ( e ) => this.hidePopup( e ) );
 
             this.allWraps = $( document.body ).find( '.mpc-container' );
 
@@ -46,22 +48,17 @@
             }
         }
         handleImagePopup( e ) {
-            const item = $( e.currentTarget );
             window.mpcHooks.doAction( 'mpc_image_popup', e );
-
-            const imgSrc = item.attr( 'data-fullimage' );
-            const popup  = $( '#mpcpop img' );
-            if( popup && popup.length > 0 && imgSrc && imgSrc.length > 0 ){
-                popup.attr( 'src', imgSrc ).show();
-            }else{
-                this.hidePopup( e );
-            }
+        }
+        renderImagePopup( e ){
+            const imgSrc = $( e.currentTarget ).attr( 'data-fullimage' );
+            $( '#mpcpop' ).find( 'img' ).attr( 'src', imgSrc );
+            $( '#mpcpop' ).toggle( imgSrc && imgSrc.length > 0 );
         }
         hidePopup( e ){
-            if( e.keyCode && 27 !== e.keyCode ){
-                return;
+            if( e.keyCode && 27 === e.keyCode ){
+                $( '#mpcpop' ).hide();
             }
-            $( '#mpcpop' ).hide();
         }
 
         tableLoadedEventHandler( wrap ){
@@ -93,8 +90,13 @@
 
             this.renderStickyHeader( wrap, positionLeft );
 
-            wrap.find( '.mpc-table-header' ).css( { 'left': `${ positionLeft }px` } ); // filter section.
-            wrap.find( '.total-row' ).css( { 'width': viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' ).offsetWidth }px` } ); // fixed total section.
+            wrap.find( '.mpc-table-header' ).css( {
+                'left': `${ positionLeft }px`,
+                'width': viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' )[0].offsetWidth }px`
+            } ); // filter section.
+            wrap.find( '.total-row' ).css( {
+                'width': viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' )[0].offsetWidth }px`
+            } ); // fixed total section.
         }
         renderStickyHeader( wrap, positionLeft ){
             wrap.find( '.mpc-fixed-header' ).remove();
@@ -109,7 +111,7 @@
                 tableHeaderHtml += `<th style="width:${ $( el ).offsetWidth }px;">${ $( el ).text() }</th>`;
             });
 
-            wrap.find( 'table.mpc-wrap' ).after( `<div class="mpc-fixed-header" style="left:${ positionLeft }px;display:none;"><table><thead><tr>${ tableHeaderHtml }</tr></thead></table></div>` );
+            wrap.find( 'table.mpc-wrap' ).after( `<div class="mpc-fixed-header" style="left:${ positionLeft }px;display:none;"><table style="width: ${ wrap.find( 'table.mpc-wrap' )[0].offsetWidth }px;"><thead><tr>${ tableHeaderHtml }</tr></thead></table></div>` );
         }
 
 
@@ -135,7 +137,7 @@
             const firstRow = wrap.find( 'table.mpc-wrap tbody tr:first-child' );
             const lastRow  = wrap.find( 'table.mpc-wrap tbody tr:last-child' );
             return {
-                isStickyFooter:  this.scrollTop + this.height < lastRow.offset().top + lastRow.offsetHeight,
+                isStickyFooter:  this.scrollTop + this.height < lastRow.offset().top + lastRow[0].offsetHeight,
                 isStickyColumns: this.scrollTop > firstRow.offset().top + 50 && this.scrollTop < lastRow.offset().top,
                 isStickyFilter:  this.scrollTop < this.prevScrollTop && firstRow.offset().top && this.scrollTop < lastRow.offset().top
             };

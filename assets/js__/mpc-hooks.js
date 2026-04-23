@@ -58,33 +58,23 @@
                         productId: parseInt( target.closest( 'tr.cart_item' ).attr( 'data-id' ) )
                     };
                 },
-                getValidStockQuantity: function( field ){
-                    const target = this.identifyTable( field );
-                    const stock  = this.state[ target.tableId ][ target.productId ]['stock'];
-                    let qty      = this.state[ target.tableId ][ target.productId ]['qty'];
-                    
-                    const oldstate = this.state[ target.tableId ][ target.productId ];
-                    
-
-                    // validate quantity.
+                getValidStockQuantity: function( field, target ){
+                    const stock = this.state[ target.tableId ][ target.productId ]['stock'];
+                    let qty     = this.state[ target.tableId ][ target.productId ]['qty'];
                     qty = 'number' === typeof stock && 0 === stock ? 0 : (
-                        -1 === stock ? qty : (
-                            stock > qty ? qty : stock
+                        stock && qty > stock && -1 !== stock ? stock : (
+                            0 === qty ? 1 : qty
                         )
-                    );
-                    // qty = stock && 0 === stock ? 0 : (
-                    //     stock && qty > stock ? stock : qty
-                    // );
+                    ); // sequence is important here.
+                    
                     this.state[ target.tableId ][ target.productId ]['qty'] = qty;
-
-                    console.log( 'stock', stock, 'qty', qty, oldstate );
                     return qty;
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];
                     return tableData && tableData.length > 0 ? Object.values( tableData ).reduce( ( sum, item ) => {
                         const price = item.checked ? item.price : 0;
-                        return sum + price;
+                        return sum + ( price * item.qty );
                     }, 0 ) : 0;
                 },
                 getCartData: function( target ){

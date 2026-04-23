@@ -19,6 +19,7 @@
             $( 'body' ).on( 'click', '.mpc-check-all', ( e ) => this.allCheckEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'change paste keyup cut select', '.mpc-product-quantity input[type="number"]', ( e ) => this.qtyChangeEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'change', 'table.mpc-wrap select.mpc-var-att', ( e ) => this.variationAttchangeEventHandler( $( e.currentTarget ) ) );
+            $( '.mpc-container' ).on( 'click', 'a.reset_variations', ( e ) => this.clearVariations( e ) );
             $( 'body' ).on( 'click', 'table.mpc-wrap input[type="checkbox"]', ( e ) => this.productCheckEventHandler( $( e.currentTarget ) ) );
 
             $( 'body' ).on( 'click', '.mpc-reset', () => window.location.reload() );
@@ -31,12 +32,10 @@
             // set table total price.
         }
         initTablesState( wrap ){
-            console.log('wrap', wrap);
             const table = wrap.find( 'table.mpc-wrap' );
             table.attr( 'data-table_id', this.tableCounter );
             table.find( 'tr.cart_item' ).each( ( _, row ) => this.initTableRowState( $( row ) ) );
             this.tableCounter++;
-            console.log( 'table state updated' );
         }
         initTableRowState( row ){
             if( 'grouped' === row.attr( 'data-type' ) ){
@@ -100,7 +99,7 @@
         }
         updateAllCheck( wrap ){
             const allCheck = wrap.find( '.mpc-check-all' );
-            if( !allCheck || 0 === allCheck.length ){
+            if( ! allCheck || 0 === allCheck.length ){
                 return;
             }
             const total   = wrap.find( 'table.mpc-wrap input[type="checkbox"]' ).length;
@@ -110,40 +109,65 @@
 
         allCheckEventHandler( el ){
             const allChecked  = el.is( ':checked' );
-            const allCheckBox = el.closest( '.mpc-container' ).find( 'table.mpc-wrap input[type="checkbox"]' );
+
+            const wrap        = el.closest( '.mpc-container' );
+            const allCheckBox = wrap.find( 'table.mpc-wrap input[type="checkbox"]' );
             if( !allCheckBox || 0 === allCheckBox.length ){
                 return;
             }
-            allCheckBox.each( ( _, cb ) => this.overrideCheckProduct( $( cb ), allChecked ) );
-        }
-        overrideCheckProduct( checkBox, allChecked ){
-            const hasNoIssue = this.hasNoRowIssue( checkBox.closest( 'tr.cart_item' ) );
-            // all checked != checkbox -> update checked status but what if it were
-            if( ( hasNoIssue && allChecked ) !== checkBox.is( ':checked' ) ){
-                checkBox.prop( 'checked', hasNoIssue && allChecked );
-                checkBox.trigger( 'click' );
-            }
+
+            const target = {
+                tableId:   parseInt( wrap.find( 'table.mpc-wrap' ).attr( 'data-table_id' ) ),
+                productId: 0
+            };
+            allCheckBox.each( ( _, cb ) => {
+                target.productId = parseInt( $( cb ).closest( 'tr.cart_item' ).attr( 'data-id' ) );
+                
+                const checkBox     = $( cb );
+                const hasNoIssue   = this.hasNoRowIssue( checkBox.closest( 'tr.cart_item' ) );
+                const shouldChange = ( hasNoIssue && allChecked ) !== checkBox.is( ':checked' );
+                window.mpcTables.updateProductMeta( target, 'checked', shouldChange );
+                // all checked != checkbox -> update checked status but what if it were
+                if( shouldChange ){
+                    checkBox.trigger( 'click' );
+                }
+            } );
         }
         hasNoRowIssue( row ){
             if( 'variable' !== row.attr( 'data-type' ) ){
                 return true;
             }
-            const total    = row.find( 'select.mpc-var-att' ).length;
-            const hasValue = row.find( 'select.mpc-var-att option:selected' ).length;
-            return total > 0 && total !== hasValue ? false : true;
+            const total    = row.find( 'select.mpc-var-att' );
+            const hasValue = total.filter( function(){
+                const value = $( this ).find( 'option:selected' ).val();
+                return value && value.length > 0;
+            } ).length;
+            return total.length > 0 && total.length !== hasValue ? false : true;
         }
 
         qtyChangeEventHandler( qtyField ){
             const target = window.mpcTables.identifyTable( qtyField );
             window.mpcTables.updateProductMeta( target, 'qty', parseInt( qtyField.val() ) );
-            this.validateStock( qtyField );
+
+            this.validateStock( qtyField, target );
             this.setTableTotal( qtyField, target );
         }   
-        validateStock( field ){
-            const qty      = window.mpcTables.getValidStockQuantity( field );
-            const qtyField = field.closest( 'tr.cart_item' ).find( '.mpc-product-quantity input[type="number"]' );
+        validateStock( field, target ){
+            const qty = window.mpcTables.getValidStockQuantity( field, target );
+
+            const row      = field.closest( 'tr.cart_item' );
+            const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
+            const checkBox = row.find( '.mpc-product-select input[type="checkbox"]' );
             if( qtyField && qtyField.length > 0 ){
                 qtyField.val( qty );
+                qtyField.prop( 'disabled', 0 === qty );
+            }
+
+            // contingency checking.
+            if( checkBox && checkBox.length > 0 ){
+                window.mpcTables.updateProductMeta( target, 'checked', 0 !== qty );
+                checkBox.prop( 'checked', 0 !== qty );
+                checkBox.prop( 'disabled', 0 === qty );
             }
         }
         setTableTotal( field, target ){
@@ -171,15 +195,13 @@
             const variation = this.getCurrentVariation( row );
             window.mpcTables.updateProductMeta( target, 'variation', variation ? variation : {} );
             window.mpcTables.updateProductMeta( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
-            console.log( 'variation', variation );
             
-            if( variation && variation.stock ){
-                variation.stock = this.sanitizeStock( variation.stock, variation.stock_status );
-                window.mpcTables.updateProductMeta( target, 'stock', variation.stock );
+            if( variation ){
+                window.mpcTables.updateProductMeta( target, 'stock', this.sanitizeStock( variation.stock, variation.stock_status ) );
             }
 
             this.clearVariationButton( row );
-            this.validateStock( attDropDown );
+            this.validateStock( attDropDown, target );
 
             this.updateVariationImage( row, variation );
             this.updateVariationDesc( row, variation );
@@ -190,9 +212,12 @@
             this.setTableTotal( attDropDown, target );
         }
         clearVariationButton( row ) {
-            const allAtts   = row.find( 'select.mpc-var-att' );
-            const allFilled = allAtts.length > 0 && allAtts.toArray().every( el => el.value !== '' ); // if all have values.
-            row.find( '.clear-button' ).html( allFilled ? `<a class="reset_variations" href="#">${mpc_frontend.reset_var}</a>` : '' );
+            const allAtts  = row.find( 'select.mpc-var-att' );
+            const clearBtn = row.find( '.clear-button' );
+            if( ! clearBtn || 0 === clearBtn.length ){
+                row.find( '.mpc-product-variation' ).append( `<div class="clear-button"><a class="reset_variations" href="#">${mpc_frontend.reset_var}</a></div>` );
+            }
+            clearBtn.toggle( allAtts.length > 0 && allAtts.toArray().every( el => el.value !== '' ) ); // if all have values.
         }
         updateVariationImage( row, variation ){
             const colImage = row.find( '.mpc-product-image .mpcpi-wrap img' );
@@ -224,9 +249,31 @@
             }
             const price = variation && variation.price ? variation.price : '';
 
-            priceWrap.find( 'span.total-price' ).text( price && ! isNaN( price ) ? this.priceFormat( price ) : '' );
-            priceWrap.toggle( price && ! isNaN( price ) );
+            priceWrap.find( 'span.total-price' ).text( 'number' === typeof price ? this.priceFormat( price ) : '' );
+            priceWrap.toggle( 'number' === typeof price );
             row.attr( 'data-price', price );
+        }
+        clearVariations( e ){
+            e.preventDefault();
+
+            const clearBtn = $( e.currentTarget );
+            const target = window.mpcTables.identifyTable( clearBtn );
+
+            const section = clearBtn.closest( '.mpc-product-variation' );
+            section.find( 'select.mpc-var-att' ).each( ( _, el ) => $( el ).val( '' ) );
+
+            window.mpcTables.updateProductMeta( target, 'variation', {} );
+            window.mpcTables.updateProductMeta( target, 'price', '' );
+            window.mpcTables.updateProductMeta( target, 'stock', '' );
+            window.mpcTables.updateProductMeta( target, 'checked', false );
+
+            section.find( '.mpc-var-desc' ).empty();
+            section.find( 'a.reset_variations' ).hide();
+
+            const checkBox = clearBtn.closest( 'tr.cart_item' ).find( '.mpc-product-select input[type="checkbox"]' );
+            if( checkBox && checkBox.length > 0 ){
+                checkBox.prop( 'checked', false );
+            }
         }
 
         productCheckEventHandler( checkBox ){

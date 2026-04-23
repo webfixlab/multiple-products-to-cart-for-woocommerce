@@ -367,7 +367,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			<div
 				class="row-variation-data"
 				data-variation_data="<?php echo wc_esc_json( wp_json_encode( MPC_Product_Data::get_available_variations( $product, self::$data['settings'] ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div>
-				<!-- data-variation_data="<?php // echo wc_esc_json( wp_json_encode( $product->get_available_variations( 'array' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"></div> -->
 			<?php
 			$default_atts = $product->get_default_attributes();
 
@@ -461,7 +460,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 					type="number"
 					step="1"
 					min="<?php echo esc_attr( $quantity ); ?>"
-					max="<?php echo ! empty( $stock )  ?>"
+					max="<?php echo ! empty( $stock ) ? $stock : ''; ?>"
 					name="quantity<?php echo $product->get_id(); ?>"
 					value="<?php echo esc_attr( $quantity ); ?>"
 					title="<?php esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ); ?>"
@@ -477,14 +476,17 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * @param object $product Product object.
 		 */
 		public static function display_product_checkbox( $product ) {
-			$checked = is_array( self::$data['atts']['selected'] ) ? in_array( $product->get_id(), self::$data['atts']['selected'], true ) : false;
+			self::setup_frontend_data();
+
+			$selected = self::$data['atts']['selected'] ?? '';
+			$checked = ! empty( $selected ) && is_array( $selected ) ? in_array( $product->get_id(), self::$data['atts']['selected'], true ) : false;
 			?>
 			<td for="buy" class="mpc-product-select">
 				<input
 					type="checkbox"
 					name="product_ids[]"
 					value="<?php echo $product->get_id(); ?>"
-					checked="<?php echo $checked ? 'checked' : ''; ?>">
+					<?php echo $checked ? 'checked' : ''; ?>>
 			</td>
 			<?php
 		}
