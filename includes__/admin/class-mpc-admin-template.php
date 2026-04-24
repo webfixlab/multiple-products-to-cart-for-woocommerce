@@ -189,8 +189,14 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
                 <div class="mpcdp_settings_toggle mpcdp_container" id="column-sorting">
                     <div class="mpcdp_settings_option visible">
                         <div class="mpcdp_row">
-                            <?php self::display_sorted_columns( $active_columns, $column_labels, true ); ?>
-                            <?php self::display_sorted_columns( array_diff( $active_columns, array_keys( $column_labels ) ), $column_labels, false ); ?>
+                            <div class="mpcdp_settings_option_description col-md-6">
+                                <div class="mpcdp_option_label"><?php echo __( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                                <?php self::display_sorted_columns( $active_columns, $column_labels, true ); ?>
+                            </div>
+                            <div class="mpcdp_settings_option_description col-md-6">
+                                <div class="mpcdp_option_label"><?php echo __( 'Inactive Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+                                <?php self::display_sorted_columns( $active_columns, $column_labels, false ); ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -234,18 +240,16 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
             <?php
         }
         private static function display_sorted_columns( $columns, $column_labels, $is_active ){
+            $columns = $is_active ? $columns : array_diff( array_keys( $column_labels ), $columns );
             ?>
-            <div class="mpcdp_settings_option_description col-md-6">
-                <div class="mpcdp_option_label"><?php echo $is_active ? __( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Inactive Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                <div class="mpc-sortable mpca-sorted-options">
-                    <ul id="<?php echo $is_active ? 'active' : 'inactive'; ?>-mpc-columns" class="connectedSortable ui-sortable">
-                        <?php
-                            foreach( $columns as $column ){
-                                self::display_column_widget( $column, $column_labels );
-                            }
-                        ?>
-                    </ul>
-                </div>
+            <div class="mpc-sortable mpca-sorted-options">
+                <ul id="<?php echo $is_active ? 'active' : 'inactive'; ?>-mpc-columns" class="connectedSortable ui-sortable">
+                    <?php
+                        foreach( $columns as $column ){
+                            self::display_column_widget( $column, $column_labels );
+                        }
+                    ?>
+                </ul>
             </div>
             <?php
         }

@@ -166,7 +166,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 					<div class="mpcdp_option_label"><?php echo esc_html__( 'Inactive Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
 					<div class="mpc-sortable mpca-sorted-options">
 						<ul id="inactive-mpc-columns" class="connectedSortable ui-sortable">
-							<?php self::display_columns( array_diff( $active_columns, array_keys( $column_labels ) ), $column_labels ); ?>
+							<?php self::display_columns( array_diff( array_keys( $column_labels ), $active_columns ), $column_labels ); ?>
 						</ul>
 					</div>
 				</div>

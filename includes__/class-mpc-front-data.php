@@ -51,6 +51,15 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 				$mpc_table__['atts']['selected'] = explode( ',', str_replace( ' ', '', $atts['selected'] ) );
 			}
 
+			$title_filter = get_option( 'mpc_show_title_dopdown' );
+			if( empty( $title_filter ) || 'on' === $title_filter ){
+				$title_asc = get_option( 'mpc_sddt_title_asc' );
+				$mpc_table__['orderby']['title-ASC'] = empty( $title_asc ) ? __( 'Title: A to Z', 'multiple-products-to-cart-for-woocommerce' ) : $title_asc;
+
+				$title_desc = get_option( 'mpc_sddt_title_desc' );
+				$mpc_table__['orderby']['title-DESC'] = empty( $title_desc ) ? __( 'Title: Z to A', 'multiple-products-to-cart-for-woocommerce' ) : $title_desc;
+			}
+
 			$mpc_table__ = array_merge( $mpc_table__, $data );
 
 			do_action( 'mpc_frontend_core_data' );

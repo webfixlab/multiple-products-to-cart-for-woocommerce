@@ -86,15 +86,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			if( ! empty( $show_filter ) && 'on' !== $show_filter ){
 				return;
 			}
-
-			$title_filter = get_option( 'mpc_show_title_dopdown' );
-			if( empty( $title_filter ) || 'on' === $title_filter ){
-				$title_asc = get_option( 'mpc_sddt_title_asc' );
-				self::$data['orderby']['title-ASC'] = empty( $title_asc ) ? __( 'Title: A to Z', 'multiple-products-to-cart-for-woocommerce' ) : $title_asc;
-
-				$title_desc = get_option( 'mpc_sddt_title_desc' );
-				self::$data['orderby']['title-ASC'] = empty( $title_desc ) ? __( 'Title: Z to A', 'multiple-products-to-cart-for-woocommerce' ) : $title_desc;
-			}
 			?>
 			<div class="mpc-sort">
 				<select
@@ -113,8 +104,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		private static function table_orderby_options(){
 			foreach ( self::$data['orderby'] as $slug => $label ) {
 				?>
-				<option
-					value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
+				<option value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
 				<?php
 			}
 		}

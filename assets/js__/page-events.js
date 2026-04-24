@@ -17,7 +17,7 @@
             this.allWraps  = null; // all table wrappers.
             this.scrollTop = 0; // current scroll top.
             this.prevScrollTop = 0; // keep old scroll position to find scroll direction.
-            this.height    = $( window ).height();
+            this.windowHeight  = $( window ).height();
             this.adminBar = 0; // all things that are sticky and not of our plugin.
 
 			$(document).ready( () => this.initEvents() );
@@ -40,11 +40,10 @@
             this.getAdminBarHeight();
         }
         tableLoadingSpinner( way, wrap ) {
-            const loaderWrap = wrap.find( '.mpc-loader' );
-            if( 'load' && ! loaderWrap && 0 === loaderWrap.length ){
+            if( 'load' === way ){
                 wrap.find( 'table.mpc-wrap' ).before( `<span class="mpc-loader"><img src="${ mpc_frontend.imgassets }loader.gif"></span>` );
             }else{
-                loaderWrap.remove();
+                wrap.find( '.mpc-loader' ).remove();
             }
         }
         handleImagePopup( e ) {
@@ -59,6 +58,7 @@
             if( e.keyCode && 27 === e.keyCode ){
                 $( '#mpcpop' ).hide();
             }
+            $( '#mpcpop' ).hide();
         }
 
         tableLoadedEventHandler( wrap ){
@@ -120,7 +120,7 @@
                 return;
             }
 
-            this.scrollTop = $( window ).scrollTop();
+            this.scrollTop = $( window ).scrollTop() + this.adminBar;
 
             $.each( this.allWraps, ( _, el ) => {
                 const wrap = $( el );
@@ -134,12 +134,15 @@
             this.prevScrollTop = this.scrollTop;
         }
         setupTableOffsets( wrap, scrollState ){
-            const firstRow = wrap.find( 'table.mpc-wrap tbody tr:first-child' );
+            const firstRow = wrap.find( 'table.mpc-wrap tbody tr:first-child' ).offset().top;
             const lastRow  = wrap.find( 'table.mpc-wrap tbody tr:last-child' );
+
+            const tableTop    = wrap.find( 'table.mpc-wrap' ).offset().top;
+            const tableBottom = lastRow.offset().top + lastRow[0].offsetHeight;
             return {
-                isStickyFooter:  this.scrollTop + this.height < lastRow.offset().top + lastRow[0].offsetHeight,
-                isStickyColumns: this.scrollTop > firstRow.offset().top + 50 && this.scrollTop < lastRow.offset().top,
-                isStickyFilter:  this.scrollTop < this.prevScrollTop && firstRow.offset().top && this.scrollTop < lastRow.offset().top
+                isStickyFooter:  this.scrollTop + this.windowHeight < tableBottom,
+                isStickyColumns: this.scrollTop > firstRow && this.scrollTop < tableBottom,
+                isStickyFilter:  this.scrollTop < this.prevScrollTop && this.scrollTop < tableBottom && this.scrollTop > tableTop
             };
         }
         hasStickyFilterEvent( wrap, scrollState ){
