@@ -46,8 +46,8 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
 
             self::$field_value = get_option( $field['key'], $field['default'] ?? '' );
 			?>
-			<div class="mpcdp_settings_toggle mpcdp_container" data-toggle-id="<?php echo esc_attr( $field['key'] ); ?>">
-				<div class="mpcdp_settings_option visible" data-field-id="<?php echo esc_attr( $field['key'] ); ?>">
+			<div class="mpcdp_settings_toggle mpcdp_container">
+				<div class="mpcdp_settings_option visible">
 					<?php self::pro_ribbon(); ?>
 					<div class="mpcdp_row">
 						<?php self::field_title(); ?>
@@ -98,8 +98,8 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
 		 */
 		private static function render_field() {
             $classes = array();
-            if( isset( $field['class'] ) ) $classes[] = self::$field['class'];
-            if( isset( $field['pro'] ) && empty( self::$pro_state ) ) $classes[] = 'mpcex-disabled';
+            if( isset( self::$field['class'] ) ) $classes[] = self::$field['class'];
+            if( isset( self::$field['pro'] ) && empty( self::$pro_state ) ) $classes[] = 'mpcex-disabled';
 
 			if( 'text' === self::$field['type'] ){
                 self::render_field_input( self::$field, $classes );
@@ -178,14 +178,16 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
         }
         private static function render_field_radio_option( $field, $option ){
             $key = $field['key'] . ' ' . $option['value'];
+            // $option['classes'][] = 'wmc_redirect' === $field['key'] && 'custom' === $option['value'] && empty( self::$pro_state ) ? 'mpcex-disabled' : '';
             ?>
             <input
                 type="radio"
-                name="<?php echo esc_attr( $key ); ?>"
+                name="<?php echo esc_attr($field['key'] ); ?>"
                 id="<?php echo esc_attr( $key ); ?>"
                 value="<?php echo esc_attr( $option['value'] ); ?>"
                 class="<?php echo esc_html( implode( ' ', $option['classes'] ) ); ?>"
                 title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>"
+                data-followup="<?php echo isset( $field['followup_hook'] ) && $field['followup_hook'] === $option['value'] ? esc_attr( $field['followup_key'] ) : ''; ?>"
                 <?php echo esc_attr( $option['checked'] ); ?>>
             <label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $option['label'] ); ?></label>
             <?php
@@ -231,37 +233,25 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                 return;
             }
 
-            $display = isset( $field['followup_depends'] ) && $field['followup_depends'] === self::$field_value ? 'block' : 'none';
+            $display = isset( $field['followup_hook'] ) && $field['followup_hook'] === self::$field_value ? 'block' : 'none';
 
             foreach( $field['followup'] as $field_followup ){
                 self::render_followup_field( $field_followup, $display );
             }
         }
         private static function render_followup_field( $field, $display ){
+            self::$field = $field;
             ?>
             <div
-                class="mpcdp_settings_option"
-                data-field-id="<?php echo esc_attr( $field['key'] ); ?>"
-                data-depends-on-<?php echo esc_attr( $field['key'] ); ?>="on"
-                data-depends-on="<?php echo esc_attr( $field['key'] ); ?>"
-                data-visible="false"
+                class="mpcdp_settings_option mpc-followup mpc-followup-<?php echo esc_attr( $field['key'] ); ?>"
                 style="display: <?php echo esc_attr( $display ); ?>;">
+                <?php self::pro_ribbon(); ?>
                 <div class="mpcdp_row">
                     <div class="mpcdp_settings_option_description col-md-6">
-                        <div class="mpcdp_option_label"><?php echo esc_html( $field['label'] ); ?></div>
-                        <?php if ( ! empty( $field['desc'] ) ) : ?>
-                            <div class="mpcdp_option_description">
-                                <?php echo wp_kses_post( $field['desc'] ); ?>
-                            </div>
-                        <?php endif; ?>
+                        <?php self::field_title(); ?>
                     </div>
                     <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
-                        <input
-                            type="text"
-                            name="<?php echo esc_attr( $field['key'] ); ?>"
-                            id="<?php echo esc_attr( $field['key'] ); ?>"
-                            value="<?php echo esc_html( self::$field_value ); ?>"
-                            placeholder="<?php echo esc_html( $field['placeholder'] ); ?>">
+                        <?php self::render_field(); ?>
                     </div>
                 </div>
             </div>

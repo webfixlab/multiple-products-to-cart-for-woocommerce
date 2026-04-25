@@ -15,7 +15,7 @@
             $( '.mpc-colorpicker' ).wpColorPicker();
 
             $( '.mpcex-disabled' ).on( 'click', e => this.showProPopup( e ) );
-            $( '#mpcpop, span.mpcpop-close' ).on( 'click', e => this.hideProPopup( e ) );
+            $( 'span.mpcpop-close' ).on( 'click', e => this.hideProPopup( e ) );
             $( document ).on( 'keyup', e => this.hideProPopup( e ) );
 
             $( window ).on( 'scroll resize', () => this.screenChangeEventHandler() );
@@ -26,10 +26,10 @@
             $( '#mpcpop' ).show();
         }
         hideProPopup( e ){
-            if( 27 !== e.keyCode ){
-                return;
+            if( 27 === e.keyCode ){
+                $( '#mpcpop' ).hide();
             }
-            $( 'body' ).find( '#mpcpop' ).hide()
+            $( '#mpcpop' ).hide();
         }
         screenChangeEventHandler(){
             const sidebar   = $( '.mpcdp_settings_sidebar' )[0];

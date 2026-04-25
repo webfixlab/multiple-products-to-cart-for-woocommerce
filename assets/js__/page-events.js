@@ -73,6 +73,7 @@
 
 
         screenResizeEventHandler(){
+            this.getAdminBarHeight();
             this.renderAllTablesStickyElements();
             this.windowScrollEventHandler();
         }
@@ -86,7 +87,7 @@
         renderStickyElements( wrap ){
             const viewPort   = window.innerWidth || document.documentElement.clientWidth;
             let positionLeft = wrap.find( 'tbody tr:first-child td:first-child' ).offset().left;
-            positionLeft = viewPort > 768 ? positionLeft : 0;
+            positionLeft     = viewPort > 768 ? positionLeft : 0;
 
             this.renderStickyHeader( wrap, positionLeft );
 

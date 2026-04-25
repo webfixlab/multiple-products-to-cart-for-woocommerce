@@ -36,7 +36,7 @@
             
             const filterWrap = wrap.find( '.mpc-orderby' );
             if( filterWrap && filterWrap.length > 0 ){
-                const value = filterWrap.find( 'option:selected' ).val();
+                const value     = filterWrap.find( 'option:selected' ).val();
                 args['order']   = value.indexOf( 'ASC' ) !== -1 ? 'ASC' : 'DESC';
                 args['orderby'] = value.replace( '-' + args['order'], '' );
             }

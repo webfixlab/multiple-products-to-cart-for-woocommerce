@@ -94,9 +94,12 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 									'label'       => __( 'Custom Page URL', 'multiple-products-to-cart-for-woocommerce' ),
 									'placeholder' => 'https://webfixlab.com/contact/',
 									'desc'        => __( 'Add a custom page URL where the customer should be redirected.', 'multiple-products-to-cart-for-woocommerce' ),
+									'pro'         => true,
+									'pro_label'   => __( 'Custom Redirect URL', 'multiple-products-to-cart-for-woocommerce' ),
 								),
 							),
-							'followup_depends' => 'custom',
+							'followup_hook'    => 'custom',
+							'followup_key'     => 'mpca_custom_redirect',
 							'pro_label'        => __( 'Custom Redirect URL', 'multiple-products-to-cart-for-woocommerce' ),
 						),
 						array(

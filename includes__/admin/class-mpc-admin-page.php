@@ -34,6 +34,12 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
          */
         private static $settings_tab;
 
+        /**
+         * Current admin state notice
+         * @var array
+         */
+        private static $notice = array( 'status' => '', 'msg' => '' );
+
 		/**
 		 * Plugin installation handler
          *
@@ -51,10 +57,9 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             self::$pro_state    = $pro_state;
             self::$plugin_data  = MPC_Core_Data::get_plugin();
 
-            // get settings tab.
             self::$settings_tab = empty( $tab ) ? self::get_tab() : $tab;
+            self::$notice       = MPC_Admin_Save_Settings::init( self::$settings_tab, $pro_state );
 
-            MPC_Admin_Save_Settings::init( self::$settings_tab, $pro_state );
             self::settings_form();
 		}
 
@@ -155,6 +160,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
             ?>
             <div class="mpcdp_settings_content">
                 <div id="<?php esc_attr( self::$settings_tab ); ?>" class="hidden mpcdp_settings_tab active" data-tab="<?php esc_attr( self::$settings_tab ); ?>" style="display: block;">
+                    <?php MPC_Admin_Template::saved_settings_notice( self::$notice ); ?>
                     <?php self::navigate_settings(); ?>
                 </div>
             </div>

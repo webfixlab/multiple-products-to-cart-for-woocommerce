@@ -26,7 +26,7 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
          * Current admin state notice
          * @var array
          */
-        private static $notice;
+        private static $notice = array( 'status' => '', 'msg' => '' );
 
 		/**
 		 * Plugin installation handler
@@ -40,7 +40,6 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
             }
 
             self::$pro_state = $pro_state;
-            self::$notice    = array( 'status' => '', 'msg' => '' );
 
             if( 'new-table' === $tab ){
                 self::add_new_table();
@@ -53,6 +52,8 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
             } elseif ( 'column-sorting' === $tab ){
                 self::save_columns_order();
             }
+
+            return self::$notice;
 		}
 
         /**
@@ -165,45 +166,47 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
         /**
          * Save admin settings fields
          *
-         * @param array $fields All input fields on this tab.
+         * @param array $sections All input fields on this tab.
          */
-        private static function save_fields( $fields ){
+        private static function save_fields( $sections ){
             if ( ! isset( $_POST['mpc_admin_settings'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) {
                 return;
             }
 
-            $followup_fields = array(); // nested fields inside of a field.
+            foreach( $sections as $section ){
+                foreach ( $section['fields'] as $field ) {
+                    if( isset( $field['pro'] ) && empty( self::$pro_state ) ) {
+                        continue;
+                    }
 
-            foreach( $fields as $field ){
-                // handle followup fields.
-                if( isset( $field['followup'] ) && ! empty( $field['followup'] ) ){
-                    $followup_fields[] = $field['followup'];
+                    $key   = $field['key'];
+                    $value = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'on' : 'no' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+
+                    self::save_field( $field, $value );
+
+                    if( ! isset( $field['followup'] ) || empty( $field['followup'] ) ){
+                        continue;
+                    }
+
+                    // handle followup fields.
+                    foreach( $field['followup'] as $field ){
+                        if( isset( $field['pro'] ) && empty( self::$pro_state ) ) {
+                            continue;
+                        }
+
+                        $key   = $field['key'];
+                        $value = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'on' : 'no' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+
+                        self::save_field( $field, $value );
+                    }
+
                 }
-
-                if( isset( $field['pro'] ) && empty( self::$pro_state ) ) {
-                    continue;
-                }
-
-                $key   = $field['key'];
-                $value = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'on' : 'no' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
-
-                self::save_field( $field, $value );
             }
 
-            // process followup fields, if any exists.
-            foreach( $followup_fields as $field ){
-                if( isset( $field['pro'] ) && empty( self::$pro_state ) ) {
-                    continue;
-                }
-
-                $key   = $field['key'];
-                $value = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'on' : 'no' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
-
-                self::save_field( $field, $value );
-            }
-
-            // show settings saved notice.
-            MPC_Admin_Template::saved_settings_notice();
+            self::$notice = array(
+                'status' => 'success',
+                'msg'    => __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' )
+            );
         }
 
         /**
@@ -239,6 +242,11 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
 			}
 
 			update_option( 'wmc_sorted_columns', sanitize_text_field( wp_unslash( $_POST['wmc_sorted_columns'] ) ) );
+
+            self::$notice = array(
+                'status' => 'success',
+                'msg'    => __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' )
+            );
         }
 	}
 }

@@ -74,20 +74,24 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
             </div>
             <?php
 		}
+
         /**
          * Show admin notices
+         *
+         * @param array $notice Notice data.
          */
-        public static function saved_settings_notice(){
+        public static function saved_settings_notice( $notice ){
+            if( ! isset( $notice['msg'] ) || empty( $notice['msg'] ) ){
+                return;
+            }
 			?>
 			<div class="mpc-notice mpcdp_settings_toggle mpcdp_container">
-				<div class="mpcdp_settings_option visible">
-					<div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
-						<span class="theme_customizer_icon dashicons dashicons-saved"></span>
-						<div class="mpcdp_settings_option_description">
-							<div class="mpcdp_option_label"><?php echo __( 'Settings Saved', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-						</div>
-					</div>
-				</div>
+                <div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
+                    <span class="theme_customizer_icon dashicons dashicons-saved"></span>
+                    <div class="mpcdp_settings_option_description">
+                        <div class="mpcdp_option_label"><?php echo esc_html( $notice['msg'] ); ?></div>
+                    </div>
+                </div>
 			</div>
 			<?php
         }
@@ -267,34 +271,26 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 
         public static function sidebar( $plugin_data ){
             ?>
-            <div class="sidebar_top">
-                <h2><?php echo esc_html__( 'Boost your tables to the next level', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
+            <div class="site-intro">
+                <h3><?php echo esc_html__( 'Boost your tables to the next level', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <div class="tagline_side">
-                    <?php
-                        echo wp_kses_post(
-                            sprintf(
-                                // translators: %1$s: line brake, %2$s: line brake.
-                                __( 'Popular PRO features: Product category dropdown, AJAX-powered search, 4 additional columns, and subscription product support. Upgrade to the PRO version to unlock the full power of the plugin!', 'multiple-products-to-cart-for-woocommerce' )
-                            )
-                        );
-                        ?>
+                    <?php echo sprintf(
+                        // translators: %1$s: line brake, %2$s: line brake.
+                        __( 'Popular PRO features: Product category dropdown, AJAX-powered search, 4 additional columns, and subscription product support. Upgrade to the PRO version to unlock the full power of the plugin!', 'multiple-products-to-cart-for-woocommerce' )
+                    ); ?>
                 </div>
-                <div><a href="<?php echo esc_url( $plugin_data['pro_plugin_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Get PRO license now', 'multiple-products-to-cart-for-woocommerce' ); ?></a></div>
+                <a href="<?php echo esc_url( $plugin_data['pro_plugin_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Get PRO license now', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
             </div>
             <div class="site-intro">
-                <h2><?php echo esc_html__( 'Missing any features? No worries!', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
+                <h3><?php echo esc_html__( 'Missing any features? No worries!', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <a href="https://webfixlab.com/wordpress-offer/" target="_blank"><?php echo esc_html__( 'Customize for $99 only', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
             </div>
-            <div class="mpca_sidebar">
-                <h2><?php echo esc_html__( 'Dedicated Support Team', 'multiple-products-to-cart-for-woocommerce' ); ?></h2>
+            <div class="site-intro">
+                <h3><?php echo esc_html__( 'Dedicated Support Team', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <div class="tagline_side">
-                    <?php echo esc_html__( 'Our support is what makes us No.1. We are available round the clock for any support.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+                    <?php echo __( 'Our support is what makes us No.1. We are available round the clock for any support.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                 </div>
-                <div>
-                    <a href="<?php echo esc_url( $plugin_data['contact_us_url'] ); ?>" target="_blank">
-                        <?php echo esc_html__( 'Contact us', 'multiple-products-to-cart-for-woocommerce' ); ?>
-                    </a>
-                </div>
+                <a href="<?php echo esc_url( $plugin_data['contact_us_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Contact us', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
             </div>
             <?php
         }

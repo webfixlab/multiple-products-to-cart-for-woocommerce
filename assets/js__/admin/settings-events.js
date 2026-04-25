@@ -30,13 +30,15 @@
 			this.setDynamicSortableArea();
 		}
 		redirectOptionsHandler( e ){
-			const elm     = $( e.currentTarget );
-			const section = elm.closest( '.mpcdp_settings_option' );
-			section.closest( '.mpcdp_container' ).find( '.mpcdp_settings_option' ).each( ( _, dep ) => {
-				if ( $( dep ).data( 'depends-on' ) === section.data( 'field-id' ) && mpc_admin.has_pro ) {
-					$( dep ).slideToggle( 'slow', 'custom' === elm.val() );
-				}
-			} );
+			const elm  = $( e.currentTarget );
+			const wrap = elm.closest( '.mpcdp_settings_toggle' );
+			wrap.find( '.mpc-followup' ).each( ( _, el ) => $( el ).hide() );
+
+			const followup   = elm.attr( 'data-followup' );
+			const followWrap = followup && followup.length > 0 ? wrap.find( `.mpc-followup-${followup}`) : null;
+			if( followWrap && followWrap.length > 0 ){
+				followWrap.slideToggle( 'slow' );
+			}
 		}
 		toggleSwitch( e ) {
 			const section  = $( e.currentTarget ).closest( '.mpcdp_settings_option' );
