@@ -13,7 +13,7 @@
 		}
 		initEventTriggers(){
 			$( 'input[name="wmc_redirect"]' ).on( 'click', e => this.redirectOptionsHandler( e ) );
-			$( '.hurkanSwitch-switch-item' ).on( 'click', e => this.toggleSwitch( e ) );
+			$( '.mpc-switch-state' ).on( 'click', e => this.toggleSwitch( e ) );
 			$( '.mpcdp_submit_button' ).on( 'click', () => this.setSortedColumns() ); // use form submit event here !!!
 			this.initColumnSorting();
 		}
@@ -51,19 +51,8 @@
 			}
 
 			checkBox.trigger( 'click' );
-			this.handleFollowupField( section );
 
-			const switchBox = section.find( '.hurkanSwitch-switch-box' );
-			switchBox.find( '.hurkanSwitch-switch-item' ).each( ( _, el ) => $( el ).toggleClass( 'active' ) );
-			switchBox.toggleClass( 'switch-animated-off switch-animated-on', 1000 );
-		}
-		handleFollowupField( section ) {
-			var field_id = section.data( 'field-id' );
-			section.closest( '.mpcdp_container' ).find( '.mpcdp_settings_option' ).each( ( e ) => {
-				if ( $( e.currentTarget ).data( 'depends-on' ) === field_id ) {
-					$( e.currentTarget ).slideToggle( 'slow' );
-				}
-			} );
+			section.find( '.mpc-switch .mpc-switch-state' ).each( ( _, el ) => $( el ).toggleClass( 'active', 1000 ) );
 		}
 		makeMoreSpace( event, ui ) {
 			if ( ui.item.hasClass( 'mpc-stone-col' ) ) {

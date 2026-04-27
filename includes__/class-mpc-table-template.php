@@ -638,6 +638,11 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				return;
 			}
 
+			// check if shortcode attribute has option to hide range.
+			if( isset( self::$data['atts']['pagination'] ) && 'false' === self::$data['atts']['pagination'] ){
+				return;
+			}
+
 			$paged = self::$data['paged'];
 			$limit = isset( self::$data['atts']['limit'] ) ? (int) self::$data['atts']['limit'] : 10;
 

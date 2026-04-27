@@ -339,6 +339,7 @@
 }
 #mpcdp_settings .mpcdp_settings_option_field_theme_customizer{
 	padding: 20px;
+	margin: 40px 0 0 0;
 	background-color: #f8f8f8;
 	color: #fff;
 	display:-webkit-box;
@@ -367,8 +368,8 @@
 	color: #182f36;
 }
 #mpcdp_settings .mpc-notice .mpcdp_settings_option_field_theme_customizer {
+	border: 1px solid #bebebe;
 	border-left: .6180469716em solid #00a32a;
-    background: #ebebeb;
 }
 #mpcdp_settings .mpcdp_settings_option_field_theme_customizer.mpc-export-notice, #mpcdp_settings .mpcdp_settings_option_field_theme_customizer.mpc-import-notice {
 	background-color: #bad1e3;
@@ -421,74 +422,51 @@ a.mpcasc-reset span.button-secondary {
 }
 
 /* HurkanSwitch start */
-#mpcdp_settings .hurkanSwitch{
-	display: inline-flex;
+.mpc-switch {
+	overflow: hidden;
+	padding: 0;
+	display: inline-block;
+	border-radius: 30px;
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box{
-	cursor:pointer;
-	background:#fff;
-	overflow:hidden;
-	border:none;
-	padding:0;
-	display:inline-block;
-	width:auto;
-	border-radius:30px;
-}
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item{
+.mpc-switch > .mpc-switch-state{
 	height: 35px;
 	line-height: 35px;
-	width: 84px;
-	font-size: 12px;
-	opacity: 0;
+	width: 70px;
+	font-size: 10px;
 	display: none;
-	border-radius: 4px;
 	font-weight: 600;
 	text-transform: uppercase;
 	position: relative;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box
+	cursor: pointer;
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item:hover{
-	text-decoration: none
+.mpc-switch > .mpc-switch-state.active{
+	display: block;
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item.active{
-	opacity: 1;
-	display: block
-}
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item.active.hurkanSwitch-switch-item-status-off{
-	padding-right: 16px;
-	padding-left: 32px;
+.mpc-switch > .mpc-switch-state.active.switched-off{
+	text-align: right;
+	padding-right: 12px;
 	background: #cbcdcf;
 	color: #ffffff;
-	text-align: right
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item.active.hurkanSwitch-switch-item-status-on{
-	padding-right: 32px;
+.mpc-switch > .mpc-switch-state.active.switched-on{
+	text-align: left;
 	padding-left: 12px;
 	background-color: #45494c;
 	color: #fff;
-	text-align: left
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item>.hurkanSwitch-switch-cursor-selector{
-	top:5px;
+.mpc-switch > .mpc-switch-state > .mpc-switch-tip{
+	top: 5px;
 	height: 25px !important;
 	width: 25px;
-	position:absolute;
-	display:block;
-	content:"";
-	-webkit-box-shadow:0 1px 3px 0 rgba(0,0,0,0.1);
-	box-shadow:0 1px 3px 0 rgba(0,0,0,0.1);
-	border-radius:20px;
-	background:#fff
+	position: absolute;
+	border-radius: 20px;
+	background: #fff;
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item.hurkanSwitch-switch-item-status-off>.hurkanSwitch-switch-cursor-selector{
+.mpc-switch > .mpc-switch-state.switched-off > .mpc-switch-tip{
 	left: 5px;
 }
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item.hurkanSwitch-switch-item-status-on>.hurkanSwitch-switch-cursor-selector{
-	right: 6px
-}
-#mpcdp_settings .hurkanSwitch>.hurkanSwitch-switch-box>.hurkanSwitch-switch-item.hurkanSwitch-switch-item-color-success{
-	background-color:#45494c !important;
+.mpc-switch > .mpc-switch-state.switched-on > .mpc-switch-tip{
+	right: 6px;
 }
 /* HurkanSwitch end */
 
@@ -608,6 +586,13 @@ li.mpc-stone-col:before {
 }
 .mpc-sortable ul li:hover {
 	border: 1px solid #2271b1;
+}
+.mpc-sortable ul li span{
+    font-size: 10px;
+    background: #e3e3e3;
+    padding: 3px 10px;
+    border-radius: 25px;
+    margin-right: 10px;
 }
 #mpcdp_settings .mpcdp_settings_toggle .mpcdp_settings_option .mpc-colorp button.button {
 	padding: 0px;
@@ -855,14 +840,6 @@ a .mpcasc-reset .button-secondary{
 	.mpcdp_settings_sidebar .mpcdp_settings_tab_control, .mpcdp_settings_sidebar .mpcdp_settings_tab_control.active{
 		padding: 14px 5px;
 		font-size: 13px;
-	}
-	#mpcdp_settings .mpcdp_settings_option_field_theme_customizer{
-		margin-left: -20px;
-		margin-right: -20px;
-		margin-bottom: -20px;
-	}
-	#mpcdp_settings .mpcdp_settings_option_field_theme_customizer:last-child{
-		margin-bottom: -20px;
 	}
 }
 @media screen and (max-width: 1200px){

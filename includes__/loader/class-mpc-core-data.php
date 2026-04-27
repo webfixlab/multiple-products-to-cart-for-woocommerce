@@ -834,7 +834,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 							),
-							'default'     => 'on',
+							'default'     => true,
 						),
 						array(
 							'key'          => 'orderby',
@@ -877,7 +877,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 							),
-							'default'     => 'off',
+							'default'     => false,
 						),
 						array(
 							'key'         => 'link',
@@ -888,7 +888,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 							),
-							'default'     => 'on',
+							'default'     => true,
 						),
 						array(
 							'key'          => 'type',

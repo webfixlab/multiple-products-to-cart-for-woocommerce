@@ -200,31 +200,25 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     style="display:none;"
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
-                    value="<?php echo esc_attr( self::$field_value ); ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
-                    title="<?php echo esc_html( $field['label'] ); ?>"
-                    data-on-title="<?php echo esc_html( $field['switch_text']['on'] ); ?>"
-                    data-off-title="<?php echo esc_html( $field['switch_text']['off'] ); ?>"
                     <?php echo 'on' === self::$field_value ? 'checked' : ''; ?>>
-                    <?php self::render_field_checkbox_switch( $field ); ?>
+                <?php self::render_field_checkbox_switch( $field ); ?>
 			</div>
             <?php
         }
         private static function render_field_checkbox_switch( $field ){
-            $value = empty( self::$field_value ) ? 'off' : self::$field_value;
+            $value = empty( self::$field_value ) ? 'off' : ( 'no' === self::$field_value ? 'off' : 'on' );
             ?>
-			<div class="hurkanSwitch hurkanSwitch-switch-plugin-box">
-				<div class="hurkanSwitch-switch-box switch-animated-<?php echo esc_attr( $value ); ?>">
-					<a class="hurkanSwitch-switch-item <?php echo 'on' === $value ? 'active' : ''; ?> hurkanSwitch-switch-item-color-success  hurkanSwitch-switch-item-status-on">
-						<span class="lbl"><?php echo esc_html( $field['switch_text']['on'] ); ?></span>
-						<span class="hurkanSwitch-switch-cursor-selector"></span>
-					</a>
-					<a class="hurkanSwitch-switch-item <?php echo 'off' === $value ? 'active' : ''; ?> hurkanSwitch-switch-item-color-  hurkanSwitch-switch-item-status-off">
-						<span class="lbl"><?php echo esc_html( $field['switch_text']['off'] ); ?></span>
-						<span class="hurkanSwitch-switch-cursor-selector"></span>
-					</a>
-				</div>
-			</div>
+            <div class="mpc-switch">
+                <div class="mpc-switch-state switched-on <?php echo 'on' === $value ? 'active' : ''; ?>">
+                    <span class="lbl"><?php echo esc_html( $field['switch_text']['on'] ); ?></span>
+                    <span class="mpc-switch-tip"></span>
+                </div>
+                <div class="mpc-switch-state switched-off <?php echo 'off' === $value ? 'active' : ''; ?>">
+                    <span class="lbl"><?php echo esc_html( $field['switch_text']['off'] ); ?></span>
+                    <span class="mpc-switch-tip"></span>
+                </div>
+            </div>
 			<?php
         }
 

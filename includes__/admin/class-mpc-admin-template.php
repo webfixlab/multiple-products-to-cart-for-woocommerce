@@ -182,7 +182,6 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
             ?>
             <div class="mpcdp_settings_section">
                 <div class="mpcdp_settings_section_title"><?php echo __( 'Column Sorting', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                <?php // $cls->show_notice(); ?>
                 <div class="mpc-banner mpcdp_settings_toggle mpcdp_container" data-toggle-id="footer_theme_customizer">
                     <div class="mpcdp_settings_option visible" data-field-id="footer_theme_customizer">
                         <div class="mpcdp_settings_option_field_theme_customizer first_customizer_field">
@@ -195,11 +194,11 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
                         <div class="mpcdp_row">
                             <div class="mpcdp_settings_option_description col-md-6">
                                 <div class="mpcdp_option_label"><?php echo __( 'Active Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                                <?php self::display_sorted_columns( $active_columns, $column_labels, true ); ?>
+                                <?php self::display_sorted_columns( $active_columns, $column_labels, $pro_state ); ?>
                             </div>
                             <div class="mpcdp_settings_option_description col-md-6">
                                 <div class="mpcdp_option_label"><?php echo __( 'Inactive Columns', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                                <?php self::display_sorted_columns( $active_columns, $column_labels, false ); ?>
+                                <?php self::display_sorted_columns( array_diff( array_keys( $column_labels ), $active_columns ), $column_labels, $pro_state ); ?>
                             </div>
                         </div>
                     </div>
@@ -243,27 +242,29 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
             </div>
             <?php
         }
-        private static function display_sorted_columns( $columns, $column_labels, $is_active ){
-            $columns = $is_active ? $columns : array_diff( array_keys( $column_labels ), $columns );
+        private static function display_sorted_columns( $columns, $column_labels, $pro_state ){
             ?>
             <div class="mpc-sortable mpca-sorted-options">
-                <ul id="<?php echo $is_active ? 'active' : 'inactive'; ?>-mpc-columns" class="connectedSortable ui-sortable">
+                <ul id="<?php echo ! empty( $pro_state ) ? 'active' : 'inactive'; ?>-mpc-columns" class="connectedSortable ui-sortable">
                     <?php
                         foreach( $columns as $column ){
-                            self::display_column_widget( $column, $column_labels );
+                            self::display_column_widget( $column, $column_labels, $pro_state );
                         }
                     ?>
                 </ul>
             </div>
             <?php
         }
-        private static function display_column_widget( $column, $column_labels ){
-			$label = get_option( 'wmc_ct_' . esc_attr( $column ), $column_labels[ $column ] );
-			$class = 'variation' === $column || ( empty( self::$pro_state ) && in_array( $column, array( 'category', 'stock', 'tag', 'sku', 'rating' ), true ) ) ? 'mpc-stone-col' : 'ui-state-default';
+        private static function display_column_widget( $column, $column_labels, $pro_state ){
+            $label  = get_option( 'wmc_ct_' . esc_attr( $column ), $column_labels[ $column ] );
+			$no_pro = empty( $pro_state ) && in_array( $column, array( 'category', 'stock', 'tag', 'sku', 'rating' ), true );
 			?>
 			<li
-				class="ui-sortable-handle <?php echo esc_attr( $class ); ?>"
+				class="ui-sortable-handle <?php echo 'variation' === $column || $no_pro ? 'mpc-stone-col' : 'ui-state-default'; ?>"
 				data-meta_key="wmc_ct_<?php echo esc_attr( $column ); ?>">
+				<?php if( $no_pro ) : ?>
+					<span><?php echo __( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+				<?php endif; ?>
 				<?php echo esc_html( $label ); ?>
 			</li>
 			<?php
@@ -272,25 +273,29 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
         public static function sidebar( $plugin_data ){
             ?>
             <div class="site-intro">
-                <h3><?php echo esc_html__( 'Boost your tables to the next level', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
-                <div class="tagline_side">
-                    <?php echo sprintf(
-                        // translators: %1$s: line brake, %2$s: line brake.
-                        __( 'Popular PRO features: Product category dropdown, AJAX-powered search, 4 additional columns, and subscription product support. Upgrade to the PRO version to unlock the full power of the plugin!', 'multiple-products-to-cart-for-woocommerce' )
-                    ); ?>
-                </div>
-                <a href="<?php echo esc_url( $plugin_data['pro_plugin_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Get PRO license now', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
-            </div>
-            <div class="site-intro">
-                <h3><?php echo esc_html__( 'Missing any features? No worries!', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
-                <a href="https://webfixlab.com/wordpress-offer/" target="_blank"><?php echo esc_html__( 'Customize for $99 only', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
-            </div>
-            <div class="site-intro">
-                <h3><?php echo esc_html__( 'Dedicated Support Team', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+                <h3><?php echo esc_html__( 'Support', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <div class="tagline_side">
                     <?php echo __( 'Our support is what makes us No.1. We are available round the clock for any support.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                 </div>
                 <a href="<?php echo esc_url( $plugin_data['contact_us_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Contact us', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+            </div>
+            <div class="site-intro">
+                <h3><?php echo esc_html__( 'Get PRO', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+                <div class="tagline_side">
+                    <?php echo sprintf(
+                        __( 'Get exclusive PRO features, like support for Subscription and Grouped products, extra columns like - Stock, SKU, filter by Category, add to cart button for each product, AJAX search and Cart section, section by categories', 'multiple-products-to-cart-for-woocommerce' )
+                    ); ?>
+                </div>
+                <a href="<?php echo esc_url( $plugin_data['pro_plugin_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Unlock all PRO features', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+            </div>
+            <div class="site-intro">
+                <h3><?php echo esc_html__( 'Customize', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+                <div class="tagline_side">
+                    <?php echo sprintf(
+                        __( 'Add any custom feature quickly.', 'multiple-products-to-cart-for-woocommerce' )
+                    ); ?>
+                </div>
+                <a href="https://webfixlab.com/wordpress-offer/" target="_blank"><?php echo esc_html__( 'Starting at $99', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
             </div>
             <?php
         }

@@ -179,12 +179,15 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			}
 		}
 		private static function display_column( $column_labels, $column ){
-			$label = get_option( 'wmc_ct_' . esc_attr( $column ), $column_labels[ $column ] );
-			$class = 'variation' === $column || ( empty( self::$pro_state ) && in_array( $column, array( 'category', 'stock', 'tag', 'sku', 'rating' ), true ) ) ? 'mpc-stone-col' : 'ui-state-default';
+			$label  = get_option( 'wmc_ct_' . esc_attr( $column ), $column_labels[ $column ] );
+			$no_pro = empty( self::$pro_state ) && in_array( $column, array( 'category', 'stock', 'tag', 'sku', 'rating' ), true );
 			?>
 			<li
-				class="ui-sortable-handle <?php echo esc_attr( $class ); ?>"
+				class="ui-sortable-handle <?php echo 'variation' === $column || $no_pro ? 'mpc-stone-col' : 'ui-state-default'; ?>"
 				data-meta_key="wmc_ct_<?php echo esc_attr( $column ); ?>">
+				<?php if( $no_pro ) : ?>
+					<span><?php echo __( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+				<?php endif; ?>
 				<?php echo esc_html( $label ); ?>
 			</li>
 			<?php
@@ -220,7 +223,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			if( empty( $options ) ){
 				return;
 			}
-			foreach( $options as $value => $label ){
+			foreach( $options as $value ){
 				$class = 'static' === $field['content_type'] ? (
 					in_array( $value, $pro_options, true ) ? 'disabled' : (
 						in_array( $value, $saved, true ) ? 'selected' : ''
@@ -228,8 +231,8 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 				) : 'selected';
 				?>
 				<option
-					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $value ) : esc_attr( $label ); ?>"
-					<?php echo esc_attr( $class ); ?>><?php echo 'static' === $field['content_type'] ? esc_html( $label ) : esc_html( self::get_selectbox_option_label( $field, $value ) ); ?></option>
+					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $value ) : esc_attr( $value ); ?>"
+					<?php echo esc_attr( $class ); ?>><?php echo 'static' === $field['content_type'] ? esc_html( $value ) : esc_html( self::get_selectbox_option_label( $field, $value ) ); ?></option>
 				<?php
 			}
 		}
@@ -244,10 +247,9 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			return get_the_title( (int) $option );
 		}
 		private static function render_field_checkbox( $field ){
-			$key = $field['key'];
-			
-			// checks saved attribute value or falls back to default value.
-			$checked = isset( self::$atts[ $key ] ) ? ( self::$atts[ $key ] || 'true' === self::$atts[ $key ] || 'on' === self::$atts[ $key ] ) : ( isset( $field['default'] ) && 'on' === $field['default'] );
+			$key     = $field['key'];
+			$default = $field['default'] ?? '';
+			$checked = ! isset( $default ) && ! empty( $default ) ? $default : ( 'true' === self::$atts[ $key ] ? true : false );
 			?>
 			<div class="input-field" style="display:none;">
 				<input
@@ -263,18 +265,16 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		}
 		private static function display_switch( $field, $checked ){
 			?>
-			<div class="hurkanSwitch hurkanSwitch-switch-plugin-box">
-				<div class="hurkanSwitch-switch-box switch-animated-<?php echo esc_attr( $checked ); ?>">
-					<a class="hurkanSwitch-switch-item <?php echo $checked ? 'active' : ''; ?> hurkanSwitch-switch-item-color-success  hurkanSwitch-switch-item-status-on">
-						<span class="lbl"><?php echo esc_html( $field['switch_text']['on'] ); ?></span>
-						<span class="hurkanSwitch-switch-cursor-selector"></span>
-					</a>
-					<a class="hurkanSwitch-switch-item <?php echo ! $checked ? 'active' : ''; ?> hurkanSwitch-switch-item-color-  hurkanSwitch-switch-item-status-off">
-						<span class="lbl"><?php echo esc_html( $field['switch_text']['off'] ); ?></span>
-						<span class="hurkanSwitch-switch-cursor-selector"></span>
-					</a>
+			<div class="mpc-switch">
+                <div class="mpc-switch-state switched-on <?php echo $checked ? 'active' : ''; ?>">
+                    <span class="lbl"><?php echo esc_html( $field['switch_text']['on'] ); ?></span>
+                    <span class="mpc-switch-tip"></span>
 				</div>
-			</div>
+                <div class="mpc-switch-state switched-off <?php echo ! $checked ? 'active' : ''; ?>">
+                    <span class="lbl"><?php echo esc_html( $field['switch_text']['off'] ); ?></span>
+                    <span class="mpc-switch-tip"></span>
+				</div>
+            </div>
 			<?php
 		}
 		private static function render_field_text( $field ){

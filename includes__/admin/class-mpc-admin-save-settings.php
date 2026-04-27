@@ -35,11 +35,16 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
          * @param string $pro_state Pro plugin status.
 		 */
 		public static function init( $tab, $pro_state ) {
-            if( 'all-tables' === $tab || 'import' === $tab || 'export' === $tab ){
+            if( 'import' === $tab || 'export' === $tab ){
                 return;
             }
 
             self::$pro_state = $pro_state;
+
+            if( 'all-tables' === $tab ){
+                self::if_delete_table();    
+                return;
+            }
 
             if( 'new-table' === $tab ){
                 self::add_new_table();
@@ -60,14 +65,17 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
          * Create or update new shortcode
          */
         private static function add_new_table(){
-            // if we just need to delete this shortcode, skip.
-            $table_id  = self::if_delete_table();
-            $form_data = self::get_new_table_form_data();
+            if ( ! isset( $_POST['mpc_opt_sc'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_opt_sc'] ) ), 'mpc_opt_sc_save' ) ) {
+				return;
+			}
 
-            self::$notice = array(
-                'status' => empty( $table_id ) ? 'success' : 'updated',
-                'msg'    => empty( $table_id ) ? __( 'Shortcode created.', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Shortcode updated.', 'multiple-products-to-cart-for-woocommerce' )
-            );
+            $table_id = isset( $_GET['mpctable'] ) ? sanitize_key( wp_unslash( $_GET['mpctable'] ) ) : '';
+
+            $form_data = array();
+            foreach( MPC_Core_Data::get_new_table()[0]['fields'] as $field ){
+                $key               = $field['key'];
+                $form_data[ $key ] = 'checkbox' === $field['type'] ? ( isset( $_POST[ $key ] ) ? 'true' : 'false' ) : sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+            }
 
             if( empty( $table_id ) ){
                 $table_id = wp_insert_post( array(
@@ -78,6 +86,11 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
                     'comment_status' => 'closed',
                     'ping_status'    => 'closed',
                 ) );
+
+                self::$notice = array(
+                    'status' => 'success',
+                    'msg'    => __( 'Shortcode created.', 'multiple-products-to-cart-for-woocommerce' )
+                );
             }else{
                 $args = array( 'ID' => (int) $table_id );
                 if( !empty( $form_data['shortcode_title'] ) ){
@@ -87,30 +100,31 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
                     $args['post_content'] = $form_data['shortcode_desc'];
                 }
                 $table_id = wp_update_post( $args );
+
+                self::$notice = array(
+                    'status' => 'updated',
+                    'msg'    => __( 'Shortcode updated.', 'multiple-products-to-cart-for-woocommerce' )
+                );
             }
 
-            self::save_shortcode_meta( $form_data, $table_id );
-            update_post_meta( $table_id, 'table_id', $table_id ); // to accomodate legacy table.
+            $shortcode = self::save_shortcode_meta( $form_data, $table_id );
+            update_post_meta( $table_id, 'shortcode', "[woo-multi-cart {$shortcode}]" );
+            // update_post_meta( $table_id, 'table_id', $table_id ); // to accomodate legacy table.
         }
 
         /**
          * Delete shortcode table
-         *
-         * @return string Table ID.
          */
         private static function if_delete_table(){
             if( !isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ){
-                return '';
+                return;
             }
 
-            $table_id  = isset( $_GET['mpctable'] ) ? sanitize_key( wp_unslash( $_GET['mpctable'] ) ) : '';
-            $delete_id = isset( $_GET['mpcscdlt'] ) ? sanitize_key( wp_unslash( $_GET['mpcscdlt'] ) ) : '';
-
-            if( empty( $delete_id ) ){
-                return $table_id;
+            $table_id = isset( $_GET['mpcscdlt'] ) ? sanitize_key( wp_unslash( $_GET['mpcscdlt'] ) ) : '';
+            if( empty( $table_id ) ){
+                return;
             }
-
-            // delete shortcode.
+            
             if( get_post_status( (int) $table_id ) ){
                 wp_delete_post( (int) $table_id, true );
             }
@@ -124,33 +138,11 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
         }
 
         /**
-         * Get shortcode POST data
-         *
-         * @return array Shortcode data.
-         */
-        private static function get_new_table_form_data(){
-            if ( ! isset( $_POST['mpc_opt_sc'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_opt_sc'] ) ), 'mpc_opt_sc_save' ) ) {
-				return [];
-			}
-            
-            $form_data = array();
-            foreach( MPC_Core_Data::get_new_table()[0]['fields'] as $field ){
-                $key = $field['key'];
-                $form_data[ $key ] = 'checkbox' === $field['type'] ? (
-                    isset( $_POST[ $key ] ) ? 'true' : 'false'
-                ) : (
-                    isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : ''
-                );
-            }
-
-            return $form_data;
-        }
-
-        /**
          * Get shortcode string and save as CPT meta
          *
          * @param array $form_data Shortcode form data.
          * @param int   $table_id  Shotcode table ID.
+         * @return string
          */
         private static function save_shortcode_meta( $form_data, $table_id ){
             $shortcode = '';
@@ -158,9 +150,9 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
                 if( 'shortcode_title' === $key || 'shortcode_desc' === $key ){
                     continue;
                 }
-                $shortcode .= "{$key}=\"{$value}\"";
+                $shortcode .= "{$key}=\"{$value}\" ";
             }
-            update_post_meta( $table_id, 'shortcode', "[woo-multi-cart {$shortcode}]" );
+            return $shortcode;
         }
 
         /**
