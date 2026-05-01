@@ -112,10 +112,7 @@
 			} );
 		}
 		setChoiceFieldValue( wrap, value ) {
-			const field = wrap.find( '.choicesdp-field' );
-			if ( value && value.length > 0 ) {
-				field.val( 'string' === typeof value ? value : value.join( ',' ) );
-			}
+			wrap.find( '.choicesdp-field' ).val( 'string' === typeof value ? value : value.join( ',' ) );
 		}
 	}
 	new MPCAdminTable();

@@ -124,6 +124,10 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			if( ! empty( $show_product_check ) && 'on' !== $show_product_check ) {
 				return;
 			}
+
+			if( ! in_array( 'wmc_ct_buy', array_keys( self::$data['columns'] ), true ) ){
+				return;
+			}
 			?>
 			<div class="mpc-all-select">
 				<label><?php echo esc_html( get_option( 'wmc_select_all_text', __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ) ) ); ?></label>
@@ -133,8 +137,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			</div>
 			<?php
 		}
-
-
 
 		/**
 		 * Display table header columns
@@ -207,8 +209,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				do_action( 'mpc_table_column_' . str_replace( 'wmc_ct_', '', $slug ), $product );
 			}
 		}
-
-
 		
 		/**
 		 * Display product image
@@ -320,8 +320,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			</td>
 			<?php
 		}
-
-
 
 		/**
 		 * Display product variations
@@ -440,9 +438,10 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			}
 
 			$stock = 'instock' === $product->get_stock_status() ? $product->get_stock_quantity() : '';
-			$stock = $product->is_sold_individually() ? 1 : $stock;
+			$stock = $product->is_sold_individually() ? 0 : $stock;
 			
-			$quantity = (int) get_option( 'wmca_default_quantity', 1 );
+			$quantity = get_option( 'wmca_default_quantity' );
+			$quantity = empty( $quantity ) ? 0 : (int) $quantity;
 			$quantity = ! empty( $stock ) && $stock > 0 ? min( $stock, $quantity ) : $quantity;
 			?>
 			<td for="quantity" class="mpc-product-quantity">
@@ -469,14 +468,15 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 
 			$selected = self::$data['atts']['selected'] ?? '';
-			$checked = ! empty( $selected ) && is_array( $selected ) ? in_array( $product->get_id(), self::$data['atts']['selected'], true ) : false;
+			$selected = is_array( $selected ) ? $selected : ( empty( $selected ) ? array() : explode( ',', str_replace( ' ', '', $selected ) ) );
+			$selected = empty( $selected ) ? $selected : array_map( 'intval', $selected );
 			?>
 			<td for="buy" class="mpc-product-select">
 				<input
 					type="checkbox"
 					name="product_ids[]"
 					value="<?php echo $product->get_id(); ?>"
-					<?php echo $checked ? 'checked' : ''; ?>>
+					<?php echo in_array( $product->get_id(), $selected, true ) ? 'checked' : ''; ?>>
 			</td>
 			<?php
 		}
@@ -644,7 +644,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			}
 
 			$paged = self::$data['paged'];
-			$limit = isset( self::$data['atts']['limit'] ) ? (int) self::$data['atts']['limit'] : 10;
+			$limit = self::$data['atts']['limit'] ?? '';
+			$limit = empty( $limit ) ? 10 : (int) $limit;
 
 			$range_start   = max( 1, ( $paged - 1 ) * $limit + 1 );
 			$range_end     = min( $paged * $limit, self::$data['total'] );

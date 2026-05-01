@@ -56,19 +56,14 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 
             $table_id = isset( $_GET['mpctable'] ) && isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ? sanitize_key( wp_unslash( $_GET['mpctable'] ) ) : '';
 
-            $prefix = !empty( $table_id ) ? __( 'Update Table', 'multiple-products-to-cart-for-woocommerce' ) : ( 'new-table' === $settings_tab ? __( 'Create Table', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Save Changes', 'multiple-products-to-cart-for-woocommerce' ) );
+            $btn_text = !empty( $table_id ) ? __( 'Update Table', 'multiple-products-to-cart-for-woocommerce' ) : ( 'new-table' === $settings_tab ? __( 'Create Table', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Save Changes', 'multiple-products-to-cart-for-woocommerce' ) );
             ?>
             <div class="mpcdp_settings_submit">
                 <div class="submit">
                     <button class="mpcdp_submit_button">
-                        <div class="save-text">
-                            <?php printf(
-                                // translators: %s: button prefix.
-                                __( '%s Table', '' ),
-                                esc_html( $prefix )
-                            ); ?>
+                        <div class="save-text"><?php echo esc_html( $btn_text ); ?>
                         </div>
-                        <div class="save-text save-text-mobile"><?php echo esc_html( explode( ' ', $prefix )[0] ); ?></div>
+                        <div class="save-text save-text-mobile"><?php echo esc_html( explode( ' ', $btn_text )[0] ); ?></div>
                     </button>
                 </div>
             </div>

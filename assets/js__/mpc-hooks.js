@@ -62,9 +62,7 @@
                     const stock = this.state[ target.tableId ][ target.productId ]['stock'];
                     let qty     = this.state[ target.tableId ][ target.productId ]['qty'];
                     qty = 'number' === typeof stock && 0 === stock ? 0 : (
-                        stock && qty > stock && -1 !== stock ? stock : (
-                            0 === qty ? 1 : qty
-                        )
+                        stock && qty > stock && -1 !== stock ? stock : qty
                     ); // sequence is important here.
                     
                     this.state[ target.tableId ][ target.productId ]['qty'] = qty;
@@ -79,12 +77,29 @@
                 },
                 getCartData: function( target ){
                     const tableData = this.state[ target.tableId ];
-                    return Object.entries( tableData ).filter( ( [ id, data ] ) => data.checked );
+                    const cartData  = {};
+                    Object.keys( tableData ).forEach( i => {
+                        if( true === tableData[i].checked ){
+                            cartData[ i ] = {
+                                type: tableData[i].type,
+                                qty: tableData[i].qty,
+                            };
+                        }
+                    });
+                    return cartData;
                 },
                 getProductData: function( target ){
                     const productItemData = {};
                     productItemData[ target.productId ] = this.state[ target.tableId ][ target.productId ];
                     return productItemData;
+                },
+                resetVariationData: function( elm ){
+                    const target = this.identifyTable( elm );
+
+                    this.updateProductMeta( target, 'variation', {} );
+                    this.updateProductMeta( target, 'price', '' );
+                    this.updateProductMeta( target, 'stock', '' );
+                    this.updateProductMeta( target, 'checked', false );
                 }
             };
         }

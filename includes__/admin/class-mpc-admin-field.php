@@ -122,7 +122,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
                     value="<?php echo esc_attr( self::$field_value ); ?>"
-                    placeholder="<?php echo esc_html( $field['placeholder'] ); ?>"
+                    placeholder="<?php echo isset( $field['placeholder'] ) ? esc_html( $field['placeholder'] ) : ''; ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
                     title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>">
             </div>
@@ -201,6 +201,7 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     name="<?php echo esc_attr( $field['key'] ); ?>"
                     id="<?php echo esc_attr( $field['key'] ); ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
+                    title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>"
                     <?php echo 'on' === self::$field_value ? 'checked' : ''; ?>>
                 <?php self::render_field_checkbox_switch( $field ); ?>
 			</div>
@@ -241,12 +242,8 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                 style="display: <?php echo esc_attr( $display ); ?>;">
                 <?php self::pro_ribbon(); ?>
                 <div class="mpcdp_row">
-                    <div class="mpcdp_settings_option_description col-md-6">
-                        <?php self::field_title(); ?>
-                    </div>
-                    <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
-                        <?php self::render_field(); ?>
-                    </div>
+                    <?php self::field_title(); ?>
+                    <?php self::render_field(); ?>
                 </div>
             </div>
             <?php

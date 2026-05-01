@@ -589,10 +589,11 @@ li.mpc-stone-col:before {
 }
 .mpc-sortable ul li span{
     font-size: 10px;
-    background: #e3e3e3;
+    background: #0f834d;
     padding: 3px 10px;
     border-radius: 25px;
     margin-right: 10px;
+    color: #fff;
 }
 #mpcdp_settings .mpcdp_settings_toggle .mpcdp_settings_option .mpc-colorp button.button {
 	padding: 0px;
@@ -904,9 +905,6 @@ a .mpcasc-reset .button-secondary{
 	}
 	.mpcdp_settings_section .mpcdp_settings_toggle .mpcdp_settings_option {
 		padding: 10px 20px;
-	}
-	.mpcdp_row{
-		display:inherit
 	}
 	.mpcdp_row .col-md-6{
 		width:100%

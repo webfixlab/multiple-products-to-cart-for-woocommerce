@@ -51,14 +51,14 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 		 * @param int   $paged paged variable.
 		 */
 		private static function get_query_args( array $atts, int $paged ) {
-			$limit   = isset( $atts['limit'] ) && ! empty( $atts['limit'] ) ? (int) $atts['limit'] : 100;
+			$limit   = isset( $atts['limit'] ) && ! empty( $atts['limit'] ) ? (int) $atts['limit'] : 10;
 			$orderby = $atts['orderby'] ?? '';
 
 			$args = array(
 				'post_type'      => 'product',
 				'post_status'    => 'publish',
 				'fields'         => 'ids',
-				'posts_per_page' => isset( $atts['pagination'] ) && false === (bool) $atts['pagination'] ? 100 : $limit,
+				'posts_per_page' => isset( $atts['pagination'] ) && 'false' === $atts['pagination'] ? 100 : $limit,
 				'paged'          => $paged,
 				'orderby'        => empty( $orderby ) || ! in_array( $orderby, array( 'price', 'title', 'date' ) ) ? 'date' : $orderby,
 				'order'          => isset( $atts['order'] ) && ! empty( $atts['order'] ) ? strtoupper( $atts['order'] ) : 'DESC',
@@ -103,16 +103,16 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			if ( isset( $atts['cats'] ) && ! empty( $atts['cats'] ) ) {
 				$args['tax_query'][] = array(
 					'taxonomy' => 'product_cat',
-					'field'    => 'slug',
-					'terms'    => explode( ',',  str_replace( ' ', '', $atts['cats'] ) ),
+					'field'    => 'term_id',
+					'terms'    => array_map( 'intval', explode( ',',  str_replace( ' ', '', $atts['cats'] ) ) ),
 				);
 			}
 
 			if ( isset( $atts['tags'] ) && ! empty( $atts['tags'] ) ) {
 				$args['tax_query'][] = array(
 					'taxonomy' => 'product_tag',
-					'field'    => 'slug',
-					'terms'    => explode( ',',  str_replace( ' ', '', $atts['tags'] ) ),
+					'field'    => 'term_id',
+					'terms'    => array_map( 'intval', explode( ',',  str_replace( ' ', '', $atts['tags'] ) ) ),
 				);
 			}
 

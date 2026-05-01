@@ -35,6 +35,13 @@
             const table = wrap.find( 'table.mpc-wrap' );
             table.attr( 'data-table_id', this.tableCounter );
             table.find( 'tr.cart_item' ).each( ( _, row ) => this.initTableRowState( $( row ) ) );
+
+            // update total price.
+            const tableTotal = wrap.find( '.mpc-total span.total-price' );
+            if( tableTotal && tableTotal.length > 0 ){
+                tableTotal.text( this.priceFormat( window.mpcTables.getTableTotal( { tableId: this.tableCounter } ) ) );
+            }
+
             this.tableCounter++;
         }
         initTableRowState( row ){
@@ -46,14 +53,10 @@
                 type: row.attr( 'data-type' )
             };
             const qty = row.find( '.mpc-product-quantity input[type="number"]' );
-            if( qty && qty.length > 0 ){
-                productData['qty'] = parseInt( qty.val() );
-            }
+            productData['qty'] = qty && qty.length > 0 ? parseInt( qty.val() ) : 0;
 
             const checkBox = row.find( 'input[type="checkbox"]' );
-            if( checkBox && checkBox.length > 0 ){
-                productData['checked'] = checkBox.is( ':checked' );
-            }
+            productData['checked'] = checkBox && checkBox.length > 0 ? checkBox.is( ':checked' ) : true;
 
             // get price - for default attribute value or just get simple product price.
             if( 'variable' === productData.type ){
@@ -72,9 +75,7 @@
                 productId: parseInt( row.attr( 'data-id' ) )
             }, productData );
 
-            // apply this product data too !!!
-            // like, disable qty field if product is outofstock.
-            // validate stock - limit quantity.
+            row.toggleClass( 'non-empty-qty', productData['qty'] > 0 );
         }
         getCurrentVariation( row ){
             const variations = row.find( '.row-variation-data' ).data( 'variation_data' );
@@ -153,22 +154,27 @@
             this.setTableTotal( qtyField, target );
         }   
         validateStock( field, target ){
-            const qty = window.mpcTables.getValidStockQuantity( field, target );
-
+            // validate quantity.
+            let qty        = 1;
+            const validQty = window.mpcTables.getValidStockQuantity( field, target );
             const row      = field.closest( 'tr.cart_item' );
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
             const checkBox = row.find( '.mpc-product-select input[type="checkbox"]' );
             if( qtyField && qtyField.length > 0 ){
+                qty = parseInt( qtyField.val() );
+                qty = qty !== validQty ? validQty : qty;
                 qtyField.val( qty );
-                qtyField.prop( 'disabled', 0 === qty );
+                qtyField.prop( 'disabled', qty !== validQty );
             }
 
             // contingency checking.
             if( checkBox && checkBox.length > 0 ){
                 window.mpcTables.updateProductMeta( target, 'checked', 0 !== qty );
-                checkBox.prop( 'checked', 0 !== qty );
-                checkBox.prop( 'disabled', 0 === qty );
+                checkBox.prop( 'checked', qty > 0 );
+                checkBox.prop( 'disabled', qty !== validQty );
             }
+
+            row.toggleClass( 'non-empty-qty', qty > 0 );
         }
         setTableTotal( field, target ){
             // I could use wc_price here.
@@ -257,22 +263,22 @@
             e.preventDefault();
 
             const clearBtn = $( e.currentTarget );
-            const target = window.mpcTables.identifyTable( clearBtn );
-
-            const section = clearBtn.closest( '.mpc-product-variation' );
+            const section  = clearBtn.closest( '.mpc-product-variation' );
             section.find( 'select.mpc-var-att' ).each( ( _, el ) => $( el ).val( '' ) );
 
-            window.mpcTables.updateProductMeta( target, 'variation', {} );
-            window.mpcTables.updateProductMeta( target, 'price', '' );
-            window.mpcTables.updateProductMeta( target, 'stock', '' );
-            window.mpcTables.updateProductMeta( target, 'checked', false );
+            window.mpcTables.resetVariationData( clearBtn );
 
             section.find( '.mpc-var-desc' ).empty();
             section.find( 'a.reset_variations' ).hide();
 
-            const checkBox = clearBtn.closest( 'tr.cart_item' ).find( '.mpc-product-select input[type="checkbox"]' );
+            const row      = clearBtn.closest( 'tr.cart_item' );
+            const checkBox = row.find( '.mpc-product-select input[type="checkbox"]' );
             if( checkBox && checkBox.length > 0 ){
                 checkBox.prop( 'checked', false );
+            }
+            const priceWrap = row.find( '.mpc-product-price .mpc-single-price' );
+            if( priceWrap && priceWrap.length > 0 ){
+                priceWrap.text( '' );
             }
         }
 

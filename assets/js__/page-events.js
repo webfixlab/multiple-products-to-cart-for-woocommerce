@@ -9,16 +9,14 @@
 ( function ( $, window, document ) {
 	class MPCFrontPageEvents{
 		constructor(){
-            this.oldScrolls = {};
-            this.screenH = $( window ).height();
-            this.screenW = window.screen.width;
+            this.state = {
+                adminBar:  0, // all things that are sticky and not of our plugin.
+                scroll:    0, // previous scroll top.
+                colHeight: 0,
+                oldScroll: 0,
+            };
 
-
-            this.allWraps  = null; // all table wrappers.
-            this.scrollTop = 0; // current scroll top.
-            this.prevScrollTop = 0; // keep old scroll position to find scroll direction.
-            this.windowHeight  = $( window ).height();
-            this.adminBar = 0; // all things that are sticky and not of our plugin.
+            this.allWraps = null; // all table wrappers.
 
 			$(document).ready( () => this.initEvents() );
 		}
@@ -121,65 +119,77 @@
                 return;
             }
 
-            this.scrollTop = $( window ).scrollTop() + this.adminBar;
+            this.state.scroll = $( window ).scrollTop() + this.state.adminBar;
 
             $.each( this.allWraps, ( _, el ) => {
                 const wrap = $( el );
-                const scrollState = this.setupTableOffsets( wrap );
-                
-                this.hasStickyHeaderEvent( wrap, scrollState );
-                this.hasStickyFilterEvent( wrap, scrollState );
-                this.hasStickyFooterEvent( wrap, scrollState );
+
+                const stickyHeader   = wrap.find( '.mpc-fixed-header' );
+                this.state.colHeight = stickyHeader && stickyHeader.length > 0 ? stickyHeader.height() : this.state.colHeight;
+
+                const isSticky = this.setupTableOffsets( wrap );
+                this.hasStickyHeaderEvent( wrap, isSticky );
+                this.hasStickyFilterEvent( wrap, isSticky );
+                this.hasStickyFooterEvent( wrap, isSticky );
             });
 
-            this.prevScrollTop = this.scrollTop;
+            this.state.oldScroll = this.state.scroll;
         }
-        setupTableOffsets( wrap, scrollState ){
+        setupTableOffsets( wrap, isSticky ){
             const firstRow = wrap.find( 'table.mpc-wrap tbody tr:first-child' ).offset().top;
             const lastRow  = wrap.find( 'table.mpc-wrap tbody tr:last-child' );
 
-            const tableTop    = wrap.find( 'table.mpc-wrap' ).offset().top;
-            const tableBottom = lastRow.offset().top + lastRow[0].offsetHeight;
+            const tableTop     = wrap.find( 'table.mpc-wrap' ).offset().top;
+            const tableBottom  = lastRow.offset().top + lastRow[0].offsetHeight;
+            const scrollBottom = this.state.scroll + $( window ).height();
+
             return {
-                isStickyFooter:  this.scrollTop + this.windowHeight < tableBottom,
-                isStickyColumns: this.scrollTop > firstRow && this.scrollTop < tableBottom,
-                isStickyFilter:  this.scrollTop < this.prevScrollTop && this.scrollTop < tableBottom && this.scrollTop > tableTop
+                footer:      scrollBottom > firstRow && scrollBottom < tableBottom,
+                tableHeader: this.state.scroll > firstRow && this.state.scroll < tableBottom,
+                filter:      this.state.scroll < this.state.oldScroll && this.state.scroll < tableBottom && this.state.scroll > tableTop
             };
         }
-        hasStickyFilterEvent( wrap, scrollState ){
+        hasStickyFilterEvent( wrap, isSticky ){
             // when scrolling up and scrolling within table.
             let height = wrap.find( '.mpc-table-header' )[0].offsetHeight + 20;
-            wrap.css( 'margin-top', scrollState.isStickyFilter ? `${height}px` : '20px' );
+            wrap.css( 'margin-top', isSticky.filter ? `${height}px` : '20px' );
 
             const tableFilters = wrap.find( '.mpc-table-header' );
-            tableFilters.toggleClass( 'mpc-fixed-filter', scrollState.isStickyFilter );
-            tableFilters.css( { 'top': scrollState.isStickyColumns ? this.adminBar + wrap.find( '.mpc-fixed-header' ).height() : this.adminBar } );
-        }
-        hasStickyHeaderEvent( wrap, scrollState ){
-            if( this.screenW < 500 ){
+            if( tableFilters.find( '.mpc-filters div' ).length + tableFilters.find( '.mpc-all-actions div' ).length < 1 ){
                 return;
+            }
+            tableFilters.toggleClass( 'mpc-fixed-filter', isSticky.filter );
+            tableFilters.css( { 'top': isSticky.tableHeader ? this.state.adminBar + this.state.colHeight : this.state.adminBar } );
+        }
+        hasStickyHeaderEvent( wrap, isSticky ){
+            if( window.screen.width < 500 ){
+                return;
+            }
+            
+            const tableHeader = wrap.find( '.mpc-fixed-header' );
+            if( ! tableHeader || 0 === tableHeader.length ){
+                this.renderStickyElements( wrap );
             }
 
             // show sticky header when we're past scrolling table header.
-            const tableHeader = wrap.find( '.mpc-fixed-header' );
-            tableHeader.css( { 'top': `${this.adminBar}px` } );
-            tableHeader.toggle( scrollState.isStickyColumns );
+            tableHeader.css( { 'top': `${this.state.adminBar}px` } );
+            tableHeader.toggle( isSticky.tableHeader );
         }
-        hasStickyFooterEvent( wrap, scrollState ){
+        hasStickyFooterEvent( wrap, isSticky ){
             // if current scroll + screen height < total row offset top.
-            wrap.find( '.total-row' ).toggleClass( 'mpc-fixed-total-m', scrollState.isStickyFooter );
+            wrap.find( '.total-row' ).toggleClass( 'mpc-fixed-total-m', isSticky.footer );
         }
         getAdminBarHeight(){
             const adminBar = $( document.body ).find( '#wpadminbar' );
             if( adminBar && adminBar.length > 0 ){
-                this.adminBar = 'fixed' === adminBar.css( 'position' ) ? adminBar.height() : 0;
+                this.state.adminBar = 'fixed' === adminBar.css( 'position' ) ? adminBar.height() : 0;
             }
 
             const device = $( document ).find( 'body' ).data( 'elementor-device-mode' );
             const elementorItems = $( document ).find( '.elementor-sticky.elementor-sticky--active' );
             if ( elementorItems && elementorItems.length > 0 && device && device.length > 0 ) {
                 elementorItems.each( ( _, el ) => {
-                    this.adminBar = ! $( el ).is( ':hidden' ) || ! $( el ).hasClass( `elementor-hidden-${device}` ) ? this.adminBar + $( el ).height() : this.adminBar;
+                    this.state.adminBar = ! $( el ).is( ':hidden' ) || ! $( el ).hasClass( `elementor-hidden-${device}` ) ? this.state.adminBar + $( el ).height() : this.state.adminBar;
                 });
             }
         }

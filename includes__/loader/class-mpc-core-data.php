@@ -108,18 +108,17 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'default'     => '',
 							'label'       => __( 'Initial Product Quantity', 'multiple-products-to-cart-for-woocommerce' ),
 							'desc'        => __( 'Set the starting value for the quantity field for each product.', 'multiple-products-to-cart-for-woocommerce' ),
-							'placeholder' => '0',
 						),
 						array(
-							'key'         => 'mpc_show_new_quantity_box',
-							'type'        => 'checkbox',
-							'label'       => __( 'Quantity Selector Design', 'multiple-products-to-cart-for-woocommerce' ),
-							'desc'        => __( 'Decide whether the quantity field should incorporate a plus-minus selector style.', 'multiple-products-to-cart-for-woocommerce' ),
+							'key'   => 'mpc_show_new_quantity_box',
+							'type'  => 'checkbox',
+							'label' => __( 'Quantity Selector Design', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'  => __( 'Decide whether the quantity field should incorporate a plus-minus selector style.', 'multiple-products-to-cart-for-woocommerce' ),
 							'switch_text' => array(
 								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 							),
-							'pro'         => true,
+							'pro'   => true,
 						),
 					),
 				),
@@ -254,7 +253,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'key'         => 'mpc_show_cat_counter',
 							'type'        => 'checkbox',
 							'label'       => __( 'Show Product Count per Category', 'multiple-products-to-cart-for-woocommerce' ),
-							'desc'        => __( 'Displays products count per category or not. Please note: for sites with more than 800 products, dynamic products count is OFF. For smaller sites it will dynamically count products specific to the table.', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'        => __( 'Displays products count per category or not.', 'multiple-products-to-cart-for-woocommerce' ),
 							'switch_text' => array(
 								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
@@ -816,10 +815,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'type'        => 'text',
 							'label'       => __( 'Products Per Page', 'multiple-products-to-cart-for-woocommerce' ),
 							'desc'        => sprintf(
-								// translators: %1$s: openning strong tag with css, %2$s: closing strong tag.
-								__( 'Set a limit on the number of products to display per page. This option is functional only when the Pagination setting is Show. Maximum page limit is %1$s100.%2$s', 'multiple-products-to-cart-for-woocommerce' ),
-								'<strong style="font-weight:bold;">',
-								'</strong>'
+								__( 'Set a limit on the number of products to display per page. This option is functional only when the Pagination setting is Show. Maximum page limit is 100', 'multiple-products-to-cart-for-woocommerce' ),
 							),
 							'placeholder' => 10,
 							'min'         => 1,

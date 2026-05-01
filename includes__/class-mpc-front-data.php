@@ -88,7 +88,7 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
             $default = self::has_variable_products( $data['products'] ) ? $default : array_diff( $default, array( 'wmc_ct_variation' ) );
 			
             // filter out extra columns.
-            $columns = empty( $columns ) ? $default : array_intersect( $default, $columns );
+            $columns = empty( $columns ) ? $default : array_intersect( $columns, $default );
 
             $labels = array(
                 'wmc_ct_image'     => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),

@@ -73,11 +73,11 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 
 			$added = array(); // array of product id => quantity.
 			foreach ( $data as $product_id => $product ) {
-				$key = '';
-
 				if ( 'grouped' === $product['type'] ) {
 					continue;
 				}
+
+				$key = '';
 
 				$quantity     = isset( $product['quantity'] ) && ! empty( $product['quantity'] ) ? (int) $product['quantity'] : 1;
 				$variation_id = isset( $product['variation_id'] ) && ! empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;

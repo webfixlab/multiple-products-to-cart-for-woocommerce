@@ -42,15 +42,7 @@
 		}
 		toggleSwitch( e ) {
 			const section  = $( e.currentTarget ).closest( '.mpcdp_settings_option' );
-			const checkBox = section.find( 'input[type="checkbox"]' );
-			if ( checkBox.hasClass( 'mpcex-disabled' ) && ! mpc_admin.has_pro ) {
-				e.preventDefault();
-				$( '#mpcpop .mpc-focus span' ).text( checkBox.attr( 'title' ) );
-				$( '#mpcpop' ).show();
-				return;
-			}
-
-			checkBox.trigger( 'click' );
+			section.find( 'input[type="checkbox"]' ).trigger( 'click' );
 
 			section.find( '.mpc-switch .mpc-switch-state' ).each( ( _, el ) => $( el ).toggleClass( 'active', 1000 ) );
 		}
