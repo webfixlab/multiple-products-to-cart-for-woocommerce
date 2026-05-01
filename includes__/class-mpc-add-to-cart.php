@@ -79,7 +79,7 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 
 				$key = '';
 
-				$quantity     = isset( $product['quantity'] ) && ! empty( $product['quantity'] ) ? (int) $product['quantity'] : 1;
+				$quantity     = isset( $product['qty'] ) && ! empty( $product['qty'] ) ? (int) $product['qty'] : 1;
 				$variation_id = isset( $product['variation_id'] ) && ! empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
 				$variation    = $product['attributes'] ?? array();
 

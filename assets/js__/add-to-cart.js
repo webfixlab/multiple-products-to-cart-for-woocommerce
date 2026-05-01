@@ -43,7 +43,6 @@
         }
         sendAddToCartRequest( cartData, wrap ){
             window.mpcHooks.doAction( 'mpc_spinner', 'load', wrap );
-            console.log( cartData );
             // remove loading animation.
             $.ajax({
                 method: "POST",
