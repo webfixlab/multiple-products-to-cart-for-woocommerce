@@ -64,14 +64,15 @@
                 $.each( response.fragments, ( key, value ) => $( key ).replaceWith( value ) );
             }
 
-            const event = new CustomEvent( 'wc-blocks_added_to_cart', {
+            const blockThemeEvent = new CustomEvent( 'wc-blocks_added_to_cart', {
                 bubbles:    true,
                 cancelable: true,
                 detail:{
                     preserveCartData: false,
+                    response: response
                 }
             } );
-            document.body.dispatchEvent( event );
+            document.body.dispatchEvent( blockThemeEvent );
 
             this.handleCartNotice( response, wrap );
         }
