@@ -235,7 +235,8 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
             }
         }
         private static function render_followup_field( $field, $display ){
-            self::$field = $field;
+            self::$field       = $field;
+            self::$field_value = get_option( $field['key'], $field['default'] ?? '' );
             ?>
             <div
                 class="mpcdp_settings_option mpc-followup mpc-followup-<?php echo esc_attr( $field['key'] ); ?>"

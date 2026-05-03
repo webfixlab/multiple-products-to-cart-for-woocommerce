@@ -218,6 +218,8 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
                 return;
             }
 
+            $value = 'wmc_redirect' === $field['key'] && empty( self::$pro_state ) && 'custom' === $value ? 'ajax' : $value;
+
             update_option( $field['key'], $value );
         }
 

@@ -212,8 +212,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		}
 
 		private static function render_selectbox_options( $field ){
-			$key = $field['key'];
-
+			$key   = $field['key'];
 			$saved = isset( self::$atts[ $key ] ) ? self::$atts[ $key ] : '';
 			$saved = is_array( $saved ) ? $saved : ( ! empty( $saved ) ? explode( ',', str_replace( ' ', '', $saved ) ) : array() );
 
@@ -223,16 +222,13 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			if( empty( $options ) ){
 				return;
 			}
-			foreach( $options as $value ){
-				$class = 'static' === $field['content_type'] ? (
-					in_array( $value, $pro_options, true ) ? 'disabled' : (
-						in_array( $value, $saved, true ) ? 'selected' : ''
-					)
-				) : 'selected';
+			foreach( $options as $slug => $label ){
+				$classes = 'static' === $field['content_type'] && in_array( $slug, $pro_options, true ) ? 'disabled' : '';
+				$classes .= in_array( $slug, $saved, true ) ? ( empty( $classes ) ? 'selected' : ' selected' ) : '';
 				?>
 				<option
-					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $value ) : esc_attr( $value ); ?>"
-					<?php echo esc_attr( $class ); ?>><?php echo 'static' === $field['content_type'] ? esc_html( $value ) : esc_html( self::get_selectbox_option_label( $field, $value ) ); ?></option>
+					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $slug ) : esc_attr( $slug ); ?>"
+					<?php echo esc_html( $classes ); ?>><?php echo 'static' === $field['content_type'] ? esc_html( $label ) : esc_html( self::get_selectbox_option_label( $field, $label ) ); ?></option>
 				<?php
 			}
 		}
@@ -247,9 +243,8 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			return get_the_title( (int) $option );
 		}
 		private static function render_field_checkbox( $field ){
-			$key     = $field['key'];
-			$default = $field['default'] ?? '';
-			$checked = ! isset( $default ) && ! empty( $default ) ? $default : ( 'true' === self::$atts[ $key ] ? true : false );
+			$key   = $field['key'];
+			$value = ! isset( self::$atts[ $key ] ) && isset( $field['default'] ) ? $field['default'] : self::$atts[ $key ];
 			?>
 			<div class="input-field" style="display:none;">
 				<input
@@ -258,10 +253,10 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 					id="<?php echo esc_attr( $key ); ?>"
 					data-off-title="<?php echo esc_attr( $field['switch_text']['off'] ); ?>"
 					data-on-title="<?php echo esc_attr( $field['switch_text']['on'] ); ?>"
-					<?php echo $checked ? 'checked' : ''; ?>>
+					<?php echo 'true' === $value ? 'checked' : ''; ?>>
 			</div>
 			<?php
-			self::display_switch( $field, $checked );
+			self::display_switch( $field, 'true' === $value );
 		}
 		private static function display_switch( $field, $checked ){
 			?>

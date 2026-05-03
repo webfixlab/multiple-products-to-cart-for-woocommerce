@@ -85,8 +85,8 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 								'custom' => __( 'Custom', 'multiple-products-to-cart-for-woocommerce' ),
 							),
 							'default'          => 'ajax',
-							'label'            => __( 'Redirect After Cart Addition', 'multiple-products-to-cart-for-woocommerce' ),
-							'desc'             => __( 'Choose the page to redirect customers to after they\'ve added products to their cart.', 'multiple-products-to-cart-for-woocommerce' ),
+							'label'            => __( 'Redirect After Adding To Cart', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'             => __( 'Choose the page to redirect customers to after they\'ve added products to their cart. `Custom` redirect URL is only avilable in PRO.', 'multiple-products-to-cart-for-woocommerce' ),
 							'followup'         => array(
 								array(
 									'key'         => 'mpca_custom_redirect',

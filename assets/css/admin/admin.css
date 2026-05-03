@@ -339,7 +339,6 @@
 }
 #mpcdp_settings .mpcdp_settings_option_field_theme_customizer{
 	padding: 20px;
-	margin: 40px 0 0 0;
 	background-color: #f8f8f8;
 	color: #fff;
 	display:-webkit-box;
@@ -773,7 +772,7 @@ a .mpcasc-reset .button-secondary{
 }
 .mpc-sc-btns{
 	position: absolute;
-	top: 10px;
+	top: 8px;
 	right: 0;
 }
 .mpc-opt-sc-btn {
