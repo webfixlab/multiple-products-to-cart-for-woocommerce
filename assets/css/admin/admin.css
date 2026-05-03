@@ -144,7 +144,7 @@
 	text-shadow:unset;
 	-webkit-box-shadow:unset;
 	box-shadow:unset;
-	padding: 10px 20px;
+	padding: 20px;
 	background: #858585;
 }
 #left-side .mpcdp_settings_submit button.mpcdp_submit_button, #left-side .mpcdp_settings_submit .submit input#submit{
@@ -849,15 +849,22 @@ a .mpcasc-reset .button-secondary{
 	#mpcdp_settings #middle-content{
 		width: 100%
 	}
-}
-@media screen and (max-width: 1024px){
+	.mpcdp_submit_button .save-text{
+		display:none
+	}
+	.mpcdp_submit_button .save-text.save-text-mobile{
+		display:block
+	}
+	.mpcdp_settings_submit button.mpcdp_submit_button, .mpcdp_settings_submit .submit input#submit{
+		padding: 10px;
+	}
 }
 @media screen and (max-width: 960px){
 	.mpc-popup{
 		left: 36px;
 	}
 }
-@media all and (max-width: 782){
+@media all and ( max-width: 782px ){
 	.mpcdp_row{
 		-webkit-box-orient:vertical;
 		-webkit-box-direction:normal;
@@ -875,12 +882,6 @@ a .mpcasc-reset .button-secondary{
 	}
 	.mpcdp_settings_sidebar .mpcdp_settings_tab_control, .mpcdp_settings_sidebar .mpcdp_settings_tab_control.active{
 		padding: 15px;
-	}
-	.mpcdp_submit_button .save-text{
-		display:none
-	}
-	.mpcdp_submit_button .save-text.save-text-mobile{
-		display:block
 	}
 	#mpcdp_settings .mpcdp_settings_option_field_theme_customizer{
 		padding: 10px;

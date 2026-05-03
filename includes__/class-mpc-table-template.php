@@ -600,19 +600,15 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * Display pagination numbers
 		 */
 		public static function display_pagination_numbers() {
+			$paged    = self::$data['paged'];
+			$max_page = self::$data['max_page'];
 			if( 1 === self::$data['max_page'] ){
 				return;
 			}
 
-			$paged    = self::$data['paged'];
-			$max_page = self::$data['max_page'];
-
-			$pages = $max_page < 5 ? range( 1, $max_page ) : array();
-			if ( $max_page > 5 ) {
-				$pages = array_merge( array( 1, $max_page ), range( $paged - 1, $paged + 1 ) );
-				$pages = array_unique( $pages );
-				sort( $pages );
-			}
+			$pages = $max_page > 5 ? array_merge( array( 1, $max_page ), range( $paged - 1, $paged + 1 ) ) : range( 1, $max_page );
+			$pages = array_unique( $pages );
+			sort( $pages );
 
 			for ( $i = 0; $i < count( $pages ); $i++ ) {
 				$page = $pages[ $i ];
