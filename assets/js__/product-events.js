@@ -21,7 +21,7 @@
             $( 'body' ).on( 'change paste keyup cut select', '.mpc-product-quantity input[type="number"]', ( e ) => this.qtyChangeEventHandler( $( e.currentTarget ) ) );
             
             $( 'body' ).on( 'change', 'table.mpc-wrap select.mpc-var-att', ( e ) => this.variationAttchangeEventHandler( $( e.currentTarget ) ) );
-            $( '.mpc-container' ).on( 'click', 'a.reset_variations', ( e ) => this.triggerClearVariations( e ) );
+            $( '.mpc-container' ).on( 'click', '.mpc-clear-variations', ( e ) => this.triggerClearVariations( e ) );
 
             $( 'body' ).on( 'click', 'table.mpc-wrap input[type="checkbox"]', ( e ) => this.productCheckEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'click', '.mpc-reset', () => window.location.reload() );
@@ -221,11 +221,12 @@
         }
         clearVariationButton( row ) {
             const allAtts  = row.find( 'select.mpc-var-att' );
-            const clearBtn = row.find( '.clear-button' );
+            const hasValue = row.find( 'select.mpc-var-att option:selected' );
+            const clearBtn = row.find( '.mpc-clear-variations' );
             if( ! clearBtn || 0 === clearBtn.length ){
-                row.find( '.mpc-product-variation' ).append( `<div class="clear-button"><a class="reset_variations" href="#">${mpc_frontend.reset_var}</a></div>` );
+                row.find( '.mpc-product-variation' ).append( `<a class="mpc-clear-variations" href="#">${mpc_frontend.reset_var}</a>` );
             }
-            clearBtn.toggle( allAtts.length > 0 && allAtts.toArray().every( el => el.value !== '' ) ); // if all have values.
+            clearBtn.toggle( allAtts.length > 0 && hasValue && hasValue.length > 0 ); // if all have values.
         }
         updateVariationImage( row, variation ){
             const colImage = row.find( '.mpc-product-image .mpcpi-wrap img' );
@@ -265,6 +266,7 @@
             window.mpcHooks.doAction( 'mpc_clear_variations', e );
         }
         clearVariations( e ){
+            console.log( 'triggered clear variations' );
             e.preventDefault();
 
             const clearBtn = $( e.currentTarget );

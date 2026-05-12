@@ -167,7 +167,7 @@ table.mpc-wrap td select:last-of-type {
 	width: 45px;
 	border-radius: 0;
 }
-.clear-button a.reset_variations {
+.mpc-clear-variations {
 	display: block;
 	margin: 5px 0 0 0;
 }

@@ -13,7 +13,7 @@
 		}
 		initEventTriggers(){
 			window.mpcHooks.addAction( 'mpc_variation_changed', ( row, variation, attDropDown ) => this.filterAvailable( row, variation, attDropDown ) );
-			window.mpcHooks.addAction( 'mpc_clear_variations', ( e ) => this.clearVariations( e ) );
+			window.mpcHooks.addAction( 'mpc_clear_variations', ( e ) => this.initClearVariations( e ) );
 		}
 		filterAvailable( row, variation, attDropDown ){
 			const args = {
@@ -25,7 +25,7 @@
 				attVal:      attDropDown.find( 'option:selected' ).val(),
 			};
 			if( ! args.attVal || 0 === args.attVal.length ){
-				// reset everything. not done yet.
+				this.clearVariations( attDropDown );
 			}
 
 			if( ! args.variations || 0 === Object.keys( args.variations ).length ){
@@ -40,36 +40,36 @@
 			// console.log( 'options', args.options );
 
 			row.find( 'select' ).each( ( _, el ) => this.filterOptions( args, $( el ) ) );
-
-			// find available variations.
-			// filter out options which are available.
 		}
 		getOptions( args ){
 			const options = {}; // att name => array of attribute values.
 			Object.keys( args.variations ).forEach( i => {
-				const attributes      = args.variations[ i ].attributes;
-				const ifSameVariation = 'undefined' !== attributes[ args.attName ] && args.attVal === attributes[ args.attName ];
-				// console.log( 'has same variation attribute?', ifSameVariation, ' : ', args.attVal, atts[ args.attName ] );
+				const attributes   = args.variations[ i ].attributes;
+				const hasTargetAtt = 'undefined' !== attributes[ args.attName ] && args.attVal === attributes[ args.attName ];
 
-				Object.keys( args.variations[ i ].attributes ).forEach( varAttName => {
-					const varAttVal = args.variations[ i ].attributes[ varAttName ];
-					const isEmpty   = ! varAttVal || 0 === varAttVal.length;
-					const isOtherAtt = ifSameVariation && varAttName !== args.attName && ! isEmpty;
-					
-					
-					if( isOtherAtt && 'undefined' === typeof options[ varAttName ] ){
-						options[ varAttName ] = [];
-					}
-					// console.log( args.attName, varAttName, 'empty?', isEmpty );
+				Object.keys( attributes ).forEach( varAttName => {
+					const varAttVal = attributes[ varAttName ];
 
-					if( isOtherAtt ){
-						// console.log( 'pushed', varAttName, varAttVal );
-						options[ varAttName ].push( varAttVal );
-					}
-				});
-			});
+					this.updateAvailableOptions( options, {
+						attName:     varAttName,
+						attVal:      varAttVal,
+						isTargetAtt: hasTargetAtt && varAttName !== args.attName,
+					});
+				} );
+			} );
 			// keep in mind, if nothing exists, that's ok, if key exists without any value, that's wrong.
 			return options;
+		}
+		updateAvailableOptions( options, args ){
+			// when it's not different attribute or there's no attribute value.
+			if( ! args.isTargetAtt || ! args.attVal || 0 === args.attVal.length ){
+				return;
+			}
+
+			if( 'undefined' === typeof options[ args.attName ] ){
+				options[ args.attName ] = [];
+			}
+			options[ args.attName ].push( args.attVal );
 		}
 		filterOptions( args, attDropDown ){
 			const attName = attDropDown.attr( 'data-attribute_name' ).replace( 'attribute_', '' );
@@ -86,13 +86,11 @@
 				$( el ).toggle( ifShow );
 			} );
 		}
-
-
-		clearVariations( e ){
-			const section = $( e.currentTarget ).closest( '.mpc-product-variation' );
-			section.find( 'select.mpc-var-att option' ).each( ( _, el ) => {
-				$( el ).show();
-			});
+		initClearVariations( e ){
+			this.clearVariations( $( e.currentTarget ) );
+		}
+		clearVariations( item ){
+			item.closest( '.mpc-product-variation' ).find( 'select.mpc-var-att option' ).each( ( _, el ) => $( el ).show() );
 		}
 	}
 	new MPCVariationHandler();

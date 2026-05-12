@@ -389,9 +389,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			if( ! empty( $default_atts ) ){
 				?>
-				<div class="clear-button">
-					<a class="reset_variations" href="#"><?php echo esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
-				</div>
+				<a class="mpc-clear-variations" href="#"><?php echo esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
 				<?php
 			}
 		}
