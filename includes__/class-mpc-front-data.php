@@ -40,10 +40,12 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 				),
 				'labels' => array(
 					'variation_prefix' => get_option( 'wmc_option_text' ),
+					'empty'            => get_option( 'wmc_empty_value_text', __( 'N/A', 'multiple-products-to-cart-for-woocommerce' ) )
 				),
 				'settings' => array(
 					'stock' => get_option( 'mpc_show_stock_out' ),
 					'desc'  => get_option( 'mpc_show_variation_desc' ),
+					'qty'   => get_option( 'wmca_default_quantity' ),
 				),
 			);
 
@@ -61,8 +63,7 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 			}
 
 			$mpc_table__ = array_merge( $mpc_table__, $data );
-
-			do_action( 'mpc_frontend_core_data' );
+			$mpc_table__ = apply_filters( 'mpc_frontend_core_data', $mpc_table__ );
 		}
 
         /**
@@ -117,16 +118,15 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 			global $wpdb;
 
 			$ids_string = implode( ',', $product_ids );
-			$has_variable = $wpdb->get_var( "
-				SELECT COUNT(tr.object_id)
+			return (bool) $wpdb->get_var( "
+				SELECT tr.object_id
 				FROM {$wpdb->term_relationships} tr
 				JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
 				JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
 				WHERE t.slug = 'variable'
 				AND tr.object_id IN ($ids_string)
+				LIMIT 1
 			" );
-
-			return $has_variable > 0;
 		}
 	}
 }

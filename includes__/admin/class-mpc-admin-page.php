@@ -109,7 +109,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
                 <div id="right-side">
                     <div class="mpcdp_settings_promo">
                         <div id="wfl-promo">
-                            <?php MPC_Admin_Template::sidebar( self::$plugin_data ); ?>
+                            <?php MPC_Admin_Template::sidebar( self::$plugin_data, self::$pro_state ); ?>
                         </div>
                     </div>
                 </div>

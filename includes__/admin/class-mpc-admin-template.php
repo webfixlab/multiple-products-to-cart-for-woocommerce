@@ -265,26 +265,52 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			<?php
 		}
 
-        public static function sidebar( $plugin_data ){
+        public static function sidebar( $plugin_data, $pro_state ){
+            self::sidebar_badge( $plugin_data, $pro_state );
+            self::sidebar_support( $plugin_data, $pro_state );
+            self::sidebar_pro_info( $plugin_data, $pro_state );
+            self::sidebar_customize();
+        }
+        private static function sidebar_badge( $plugin_data, $pro_state ){
+            if( empty( $pro_state ) || 'activated' !== $pro_state ){
+                return;
+            }
+            ?>
+            <div class="mpc-pro-badge">
+                <svg viewBox="0 0 24 24"><g><polyline points="7 13 10 16 17 9"></polyline><circle cx="12" cy="12" r="10"></circle></g></svg>
+                <h3><?php echo __( 'License Activated', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+            </div>
+            <?php
+        }
+        private static function sidebar_support( $plugin_data, $pro_state ){
             ?>
             <div class="site-intro">
-                <h3><?php echo esc_html__( 'Support', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+                <h3><?php echo empty( $pro_state ) ? __( 'Contact', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Premium support', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <div class="tagline_side">
                     <?php echo __( 'Our support is what makes us No.1. We are available round the clock for any support.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                 </div>
-                <a href="<?php echo esc_url( $plugin_data['contact_us_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Contact us', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+                <a href="<?php echo esc_url( $plugin_data['contact_us_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Submit this form', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
             </div>
-            <div class="site-intro">
-                <h3><?php echo esc_html__( 'Get PRO', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+            <?php
+        }
+        private static function sidebar_pro_info( $plugin_data, $pro_state ){
+            if( ! empty( $pro_state ) && 'activated' === $pro_state ){
+                return;
+            }
+            ?>
+             <div class="site-intro">
+                <h3><?php echo empty( $pro_state ) ? __( 'Add premium version', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Activate your license', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <div class="tagline_side">
-                    <?php echo sprintf(
-                        __( 'Get exclusive PRO features, like support for Subscription and Grouped products, extra columns like - Stock, SKU, filter by Category, add to cart button for each product, AJAX search and Cart section, section by categories', 'multiple-products-to-cart-for-woocommerce' )
-                    ); ?>
+                    <?php echo empty( $pro_state ) ? __( 'Get exclusive PRO features, like support for Subscription and Grouped products, extra columns like - Stock, SKU, filter by Category, add to cart button for each product, AJAX search and Cart section, section by categories', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Activate your license key to get regular new updates.', 'multiple-products-to-cart-for-woocommerce' ); ?>
                 </div>
-                <a href="<?php echo esc_url( $plugin_data['pro_plugin_url'] ); ?>" target="_blank"><?php echo esc_html__( 'Unlock all PRO features', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
+                <a href="<?php echo esc_url( $plugin_data['pro_plugin_url'] ); ?>" target="_blank"><?php echo empty( $pro_state ) ? __( 'Unlock all PRO features', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Activate PRO', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
             </div>
+            <?php
+        }
+        private static function sidebar_customize(){
+            ?>
             <div class="site-intro">
-                <h3><?php echo esc_html__( 'Customize', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
+                <h3><?php echo esc_html__( 'Add new feature', 'multiple-products-to-cart-for-woocommerce' ); ?></h3>
                 <div class="tagline_side">
                     <?php echo sprintf(
                         __( 'Add any custom feature quickly.', 'multiple-products-to-cart-for-woocommerce' )

@@ -175,7 +175,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			foreach( self::$data['products'] as $product_id ) {
 				self::display_table_row( $product_id );
-				do_action( 'mpc_table_row' );
 			}
 		}
 
@@ -197,6 +196,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				<?php self::add_row_columns_action( $product ); ?>
 			</tr>
 			<?php
+			do_action( 'mpc_table_row', $product );
 		}
 
 		/**
@@ -366,11 +366,10 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				} ) : $options;
 
 				$terms = array_map( function( $term ) use( $default_atts, $att_name_sanitized ){
-					$is_obj = is_object( $term );
-					$slug   = $is_obj ? $term->slug : $term;
+					$slug = is_object( $term ) ? $term->slug : $term;
 
 					return array(
-						'name'     => $is_obj ? $term->name : $term,
+						'name'     => is_object( $term ) ? $term->name : $term,
 						'slug'     => $slug,
 						'selected' => isset( $default_atts[ $att_name_sanitized ] ) && $slug === $default_atts[ $att_name_sanitized ]
 					);
@@ -429,18 +428,18 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * @param object $product Product object.
 		 */
 		public static function display_product_quantity( $product ) {
+			self::setup_frontend_data();
+
 			// skip for grouped product.
 			if ( 'grouped' === $product->get_type() ) {
-				?>
-				<td></td>
-				<?php
+				echo wp_kses_post( '<td></td>' );
 				return;
 			}
 
 			$stock = 'instock' === $product->get_stock_status() ? $product->get_stock_quantity() : '';
 			$stock = $product->is_sold_individually() ? 0 : $stock;
 			
-			$quantity = get_option( 'wmca_default_quantity' );
+			$quantity = self::$data['settings']['qty'] ?? '';
 			$quantity = empty( $quantity ) ? 0 : (int) $quantity;
 			$quantity = ! empty( $stock ) && $stock > 0 ? min( $stock, $quantity ) : $quantity;
 			?>
@@ -466,6 +465,12 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		public static function display_product_checkbox( $product ) {
 			self::setup_frontend_data();
+
+			// skip for grouped product.
+			if ( 'grouped' === $product->get_type() ) {
+				echo wp_kses_post( '<td></td>' );
+				return;
+			}
 
 			$selected = self::$data['atts']['selected'] ?? '';
 			$selected = is_array( $selected ) ? $selected : ( empty( $selected ) ? array() : explode( ',', str_replace( ' ', '', $selected ) ) );

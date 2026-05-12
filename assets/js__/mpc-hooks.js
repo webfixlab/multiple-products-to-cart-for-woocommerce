@@ -61,6 +61,7 @@
                 getValidStockQuantity: function( field, target ){
                     const stock = this.state[ target.tableId ][ target.productId ]['stock'];
                     let qty     = this.state[ target.tableId ][ target.productId ]['qty'];
+                    
                     qty = 'number' === typeof stock && 0 === stock ? 0 : (
                         stock && qty > stock && -1 !== stock ? stock : qty
                     ); // sequence is important here.

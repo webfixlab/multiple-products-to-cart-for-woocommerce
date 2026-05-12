@@ -32,16 +32,14 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$result = new WP_Query( $args );
 			wp_reset_postdata();
 
-			$products = apply_filters( 'mpc_modify_get_products', $result->posts, $args );
-
-			return array(
+			return apply_filters( 'mpc_modify_get_products', array(
 				'paged'    => $paged,
 				'atts'     => $atts,
 				'args'     => $args,
-				'products' => $products,
+				'products' => $result->posts,
 				'total'    => $result->found_posts,
 				'max_page' => $result->max_num_pages
-			);
+			) );
 		}
 
 		/**

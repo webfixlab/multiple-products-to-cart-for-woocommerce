@@ -15,13 +15,15 @@
 		initEvents(){
             // trigger new custom events from this free version with arguments and use it on pro.
             window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableEvents( wrap ) );
+            window.mpcHooks.addAction( 'mpc_clear_variations', ( e ) => this.clearVariations( e ) );
 
             $( 'body' ).on( 'click', '.mpc-check-all', ( e ) => this.allCheckEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'change paste keyup cut select', '.mpc-product-quantity input[type="number"]', ( e ) => this.qtyChangeEventHandler( $( e.currentTarget ) ) );
+            
             $( 'body' ).on( 'change', 'table.mpc-wrap select.mpc-var-att', ( e ) => this.variationAttchangeEventHandler( $( e.currentTarget ) ) );
-            $( '.mpc-container' ).on( 'click', 'a.reset_variations', ( e ) => this.clearVariations( e ) );
-            $( 'body' ).on( 'click', 'table.mpc-wrap input[type="checkbox"]', ( e ) => this.productCheckEventHandler( $( e.currentTarget ) ) );
+            $( '.mpc-container' ).on( 'click', 'a.reset_variations', ( e ) => this.triggerClearVariations( e ) );
 
+            $( 'body' ).on( 'click', 'table.mpc-wrap input[type="checkbox"]', ( e ) => this.productCheckEventHandler( $( e.currentTarget ) ) );
             $( 'body' ).on( 'click', '.mpc-reset', () => window.location.reload() );
 
             $( 'body' ).find( '.mpc-container' ).each( ( _, el ) => this.tableEvents( $( el ) ) );
@@ -213,7 +215,7 @@
             this.updateVariationDesc( row, variation );
             this.updateVariationPrice( row, variation );
 
-            window.mpcHooks.doAction( 'mpc_variation_changed', row, variation );
+            window.mpcHooks.doAction( 'mpc_variation_changed', row, variation, attDropDown );
 
             this.setTableTotal( attDropDown, target );
         }
@@ -258,6 +260,9 @@
             priceWrap.find( 'span.total-price' ).text( 'number' === typeof price ? this.priceFormat( price ) : '' );
             priceWrap.toggle( 'number' === typeof price );
             row.attr( 'data-price', price );
+        }
+        triggerClearVariations( e ){
+            window.mpcHooks.doAction( 'mpc_clear_variations', e );
         }
         clearVariations( e ){
             e.preventDefault();
