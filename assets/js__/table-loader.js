@@ -40,7 +40,7 @@
                 args['order']   = value.indexOf( 'ASC' ) !== -1 ? 'ASC' : 'DESC';
                 args['orderby'] = value.replace( '-' + args['order'], '' );
             }
-            args[ 'page' ] = parseInt( wrap.find( '.mpc-pagenumbers span.current' ).text() );
+            args[ 'page' ] = 'orderby' === type ? 1 : parseInt( wrap.find( '.mpc-pagenumbers span.current' ).text() );
 
             return window.mpcHooks.applyFilters( 'mpc_table_args', args, wrap );
         }
@@ -79,6 +79,7 @@
             if( start !== -1 ) response = response.substring( start );
             
             var rp = JSON.parse( response );
+            console.log( 'response', rp );
 
             wrap.find( '.mpc-all-select, .mpc-table-footer' ).toggle( ! rp || ! rp.status );
             if ( ! rp.mpc_fragments || 0 === rp.mpc_fragments.length ) {
