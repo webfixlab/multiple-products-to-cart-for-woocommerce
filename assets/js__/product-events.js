@@ -242,14 +242,25 @@
             colImage.attr( 'data-fullimage', full );
         }
         updateVariationDesc( row, variation ){
-            const desc     = variation && variation.desc ? variation.desc : '';
-            const descWrap = row.find( '.mpc-var-desc' );
-            if( descWrap && descWrap.length > 0 ){
-                descWrap.remove();
+            const titleWrap = row.find( '.mpc-product-title' );
+            if( ! titleWrap || 0 === titleWrap.length ){
+                return;
             }
-            if( desc && desc.length > 0 ){
-                row.find( '.mpc-product-variation' ).append( `<p class="mpc-var-desc">${desc}</p>` );
+
+            const varDesc = variation && variation.desc ? variation.desc : '';
+            const hasDesc = varDesc && varDesc.length > 0;
+            
+            const varDescWrap = row.find( '.mpc-var-desc' );
+            if( varDescWrap && varDescWrap.length > 0 ){
+                varDescWrap.remove();
             }
+
+            if( hasDesc ){
+                titleWrap.append( `<div class="mpc-var-desc">${varDesc}</div>` );
+            }
+
+            const productDesc = row.find( '.mpc-product-desc' );
+            productDesc.toggle( ! hasDesc );
         }
         updateVariationPrice( row, variation ){
             const priceWrap = row.find( '.mpc-product-price .mpc-single-price' );
@@ -275,8 +286,7 @@
 
             window.mpcTables.resetVariationData( clearBtn );
 
-            section.find( '.mpc-var-desc' ).empty();
-            section.find( 'a.reset_variations' ).hide();
+            section.find( '.mpc-clear-variations' ).hide();
 
             const row      = clearBtn.closest( 'tr.cart_item' );
             const checkBox = row.find( '.mpc-product-select input[type="checkbox"]' );
@@ -285,8 +295,10 @@
             }
             const priceWrap = row.find( '.mpc-product-price .mpc-single-price' );
             if( priceWrap && priceWrap.length > 0 ){
-                priceWrap.text( '' );
+                priceWrap.hide();
             }
+
+            row.find( '.mpc-var-desc' ).empty();
         }
 
         productCheckEventHandler( checkBox ){

@@ -293,8 +293,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$desc = $product->get_short_description();
 			$desc = empty( $desc ) ? $product->get_description() : $desc;
 			?>
-			<div class="woocommerce-product-details__short-description">
-				<p><?php echo esc_html( wp_strip_all_tags( do_shortcode( $desc ) ) ); ?></p>
+			<div class="mpc-product-desc">
+				<?php echo esc_html( wp_strip_all_tags( do_shortcode( $desc ) ) ); ?>
 			</div>
 			<?php
 		}

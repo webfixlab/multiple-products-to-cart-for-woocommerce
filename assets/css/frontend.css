@@ -543,9 +543,12 @@ span.mpc-empty-var {
     color: #ada5a5;
 	font-size: 13px;
 }
-.mpc-product-title p {
+.mpc-product-desc {
     color: #7e7e7e;
 	margin: 3px 0;
+}
+span.mpc-mobile-only{
+	display: none;
 }
 /* Mobile CSS */
 @media screen and (max-width: 767px) {
