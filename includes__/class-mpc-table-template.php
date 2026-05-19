@@ -646,6 +646,10 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$limit = self::$data['atts']['limit'] ?? '';
 			$limit = empty( $limit ) ? 10 : (int) $limit;
 
+			if( self::$data['total'] < $limit ){
+				return;
+			}
+
 			$range_start   = max( 1, ( $paged - 1 ) * $limit + 1 );
 			$range_end     = min( $paged * $limit, self::$data['total'] );
 			$product_range = number_format( $range_start ) . ' - ' . number_format( $range_end );

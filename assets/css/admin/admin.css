@@ -22,20 +22,20 @@
     display: flex;
     margin: 20px 10px 20px 0;
     padding: 25px 10px 25px 15px;
-    background: #4f9d4d;
+    background: #dbdbdb;
     border-radius: 5px;
     border-left: 10px solid #3f6a3e;
 }
 .mpc-pro-badge svg {
     width: 20px;
     padding-right: 10px;
-    stroke: #ffffff;
+    stroke: #3f6a3e;
     stroke-width: 2;
     fill: none;
 }
 .mpc-pro-badge h3 {
 	margin: 0;
-    color: #ffffff;
+    color: #3f6a3e;
     font-size: 16px;
     font-weight: normal;
 }
@@ -395,6 +395,7 @@
 	color: #182f36;
 }
 #mpcdp_settings .mpc-notice .mpcdp_settings_option_field_theme_customizer {
+	margin-top: 25px;
 	border: 1px solid #bebebe;
 	border-left: .6180469716em solid #00a32a;
 }
@@ -840,9 +841,6 @@ a .mpcasc-reset .button-secondary{
 	display: none;
 }
 @media screen and (max-width: 1600px){
-	#mpcdp_settings{
-		max-width:95% !important
-	}
 	.switch-field label{
 		width: 82px;
 		padding: 12px 0;

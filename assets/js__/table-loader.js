@@ -28,6 +28,7 @@
             const elm  = $( e.currentTarget );
             const wrap = elm.closest( '.mpc-container' );
             const args = this.getArgs( wrap, type );
+            console.log('args', args);
             
             this.requestNewTable( args, wrap );
         }
@@ -40,7 +41,7 @@
                 args['order']   = value.indexOf( 'ASC' ) !== -1 ? 'ASC' : 'DESC';
                 args['orderby'] = value.replace( '-' + args['order'], '' );
             }
-            args[ 'page' ] = 'orderby' === type ? 1 : parseInt( wrap.find( '.mpc-pagenumbers span.current' ).text() );
+            args[ 'page' ] = 'pagination' === type ? parseInt( wrap.find( '.mpc-pagenumbers span.current' ).text() ) : 1;
 
             return window.mpcHooks.applyFilters( 'mpc_table_args', args, wrap );
         }
