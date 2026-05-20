@@ -187,13 +187,13 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$product = wc_get_product( (int) $product_id );
 			?>
 			<tr
-				class="cart_item"
+				class="cart_item <?php echo esc_attr( $product->get_type() ); ?>"
 				data-type="<?php echo esc_attr( $product->get_type() ); ?>"
 				data-id="<?php echo esc_attr( $product_id ); ?>"
 				stock="<?php echo esc_attr( $product->get_stock_quantity() ); ?>"
 				stock_status="<?php echo esc_attr( $product->get_stock_status() ); ?>"
 				data-price="<?php echo esc_attr( MPC_Product_Data::get_price_amount( $product ) ); ?>">
-				<?php self::add_row_columns_action( $product ); ?>
+				<?php self::display_table_row_columns( $product ); ?>
 			</tr>
 			<?php
 			do_action( 'mpc_table_row', $product );
@@ -204,9 +204,14 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 *
 		 * @param object $product Product object.
 		 */
-		private static function add_row_columns_action( $product ){
+		private static function display_table_row_columns( $product ){
 			foreach ( self::$data['columns'] as $slug => $label ) {
-				do_action( 'mpc_table_column_' . str_replace( 'wmc_ct_', '', $slug ), $product );
+				$key = str_replace( 'wmc_ct_', '', $slug );
+				?>
+				<td class="mpc-product-<?php echo esc_attr( $key ); ?>">
+					<?php do_action( 'mpc_table_column_' . $key, $product ); ?>
+				</td>
+				<?php
 			}
 		}
 		
@@ -222,13 +227,11 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$thumb = empty( $image_id ) ? self::$data['image']['thumb'] : wp_get_attachment_image_url( $image_id, 'thumbnail' );
 			$full  = empty( $image_id ) ? self::$data['image']['full'] : wp_get_attachment_image_url( $image_id, 'large' );
 			?>
-			<td for="image" class="mpc-product-image">
-				<div class="mpcpi-wrap">
-					<?php self::display_on_sale( $product ); ?>
-					<img src="<?php echo esc_url( $thumb ); ?>" class="mpc-product-image attachment-<?php echo esc_attr( $thumb ); ?> size-<?php echo esc_attr( $thumb ); ?>" alt="" data-fullimage="<?php echo esc_url( $full ); ?>">
-				</div>
-				<?php do_action( 'init_mpc_gallery', $product ); ?>
-			</td>
+			<div class="mpcpi-wrap">
+				<?php self::display_on_sale( $product ); ?>
+				<img src="<?php echo esc_url( $thumb ); ?>" class="mpc-product-image attachment-<?php echo esc_attr( $thumb ); ?> size-<?php echo esc_attr( $thumb ); ?>" alt="" data-fullimage="<?php echo esc_url( $full ); ?>">
+			</div>
+			<?php do_action( 'init_mpc_gallery', $product ); ?>
 			<?php
 		}
 
@@ -260,12 +263,10 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		public static function display_product_details( $product ) {
 			?>
-			<td for="title" class="mpc-product-name">
-				<div class="mpc-product-title">
-					<?php self::display_product_title( $product ); ?>
-					<?php self::display_product_description( $product ); ?>
-				</div>
-			</td>
+			<div class="mpc-product-title">
+				<?php self::display_product_title( $product ); ?>
+				<?php self::display_product_description( $product ); ?>
+			</div>
 			<?php
 		}
 
@@ -306,18 +307,16 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		public static function display_product_price( $product ) {
 			?>
-			<td for="price" class="mpc-product-price">
-				<div class="mpc-single-price" style="display:none;">
-					<?php
-						if ( 'variable' === $product->get_type() ) { // for variable products only.
-							self::total_price();
-						}
-					?>
-				</div>
-				<div class="mpc-range">
-					<?php echo $product->get_price_html(); ?>
-				</div>
-			</td>
+			<div class="mpc-single-price" style="display:none;">
+				<?php
+					if ( 'variable' === $product->get_type() ) { // for variable products only.
+						self::total_price();
+					}
+				?>
+			</div>
+			<div class="mpc-range">
+				<?php echo $product->get_price_html(); ?>
+			</div>
 			<?php
 		}
 
@@ -328,12 +327,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		public static function display_product_variations( $product ) {
 			self::setup_frontend_data();
-			?>
-			<td for="variation" class="mpc-product-variation">
-				<?php self::display_variation_attributes( $product ); ?>
-				<?php do_action( 'mpcp_custom_variation_html' ); // add custom variation html content. ?>
-			</td>
-			<?php
+			self::display_variation_attributes( $product );
+			do_action( 'mpcp_custom_variation_html' ); // add custom variation html content.
 		}
 
 		/**
@@ -441,18 +436,16 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$quantity = empty( $quantity ) ? 0 : (int) $quantity;
 			$quantity = ! empty( $stock ) && $stock > 0 ? min( $stock, $quantity ) : $quantity;
 			?>
-			<td for="quantity" class="mpc-product-quantity">
-				<input
-					type="number"
-					step="1"
-					min="<?php echo esc_attr( $quantity ); ?>"
-					max="<?php echo ! empty( $stock ) ? $stock : ''; ?>"
-					name="quantity<?php echo $product->get_id(); ?>"
-					value="<?php echo esc_attr( $quantity ); ?>"
-					title="<?php esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ); ?>"
-					size="4"
-					inputmode="numeric">
-			</td>
+			<input
+				type="number"
+				step="1"
+				min="<?php echo esc_attr( $quantity ); ?>"
+				max="<?php echo ! empty( $stock ) ? $stock : ''; ?>"
+				name="quantity<?php echo $product->get_id(); ?>"
+				value="<?php echo esc_attr( $quantity ); ?>"
+				title="<?php esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ); ?>"
+				size="4"
+				inputmode="numeric">
 			<?php
 		}
 
@@ -474,13 +467,11 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$selected = is_array( $selected ) ? $selected : ( empty( $selected ) ? array() : explode( ',', str_replace( ' ', '', $selected ) ) );
 			$selected = empty( $selected ) ? $selected : array_map( 'intval', $selected );
 			?>
-			<td for="buy" class="mpc-product-select">
-				<input
-					type="checkbox"
-					name="product_ids[]"
-					value="<?php echo $product->get_id(); ?>"
-					<?php echo in_array( $product->get_id(), $selected, true ) ? 'checked' : ''; ?>>
-			</td>
+			<input
+				type="checkbox"
+				name="product_ids[]"
+				value="<?php echo $product->get_id(); ?>"
+				<?php echo in_array( $product->get_id(), $selected, true ) ? 'checked' : ''; ?>>
 			<?php
 		}
 

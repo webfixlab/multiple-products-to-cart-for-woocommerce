@@ -28,7 +28,6 @@
             const elm  = $( e.currentTarget );
             const wrap = elm.closest( '.mpc-container' );
             const args = this.getArgs( wrap, type );
-            console.log('args', args);
             
             this.requestNewTable( args, wrap );
         }
@@ -79,16 +78,15 @@
             const start = response.indexOf( '{' );
             if( start !== -1 ) response = response.substring( start );
             
-            var rp = JSON.parse( response );
-            console.log( 'response', rp );
+            const res = JSON.parse( response );
 
-            wrap.find( '.mpc-all-select, .mpc-table-footer' ).toggle( ! rp || ! rp.status );
-            if ( ! rp.mpc_fragments || 0 === rp.mpc_fragments.length ) {
+            wrap.find( '.mpc-all-select, .mpc-table-footer' ).toggle( ! res || ! res.status );
+            if ( ! res.mpc_fragments || 0 === res.mpc_fragments.length ) {
                 return;
             }
 
-            Object.keys( rp.mpc_fragments ).forEach( key => {
-                wrap.find( rp.mpc_fragments[key].key ).replaceWith( rp.mpc_fragments[key].val );
+            Object.keys( res.mpc_fragments ).forEach( key => {
+                wrap.find( res.mpc_fragments[key].key ).replaceWith( res.mpc_fragments[key].val );
             });
         }
 	}
