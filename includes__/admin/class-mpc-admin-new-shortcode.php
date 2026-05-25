@@ -222,9 +222,10 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			if( empty( $options ) ){
 				return;
 			}
+
 			foreach( $options as $slug => $label ){
 				$classes = 'static' === $field['content_type'] && in_array( $slug, $pro_options, true ) ? 'disabled' : '';
-				$classes .= in_array( $slug, $saved, true ) ? ( empty( $classes ) ? 'selected' : ' selected' ) : '';
+				$classes .= 'static' !== $field['content_type'] || in_array( $slug, $saved, true ) ? ( empty( $classes ) ? 'selected' : ' selected' ) : '';
 				?>
 				<option
 					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $slug ) : esc_attr( $slug ); ?>"
@@ -236,11 +237,13 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			if( empty( $option ) ){
 				return;
 			}
-			if( 'cats' === $field['key'] ){
-				$term = get_term( (int) $option );
-				return $term->name;
+
+			if( 'cats' !== $field['key'] ){
+				return get_the_title( (int) $option );
 			}
-			return get_the_title( (int) $option );
+
+			$term = get_term( (int) $option );
+			return $term->name;
 		}
 		private static function render_field_checkbox( $field ){
 			$key   = $field['key'];

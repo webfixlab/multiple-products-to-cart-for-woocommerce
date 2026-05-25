@@ -139,8 +139,8 @@ if ( ! class_exists( 'MPC_Admin_Field' ) ) {
                     placeholder="<?php echo esc_html( $field['placeholder'] ); ?>"
                     class="<?php echo esc_html( implode( ' ', $classes ) ); ?>"
                     title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>"
-                    min="<?php echo isset( $field['min'] ) ? esc_attr( $field['min'] ) : 1; ?>"
-                    max="<?php echo isset( $field['min'] ) ? esc_attr( $field['min'] ) : 100; ?>">
+                    min="<?php echo isset( $field['min'] ) ? esc_attr( $field['min'] ) : ''; ?>"
+                    max="<?php echo isset( $field['max'] ) ? esc_attr( $field['max'] ) : ''; ?>">
 			</div>
             <?php
         }

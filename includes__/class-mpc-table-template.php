@@ -130,7 +130,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			}
 			?>
 			<div class="mpc-all-select">
-				<label><?php echo esc_html( get_option( 'wmc_select_all_text', __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ) ) ); ?></label>
+				<span><?php echo esc_html( get_option( 'wmc_select_all_text', __( 'Select All', 'multiple-products-to-cart-for-woocommerce' ) ) ); ?></span>
 				<input
 					type="checkbox"
 					class="mpc-check-all">
@@ -276,8 +276,15 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * @param object $product Product object.
 		 */
 		private static function display_product_title( $product ){
+			$show_link = self::$data['atts']['link'] ?? '';
 			?>
-			<a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html( $product->get_title() ); ?></a>
+			<div class="mpc-product-name">
+				<?php if( empty( $show_link ) || 'true' === $show_link ) : ?>
+					<a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html( $product->get_title() ); ?></a>
+				<?php else: ?>
+					<?php echo esc_html( $product->get_title() ); ?>
+				<?php endif; ?>
+			</div>
 			<?php
 		}
 
@@ -425,7 +432,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			// skip for grouped product.
 			if ( 'grouped' === $product->get_type() ) {
-				echo wp_kses_post( '<td></td>' );
 				return;
 			}
 
@@ -459,7 +465,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			// skip for grouped product.
 			if ( 'grouped' === $product->get_type() ) {
-				echo wp_kses_post( '<td></td>' );
 				return;
 			}
 

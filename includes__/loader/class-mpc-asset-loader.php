@@ -68,7 +68,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js__/page-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 			wp_register_script( 'mpc-add-to-cart', MPC_URL . 'assets/js__/add-to-cart' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 
-			wp_register_script( 'mpc-available', MPC_URL . 'assets/js__/table-variations' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks', 'mpc-product-events' ), MPC_VER, true );
+			wp_register_script( 'mpc-available', MPC_URL . 'assets/js__/available-variations' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks', 'mpc-product-events' ), MPC_VER, true );
 			
 			wp_enqueue_script( 'mpc-table-loader' );
 			wp_enqueue_script( 'mpc-product-events' );
@@ -149,14 +149,14 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			}
 
 			if ( ! empty( $title_color ) ) {
-				$css .= ".mpc-product-title a{ color: {$title_color}; }";
+				$css .= ".mpc-product-title, .mpc-product-title a{ color: {$title_color}; }";
 			}
 
 			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) {
 				$css .= ".mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }";
 			}
 
-			$css .= '.mpc-container .mpc-product-title a{';
+			$css .= '.mpc-container .mpc-product-title, .mpc-product-title a{';
 			if ( ! empty( $title_font_size ) ) {
 				$css .= "font-size: {$title_font_size}px;";
 			}
