@@ -26,14 +26,15 @@
 
             window.mpcHooks.addAction( 'mpc_image_popup', ( e ) => this.renderImagePopup( e ) );
             $( '.mpc-container' ).on( 'click', '.mpc-product-image img', ( e ) => this.handleImagePopup( e ) );
-
-            $( 'span.mpcpop-close' ).on( 'click', ( e ) => this.hidePopup( e ) );
+            $( 'span.mpcpop-close' ).on( 'click', ( e ) => this.hidePopup( e) );
             $( document ).on( 'keyup', ( e ) => this.hidePopup( e ) );
+            $( '#mpcpop' ).on( 'click', ( e ) => this.hidePopup( e ) );
 
             this.allWraps = $( document.body ).find( '.mpc-container' );
 
             $( window ).on( 'resize', () => this.screenResizeEventHandler() );
             $( window ).on( 'scroll', () => this.windowScrollEventHandler() );
+
             this.renderAllTablesStickyElements();
             this.getAdminBarHeight();
 
@@ -55,10 +56,14 @@
             $( '#mpcpop' ).toggle( imgSrc && imgSrc.length > 0 );
         }
         hidePopup( e ){
-            if( e.keyCode && 27 === e.keyCode ){
+            if( $( e ).hasClass( 'mpcpop-close' ) ){
+                $( '#mpcpop' ).hide();
+            }else if( e.keyCode && 27 === e.keyCode ){
+                $( '#mpcpop' ).hide();
+            } else if( 'img' !== e.target.tagName.toLowerCase() ){
                 $( '#mpcpop' ).hide();
             }
-            $( '#mpcpop' ).hide();
+            
         }
 
         tableLoadedEventHandler( wrap ){

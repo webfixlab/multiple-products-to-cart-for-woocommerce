@@ -149,14 +149,14 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			}
 
 			if ( ! empty( $title_color ) ) {
-				$css .= ".mpc-product-title, .mpc-product-title a{ color: {$title_color}; }";
+				$css .= ".mpc-product-title a{ color: {$title_color}; }";
 			}
 
 			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) {
 				$css .= ".mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }";
 			}
 
-			$css .= '.mpc-container .mpc-product-title, .mpc-product-title a{';
+			$css .= '.mpc-container .mpc-product-title a{';
 			if ( ! empty( $title_font_size ) ) {
 				$css .= "font-size: {$title_font_size}px;";
 			}
