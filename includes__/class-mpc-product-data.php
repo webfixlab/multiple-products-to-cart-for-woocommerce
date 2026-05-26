@@ -89,14 +89,13 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 				$args['post__not_in'] = explode( ',',  str_replace( ' ', '', $atts['skip_products'] ) );
 			}
 
-			if ( isset( $atts['type'] ) && ! empty( $atts['type'] ) ) {
-				$product_types = explode( ',',  str_replace( ' ', '', $atts['type'] ) );
-				$args['tax_query'][] = array(
-					'taxonomy' => 'product_type',
-					'field'    => 'slug',
-					'terms'    => in_array( 'all', $product_types, true ) ? array( 'simple', 'variable' ) : array_intersect( array( 'simple', 'variable' ), $product_types ),
-				);
-			}
+			$product_types = isset( $atts['type'] ) && ! empty( $atts['type'] ) ? $atts['type'] : '';
+			$product_types = ! empty( $product_types ) ? explode( ',', str_replace( ' ', '', $product_types ) ) : array();
+			$args['tax_query'][] = array(
+				'taxonomy' => 'product_type',
+				'field'    => 'slug',
+				'terms'    => ! empty( $product_types ) && ! in_array( 'all', $product_types, true ) ? array_intersect( array( 'simple', 'variable' ), $product_types ) : array( 'simple', 'variable' ),
+			);
 
 			if ( isset( $atts['cats'] ) && ! empty( $atts['cats'] ) ) {
 				$args['tax_query'][] = array(
