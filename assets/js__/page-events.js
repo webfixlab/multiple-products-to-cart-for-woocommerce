@@ -91,13 +91,29 @@
 
             this.renderStickyHeader( wrap, positionLeft );
 
-            wrap.find( '.mpc-table-header' ).css( {
-                'left': `${ positionLeft }px`,
-                'width': viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' )[0].offsetWidth }px`
-            } ); // filter section.
-            wrap.find( '.total-row' ).css( {
-                'width': viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' )[0].offsetWidth }px`
-            } ); // fixed total section.
+            const currentWidth = viewPort < 768 ? '100%' : `${ wrap.find( 'table.mpc-wrap' )[0].offsetWidth }px`;
+
+            const tableFilter = wrap.find( '.mpc-table-header' );
+            if( tableFilter && tableFilter.length > 0 ){
+                tableFilter.css({
+                    'width': currentWidth
+                });
+            }
+
+            const tableTotal = wrap.find( '.total-row' );
+            if( tableTotal && tableTotal.length > 0 ){
+                tableTotal.css({
+                    'left': `${ positionLeft }px`,
+                    'width': currentWidth
+                });
+            }
+            
+            const tableBtn = wrap.find( '.mpc-button' );
+            if( tableBtn && tableBtn.length > 0 ){
+                tableBtn.css( {
+                    'width': currentWidth
+                } );
+            }
         }
         renderStickyHeader( wrap, positionLeft ){
             wrap.find( '.mpc-fixed-header' ).remove();

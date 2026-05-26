@@ -547,7 +547,8 @@ span.mpc-empty-var {
 }
 .mpc-product-desc {
     color: #7e7e7e;
-	margin: 3px 0;
+	margin: 0;
+	font-size: 13px;
 }
 span.mpc-mobile-only{
 	display: none;
