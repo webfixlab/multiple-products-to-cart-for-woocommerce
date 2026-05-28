@@ -15,11 +15,12 @@
 	outline: none;
 	vertical-align: middle;
 	margin: 0;
+	accent-color: #616161;
 }
 .mpc-container select{
     border-radius: 4px;
 	padding: 5px 10px;
-	border: 1px solid #898989;
+	border: 1px solid #ccc;
 	color: #565656;
 	height: 31px;
 }
@@ -548,7 +549,7 @@ span.mpc-empty-var {
 .mpc-product-desc {
     color: #7e7e7e;
 	margin: 0;
-	font-size: 13px;
+	font-size: 15px;
 }
 span.mpc-mobile-only{
 	display: none;

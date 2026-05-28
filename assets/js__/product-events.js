@@ -305,6 +305,22 @@
             const target = window.mpcTables.identifyTable( checkBox );
             window.mpcTables.updateProductMeta( target, 'checked', checkBox.is( ':checked' ) );
             this.setTableTotal( checkBox, target );
+
+            this.autoCheckAllCheckbox( checkBox );
+        }
+        autoCheckAllCheckbox( checkBox ){
+            const wrap = checkBox.closest( '.mpc-container' );
+
+            const allCheckBox = wrap.find( '.mpc-all-select input[type="checkbox"]' );
+            if( ! allCheckBox || 0 === allCheckBox.length ){
+                return;
+            }
+
+            // auto check all-check.
+            const total = wrap.find( 'table.mpc-wrap input[type="checkbox"]' ).length;
+            const checked = wrap.find( 'table.mpc-wrap input[type="checkbox"]:checked' ).length;
+
+            allCheckBox.prop( 'checked', total > 0 && total === checked );
         }
 	}
 	new MPCFrontProductEvents();
