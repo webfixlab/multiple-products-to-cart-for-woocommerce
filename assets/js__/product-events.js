@@ -159,10 +159,11 @@
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
             const qty      = qtyField && qtyField.length > 0 ? parseInt( qtyField.val() ) : 1;
             const validQty = window.mpcTables.getValidStockQuantity( field, target );
+            console.log( 'stock', qty, validQty );
 
             if( qtyField && qtyField.length > 0 ){
                 qtyField.prop( 'disabled', 0 === validQty && qty > 0 );
-                qtyField.val( 0 === validQty ? 0 : qty );
+                qtyField.val( validQty );
             }
 
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );

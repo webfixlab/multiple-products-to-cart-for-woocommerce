@@ -67,8 +67,8 @@
                         stock && tempQty > stock && -1 !== stock ? stock : tempQty
                     ); // sequence is important here.
                     
-                    this.state[ target.tableId ][ target.productId ]['qty'] = 0 === validQty ? 0 : qty;
-                    return validQty;
+                    this.state[ target.tableId ][ target.productId ]['qty'] = 0 === qty && 1 === validQty ? 0 : validQty;
+                    return 0 === qty && 1 === validQty ? 0 : validQty;
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];
