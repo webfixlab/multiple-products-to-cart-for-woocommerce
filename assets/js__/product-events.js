@@ -159,7 +159,6 @@
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
             const qty      = qtyField && qtyField.length > 0 ? parseInt( qtyField.val() ) : 1;
             const validQty = window.mpcTables.getValidStockQuantity( field, target );
-            console.log( 'stock', qty, validQty );
 
             if( qtyField && qtyField.length > 0 ){
                 qtyField.prop( 'disabled', 0 === validQty && qty > 0 );
@@ -288,6 +287,7 @@
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
             if( checkBox && checkBox.length > 0 ){
                 checkBox.prop( 'checked', false );
+                checkBox.prop( 'disabled', false );
             }
             const priceWrap = row.find( '.mpc-product-price .mpc-single-price' );
             if( priceWrap && priceWrap.length > 0 ){
@@ -295,6 +295,11 @@
             }
 
             row.find( '.mpc-var-desc' ).empty();
+
+            const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
+            if( qtyField && qtyField.length > 0 ){
+                qtyField.prop( 'disabled', false );
+            }
         }
 
         productCheckEventHandler( checkBox ){
