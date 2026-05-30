@@ -76,8 +76,6 @@
                 tableId:   this.tableCounter,
                 productId: parseInt( row.attr( 'data-id' ) )
             }, productData );
-
-            row.toggleClass( 'non-empty-qty', productData['qty'] > 0 );
         }
         getCurrentVariation( row ){
             const variations = row.find( '.row-variation-data' ).data( 'variation_data' );
@@ -156,27 +154,25 @@
             this.setTableTotal( qtyField, target );
         }   
         validateStock( field, target ){
-            // validate quantity.
-            let qty        = 1;
-            const validQty = window.mpcTables.getValidStockQuantity( field, target );
-            const row      = field.closest( 'tr.cart_item' );
+            const row = field.closest( 'tr.cart_item' );
+
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
-            const checkBox = row.find( '.mpc-product-select input[type="checkbox"]' );
+            const qty      = qtyField && qtyField.length > 0 ? parseInt( qtyField.val() ) : 1;
+            const validQty = window.mpcTables.getValidStockQuantity( field, target );
+
             if( qtyField && qtyField.length > 0 ){
-                qty = parseInt( qtyField.val() );
-                qty = qty !== validQty ? validQty : qty;
-                qtyField.val( qty );
-                qtyField.prop( 'disabled', qty !== validQty );
+                qtyField.prop( 'disabled', 0 === validQty && qty > 0 );
+                qtyField.val( 0 === validQty ? 0 : qty );
             }
 
-            // contingency checking.
+            const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
             if( checkBox && checkBox.length > 0 ){
                 window.mpcTables.updateProductMeta( target, 'checked', 0 !== qty );
-                checkBox.prop( 'checked', qty > 0 );
-                checkBox.prop( 'disabled', qty !== validQty );
+                if( checkBox.is( ':checked' ) && 0 === validQty && qty > 0 ){
+                    checkBox.prop( 'checked', false );
+                }
+                checkBox.prop( 'disabled', 0 === validQty && qty > 0 );
             }
-
-            row.toggleClass( 'non-empty-qty', qty > 0 );
         }
         setTableTotal( field, target ){
             // I could use wc_price here.
@@ -277,7 +273,6 @@
             window.mpcHooks.doAction( 'mpc_clear_variations', e );
         }
         clearVariations( e ){
-            console.log( 'triggered clear variations' );
             e.preventDefault();
 
             const clearBtn = $( e.currentTarget );
@@ -289,7 +284,7 @@
             section.find( '.mpc-clear-variations' ).hide();
 
             const row      = clearBtn.closest( 'tr.cart_item' );
-            const checkBox = row.find( '.mpc-product-select input[type="checkbox"]' );
+            const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
             if( checkBox && checkBox.length > 0 ){
                 checkBox.prop( 'checked', false );
             }

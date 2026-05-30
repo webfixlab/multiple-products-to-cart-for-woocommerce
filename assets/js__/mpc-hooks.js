@@ -60,14 +60,15 @@
                 },
                 getValidStockQuantity: function( field, target ){
                     const stock = this.state[ target.tableId ][ target.productId ]['stock'];
-                    let qty     = this.state[ target.tableId ][ target.productId ]['qty'];
+                    const qty   = this.state[ target.tableId ][ target.productId ]['qty'];
                     
-                    qty = 'number' === typeof stock && 0 === stock ? 0 : (
-                        stock && qty > stock && -1 !== stock ? stock : qty
+                    const tempQty  = 0 === qty ? 1 : qty; // considering default quantity = 1, for easier validation.
+                    const validQty = 'number' === typeof stock && 0 === stock ? 0 : (
+                        stock && tempQty > stock && -1 !== stock ? stock : tempQty
                     ); // sequence is important here.
                     
-                    this.state[ target.tableId ][ target.productId ]['qty'] = qty;
-                    return qty;
+                    this.state[ target.tableId ][ target.productId ]['qty'] = 0 === validQty ? 0 : qty;
+                    return validQty;
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];

@@ -445,7 +445,6 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			<input
 				type="number"
 				step="1"
-				min="<?php echo esc_attr( $quantity ); ?>"
 				max="<?php echo ! empty( $stock ) ? $stock : ''; ?>"
 				name="quantity<?php echo $product->get_id(); ?>"
 				value="<?php echo esc_attr( $quantity ); ?>"

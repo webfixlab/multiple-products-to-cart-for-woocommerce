@@ -648,7 +648,7 @@ span.mpc-mobile-only{
 		display: inline-block;
 		text-align: left;
 	}
-	table.mpc-wrap tbody td.mpc-product-select {
+	table.mpc-wrap tbody td.mpc-product-buy {
 		position: static;
 	}
 	table.mpc-wrap tbody tr:nth-child(2n) td {
