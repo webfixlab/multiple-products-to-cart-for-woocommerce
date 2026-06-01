@@ -62,13 +62,13 @@
                     const stock = this.state[ target.tableId ][ target.productId ]['stock'];
                     const qty   = this.state[ target.tableId ][ target.productId ]['qty'];
                     
-                    const tempQty  = 0 === qty ? 1 : qty; // considering default quantity = 1, for easier validation.
+                    const tempQty  = Math.max( 1, qty ); // considering default quantity = 1, for easier validation.
                     const validQty = 'number' === typeof stock && 0 === stock ? 0 : (
                         stock && tempQty > stock && -1 !== stock ? stock : tempQty
                     ); // sequence is important here.
                     
-                    this.state[ target.tableId ][ target.productId ]['qty'] = 0 === qty && 1 === validQty ? 0 : validQty;
-                    return 0 === qty && 1 === validQty ? 0 : validQty;
+                    this.state[ target.tableId ][ target.productId ]['qty'] = Math.min( qty, validQty );
+                    return Math.min( qty, validQty );
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];

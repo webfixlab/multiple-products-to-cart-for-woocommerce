@@ -17,6 +17,12 @@ if ( ! class_exists( 'MPC_Admin_Ajax' ) ) {
 	class MPC_Admin_Ajax {
 
 		/**
+		 * Results limit
+		 * @var int
+		 */
+		private static $limit = 50;
+
+		/**
 		 * Register ajax endpoint
 		 */
 		public static function init() {
@@ -34,51 +40,65 @@ if ( ! class_exists( 'MPC_Admin_Ajax' ) ) {
 			$search = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 			$type   = isset( $_POST['type_name'] ) ? sanitize_text_field( wp_unslash( $_POST['type_name'] ) ) : '';
 
-			$limit = 50; // Limit the number of items.
-			if ( 'cats' === $type ) {
-				$args = array(
-					'taxonomy'   => 'product_cat',
-					'hide_empty' => false,  // Set this to true if you only want categories with products.
-					'name__like' => $search,  // Search by category name.
-					'number'     => $limit,  // Limit the number of categories.
-				);
+			wp_send_json( 'cats' === $type ? self::get_taxonomies( $search ) : self::get_products( $search ) );
+		}
+		private static function get_taxonomies( $search ){
+			$args = array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,  // Set this to true if you only want categories with products.
+				// 'name__like' => $search,  // Search by category name.
+				'search' => $search,  // Search by category name.
+				'number'     => self::$limit,  // Limit the number of categories.
+			);
 
-				$product_categories = get_terms( $args );
-				$categories         = array();
-				if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) {
-					foreach ( $product_categories as $category ) {
-						$categories[] = array(
-							'id'   => $category->term_id,
-							'name' => $category->name,
-						);
-					}
-				}
-
-				wp_send_json( $categories );
-			} else {
-				$args = array(
-					's'              => $search,
-					'post_type'      => 'product',
-					'posts_per_page' => $limit,
-				);
-
-				$products = array();
-				$query    = new WP_Query( $args );
-				if ( $query->have_posts() ) {
-					while ( $query->have_posts() ) {
-						$query->the_post();
-						$products[] = array(
-							'id'   => get_the_ID(),
-							'name' => get_the_title(),
-						);
-					}
-				}
-
-				wp_reset_postdata();
-				wp_send_json( $products );
+			$results = get_terms( $args );
+			if( empty( $results ) || is_wp_error( $results ) ){
+				return array();
 			}
 
-			wp_send_json( array() );
+			$all_tax = array();
+
+			foreach ( $results as $tax ) {
+				$all_tax[] = array(
+					'id'   => $tax->term_id,
+					'name' => $tax->name,
+				);
+			}
+			
+			return $all_tax;
+		}
+		private static function get_products( $search ){
+			$args = array(
+				's'              => $search,
+				'post_type'      => 'product',
+				'posts_per_page' => self::$limit,
+				'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					'relation' => 'AND',
+					array(
+						'taxonomy' => 'product_type',
+						'field'    => 'slug',
+						'terms'    =>  array( 'simple', 'variable' ),
+					)
+				)
+			);
+
+			$args = apply_filters( 'mpc_admin_ajax_search_products', $args );
+
+			$results = new WP_Query( $args );
+			if( empty( $results ) || is_wp_error( $results ) ){
+				return array();
+			}
+
+			$products = array();
+			
+			foreach( $results->posts as $post ){
+				$products[] = array(
+					'id'   => $post->ID,
+					'name' => $post->post_title
+				);
+			}
+
+			return $products;
 		}
 	}
 }

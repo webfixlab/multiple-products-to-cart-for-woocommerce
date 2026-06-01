@@ -798,6 +798,7 @@ a .mpcasc-reset .button-secondary{
 }
 .choicesdp .choices[data-type*=select-multiple] .choices__button, .choices[data-type*=text] .choices__button{
 	border-color: #fff;
+	border: none;
 }
 .mpc-sc-btns{
 	position: absolute;

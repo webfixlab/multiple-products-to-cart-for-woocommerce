@@ -160,18 +160,22 @@
             const qty      = qtyField && qtyField.length > 0 ? parseInt( qtyField.val() ) : 1;
             const validQty = window.mpcTables.getValidStockQuantity( field, target );
 
+            const notInStock = qty > 0 && 0 === validQty;
+
             if( qtyField && qtyField.length > 0 ){
-                qtyField.prop( 'disabled', 0 === validQty && qty > 0 );
+                qtyField.prop( 'disabled', notInStock );
                 qtyField.val( validQty );
             }
 
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
+            
+            window.mpcTables.updateProductMeta( target, 'checked', checkBox && checkBox.length > 0 ? checkBox.is( ':checked' ) && false === notInStock : false === notInStock );
+
             if( checkBox && checkBox.length > 0 ){
-                window.mpcTables.updateProductMeta( target, 'checked', 0 !== qty );
-                if( checkBox.is( ':checked' ) && 0 === validQty && qty > 0 ){
+                if( checkBox.is( ':checked' ) && notInStock ){
                     checkBox.prop( 'checked', false );
                 }
-                checkBox.prop( 'disabled', 0 === validQty && qty > 0 );
+                checkBox.prop( 'disabled', notInStock );
             }
         }
         setTableTotal( field, target ){
