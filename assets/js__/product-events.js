@@ -81,14 +81,21 @@
             const variations = row.find( '.row-variation-data' ).data( 'variation_data' );
             const variation = Object.values( variations ).find( variation => {
                 let hasNoIssue = true; // if any attribute value is missed.
+
+                const newAtts = {};
                 for( const [attName, attVal] of Object.entries( variation.attributes ) ){
                     const attNameSanitized = attName.replace( 'attribute_', '' );
                     const foundAttVal      = row.find( `select.${attNameSanitized} option:selected` ).attr( 'data-value' ); // could you just :selected.
+
+                    newAtts[ `attribute_${attName}` ] = foundAttVal;
 
                     if( !foundAttVal || 0 === foundAttVal.length || attVal && attVal.length > 0 && attVal !== foundAttVal ){
                         hasNoIssue = false;
                     }
                 }
+
+                variation['attributes__'] = newAtts;
+
                 return hasNoIssue;
             });
             return variation || null;
@@ -160,11 +167,11 @@
             const qty      = qtyField && qtyField.length > 0 ? parseInt( qtyField.val() ) : 1;
             const validQty = window.mpcTables.getValidStockQuantity( field, target );
 
-            const notInStock = qty > 0 && 0 === validQty;
+            const notInStock = 0 === validQty; // what if qty = 0 & valid = 0?
 
             if( qtyField && qtyField.length > 0 ){
                 qtyField.prop( 'disabled', notInStock );
-                qtyField.val( validQty );
+                qtyField.val( Math.min( qty, validQty ) );
             }
 
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );

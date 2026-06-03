@@ -68,7 +68,7 @@
                     ); // sequence is important here.
                     
                     this.state[ target.tableId ][ target.productId ]['qty'] = Math.min( qty, validQty );
-                    return Math.min( qty, validQty );
+                    return Math.min( tempQty, validQty );
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];
@@ -81,11 +81,16 @@
                     const tableData = this.state[ target.tableId ];
                     const cartData  = {};
                     Object.keys( tableData ).forEach( i => {
-                        if( true === tableData[i].checked ){
+                        if( true === tableData[i].checked && tableData[i].qty > 0 ){
                             cartData[ i ] = {
                                 type: tableData[i].type,
                                 qty: tableData[i].qty,
                             };
+
+                            if( 'variable' === tableData[i].type ){
+                                cartData[ i ]['variation_id'] = tableData[i].variation.variation_id;
+                                cartData[ i ]['attributes']   = tableData[i].variation.attributes__;
+                            }
                         }
                     });
                     return cartData;

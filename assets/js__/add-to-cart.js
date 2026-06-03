@@ -39,6 +39,7 @@
                 wrap.find( 'input[name="mpc_cart_data"]' ).val( JSON.stringify( cartData ) );
                 return;
             }
+
             this.sendAddToCartRequest( cartData, wrap );
         }
         sendAddToCartRequest( cartData, wrap ){
@@ -81,10 +82,10 @@
             if( noticeWrap && noticeWrap.length > 0 ){
                 noticeWrap.html( msg );
             }else{
-                wrap.find( 'table.mpc-wrap' ).prepend( `<div class="woo-notices mpc-notice">${ msg }</div>` );
+                wrap.prepend( `<div class="woo-notices mpc-notice">${ msg }</div>` );
             }
 
-            $( 'html, body' ).animate( { scrollTop: table.offset().top - 60 }, 'slow' );
+            $( 'html, body' ).animate( { scrollTop: wrap.offset().top - 60 }, 'slow' );
             setTimeout( () => wrap.find( '.woo-notices' ).remove(), 5000 );
         }
         handleCartNotice( response, wrap ){

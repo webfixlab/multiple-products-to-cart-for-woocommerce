@@ -294,7 +294,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * @param object $product Product object.
 		 */
 		private static function display_product_description( $product ){
-			if( isset( self::$data['atts']['desc'] ) && false === (bool) self::$data['atts']['desc'] ){
+			if( isset( self::$data['atts']['description'] ) && 'false' === self::$data['atts']['description'] ){
 				return;
 			}
 
@@ -445,6 +445,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			<input
 				type="number"
 				step="1"
+				min="0"
 				max="<?php echo ! empty( $stock ) ? $stock : ''; ?>"
 				name="quantity<?php echo $product->get_id(); ?>"
 				value="<?php echo esc_attr( $quantity ); ?>"

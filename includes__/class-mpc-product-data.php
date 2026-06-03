@@ -193,6 +193,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$stock   = $variation->get_stock_quantity();
 
 			$data = array(
+				'variation_id' => $variation_id,
 				'attributes'   => $variation->get_attributes(),
 				'price'        => empty( $sub_fee ) ? $price : $price + (float) $sub_fee,
 				'sku'          => $variation->get_sku(),

@@ -421,6 +421,9 @@ span.mpc-loader img {
 .woo-notices.mpc-notice {
 	background: #ff9797;
 }
+.woo-notices.mpc-notice p, .mpc-cart-messege ul li{
+	font-size: 16px;
+}
 /* floating total */
 .mpc-floating-total {
 	position: fixed;
