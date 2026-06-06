@@ -16,7 +16,7 @@
                 actions: {},
                 filters: {},
                 addAction: function( tag, callback ) {
-                    if ( ! this.actions[ tag ]) this.actions[ tag ] = [];
+                    if ( ! this.actions[ tag ] ) this.actions[ tag ] = [];
                     this.actions[ tag ].push( callback );
                 },
                 doAction: function( tag, ...args ) {
@@ -52,6 +52,9 @@
                 updateProductMeta: function( target, key, value ){
                     this.state[ target.tableId ][ target.productId ][ key ] = value;
                 },
+                getProductMeta: function( target, key ){
+                    return this.state[ target.tableId ][ target.productId ][ key ];
+                },
                 identifyTable: function( target ){
                     return {
                         tableId:   parseInt( target.closest( 'table.mpc-wrap' ).attr( 'data-table_id' ) ),
@@ -59,16 +62,20 @@
                     };
                 },
                 getValidStockQuantity: function( field, target ){
-                    const stock = this.state[ target.tableId ][ target.productId ]['stock'];
-                    const qty   = this.state[ target.tableId ][ target.productId ]['qty'];
+                    const productObj = this.state[ target.tableId ][ target.productId ];
+
+                    const stock = productObj.stock;
+                    const qty   = productObj.qty;
                     
-                    const tempQty  = Math.max( 1, qty ); // considering default quantity = 1, for easier validation.
-                    const validQty = 'number' === typeof stock && 0 === stock ? 0 : (
+                    const tempQty = Math.max( 1, qty ); // considering default quantity = 1, for easier validation.
+                    let validQty  = 'number' === typeof stock && 0 === stock ? 0 : (
                         stock && tempQty > stock && -1 !== stock ? stock : tempQty
                     ); // sequence is important here.
-                    
-                    this.state[ target.tableId ][ target.productId ]['qty'] = Math.min( qty, validQty );
-                    return Math.min( tempQty, validQty );
+
+                    // if not variation found yet, keep qty 0.
+                    validQty = 'variable' === productObj.type && $.isEmptyObject( productObj.variation ) ? 0 : validQty;
+
+                    return 0 === qty && validQty > 0 ? 1 : Math.min( qty, validQty );
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];

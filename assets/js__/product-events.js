@@ -52,18 +52,20 @@
             }
             
             const productData = {
-                type: row.attr( 'data-type' )
+                type:      row.attr( 'data-type' ),
+                qty_state: '', // can be either '+' or '-', if qty increase or decrease.
             };
-            const qty = row.find( '.mpc-product-quantity input[type="number"]' );
-            productData['qty'] = qty && qty.length > 0 ? parseInt( qty.val() ) : 0;
 
-            const checkBox = row.find( 'input[type="checkbox"]' );
+            const qtyField     = row.find( '.mpc-product-quantity input[type="number"]' );
+            productData['qty'] = qtyField && qtyField.length > 0 && qtyField.val().length > 0 ? parseInt( qtyField.val() ) : 1;
+
+            const checkBox         = row.find( 'input[type="checkbox"]' );
             productData['checked'] = checkBox && checkBox.length > 0 ? checkBox.is( ':checked' ) : true;
 
-            // get price - for default attribute value or just get simple product price.
+            // get price - for default att value or just get simple product price.
             if( 'variable' === productData.type ){
                 const variation = this.getCurrentVariation( row );
-                productData['price'] = variation && variation.price ? parseFloat( variation.price) : 0;
+                productData['price'] = variation && variation.price ? parseFloat( variation.price ) : 0;
                 productData['stock'] = variation && variation.stock_status ? this.sanitizeStock( variation.stock, variation.stock_status ) : -1; // -1 = unlimited.
                 productData['variation'] = variation;
             }else{
@@ -155,7 +157,12 @@
 
         qtyChangeEventHandler( qtyField ){
             const target = window.mpcTables.identifyTable( qtyField );
-            window.mpcTables.updateProductMeta( target, 'qty', parseInt( qtyField.val() ) );
+
+            const qty     = qtyField.val().length > 0 ? parseInt( qtyField.val() ) : 0;
+            const prevQty = window.mpcTables.getProductMeta( target, 'qty' );
+
+            window.mpcTables.updateProductMeta( target, 'qty_state', qty > prevQty ? '+' : ( qty < prevQty ? '-' : '' ) );
+            window.mpcTables.updateProductMeta( target, 'qty', qty );
 
             this.validateStock( qtyField, target );
             this.setTableTotal( qtyField, target );
@@ -164,25 +171,25 @@
             const row = field.closest( 'tr.cart_item' );
 
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
-            const qty      = qtyField && qtyField.length > 0 ? parseInt( qtyField.val() ) : 1;
+            const qty      = window.mpcTables.getProductMeta( target, 'qty' );
+            const qtyState = window.mpcTables.getProductMeta( target, 'qty_state' );
             const validQty = window.mpcTables.getValidStockQuantity( field, target );
 
-            const notInStock = 0 === validQty; // what if qty = 0 & valid = 0?
+            // if user reduce qty, keep 0, else auto increase it and auto check checkbox.
+            const tempQty = 0 === qty && validQty > 0 && '-' !== qtyState ? 1 : Math.min( qty, validQty );
 
             if( qtyField && qtyField.length > 0 ){
-                qtyField.prop( 'disabled', notInStock );
-                qtyField.val( Math.min( qty, validQty ) );
+                qtyField.prop( 'disabled', 0 === validQty );
+                qtyField.val( tempQty );
             }
 
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
-            
-            window.mpcTables.updateProductMeta( target, 'checked', checkBox && checkBox.length > 0 ? checkBox.is( ':checked' ) && false === notInStock : false === notInStock );
+            window.mpcTables.updateProductMeta( target, 'checked', tempQty > 0 );
+            window.mpcTables.updateProductMeta( target, 'qty', tempQty );
 
             if( checkBox && checkBox.length > 0 ){
-                if( checkBox.is( ':checked' ) && notInStock ){
-                    checkBox.prop( 'checked', false );
-                }
-                checkBox.prop( 'disabled', notInStock );
+                checkBox.prop( 'checked', tempQty > 0 );
+                checkBox.prop( 'disabled', 0 === validQty );
             }
         }
         setTableTotal( field, target ){
