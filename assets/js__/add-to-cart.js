@@ -23,7 +23,7 @@
             const wrap = $( e.currentTarget ).closest( '.mpc-container' );
 
             const tableId  = parseInt( wrap.find( 'table.mpc-wrap' ).attr( 'data-table_id' ) );
-            const cartData = window.mpcTables.getCartData( {
+            const cartData = window.mpcTables.getTableCartData( {
                 tableId: tableId,
             } );
 

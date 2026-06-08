@@ -424,31 +424,6 @@ span.mpc-loader img {
 .woo-notices.mpc-notice p, .mpc-cart-messege ul li{
 	font-size: 16px;
 }
-/* floating total */
-.mpc-floating-total {
-	position: fixed;
-	left: 5px;
-	top: 50%;
-	background: #ccc;
-	padding: 2%;
-	text-align: center;
-}
-.mpc-floating-total span.float-label {
-	display: block;
-	text-decoration: underline;
-}
-.mpc-floating-total.active {
-	padding: 26px 30px;
-	background: #15b555;
-	color: #fff;
-}
-.mpc-floating-total.active span.float-label {
-	text-decoration: none;
-	padding: 1px 10px;
-	border-radius: 5px;
-	background: #077633;
-	cursor: pointer;
-}
 .woocommerce-notices-wrapper.mpc-cart-messege{
 	margin: 20px 0 0 0;
 }

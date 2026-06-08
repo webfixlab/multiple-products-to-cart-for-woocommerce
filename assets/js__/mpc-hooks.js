@@ -84,28 +84,28 @@
                         return sum + ( price * item.qty );
                     }, 0 ) : 0;
                 },
-                getCartData: function( target ){
+                getTableCartData: function( target ){
                     const tableData = this.state[ target.tableId ];
                     const cartData  = {};
                     Object.keys( tableData ).forEach( i => {
                         if( true === tableData[i].checked && tableData[i].qty > 0 ){
-                            cartData[ i ] = {
-                                type: tableData[i].type,
-                                qty: tableData[i].qty,
-                            };
-
-                            if( 'variable' === tableData[i].type ){
-                                cartData[ i ]['variation_id'] = tableData[i].variation.variation_id;
-                                cartData[ i ]['attributes']   = tableData[i].variation.attributes__;
-                            }
+                            cartData[ i ] = this.getProductCartData( tableData[i] );
                         }
                     });
                     return cartData;
                 },
-                getProductData: function( target ){
-                    const productItemData = {};
-                    productItemData[ target.productId ] = this.state[ target.tableId ][ target.productId ];
-                    return productItemData;
+                getProductCartData: function( productData ){
+                    const cartData = {
+                        type: productData.type,
+                        qty:  productData.qty,
+                    };
+
+                    if( 'variable' === productData.type ){
+                        cartData['variation_id'] = productData.variation.variation_id;
+                        cartData['attributes']   = productData.variation.attributes__;
+                    }
+
+                    return cartData;
                 },
                 resetVariationData: function( elm ){
                     const target = this.identifyTable( elm );

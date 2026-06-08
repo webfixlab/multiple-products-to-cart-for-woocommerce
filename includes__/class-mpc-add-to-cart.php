@@ -73,6 +73,7 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 
 			$added = array(); // array of product id => quantity.
 			foreach ( $data as $product_id => $product ) {
+				
 				if ( 'grouped' === $product['type'] ) {
 					continue;
 				}
