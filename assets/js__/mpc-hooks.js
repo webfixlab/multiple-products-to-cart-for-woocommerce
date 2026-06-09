@@ -62,20 +62,15 @@
                     };
                 },
                 getValidStockQuantity: function( field, target ){
-                    const productObj = this.state[ target.tableId ][ target.productId ];
+                    const item  = this.state[ target.tableId ][ target.productId ];
+                    const qty   = item.qty;
+                    const stock = item.stock ?? -1;
 
-                    const stock = productObj.stock;
-                    const qty   = productObj.qty;
-                    
-                    const tempQty = Math.max( 1, qty ); // considering default quantity = 1, for easier validation.
-                    let validQty  = 'number' === typeof stock && 0 === stock ? 0 : (
-                        stock && tempQty > stock && -1 !== stock ? stock : tempQty
-                    ); // sequence is important here.
-
-                    // if not variation found yet, keep qty 0.
-                    validQty = 'variable' === productObj.type && $.isEmptyObject( productObj.variation ) ? 0 : validQty;
-
-                    return 0 === qty && validQty > 0 ? 1 : Math.min( qty, validQty );
+                    // only return valid qty.
+                    const valid = 'number' === typeof stock && 0 === stock ? 0 : (
+                        qty > stock && -1 !== stock ? stock : Math.max( 1, qty )
+                    );
+                    return valid;
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];

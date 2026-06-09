@@ -168,28 +168,36 @@
             this.setTableTotal( qtyField, target );
         }   
         validateStock( field, target ){
-            const row = field.closest( 'tr.cart_item' );
+            const row   = field.closest( 'tr.cart_item' );
+            const item  = window.mpcTables.state[ target.tableId ][ target.productId ];
+            const valid = window.mpcTables.getValidStockQuantity( field, target );
+
+            // auto increase quantity when everything is in order.
+            let autoQty = '-' !== item.qty_state && 0 === item.qty && valid > 0 ? 1 : Math.min( valid, item.qty );
+            autoQty     = 'variable' === item.type && $.isEmptyObject( item.variation ) ? 0 : autoQty;
 
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
-            const qty      = window.mpcTables.getProductMeta( target, 'qty' );
-            const qtyState = window.mpcTables.getProductMeta( target, 'qty_state' );
-            const validQty = window.mpcTables.getValidStockQuantity( field, target );
-
-            // if user reduce qty, keep 0, else auto increase it and auto check checkbox.
-            const tempQty = 0 === qty && validQty > 0 && '-' !== qtyState ? 1 : Math.min( qty, validQty );
-
             if( qtyField && qtyField.length > 0 ){
-                qtyField.prop( 'disabled', 0 === validQty );
-                qtyField.val( tempQty );
+                qtyField.prop( 'disabled', 0 === valid );
+                qtyField.val( autoQty );
             }
-
+            
+            window.mpcTables.updateProductMeta( target, 'checked', autoQty > 0 );
+            window.mpcTables.updateProductMeta( target, 'qty', autoQty );
+            
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
-            window.mpcTables.updateProductMeta( target, 'checked', tempQty > 0 );
-            window.mpcTables.updateProductMeta( target, 'qty', tempQty );
-
             if( checkBox && checkBox.length > 0 ){
-                checkBox.prop( 'checked', tempQty > 0 );
-                checkBox.prop( 'disabled', 0 === validQty );
+                // when reducing quantity, don't auto check it.
+                if( '-' !== item.qty_state ){
+                    checkBox.prop( 'checked', autoQty > 0 );
+                }
+
+                // when quantity is zero, uncheck it.
+                if( 0 === autoQty ){
+                    checkBox.prop( 'checked', false );
+                }
+
+                checkBox.prop( 'disabled', 0 === valid );
             }
         }
         setTableTotal( field, target ){
@@ -215,7 +223,7 @@
             const row    = attDropDown.closest( 'tr.cart_item' );
     
             const variation = this.getCurrentVariation( row );
-            window.mpcTables.updateProductMeta( target, 'variation', variation ? variation : {} );
+            window.mpcTables.updateProductMeta( target, 'variation', $.isEmptyObject( variation ) ? {} : variation );
             window.mpcTables.updateProductMeta( target, 'price', variation && variation.price ? parseFloat( variation.price ) : 0 );
             
             if( variation ){
