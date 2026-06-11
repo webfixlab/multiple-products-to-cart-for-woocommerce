@@ -63,14 +63,12 @@
                 },
                 getValidStockQuantity: function( field, target ){
                     const item  = this.state[ target.tableId ][ target.productId ];
-                    const qty   = item.qty;
                     const stock = item.stock ?? -1;
 
-                    // only return valid qty.
-                    const valid = 'number' === typeof stock && 0 === stock ? 0 : (
-                        qty > stock && -1 !== stock ? stock : Math.max( 1, qty )
+                    // return 0 only when it's out of stock, else at least 1.
+                    return 'number' === typeof stock && 0 === stock ? 0 : (
+                        item.qty > stock && -1 !== stock ? stock : Math.max( 1, item.qty )
                     );
-                    return valid;
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];

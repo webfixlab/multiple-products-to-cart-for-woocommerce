@@ -181,8 +181,7 @@
                 qtyField.prop( 'disabled', 0 === valid );
                 qtyField.val( autoQty );
             }
-            
-            window.mpcTables.updateProductMeta( target, 'checked', autoQty > 0 );
+
             window.mpcTables.updateProductMeta( target, 'qty', autoQty );
             
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
@@ -190,11 +189,13 @@
                 // when reducing quantity, don't auto check it.
                 if( '-' !== item.qty_state ){
                     checkBox.prop( 'checked', autoQty > 0 );
+                    window.mpcTables.updateProductMeta( target, 'checked', autoQty > 0 );
                 }
 
                 // when quantity is zero, uncheck it.
                 if( 0 === autoQty ){
                     checkBox.prop( 'checked', false );
+                    window.mpcTables.updateProductMeta( target, 'checked', false );
                 }
 
                 checkBox.prop( 'disabled', 0 === valid );

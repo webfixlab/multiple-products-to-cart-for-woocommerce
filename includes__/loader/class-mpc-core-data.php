@@ -45,7 +45,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 					'icon' => 'dashicons-shortcode',
 				),
 				'general-settings' => array(
-					'tab'  => __( 'General Settings', 'multiple-products-to-cart-for-woocommerce' ),
+					'tab'  => __( 'Settings', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-admin-settings',
 				),
 				'labels' => array(

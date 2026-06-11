@@ -14,8 +14,9 @@
 		initEvents(){
             $( 'body' ).on( 'click', '.mpc-cart-messege', () => $( 'body' ).find('.mpc-cart-messege').remove() );
 
-            $( '.mpc-cart .mpc-add-to-cart' ).on( 'click', ( e ) => this.addCartHook( e ) );
+            $( 'form.mpc-cart .mpc-add-to-cart' ).on( 'click', ( e ) => this.addCartHook( e ) );
             $( '.mpc-fixed-cart' ).on( 'click', ( e ) => this.addCartHook( e ) );
+            
             window.mpcHooks.addAction( 'mpc_add_to_cart', ( cartData, wrap ) => this.handleAddToCart( cartData, wrap ) );
         }
         addCartHook( e ){
@@ -37,6 +38,8 @@
 
             if( 'ajax' !== mpc_frontend.redirect_url ){
                 wrap.find( 'input[name="mpc_cart_data"]' ).val( JSON.stringify( cartData ) );
+
+                wrap.find( 'form.mpc-cart' ).submit();
                 return;
             }
 
