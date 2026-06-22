@@ -36,6 +36,12 @@
                 return;
             }
 
+            // confirmation here.
+            const msg = this.prepareConfirmation( wrap, cartData );
+            if( msg.length > 0 && ! confirm( msg ) ){
+                return;
+            }
+
             if( 'ajax' !== mpc_frontend.redirect_url ){
                 wrap.find( 'input[name="mpc_cart_data"]' ).val( JSON.stringify( cartData ) );
 
@@ -44,6 +50,18 @@
             }
 
             this.sendAddToCartRequest( cartData, wrap );
+        }
+        prepareConfirmation( wrap, cartData ){
+            const row      = $( wrap.find( 'table.mpc-wrap tbody tr.cart_item' )[0] );
+            const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
+            const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
+
+            const total = Object.keys( cartData ).length;
+            const msg   = ! checkBox || 0 === checkBox.length ? `all ${total}` : (
+                ! qtyField || 0 === qtyField.length ? `1 of all ${total}` : ''
+            );
+            
+            return msg.length > 0 ? `Please note, you are adding ${msg} products to cart.` : '';
         }
         sendAddToCartRequest( cartData, wrap ){
             window.mpcHooks.doAction( 'mpc_spinner', 'load', wrap );
