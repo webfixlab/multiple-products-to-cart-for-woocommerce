@@ -34,10 +34,8 @@
 
 			args.options = this.getOptions( args );
 			if( 0 === Object.keys( args.options ).length ){
-				// console.log( 'no options, skipping', args.options );
 				return;
 			}
-			// console.log( 'options', args.options );
 
 			row.find( 'select' ).each( ( _, el ) => this.filterOptions( args, $( el ) ) );
 		}
@@ -75,11 +73,9 @@
 			const attName = attDropDown.attr( 'data-attribute_name' ).replace( 'attribute_', '' );
 			const attVal  = attDropDown.find( 'option:selected' ).val();
 			if( args.attName === attName ){
-				// console.log( 'same att', args.attName );
 				return;
 			}
 
-			// console.log( 'not same att', attName, args.attName );
 			attDropDown.find( 'option' ).each( ( _, el ) => {
 				const varAttVal = $( el ).val();
 				const ifShow    = 0 === varAttVal.length || 'undefined' === typeof args.options[ attName ] || -1 !== args.options[ attName ].indexOf( varAttVal );

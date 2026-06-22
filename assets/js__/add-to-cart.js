@@ -57,11 +57,13 @@
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
 
             const total = Object.keys( cartData ).length;
-            const msg   = ! checkBox || 0 === checkBox.length ? `all ${total}` : (
-                ! qtyField || 0 === qtyField.length ? `1 of all ${total}` : ''
+            let msg     = ! qtyField || 0 === qtyField.length ? `1 of all ${total}` : (
+                ! checkBox || 0 === checkBox.length ? `all ${total}` : ''
             );
-            
-            return msg.length > 0 ? `Please note, you are adding ${msg} products to cart.` : '';
+            msg = total > 1 ? msg : 'a';
+            msg = msg.length > 0 ? `Please note, you are adding ${msg} products to cart.` : '';
+
+            return msg;
         }
         sendAddToCartRequest( cartData, wrap ){
             window.mpcHooks.doAction( 'mpc_spinner', 'load', wrap );

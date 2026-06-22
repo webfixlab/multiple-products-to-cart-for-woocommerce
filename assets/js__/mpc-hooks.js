@@ -82,7 +82,10 @@
                     const cartData  = {};
                     Object.keys( tableData ).forEach( i => {
                         if( true === tableData[i].checked && tableData[i].qty > 0 ){
-                            cartData[ i ] = this.getProductCartData( tableData[i] );
+                            const itemData = this.getProductCartData( tableData[i] );
+                            if( ! $.isEmptyObject( itemData ) ){
+                                cartData[ i ] = itemData;
+                            }
                         }
                     });
                     return cartData;
@@ -92,6 +95,10 @@
                         type: productData.type,
                         qty:  productData.qty,
                     };
+
+                    if( 'variable' === productData.type && $.isEmptyObject( productData.variation ) ){
+                        return {};
+                    }
 
                     if( 'variable' === productData.type ){
                         cartData['variation_id'] = productData.variation.variation_id;
