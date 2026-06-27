@@ -103,8 +103,9 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 				'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
 				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
 				'redirect_url'   => get_option( 'wmc_redirect', 'cart' ),
-				'blank_submit'   => get_option( 'wmc_empty_form_text', __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' ) ),
-				'missed_option'  => get_option( 'wmc_missed_variation_text', __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' ) ),
+				'blank_submit'   => get_option( 'wmc_empty_form_text', __( 'Please fix the issues and try again.', 'multiple-products-to-cart-for-woocommerce' ) ),
+				// 'blank_submit'   => get_option( 'wmc_empty_form_text', __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' ) ),
+				// 'missed_option'  => get_option( 'wmc_missed_variation_text', __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' ) ),
                 // 'orderby_ddown'  => array( 'price', 'title', 'date' ),
 			) );
         }

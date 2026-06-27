@@ -512,6 +512,12 @@ td.mpc-product-quantity input[type="number"]:disabled {
 	background-color: #e6e6e6;
     opacity: 0.5;
 }
+.mpc-container select.mpc-var-att.mpc-faulty, td.mpc-product-quantity input[type="number"].mpc-faulty{
+	border: 1px solid red;
+}
+.mpc-container input[type="checkbox"].mpc-faulty{
+	outline: 1px solid red;
+}
 /* Avada theme support start */
 body.wp-theme-Avada .mpc-container a{
 	color: #000;

@@ -32,7 +32,7 @@
         }
         handleAddToCart( cartData, wrap ){
             if( 0 === Object.keys( cartData ).length ){
-                this.validationNotice( wrap, `<p class="woocommerce-error">${ mpc_frontend.blank_submit }</p>` );
+                this.validationNotice( wrap, cartData );
                 return;
             }
 
@@ -100,7 +100,15 @@
 
             this.handleCartNotice( response, wrap );
         }
-        validationNotice( wrap, msg ) {
+        validationNotice( wrap, cartData ) {
+            wrap.find( 'tbody tr.cart_item' ).each( ( _, el ) => {
+                this.markQtyField( $( el ) );
+                this.markCheckBox( $( el ) );
+                this.markVariationAtts( $( el ) );
+            } );
+            
+            const msg = `<p class="woocommerce-error">${ mpc_frontend.blank_submit }</p>`;
+
             const noticeWrap = wrap.find( '.woo-notices' );
             if( noticeWrap && noticeWrap.length > 0 ){
                 noticeWrap.html( msg );
@@ -111,6 +119,45 @@
             $( 'html, body' ).animate( { scrollTop: wrap.offset().top - 60 }, 'slow' );
             setTimeout( () => wrap.find( '.woo-notices' ).remove(), 5000 );
         }
+        markQtyField( row ){
+            const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
+            if( ! qtyField || 0 === qtyField.length ){
+                return;
+            }
+
+            const qty = qtyField.val().length > 0 ? parseInt( qtyField.val() ) : 0;
+            if( qty > 1 ){
+                qtyField.removeClass( 'mpc-faulty' );
+                return;
+            }
+            
+            // add marker.
+            qtyField.addClass( 'mpc-faulty' );
+        }
+        markCheckBox( row ){
+            const checkBox = row.find( 'input[type="checkbox"]' );
+            if( checkBox.is( ':checked' ) ){
+                checkBox.removeClass( 'mpc-faulty' );
+                return;
+            }
+            checkBox.addClass( 'mpc-faulty' );
+        }
+        markVariationAtts( row ){
+            const total = row.find( 'select.mpc-var-att' ).length;
+            if( 0 === total ){
+                return;
+            }
+            
+            row.find( 'select.mpc-var-att' ).each( ( _, att ) => {
+                const optVal = $( att ).find( 'option:selected' ).val();
+                if( 0 === optVal.length ){
+                    $( att ).addClass( 'mpc-faulty' );
+                }else{
+                    $( att ).removeClass( 'mpc-faulty' );
+                }
+            } );
+        }
+
         handleCartNotice( response, wrap ){
             $( 'body' ).find( '.mpc-cart-messege' ).remove();
 

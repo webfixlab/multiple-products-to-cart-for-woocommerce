@@ -180,6 +180,9 @@
             if( qtyField && qtyField.length > 0 ){
                 qtyField.prop( 'disabled', 0 === valid );
                 qtyField.val( autoQty );
+                if( autoQty > 0 ){
+                    qtyField.removeClass( 'mpc-faulty' );
+                }
             }
 
             window.mpcTables.updateProductMeta( target, 'qty', autoQty );
@@ -241,6 +244,11 @@
             window.mpcHooks.doAction( 'mpc_variation_changed', row, variation, attDropDown );
 
             this.setTableTotal( attDropDown, target );
+
+            const attVal = attDropDown.find( 'option:selected' ).val();
+            if( attVal && attVal.length > 0 ){
+                attDropDown.removeClass( 'mpc-faulty' );
+            }
         }
         clearVariationButton( row ) {
             const allAtts  = row.find( 'select.mpc-var-att' );
@@ -333,6 +341,10 @@
             const target = window.mpcTables.identifyTable( checkBox );
             window.mpcTables.updateProductMeta( target, 'checked', checkBox.is( ':checked' ) );
             this.setTableTotal( checkBox, target );
+
+            if( checkBox.is( ':checked' ) ){
+                checkBox.removeClass( 'mpc-faulty' );
+            }
 
             this.autoCheckAllCheckbox( checkBox );
         }

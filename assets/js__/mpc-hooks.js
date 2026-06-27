@@ -42,7 +42,7 @@
 
             // common event handlers.
             window.mpcTables = {
-                state: {},
+                state:  {}, // complete table state with all necessary data.
                 updateProductState: function( target, productData ){
                     if( ! this.state[ target.tableId ] ){
                         this.state[ target.tableId ] = [];
