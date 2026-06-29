@@ -56,14 +56,20 @@
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
 
-            const total = Object.keys( cartData ).length;
-            let msg     = ! qtyField || 0 === qtyField.length ? `1 of all ${total}` : (
-                ! checkBox || 0 === checkBox.length ? `all ${total}` : ''
-            );
-            msg = total > 1 ? msg : 'a';
-            msg = msg.length > 0 ? `Please note, you are adding ${msg} products to cart.` : '';
+            const missingQty = ! qtyField || 0 === qtyField.length;
+            const missingBuy = ! checkBox || 0 === checkBox.length;
 
-            return msg;
+            // const missingField = ! qtyField || 0 === qtyField.length || ! checkBox || 0 === checkBox.length;
+            const total = Object.keys( cartData ).length;
+            const msg   = missingQty || missingBuy ? (
+                1 === total ? 'a product' : (
+                    missingQty ? `1 of all ${total} products` : (
+                        missingBuy ? `all ${total} products` : ''
+                    )
+                )
+            ) : '';
+
+            return msg.length > 0 ? `Please note, you are adding ${msg} products to cart.` : '';
         }
         sendAddToCartRequest( cartData, wrap ){
             window.mpcHooks.doAction( 'mpc_spinner', 'load', wrap );

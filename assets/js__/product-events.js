@@ -168,40 +168,39 @@
             this.setTableTotal( qtyField, target );
         }   
         validateStock( field, target ){
-            const row   = field.closest( 'tr.cart_item' );
-            const item  = window.mpcTables.state[ target.tableId ][ target.productId ];
-            const valid = window.mpcTables.getValidStockQuantity( field, target );
+            const row      = field.closest( 'tr.cart_item' );
+            const item     = window.mpcTables.state[ target.tableId ][ target.productId ];
+            const validity = window.mpcTables.getValidStockQuantity( field, target );
 
-            // auto increase quantity when everything is in order.
-            let autoQty = '-' !== item.qty_state && 0 === item.qty && valid > 0 ? 1 : Math.min( valid, item.qty );
-            autoQty     = 'variable' === item.type && $.isEmptyObject( item.variation ) ? 0 : autoQty;
-
+            this.qtyFieldValidation( row, validity );
+            this.checkBoxValidation( row, validity );
+        }
+        qtyFieldValidation( row, validity ){
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
-            if( qtyField && qtyField.length > 0 ){
-                qtyField.prop( 'disabled', 0 === valid );
-                qtyField.val( autoQty );
-                if( autoQty > 0 ){
-                    qtyField.removeClass( 'mpc-faulty' );
-                }
+            if( ! qtyField || 0 === qtyField.length ){
+                return;
             }
 
-            window.mpcTables.updateProductMeta( target, 'qty', autoQty );
-            
+            qtyField.prop( 'disabled', validity.disabled );
+            qtyField.val( validity.qty );
+            if( validity.qty > 0 ){
+                qtyField.removeClass( 'mpc-faulty' );
+            }
+        }
+        checkBoxValidation( row, validity ){
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
-            if( checkBox && checkBox.length > 0 ){
-                // when reducing quantity, don't auto check it.
-                if( '-' !== item.qty_state ){
-                    checkBox.prop( 'checked', autoQty > 0 );
-                    window.mpcTables.updateProductMeta( target, 'checked', autoQty > 0 );
-                }
+            if( ! checkBox || 0 === checkBox.length ){
+                return;
+            }
 
-                // when quantity is zero, uncheck it.
-                if( 0 === autoQty ){
-                    checkBox.prop( 'checked', false );
-                    window.mpcTables.updateProductMeta( target, 'checked', false );
-                }
+            checkBox.prop( 'disabled', validity.disabled );
 
-                checkBox.prop( 'disabled', 0 === valid );
+            if( validity.auto_update && validity.qty > 0 ){
+                checkBox.prop( 'checked', true );
+                checkBox.removeClass( 'mpc-faulty' );
+            }
+            if( 0 === validity.qty ){
+                checkBox.prop( 'checked', false );
             }
         }
         setTableTotal( field, target ){

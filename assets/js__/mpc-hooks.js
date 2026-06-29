@@ -62,13 +62,35 @@
                     };
                 },
                 getValidStockQuantity: function( field, target ){
-                    const item  = this.state[ target.tableId ][ target.productId ];
+                    const item = this.state[ target.tableId ][ target.productId ];
+
+                    // don't judge until you have solid reason to judge.
+                    if( 'variable' === item.type && $.isEmptyObject( item.variation ) ){
+                        return {
+                            qty:         item.qty,
+                            auto_update: false,
+                            disabled:    false
+                        };
+                    }
+                    
                     const stock = item.stock ?? -1;
+                    const qty = item.qty;
 
                     // return 0 only when it's out of stock, else at least 1.
-                    return 'number' === typeof stock && 0 === stock ? 0 : (
+                    const valid = 'number' === typeof stock && 0 === stock ? 0 : (
                         item.qty > stock && -1 !== stock ? stock : Math.max( 1, item.qty )
                     );
+
+                    let autoUpdate = '-' !== item.qty_state && valid > 0; // when not reducing quantity.
+                    
+                    item.qty     = autoUpdate ? Math.max( 1, item.qty ) : Math.min( valid, item.qty );
+                    item.checked = autoUpdate ? true : ( 0 === valid ? false : item.checked );
+
+                    return {
+                        qty:         item.qty,
+                        auto_update: autoUpdate,
+                        disabled:    0 === valid
+                    };
                 },
                 getTableTotal: function( target ) {
                     const tableData = this.state[ target.tableId ];
