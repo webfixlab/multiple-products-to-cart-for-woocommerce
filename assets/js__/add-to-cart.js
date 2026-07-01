@@ -62,14 +62,14 @@
             // const missingField = ! qtyField || 0 === qtyField.length || ! checkBox || 0 === checkBox.length;
             const total = Object.keys( cartData ).length;
             const msg   = missingQty || missingBuy ? (
-                1 === total ? 'a product' : (
-                    missingQty ? `1 of all ${total} products` : (
-                        missingBuy ? `all ${total} products` : ''
+                1 === total ? mpc_frontend.cart_confirm.single : (
+                    missingQty ? `${total}x1 ${mpc_frontend.cart_confirm.plural}` : (
+                        missingBuy ? `${total} ${mpc_frontend.cart_confirm.plural}` : ''
                     )
                 )
             ) : '';
 
-            return msg.length > 0 ? `Please note, you are adding ${msg} products to cart.` : '';
+            return msg.length > 0 ? mpc_frontend.cart_confirm.msg.replace( '%s', msg ) : '';
         }
         sendAddToCartRequest( cartData, wrap ){
             window.mpcHooks.doAction( 'mpc_spinner', 'load', wrap );

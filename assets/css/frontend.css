@@ -165,9 +165,6 @@ table.mpc-wrap img:hover {
 .mpc-product-title a{
 	text-decoration: underline;
 }
-td.mpc-product-variation select {
-	margin-bottom: 10px;
-}
 table.mpc-wrap td select:last-of-type {
 	margin-bottom: 0;
 }
@@ -180,6 +177,16 @@ table.mpc-wrap td select:last-of-type {
 	display: block;
 	box-shadow: none;
 	margin: 5px 0 0 0;
+}
+td.mpc-product-variation select {
+  margin-bottom: 5px;
+}
+.mpc-stock-out {
+	/* font-size: 13px; */
+	color: #d20000;
+	font-weight: 400;
+	display: block;
+	margin-bottom: 7px;
 }
 .total-row {
 	text-align: right;

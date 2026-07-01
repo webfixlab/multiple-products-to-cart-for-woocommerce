@@ -93,20 +93,21 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 				'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
 				'ds'             => wc_get_price_decimal_separator(), // decimal separator.
 				'ts'             => wc_get_price_thousand_separator(), // thousand separator.
-				// 'dqty'           => get_option( 'wmca_default_quantity', 1 ),
 				'locale'         => str_replace( '_', '-', get_locale() ),
 				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-				// 'currency'       => get_woocommerce_currency_symbol(), // currency symbol.
 				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
                 'imgassets'      => MPC_URL . 'assets/images/',
-				// 'cart_text'      => get_option( 'wmc_button_text', __( 'Add to cart', 'multiple-products-to-cart-for-woocommerce' ) ),
 				'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
 				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
 				'redirect_url'   => get_option( 'wmc_redirect', 'cart' ),
 				'blank_submit'   => get_option( 'wmc_empty_form_text', __( 'Please fix the issues and try again.', 'multiple-products-to-cart-for-woocommerce' ) ),
-				// 'blank_submit'   => get_option( 'wmc_empty_form_text', __( 'Please check one or more products', 'multiple-products-to-cart-for-woocommerce' ) ),
-				// 'missed_option'  => get_option( 'wmc_missed_variation_text', __( 'Please select all options', 'multiple-products-to-cart-for-woocommerce' ) ),
-                // 'orderby_ddown'  => array( 'price', 'title', 'date' ),
+				'stock_out'      => __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ),
+				'cart_confirm'   => array(
+					'single' => __( '1 product', 'multiple-products-to-cart-for-woocommerce' ),
+					'plural' => __( 'products', 'multiple-products-to-cart-for-woocommerce' ),
+					// trnaslators: %s is total product count.
+					'msg' => __( 'Please note, %s will be added to the cart.', 'multiple-products-to-cart-for-woocommerce' )
+				),
 			) );
         }
 
