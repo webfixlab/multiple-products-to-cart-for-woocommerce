@@ -199,7 +199,6 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 				'sku'          => $variation->get_sku(),
 				'stock_status' => $variation->get_stock_status(),
 				'stock'        => empty( $stock ) ? '' : $stock,
-				'stock_txt'    => __( 'In stock', 'multiple-products-to-cart-for-woocommerce' ),
 			);
 
 			$image_id = get_post_meta( $variation_id, '_thumbnail_id', true );

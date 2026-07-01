@@ -182,11 +182,11 @@ td.mpc-product-variation select {
   margin-bottom: 5px;
 }
 .mpc-stock-out {
-	/* font-size: 13px; */
+	font-size: 14px;
 	color: #d20000;
 	font-weight: 400;
 	display: block;
-	margin-bottom: 7px;
+	margin-bottom: 5px;
 }
 .total-row {
 	text-align: right;

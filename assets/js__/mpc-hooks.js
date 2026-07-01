@@ -74,7 +74,6 @@
                     }
                     
                     const stock = item.stock ?? -1;
-                    const qty = item.qty;
 
                     // return 0 only when it's out of stock, else at least 1.
                     const valid = 'number' === typeof stock && 0 === stock ? 0 : (

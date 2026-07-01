@@ -175,6 +175,8 @@
             this.qtyFieldValidation( row, validity );
             this.checkBoxValidation( row, validity );
             this.variationAttValidation( row, validity );
+
+            window.mpcHooks.doAction( 'mpc_row_validation', row, validity );
         }
         qtyFieldValidation( row, validity ){
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
@@ -206,10 +208,9 @@
         }
         variationAttValidation( row, validity ){
             // out of stock message.
+            row.find( '.mpc-stock-out' ).remove();
             if( validity.disabled ){
                 row.find( 'td.mpc-product-variation' ).prepend( `<span class="mpc-stock-out">${mpc_frontend.stock_out}</span>` );
-            }else{
-                row.find( '.mpc-stock-out' ).remove();
             }
         }
         setTableTotal( field, target ){
