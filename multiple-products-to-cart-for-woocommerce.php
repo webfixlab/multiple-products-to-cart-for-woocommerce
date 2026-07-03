@@ -32,4 +32,3 @@ define( 'MPC_PATH', plugin_dir_path( MPC ) );
 define( 'MPC_URL', plugin_dir_url( MPC ) );
 
 require MPC_PATH . 'includes__/loader/class-mpc-loader.php';
-// require MPC_PATH . 'includes/class/admin/class-mpcloader.php';

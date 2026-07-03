@@ -16,41 +16,43 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 	 */
 	class MPC_Asset_Loader {
 
-        /**
-         * If we should load uncompressed asset files
-         * @var string
-         */
-        private static $suffix;
-
-        /**
-         * Pro plugin status
-         * @var string
-         */
-        private static $pro_state;
+		/**
+		 * If we should load uncompressed asset files
+		 *
+		 * @var string
+		 */
+		private static $suffix;
 
 		/**
-         * Plugin core data
-         * @var array
-         */
-        private static $plugin_data;
-        
-        /**
-         * Init asset loader class
-         *
-         * @param string $pro_state Pro plugin status.
-         */
-        public static function init( $pro_state ){
-            self::$pro_state   = $pro_state;
-            // self::$suffix      = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-            self::$suffix      = '';
+		 * Pro plugin status
+		 *
+		 * @var string
+		 */
+		private static $pro_state;
+
+		/**
+		 * Plugin core data
+		 *
+		 * @var array
+		 */
+		private static $plugin_data;
+
+		/**
+		 * Init asset loader class
+		 *
+		 * @param string $pro_state Pro plugin status.
+		 */
+		public static function init( $pro_state ) {
+			self::$pro_state = $pro_state;
+			self::$suffix    = '';
 
 			self::$plugin_data = MPC_Core_Data::get_plugin();
 
-            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_frontend_assets' ) );
+			add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_frontend_assets' ) );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'load_admin_assets' ) );
-        }
+		}
 
-        /**
+		/**
 		 * Plugin frontend scripts and style enqueue
 		 */
 		public static function load_frontend_assets() {
@@ -62,14 +64,14 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			// hooks and filters script.
 			wp_register_script( 'mpc-hooks', MPC_URL . 'assets/js__/mpc-hooks' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
 			wp_enqueue_script( 'mpc-hooks' );
-			
+
 			wp_register_script( 'mpc-table-loader', MPC_URL . 'assets/js__/table-loader' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 			wp_register_script( 'mpc-product-events', MPC_URL . 'assets/js__/product-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js__/page-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 			wp_register_script( 'mpc-add-to-cart', MPC_URL . 'assets/js__/add-to-cart' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 
 			wp_register_script( 'mpc-available', MPC_URL . 'assets/js__/available-variations' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks', 'mpc-product-events' ), MPC_VER, true );
-			
+
 			wp_enqueue_script( 'mpc-table-loader' );
 			wp_enqueue_script( 'mpc-product-events' );
 			wp_enqueue_script( 'mpc-page-events' );
@@ -86,30 +88,34 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 
 		/**
 		 * Get frontend script localized data
+		 *
 		 * @return array
 		 */
-        private static function front_script_data(){
-			return apply_filters( 'mpca_update_local_vars', array(
-				'dp'             => get_option( 'woocommerce_price_num_decimals', 2 ),
-				'ds'             => wc_get_price_decimal_separator(), // decimal separator.
-				'ts'             => wc_get_price_thousand_separator(), // thousand separator.
-				'locale'         => str_replace( '_', '-', get_locale() ),
-				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-				'reset_var'      => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
-                'imgassets'      => MPC_URL . 'assets/images/',
-				'cart_nonce'     => wp_create_nonce( 'cart_nonce_ref' ),
-				'table_nonce'    => wp_create_nonce( 'table_nonce_ref' ),
-				'redirect_url'   => get_option( 'wmc_redirect', 'cart' ),
-				'blank_submit'   => get_option( 'wmc_empty_form_text', __( 'Please fix the issues and try again.', 'multiple-products-to-cart-for-woocommerce' ) ),
-				'stock_out'      => __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ),
-				'cart_confirm'   => array(
-					'single' => __( '1 product', 'multiple-products-to-cart-for-woocommerce' ),
-					'plural' => __( 'products', 'multiple-products-to-cart-for-woocommerce' ),
-					// trnaslators: %s is total product count.
-					'msg' => __( 'Please note, %s will be added to the cart.', 'multiple-products-to-cart-for-woocommerce' )
-				),
-			) );
-        }
+		private static function front_script_data() {
+			return apply_filters(
+				'mpca_update_local_vars',
+				array(
+					'dp'           => get_option( 'woocommerce_price_num_decimals', 2 ),
+					'ds'           => wc_get_price_decimal_separator(), // decimal separator.
+					'ts'           => wc_get_price_thousand_separator(), // thousand separator.
+					'locale'       => str_replace( '_', '-', get_locale() ),
+					'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+					'reset_var'    => esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ),
+					'imgassets'    => MPC_URL . 'assets/images/',
+					'cart_nonce'   => wp_create_nonce( 'cart_nonce_ref' ),
+					'table_nonce'  => wp_create_nonce( 'table_nonce_ref' ),
+					'redirect_url' => get_option( 'wmc_redirect', 'cart' ),
+					'blank_submit' => get_option( 'wmc_empty_form_text', __( 'Please fix the issues and try again.', 'multiple-products-to-cart-for-woocommerce' ) ),
+					'stock_out'    => __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ),
+					'cart_confirm' => array(
+						'single' => __( '1 product', 'multiple-products-to-cart-for-woocommerce' ),
+						'plural' => __( 'products', 'multiple-products-to-cart-for-woocommerce' ),
+						// translators: %s is total product count.
+						'msg'    => __( 'Please note, %s will be added to the cart.', 'multiple-products-to-cart-for-woocommerce' ),
+					),
+				)
+			);
+		}
 
 		/**
 		 * Inline CSS for dynamic CSS property values
@@ -155,7 +161,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			}
 
 			if ( 'on' === get_option( 'wmca_inline_dropdown' ) ) {
-				$css .= ".mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }";
+				$css .= '.mpc-wrap .variation-group > select, .variation-group select{ max-width: 100px; }';
 			}
 
 			$css .= '.mpc-container .mpc-product-title a{';
@@ -199,9 +205,9 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 		 * Admin scripts and style enqueue
 		 */
 		public static function load_admin_assets() {
-            if( ! is_admin() || ! self::admin_in_scope() ){
-                return;
-            }
+			if ( ! is_admin() || ! self::admin_in_scope() ) {
+				return;
+			}
 
 			wp_register_style( 'mpc-admin', MPC_URL . 'assets/css/admin/admin' . self::$suffix . '.css', array(), MPC_VER );
 			wp_enqueue_style( 'mpc-admin' );
@@ -215,36 +221,39 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			wp_enqueue_script( 'mpc-shortcode-events' );
 
 			$localized_data = self::admin_script_data();
-            wp_localize_script( 'mpc-page-events', 'mpc_admin', $localized_data );
-            wp_localize_script( 'mpc-settings-events', 'mpc_admin', $localized_data );
-            wp_localize_script( 'mpc-shortcode-events', 'mpc_admin', $localized_data );
-            
+			wp_localize_script( 'mpc-page-events', 'mpc_admin', $localized_data );
+			wp_localize_script( 'mpc-settings-events', 'mpc_admin', $localized_data );
+			wp_localize_script( 'mpc-shortcode-events', 'mpc_admin', $localized_data );
+
 			self::admin_libraries();
 		}
 
 		/**
 		 * Checks if admin in scope.
 		 */
-        private static function admin_in_scope(){
-            $screen = get_current_screen();
-            return in_array( $screen->id, self::$plugin_data[ 'admin_scopes' ], true );
-        }
+		private static function admin_in_scope() {
+			$screen = get_current_screen();
+			return in_array( $screen->id, self::$plugin_data['admin_scopes'], true );
+		}
 
 		/**
 		 * Get admin localized data
 		 */
-        private static function admin_script_data(){
-			return apply_filters( 'mpca_local_var', array(
-				'nonce'        => wp_create_nonce( 'search_box_nonce' ),
-				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-                'has_pro'      => empty( self::$pro_state ),
-			) );
-        }
+		private static function admin_script_data() {
+			return apply_filters(
+				'mpca_local_var',
+				array(
+					'nonce'   => wp_create_nonce( 'search_box_nonce' ),
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'has_pro' => empty( self::$pro_state ),
+				)
+			);
+		}
 
 		/**
 		 * Add support libraries for admin
 		 */
-		private static function admin_libraries(){
+		private static function admin_libraries() {
 			// colorpicker style.
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker' );

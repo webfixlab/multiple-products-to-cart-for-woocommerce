@@ -20,7 +20,7 @@ if ( ! class_exists( 'MPC_Ajax_Table_Loader' ) ) {
 		 * Class initialization function
 		 */
 		public static function init() {
-            add_action( 'wp_ajax_mpc_ajax_table_loader', array( __CLASS__, 'product_table_ajax' ) );
+			add_action( 'wp_ajax_mpc_ajax_table_loader', array( __CLASS__, 'product_table_ajax' ) );
 			add_action( 'wp_ajax_nopriv_mpc_ajax_table_loader', array( __CLASS__, 'product_table_ajax' ) );
 		}
 
@@ -33,31 +33,34 @@ if ( ! class_exists( 'MPC_Ajax_Table_Loader' ) ) {
 			$locale = isset( $_POST['locale'] ) ? sanitize_text_field( wp_unslash( $_POST['locale'] ) ) : '';
 			$paged  = isset( $_POST['page'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['page'] ) ) : 1;
 
-			$atts   = sanitize_text_field( wp_unslash( $_POST['atts'] ) );
-			$atts   = json_decode( $atts, true );
-			if( empty( $atts ) ){
+			$atts = isset( $_POST['atts'] ) ? sanitize_text_field( wp_unslash( $_POST['atts'] ) ) : array();
+			$atts = ! empty( $atts ) ? json_decode( $atts, true ) : array();
+			if ( empty( $atts ) ) {
 				wp_send_json_error( array( 'msg' => __( 'Sorry! There was an error.', 'multiple-products-to-cart-for-woocommerce' ) ) );
 			}
 
 			$data = MPC_Product_Data::get_products( $atts, $paged );
-			if( empty( $data ) || empty( $data['products'] ) ){
-				wp_send_json( array(
-					'status'        => 'error',
-					'msg'           => __( 'No posts found!', 'multiple-products-to-cart-for-woocommerce' ),
-					'mpc_fragments' => self::empty_products_error_response()
-				) );
+			if ( empty( $data ) || empty( $data['products'] ) ) {
+				wp_send_json(
+					array(
+						'status'        => 'error',
+						'msg'           => __( 'No posts found!', 'multiple-products-to-cart-for-woocommerce' ),
+						'mpc_fragments' => self::empty_products_error_response(),
+					)
+				);
 			}
 
 			MPC_Front_Data::setup_frontend_data( $atts, $data );
-			
+
 			wp_send_json( array( 'mpc_fragments' => self::get_table_fragments( $atts, $locale ) ) );
 		}
 
 		/**
 		 * No products found - ajax response.
+		 *
 		 * @return array<array{adding_type: string, key: string, parent: string, val: string|array{key: string, val: string}>}
 		 */
-		private static function empty_products_error_response(){
+		private static function empty_products_error_response() {
 			return array(
 				array(
 					'key' => 'table.mpc-wrap',
@@ -84,7 +87,7 @@ if ( ! class_exists( 'MPC_Ajax_Table_Loader' ) ) {
 		 * @param string $locale Translation locale.
 		 * @return array
 		 */
-		private static function get_table_fragments( array $atts, string $locale ){
+		private static function get_table_fragments( array $atts, string $locale ) {
 			$response = array();
 
 			// Switch to the new locale | Multilingual | PolyLang plugin support.

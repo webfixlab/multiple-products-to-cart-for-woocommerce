@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if( ! function_exists( 'mpc_display_table' ) ){
+if ( ! function_exists( 'mpc_display_table' ) ) {
 	/**
 	 * Display product table
 	 */

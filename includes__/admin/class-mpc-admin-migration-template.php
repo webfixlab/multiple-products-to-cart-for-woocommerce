@@ -16,171 +16,180 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 	 */
 	class MPC_Admin_Migration_Template {
 
-        /**
-         * Settings page tab
-         * @var string
-         */
-        private static $settings_tab;
-
-        /**
-         * Pro plugin status
-         * @var string
-         */
-        private static $pro_state = '';
-
-        /**
-         * Export settings and tables template
-         */
-        public static function render_template( $tab, $pro_state ){
-            self::$settings_tab = $tab;
-            self::$pro_state    = $pro_state;
-
-            if( 'import' === $tab ){
-                do_action( 'mpc_pro_import' );
-            }
-            ?>
-            <div class="mpcdp_settings_section">
-                <?php self::page_title(); ?>
-                <div class="mpcdp_settings_toggle mpcdp_container">
-                    <div class="mpcdp_settings_option visible">
-                        <div class="mpcdp_settings_option_field_theme_customizer">
-                            <?php self::page_desc(); ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="mpcdp_settings_toggle mpcdp_container">
-                    <div class="mpcdp_settings_option visible">
-                        <div class="mpcdp_row">
-                            <?php self::migration_buttons(); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php
-            wp_nonce_field( "mpc_{$tab}_nonce", "mpc_{$tab}" );
-        }
-
-        /**
-         * Display page title
-         */
-        private static function page_title(){
-            ?>
-            <div class="mpcdp_settings_section_title">
-                <?php echo 'export' === self::$settings_tab ? __( 'Export Settings', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import Settings', 'multiple-products-to-cart-for-woocommerce' ); ?>
-            </div>
-            <?php
-        }
-
-        /**
-         * Display export page desctiption
-         */
-        private static function page_desc(){
-            ?>
-            <span class="theme_customizer_icon dashicons dashicons-<?php echo 'export' === self::$settings_tab ? 'download' : 'upload'; ?>"></span>
-            <div class="mpcdp_settings_option_description">
-                <?php self::pro_ribbon(); ?>
-                <div class="mpcdp_option_label"><?php echo wp_kses_post(
-                    sprintf(
-                        // translators: %s is settings tab.
-                        __( '%s MPC Tables and Settings', 'multiple-products-to-cart-for-woocommerce' ),
-                        'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' )
-                    )
-                ); ?></div>
-                <div class="mpcdp_option_description">
-                    <?php self::tab_desc(); ?>
-                    <?php self::only_for_pro_notice(); ?>
-                </div>
-            </div>
-            <?php
-        }
-
-        /**
-		 * Settings field PRO ribbon
+		/**
+		 * Settings page tab
+		 *
+		 * @var string
 		 */
-		private static function pro_ribbon() {
-			if( ! empty( self::$pro_state ) ) {
-                return;
-            }
+		private static $settings_tab;
+
+		/**
+		 * Pro plugin status
+		 *
+		 * @var string
+		 */
+		private static $pro_state = '';
+
+		/**
+		 * Display migration template
+		 *
+		 * @param string $tab       Settings tab.
+		 * @param string $pro_state Pro state.
+		 */
+		public static function render_template( $tab, $pro_state ) {
+			self::$settings_tab = $tab;
+			self::$pro_state    = $pro_state;
+
+			if ( 'import' === $tab ) {
+				do_action( 'mpc_pro_import' );
+			}
 			?>
-			<div class="mpcdp_settings_option_ribbon mpcdp_settings_option_ribbon_new">
-				<?php echo __( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
+			<div class="mpcdp_settings_section">
+				<?php self::page_title(); ?>
+				<div class="mpcdp_settings_toggle mpcdp_container">
+					<div class="mpcdp_settings_option visible">
+						<div class="mpcdp_settings_option_field_theme_customizer">
+							<?php self::page_desc(); ?>
+						</div>
+					</div>
+				</div>
+				<div class="mpcdp_settings_toggle mpcdp_container">
+					<div class="mpcdp_settings_option visible">
+						<div class="mpcdp_row">
+							<?php self::migration_buttons(); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+			wp_nonce_field( "mpc_{$tab}_nonce", "mpc_{$tab}" );
+		}
+
+		/**
+		 * Display page title
+		 */
+		private static function page_title() {
+			?>
+			<div class="mpcdp_settings_section_title">
+				<?php echo 'export' === self::$settings_tab ? esc_html__( 'Export Settings', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import Settings', 'multiple-products-to-cart-for-woocommerce' ); ?>
 			</div>
 			<?php
 		}
 
-        /**
-         * Display details of current tab
-         */
-        private static function tab_desc(){
-            if( 'export' === self::$settings_tab ){
-                ?>
-                <br>
-                <?php echo __( 'Click on `Export` to export tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
-                <br><br>
-                <?php echo __( 'You will find either a `mpc_export.json` or an enumarated `mpc_export(1).json` file in your `Downloads` folder. You can use this file to import it later or to other websites.', 'multiple-products-to-cart-for-woocommerce' ); ?>
-                <br><br>
-                <?php
-            }else{
-                ?>
-                <br>
-                <?php echo __( 'The file name will be `mpc_export.json` or enumarated `mpc_export(1).json`.', 'multiple-products-to-cart-for-woocommerce' ); ?>
-                <br><br>
-                <?php echo __( 'Choose the .json file and click on `Import`. This will import `Multiple products to cart for WooCommerce` tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
-                <br><br>
-                <?php
-            }
-        }
+		/**
+		 * Display export page desctiption
+		 */
+		private static function page_desc() {
+			?>
+			<span class="theme_customizer_icon dashicons dashicons-<?php echo 'export' === self::$settings_tab ? 'download' : 'upload'; ?>"></span>
+			<div class="mpcdp_settings_option_description">
+				<?php self::pro_ribbon(); ?>
+				<div class="mpcdp_option_label">
+				<?php
+				echo wp_kses_post(
+					sprintf(
+						// translators: %s is settings tab.
+						esc_html__( '%s MPC Tables and Settings', 'multiple-products-to-cart-for-woocommerce' ),
+						'export' === self::$settings_tab ? esc_html__( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import', 'multiple-products-to-cart-for-woocommerce' )
+					)
+				);
+				?>
+				</div>
+				<div class="mpcdp_option_description">
+					<?php self::tab_desc(); ?>
+					<?php self::only_for_pro_notice(); ?>
+				</div>
+			</div>
+			<?php
+		}
 
-        /**
-         * Notice to inform the provided key feature is only avialable in Pro plugin
-         */
-        private static function only_for_pro_notice(){
-            if( ! empty( self::$pro_state ) ) {
-                return;
-            }
+		/**
+		 * Settings field PRO ribbon
+		 */
+		private static function pro_ribbon() {
+			if ( ! empty( self::$pro_state ) ) {
+				return;
+			}
+			?>
+			<div class="mpcdp_settings_option_ribbon mpcdp_settings_option_ribbon_new">
+				<?php echo esc_html__( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
+			</div>
+			<?php
+		}
 
-            echo wp_kses_post(
-                sprintf(
-                    // translators: %s is the feature name.
-                    __( 'The %s feature is only available for PRO plugin.', 'multiple-products-to-cart-for-woocommerce' ),
-                    esc_html( self::$settings_tab )
-                )
-            );
-        }
+		/**
+		 * Display details of current tab
+		 */
+		private static function tab_desc() {
+			if ( 'export' === self::$settings_tab ) {
+				?>
+				<br>
+				<?php echo esc_html__( 'Click on `Export` to export tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+				<br><br>
+				<?php echo esc_html__( 'You will find either a `mpc_export.json` or an enumarated `mpc_export(1).json` file in your `Downloads` folder. You can use this file to import it later or to other websites.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+				<br><br>
+				<?php
+			} else {
+				?>
+				<br>
+				<?php echo esc_html__( 'The file name will be `mpc_export.json` or enumarated `mpc_export(1).json`.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+				<br><br>
+				<?php echo esc_html__( 'Choose the .json file and click on `Import`. This will import `Multiple products to cart for WooCommerce` tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+				<br><br>
+				<?php
+			}
+		}
 
-        /**
-         * Display export buttons
-         */
-        private static function migration_buttons(){
-            ?>
-            <div class="mpcdp_settings_option_description col-md-6">
-                <div class="mpcdp_option_label"><?php echo 'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                <div class="mpcdp_option_description">
-                    <?php
-                        echo wp_kses_post(
-                            sprintf(
-                                // translators: %s is settings tab.
-                                __( '%s MPC Tables and Settings', 'multiple-products-to-cart-for-woocommerce' ),
-                                'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' )
-                            )
-                        );
-                    ?>
-                </div>
-            </div>
-            <div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
-                <div class="mpcdp_settings_submit mpc-file">
-                    <div class="submit">
-                        <button
-                            id="mpc-<?php echo esc_attr( self::$settings_tab ); ?>"
-                            class="mpcdp_submit_button <?php echo empty( self::$pro_state ) ? 'mpcex-disabled' : ''; ?>"
-                            title="<?php echo 'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?>">
-                            <div class="save-text"><?php echo 'export' === self::$settings_tab ? __( 'Export settings', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                            <div class="save-text save-text-mobile"><?php echo 'export' === self::$settings_tab ? __( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : __( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <?php
-        }
+		/**
+		 * Notice to inform the provided key feature is only avialable in Pro plugin
+		 */
+		private static function only_for_pro_notice() {
+			if ( ! empty( self::$pro_state ) ) {
+				return;
+			}
+
+			echo wp_kses_post(
+				sprintf(
+					// translators: %s is the feature name.
+					esc_html__( 'The %s feature is only available for PRO plugin.', 'multiple-products-to-cart-for-woocommerce' ),
+					esc_html( self::$settings_tab )
+				)
+			);
+		}
+
+		/**
+		 * Display export buttons
+		 */
+		private static function migration_buttons() {
+			?>
+			<div class="mpcdp_settings_option_description col-md-6">
+				<div class="mpcdp_option_label"><?php echo 'export' === self::$settings_tab ? esc_html__( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+				<div class="mpcdp_option_description">
+					<?php
+						echo wp_kses_post(
+							sprintf(
+								// translators: %s is settings tab.
+								esc_html__( '%s MPC Tables and Settings', 'multiple-products-to-cart-for-woocommerce' ),
+								'export' === self::$settings_tab ? esc_html__( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import', 'multiple-products-to-cart-for-woocommerce' )
+							)
+						);
+					?>
+				</div>
+			</div>
+			<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">
+				<div class="mpcdp_settings_submit mpc-file">
+					<div class="submit">
+						<button
+							id="mpc-<?php echo esc_attr( self::$settings_tab ); ?>"
+							class="mpcdp_submit_button <?php echo empty( self::$pro_state ) ? 'mpcex-disabled' : ''; ?>"
+							title="<?php echo 'export' === self::$settings_tab ? esc_html__( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?>">
+							<div class="save-text"><?php echo 'export' === self::$settings_tab ? esc_html__( 'Export settings', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import settings', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+							<div class="save-text save-text-mobile"><?php echo 'export' === self::$settings_tab ? esc_html__( 'Export', 'multiple-products-to-cart-for-woocommerce' ) : esc_html__( 'Import', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+						</button>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
 	}
 }

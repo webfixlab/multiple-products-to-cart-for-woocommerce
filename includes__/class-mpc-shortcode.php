@@ -33,12 +33,12 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 			global $mpc_table__;
 
 			$atts = self::extract_shortcode_atts( $atts );
-			if( empty( $atts ) ){
+			if ( empty( $atts ) ) {
 				return;
 			}
 
 			$data = MPC_Product_Data::get_products( $atts, 1 );
-			if( empty( $data ) || empty( $data['products'] ) ){
+			if ( empty( $data ) || empty( $data['products'] ) ) {
 				return;
 			}
 
@@ -69,12 +69,12 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		}
 
 		/**
-		 * Get saved shortcode 
+		 * Get saved shortcode
 		 *
 		 * @param array $atts Shortcode attributes.
 		 * @return array
 		 */
-		private static function extract_saved_shortcode( $atts ){
+		private static function extract_saved_shortcode( $atts ) {
 			$table_id  = (int) $atts['table'];
 			$cpt_id    = get_post_meta( $table_id, 'table_id', true );
 			$shortcode = get_post_meta( $cpt_id, 'shortcode', true );
@@ -85,22 +85,25 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 
 			$shortcode_atts = ! empty( $shortcode ) ? shortcode_parse_atts( $shortcode ) : array(); // shortcode attributes.
 
-			$reference_atts = apply_filters( 'mpc_filter_attributes', array(
-				'table'         => '',
-				'limit'         => 10,
-				'orderby'       => '',
-				'order'         => 'DESC',
-				'ids'           => '',
-				'skip_products' => '',
-				'cats'          => '',
-				'tags'          => '',
-				'type'          => 'all',
-				'link'          => 'true',
-				'description'   => 'false',
-				'selected'      => '',
-				'pagination'    => 'true',
-				'columns'       => '',
-			) );
+			$reference_atts = apply_filters(
+				'mpc_filter_attributes',
+				array(
+					'table'         => '',
+					'limit'         => 10,
+					'orderby'       => '',
+					'order'         => 'DESC',
+					'ids'           => '',
+					'skip_products' => '',
+					'cats'          => '',
+					'tags'          => '',
+					'type'          => 'all',
+					'link'          => 'true',
+					'description'   => 'false',
+					'selected'      => '',
+					'pagination'    => 'true',
+					'columns'       => '',
+				)
+			);
 
 			return shortcode_atts( $reference_atts, $shortcode_atts, 'woo-multi-cart' );
 		}

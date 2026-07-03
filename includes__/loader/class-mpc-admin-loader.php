@@ -16,31 +16,33 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 	 */
 	class MPC_Admin_Loader {
 
-        /**
-         * Plugin core data
-         * @var array
-         */
-        private static $plugin_data;
+		/**
+		 * Plugin core data
+		 *
+		 * @var array
+		 */
+		private static $plugin_data;
 
-        /**
-         * Pro plugin status
-         * @var string
-         */
-        private static $pro_state;
+		/**
+		 * Pro plugin status
+		 *
+		 * @var string
+		 */
+		private static $pro_state;
 
 		/**
 		 * Plugin installation handler
-         *
-         * @param string $pro_state Pro plugin status.
+		 *
+		 * @param string $pro_state Pro plugin status.
 		 */
 		public static function init( $pro_state ) {
-            self::$pro_state   = $pro_state;
-            self::$plugin_data = MPC_Core_Data::get_plugin();
+			self::$pro_state   = $pro_state;
+			self::$plugin_data = MPC_Core_Data::get_plugin();
 
 			self::register_cpt();
 
 			add_action( 'admin_head', array( __CLASS__, 'admin_head' ) );
-            add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
+			add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 
 			// add extra links right under plug.
 			add_filter( 'plugin_action_links_' . plugin_basename( MPC ), array( __CLASS__, 'action_links' ) );
@@ -81,7 +83,7 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 			);
 		}
 
-        /**
+		/**
 		 * Process admin head | handle notice and menu styling
 		 */
 		public static function admin_head() {
@@ -89,7 +91,7 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 			self::remove_admin_notices();
 		}
 
-        /**
+		/**
 		 * Admin menu styling
 		 */
 		public static function admin_menu_css() {
@@ -108,7 +110,7 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 				jQuery( document ).ready(function(){
 					jQuery( '#toplevel_page_mpc-shortcodes a' ).each(function(){
 						if( jQuery(this).text() == '<?php echo esc_html__( 'Get PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>' ){
-							jQuery(this).attr( 'href', '<?php echo esc_url( self::$plugin_data[ 'pro_plugin_url' ] ); ?>' );
+							jQuery(this).attr( 'href', '<?php echo esc_url( self::$plugin_data['pro_plugin_url'] ); ?>' );
 							jQuery(this).attr( 'target', '_blank' );
 						}
 					});
@@ -117,13 +119,13 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 			<?php
 		}
 
-        /**
+		/**
 		 * Store all admin notices to global variable and remove all
 		 */
 		public static function remove_admin_notices() {
 			// only apply to admin MPC setting page.
 			$screen = get_current_screen();
-			if ( ! in_array( $screen->id, self::$plugin_data[ 'admin_scopes' ], true ) ) {
+			if ( ! in_array( $screen->id, self::$plugin_data['admin_scopes'], true ) ) {
 				return;
 			}
 
@@ -186,7 +188,7 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 			}
 		}
 
-        /**
+		/**
 		 * Saved tables admin menu page
 		 */
 		public static function all_tables_page() {
@@ -197,21 +199,21 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 		 * New table admin menu page
 		 */
 		public static function create_new_table_page() {
-            MPC_Admin_Page::init( 'new-table', self::$pro_state );
+			MPC_Admin_Page::init( 'new-table', self::$pro_state );
 		}
 
 		/**
 		 * Admin settings menu page
 		 */
 		public static function admin_settings_page() {
-            MPC_Admin_Page::init( '', self::$pro_state );
+			MPC_Admin_Page::init( '', self::$pro_state );
 		}
 
 		/**
 		 * Admin menu pro page
 		 */
 		public static function pro_page() {
-			header( 'Location: ' . esc_url( self::$plugin_data[ 'pro_plugin_url' ] ) );
+			header( 'Location: ' . esc_url( self::$plugin_data['pro_plugin_url'] ) );
 			exit;
 		}
 
@@ -229,13 +231,13 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 				esc_html__( 'Settings', 'multiple-products-to-cart-for-woocommerce' )
 			);
 
-            if( ! empty( self::$pro_state ) ){
-                return array_merge( $action_links, $links );
-            }
+			if ( ! empty( self::$pro_state ) ) {
+				return array_merge( $action_links, $links );
+			}
 
 			$action_links['premium'] = sprintf(
 				'<a href="%s" style="font-weight: bold;background: linear-gradient(94deg, #0090F7, #BA62FC, #F2416B, #F55600);background-clip: text;color: transparent;">%s</a>',
-				esc_url( self::$plugin_data[ 'pro_plugin_url' ] ),
+				esc_url( self::$plugin_data['pro_plugin_url'] ),
 				__( 'Get PRO Plugin', 'multiple-products-to-cart-for-woocommerce' )
 			);
 
@@ -254,13 +256,16 @@ if ( ! class_exists( 'MPC_Admin_Loader' ) ) {
 				return $links;
 			}
 
-			return array_merge( $links, array(
-                'apidocs' => sprintf(
-                    '<a href="%s">%s</a>',
-                    esc_url( self::$plugin_data[ 'contact_us_url' ] ),
-                    esc_html__( 'Support', 'multiple-products-to-cart-for-woocommerce' )
-                )
-            ) );
+			return array_merge(
+				$links,
+				array(
+					'apidocs' => sprintf(
+						'<a href="%s">%s</a>',
+						esc_url( self::$plugin_data['contact_us_url'] ),
+						esc_html__( 'Support', 'multiple-products-to-cart-for-woocommerce' )
+					),
+				)
+			);
 		}
 	}
 }

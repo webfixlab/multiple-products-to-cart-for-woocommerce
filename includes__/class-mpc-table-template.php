@@ -18,6 +18,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 		/**
 		 * Frontent template data
+		 *
 		 * @var array
 		 */
 		private static $data;
@@ -25,12 +26,12 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Initialize table actions and filters.
 		 */
-		public static function init(){
+		public static function init() {
 			// header.
 			add_action( 'mpc_table_header', array( __CLASS__, 'display_table_filters' ), 10 );
 			add_action( 'mpc_table_filters', array( __CLASS__, 'table_orderby' ), 10 );
 			add_action( 'mpc_table_actions', array( __CLASS__, 'table_check_all' ), 10 );
-			
+
 			// content.
 			add_action( 'mpc_table_title_columns', array( __CLASS__, 'display_table_header' ), 10 );
 			add_action( 'mpc_table_body', array( __CLASS__, 'display_table_body' ), 10 );
@@ -44,7 +45,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			add_action( 'mpc_table_column_quantity', array( __CLASS__, 'display_product_quantity' ), 10, 1 );
 			add_action( 'mpc_table_column_buy', array( __CLASS__, 'display_product_checkbox' ), 10, 1 );
-			
+
 			// footer.
 			add_action( 'mpc_table_footer', array( __CLASS__, 'table_footer' ), 10 );
 			add_action( 'mpc_table_total', array( __CLASS__, 'table_total' ), 10 );
@@ -56,7 +57,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Get global data into class static variable for ease of access
 		 */
-		private static function setup_frontend_data(){
+		private static function setup_frontend_data() {
 			global $mpc_table__;
 
 			self::$data = &$mpc_table__;
@@ -65,7 +66,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Display table filters and actions
 		 */
-		public static function display_table_filters(){
+		public static function display_table_filters() {
 			?>
 			<div class="mpc-filters">
 				<?php do_action( 'mpc_table_filters' ); ?>
@@ -83,7 +84,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 
 			$show_filter = get_option( 'wmc_show_products_filter' );
-			if( ! empty( $show_filter ) && 'on' !== $show_filter ){
+			if ( ! empty( $show_filter ) && 'on' !== $show_filter ) {
 				return;
 			}
 			?>
@@ -101,7 +102,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Display filter options
 		 */
-		private static function table_orderby_options(){
+		private static function table_orderby_options() {
 			foreach ( self::$data['orderby'] as $slug => $label ) {
 				?>
 				<option value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
@@ -116,16 +117,16 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 
 			$show_all_check = get_option( 'wmc_show_all_select' );
-			if( ! empty( $show_all_check ) && 'on' !== $show_all_check ){
+			if ( ! empty( $show_all_check ) && 'on' !== $show_all_check ) {
 				return; // option hidden.
 			}
 
 			$show_product_check = get_option( 'mpc_add_to_cart_checkbox' );
-			if( ! empty( $show_product_check ) && 'on' !== $show_product_check ) {
+			if ( ! empty( $show_product_check ) && 'on' !== $show_product_check ) {
 				return;
 			}
 
-			if( ! in_array( 'wmc_ct_buy', array_keys( self::$data['columns'] ), true ) ){
+			if ( ! in_array( 'wmc_ct_buy', array_keys( self::$data['columns'] ), true ) ) {
 				return;
 			}
 			?>
@@ -155,9 +156,9 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Display table columns with labels
 		 */
-		private static function display_table_header_columns(){
+		private static function display_table_header_columns() {
 			self::setup_frontend_data();
-			
+
 			foreach ( self::$data['columns'] as $slug => $label ) {
 				?>
 				<th
@@ -173,7 +174,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		public static function display_table_body() {
 			self::setup_frontend_data();
 
-			foreach( self::$data['products'] as $product_id ) {
+			foreach ( self::$data['products'] as $product_id ) {
 				self::display_table_row( $product_id );
 			}
 		}
@@ -204,7 +205,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 *
 		 * @param object $product Product object.
 		 */
-		private static function display_table_row_columns( $product ){
+		private static function display_table_row_columns( $product ) {
 			foreach ( self::$data['columns'] as $slug => $label ) {
 				$key = str_replace( 'wmc_ct_', '', $slug );
 				?>
@@ -214,7 +215,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				<?php
 			}
 		}
-		
+
 		/**
 		 * Display product image
 		 *
@@ -224,8 +225,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 
 			$image_id = $product->get_image_id();
-			$thumb = empty( $image_id ) ? self::$data['image']['thumb'] : wp_get_attachment_image_url( $image_id, 'thumbnail' );
-			$full  = empty( $image_id ) ? self::$data['image']['full'] : wp_get_attachment_image_url( $image_id, 'large' );
+			$thumb    = empty( $image_id ) ? self::$data['image']['thumb'] : wp_get_attachment_image_url( $image_id, 'thumbnail' );
+			$full     = empty( $image_id ) ? self::$data['image']['full'] : wp_get_attachment_image_url( $image_id, 'large' );
 			?>
 			<div class="mpcpi-wrap">
 				<?php self::display_on_sale( $product ); ?>
@@ -240,13 +241,13 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 *
 		 * @param object $product Product object.
 		 */
-		private static function display_on_sale( $product ){
-			if( ! $product->is_on_sale() ){
+		private static function display_on_sale( $product ) {
+			if ( ! $product->is_on_sale() ) {
 				return;
 			}
 
 			$show_on_sale = get_option( 'mpc_show_on_sale' );
-			if( ! empty( $show_on_sale ) && 'on' !== $show_on_sale ){
+			if ( ! empty( $show_on_sale ) && 'on' !== $show_on_sale ) {
 				return;
 			}
 			?>
@@ -275,13 +276,13 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 *
 		 * @param object $product Product object.
 		 */
-		private static function display_product_title( $product ){
+		private static function display_product_title( $product ) {
 			$show_link = self::$data['atts']['link'] ?? '';
 			?>
 			<div class="mpc-product-name">
-				<?php if( empty( $show_link ) || 'true' === $show_link ) : ?>
+				<?php if ( empty( $show_link ) || 'true' === $show_link ) : ?>
 					<a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html( $product->get_title() ); ?></a>
-				<?php else: ?>
+				<?php else : ?>
 					<?php echo esc_html( $product->get_title() ); ?>
 				<?php endif; ?>
 			</div>
@@ -293,8 +294,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 *
 		 * @param object $product Product object.
 		 */
-		private static function display_product_description( $product ){
-			if( isset( self::$data['atts']['description'] ) && 'false' === self::$data['atts']['description'] ){
+		private static function display_product_description( $product ) {
+			if ( isset( self::$data['atts']['description'] ) && 'false' === self::$data['atts']['description'] ) {
 				return;
 			}
 
@@ -316,13 +317,13 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			?>
 			<div class="mpc-single-price" style="display:none;">
 				<?php
-					if ( 'variable' === $product->get_type() ) { // for variable products only.
-						self::total_price();
-					}
+				if ( 'variable' === $product->get_type() ) { // for variable products only.
+					self::total_price();
+				}
 				?>
 			</div>
 			<div class="mpc-range">
-				<?php echo $product->get_price_html(); ?>
+				<?php echo wp_kses_post( $product->get_price_html() ); ?>
 			</div>
 			<?php
 		}
@@ -344,13 +345,13 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * @param object $product Product object.
 		 */
 		private static function display_variation_attributes( $product ) {
-			if( 'variable' !== $product->get_type() ){
+			if ( 'variable' !== $product->get_type() ) {
 				self::no_variation_text();
 				return;
 			}
 
 			$attributes = $product->get_variation_attributes();
-			if( empty( $attributes ) || ! is_array( $attributes ) ){
+			if ( empty( $attributes ) || ! is_array( $attributes ) ) {
 				return;
 			}
 			?>
@@ -360,22 +361,28 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			<?php
 			$default_atts = $product->get_default_attributes();
 
-			foreach( $attributes as $att_name => $options ){
+			foreach ( $attributes as $att_name => $options ) {
 				$att_name_sanitized = sanitize_title( $att_name );
 
-				$terms = taxonomy_exists( $att_name ) ? array_filter( wc_get_product_terms( $product->get_id(), $att_name, array( 'fields' => 'all' ) ), function( $term ) use( $options ){
-					return in_array( $term->slug, $options );
-				} ) : $options;
+				$terms = taxonomy_exists( $att_name ) ? array_filter(
+					wc_get_product_terms( $product->get_id(), $att_name, array( 'fields' => 'all' ) ),
+					function ( $term ) use ( $options ) {
+						return in_array( $term->slug, $options, true );
+					}
+				) : $options;
 
-				$terms = array_map( function( $term ) use( $default_atts, $att_name_sanitized ){
-					$slug = is_object( $term ) ? $term->slug : $term;
+				$terms = array_map(
+					function ( $term ) use ( $default_atts, $att_name_sanitized ) {
+						$slug = is_object( $term ) ? $term->slug : $term;
 
-					return array(
-						'name'     => is_object( $term ) ? $term->name : $term,
-						'slug'     => $slug,
-						'selected' => isset( $default_atts[ $att_name_sanitized ] ) && $slug === $default_atts[ $att_name_sanitized ]
-					);
-				}, $terms );
+						return array(
+							'name'     => is_object( $term ) ? $term->name : $term,
+							'slug'     => $slug,
+							'selected' => isset( $default_atts[ $att_name_sanitized ] ) && $slug === $default_atts[ $att_name_sanitized ],
+						);
+					},
+					$terms
+				);
 
 				$default_option = self::$data['labels']['variation_prefix'] . wc_attribute_label( $att_name );
 				?>
@@ -389,7 +396,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				<?php
 			}
 
-			if( ! empty( $default_atts ) ){
+			if ( ! empty( $default_atts ) ) {
 				?>
 				<a class="mpc-clear-variations" href="#"><?php echo esc_html__( 'Clear', 'multiple-products-to-cart-for-woocommerce' ); ?></a>
 				<?php
@@ -401,8 +408,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 *
 		 * @param array $terms Attribute option terms.
 		 */
-		private static function display_variation_attribute( $terms ){
-			foreach( $terms as $term ){
+		private static function display_variation_attribute( $terms ) {
+			foreach ( $terms as $term ) {
 				?>
 				<option
 					data-value="<?php echo esc_html( $term['slug'] ); ?>"
@@ -437,7 +444,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			$stock = 'instock' === $product->get_stock_status() ? $product->get_stock_quantity() : '';
 			$stock = $product->is_sold_individually() ? 0 : $stock;
-			
+
 			$quantity = self::$data['settings']['qty'] ?? '';
 			$quantity = empty( $quantity ) ? 0 : (int) $quantity;
 			$quantity = ! empty( $stock ) && $stock > 0 ? min( $stock, $quantity ) : $quantity;
@@ -446,8 +453,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				type="number"
 				step="1"
 				min="0"
-				max="<?php echo ! empty( $stock ) ? $stock : ''; ?>"
-				name="quantity<?php echo $product->get_id(); ?>"
+				max="<?php echo ! empty( $stock ) ? esc_attr( $stock ) : ''; ?>"
+				name="quantity<?php echo esc_attr( $product->get_id() ); ?>"
 				value="<?php echo esc_attr( $quantity ); ?>"
 				title="<?php esc_html__( 'Quantity', 'multiple-products-to-cart-for-woocommerce' ); ?>"
 				size="4"
@@ -475,7 +482,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			<input
 				type="checkbox"
 				name="product_ids[]"
-				value="<?php echo $product->get_id(); ?>"
+				value="<?php echo esc_attr( $product->get_id() ); ?>"
 				<?php echo in_array( $product->get_id(), $selected, true ) ? 'checked' : ''; ?>>
 			<?php
 		}
@@ -487,7 +494,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		public static function table_footer() {
 			self::setup_frontend_data();
-			
+
 			do_action( 'mpc_table_total' );
 			?>
 			<div class="mpc-button">
@@ -543,9 +550,9 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		/**
 		 * Display table reset button
 		 */
-		private static function table_reset_btn(){
+		private static function table_reset_btn() {
 			$show_reset = get_option( 'wmca_show_reset_btn' );
-			if( ! empty( $show_reset ) && 'on' !== $show_reset ) {
+			if ( ! empty( $show_reset ) && 'on' !== $show_reset ) {
 				return;
 			}
 			?>
@@ -573,12 +580,12 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 * Display numbered pagination
 		 */
 		private static function display_pagination() {
-			if( isset( self::$data['atts']['pagination'] ) && false === (bool) self::$data['atts']['pagination'] ){
+			if ( isset( self::$data['atts']['pagination'] ) && false === (bool) self::$data['atts']['pagination'] ) {
 				return;
 			}
-			
+
 			$limit = (int) self::$data['atts']['limit'] || 10;
-			if( self::$data['total'] < $limit ){
+			if ( self::$data['total'] < $limit ) {
 				return;
 			}
 			?>
@@ -601,7 +608,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		public static function display_pagination_numbers() {
 			$paged    = self::$data['paged'];
 			$max_page = self::$data['max_page'];
-			if( 1 === self::$data['max_page'] ){
+			if ( 1 === self::$data['max_page'] ) {
 				return;
 			}
 
@@ -609,13 +616,15 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$pages = array_unique( $pages );
 			sort( $pages );
 
-			for ( $i = 0; $i < count( $pages ); $i++ ) {
+			$total_pages = count( $pages );
+
+			for ( $i = 0; $i < $total_pages; $i++ ) {
 				$page = $pages[ $i ];
-				if( 0 === $page || $page > $max_page ){
+				if ( 0 === $page || $page > $max_page ) {
 					continue;
 				}
 
-				if( $i > 0 && $page - $pages[ $i -1 ] > 1 ){
+				if ( $i > 0 && $page - $pages[ $i - 1 ] > 1 ) {
 					echo '<span class="mpc-divider">-</span>';
 				}
 				?>
@@ -629,12 +638,12 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		public static function display_pagination_range() {
 			$show_range = get_option( 'wmc_show_pagination_text' );
-			if( ! empty( $show_range ) && 'on' !== $show_range ){
+			if ( ! empty( $show_range ) && 'on' !== $show_range ) {
 				return;
 			}
 
 			// check if shortcode attribute has option to hide range.
-			if( isset( self::$data['atts']['pagination'] ) && 'false' === self::$data['atts']['pagination'] ){
+			if ( isset( self::$data['atts']['pagination'] ) && 'false' === self::$data['atts']['pagination'] ) {
 				return;
 			}
 
@@ -642,7 +651,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$limit = self::$data['atts']['limit'] ?? '';
 			$limit = empty( $limit ) ? 10 : (int) $limit;
 
-			if( self::$data['total'] < $limit ){
+			if ( self::$data['total'] < $limit ) {
 				return;
 			}
 

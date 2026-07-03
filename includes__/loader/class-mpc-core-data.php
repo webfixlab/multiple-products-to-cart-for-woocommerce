@@ -16,7 +16,12 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 	 */
 	class MPC_Core_Data {
 
-		public static function get_plugin(){
+		/**
+		 * Get general plugin data
+		 *
+		 * @return array
+		 */
+		public static function get_plugin() {
 			return array(
 				'plugin_url'      => 'https://wordpress.org/plugins/multiple-products-to-cart-for-woocommerce/',
 				'review_url'      => 'https://wordpress.org/support/plugin/multiple-products-to-cart-for-woocommerce/reviews/',
@@ -31,16 +36,22 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 					'multiple-products_page_mpc-shortcode',
 					'multiple-products_page_mpc-settings',
 					'multiple-products_page_mpca_license',
-				)
+				),
 			);
 		}
-		public static function navigation_data(){
+
+		/**
+		 * Get admin navigation menus
+		 *
+		 * @return array
+		 */
+		public static function navigation_data() {
 			return array(
-				'all-tables' => array(
+				'all-tables'       => array(
 					'tab'  => __( 'All Tables', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-saved',
 				),
-				'new-table' => array(
+				'new-table'        => array(
 					'tab'  => __( 'New Table', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-shortcode',
 				),
@@ -48,46 +59,52 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 					'tab'  => __( 'Settings', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-admin-settings',
 				),
-				'labels' => array(
+				'labels'           => array(
 					'tab'  => __( 'Labels', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-text',
 				),
-				'appearence' => array(
+				'appearence'       => array(
 					'tab'  => __( 'Appearence', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-admin-appearance',
 				),
-				'column-sorting' => array(
+				'column-sorting'   => array(
 					'tab'  => __( 'Column Sorting', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-sort',
 				),
-				'export' => array(
+				'export'           => array(
 					'tab'  => __( 'Export', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-download',
 				),
-				'import' => array(
+				'import'           => array(
 					'tab'  => __( 'Import', 'multiple-products-to-cart-for-woocommerce' ),
 					'icon' => 'dashicons-upload',
 				),
 			);
 		}
-		public static function get_general_settings(){
+
+		/**
+		 * General settings fields data
+		 *
+		 * @return array
+		 */
+		public static function get_general_settings() {
 			return array(
 				array(
 					'section' => __( 'Redirect & Quantity', 'multiple-products-to-cart-for-woocommerce' ),
 					'desc'    => '',
 					'fields'  => array(
 						array(
-							'key'              => 'wmc_redirect',
-							'type'             => 'radio',
-							'options'          => array(
+							'key'           => 'wmc_redirect',
+							'type'          => 'radio',
+							'options'       => array(
 								'ajax'   => __( 'None', 'multiple-products-to-cart-for-woocommerce' ),
 								'cart'   => __( 'Cart', 'multiple-products-to-cart-for-woocommerce' ),
 								'custom' => __( 'Custom', 'multiple-products-to-cart-for-woocommerce' ),
 							),
-							'default'          => 'ajax',
-							'label'            => __( 'Redirect After Adding To Cart', 'multiple-products-to-cart-for-woocommerce' ),
-							'desc'             => __( 'Choose the page to redirect customers to after they\'ve added products to their cart. `Custom` redirect URL is only avilable in PRO.', 'multiple-products-to-cart-for-woocommerce' ),
-							'followup'         => array(
+							'default'       => 'ajax',
+							'label'         => __( 'Redirect After Adding To Cart', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'          => __( 'Choose the page to redirect customers to after they\'ve added products to their cart. `Custom` redirect URL is only avilable in PRO.', 'multiple-products-to-cart-for-woocommerce' ),
+							'followup'      => array(
 								array(
 									'key'         => 'mpca_custom_redirect',
 									'type'        => 'text',
@@ -98,27 +115,27 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 									'pro_label'   => __( 'Custom Redirect URL', 'multiple-products-to-cart-for-woocommerce' ),
 								),
 							),
-							'followup_hook'    => 'custom',
-							'followup_key'     => 'mpca_custom_redirect',
-							'pro_label'        => __( 'Custom Redirect URL', 'multiple-products-to-cart-for-woocommerce' ),
+							'followup_hook' => 'custom',
+							'followup_key'  => 'mpca_custom_redirect',
+							'pro_label'     => __( 'Custom Redirect URL', 'multiple-products-to-cart-for-woocommerce' ),
 						),
 						array(
-							'key'         => 'wmca_default_quantity',
-							'type'        => 'text',
-							'default'     => '',
-							'label'       => __( 'Initial Product Quantity', 'multiple-products-to-cart-for-woocommerce' ),
-							'desc'        => __( 'Set the starting value for the quantity field for each product.', 'multiple-products-to-cart-for-woocommerce' ),
+							'key'     => 'wmca_default_quantity',
+							'type'    => 'text',
+							'default' => '',
+							'label'   => __( 'Initial Product Quantity', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'    => __( 'Set the starting value for the quantity field for each product.', 'multiple-products-to-cart-for-woocommerce' ),
 						),
 						array(
-							'key'   => 'mpc_show_new_quantity_box',
-							'type'  => 'checkbox',
-							'label' => __( 'Quantity Selector Design', 'multiple-products-to-cart-for-woocommerce' ),
-							'desc'  => __( 'Decide whether the quantity field should incorporate a plus-minus selector style.', 'multiple-products-to-cart-for-woocommerce' ),
+							'key'         => 'mpc_show_new_quantity_box',
+							'type'        => 'checkbox',
+							'label'       => __( 'Quantity Selector Design', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'        => __( 'Decide whether the quantity field should incorporate a plus-minus selector style.', 'multiple-products-to-cart-for-woocommerce' ),
 							'switch_text' => array(
 								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
 								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
 							),
-							'pro'   => true,
+							'pro'         => true,
 						),
 					),
 				),
@@ -377,7 +394,13 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				),
 			);
 		}
-		public static function get_labels(){
+
+		/**
+		 * Get all labels settings fields data
+		 *
+		 * @return array
+		 */
+		public static function get_labels() {
 			return array(
 				array(
 					'section' => __( 'Buttons', 'multiple-products-to-cart-for-woocommerce' ),
@@ -644,7 +667,13 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				),
 			);
 		}
-		public static function get_appearence(){
+
+		/**
+		 * Get appearence settings fields data
+		 *
+		 * @return array
+		 */
+		public static function get_appearence() {
 			return array(
 				array(
 					'section' => __( 'Images', 'multiple-products-to-cart-for-woocommerce' ),
@@ -750,7 +779,13 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				),
 			);
 		}
-		public static function get_new_table(){
+
+		/**
+		 * Get new shortcode table fields data
+		 *
+		 * @return array
+		 */
+		public static function get_new_table() {
 			return array(
 				array(
 					'section' => __( 'Add New Product Table', 'multiple-products-to-cart-for-woocommerce' ),
@@ -907,7 +942,13 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				),
 			);
 		}
-		public static function get_columns(){
+
+		/**
+		 * Get all table columns
+		 *
+		 * @return array
+		 */
+		public static function get_columns() {
 			return array(
 				'image'     => __( 'Image', 'multiple-products-to-cart-for-woocommerce' ),
 				'product'   => __( 'Product', 'multiple-products-to-cart-for-woocommerce' ),

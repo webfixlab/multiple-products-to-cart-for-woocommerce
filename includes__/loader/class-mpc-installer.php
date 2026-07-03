@@ -16,17 +16,18 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 	 */
 	class MPC_Installer {
 
-        /**
-         * Plugin core data
-         * @var array
-         */
-        private static $plugin_data;
+		/**
+		 * Plugin core data
+		 *
+		 * @var array
+		 */
+		private static $plugin_data;
 
 		/**
 		 * Plugin installation handler
 		 */
 		public static function install() {
-            self::$plugin_data = MPC_Core_Data::get_plugin();
+			self::$plugin_data = MPC_Core_Data::get_plugin();
 
 			if ( ! self::has_wc() ) {
 				add_action( 'admin_notices', array( __CLASS__, 'missing_wc' ) );
@@ -50,8 +51,8 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
-            $base   = 'woocommerce';
-            $plugin = 'multiple-products-to-cart-for-woocommerce';
+			$base   = 'woocommerce';
+			$plugin = 'multiple-products-to-cart-for-woocommerce';
 
 			// if base plugin is active but woocommer is not, skip.
 			if ( ! is_plugin_active( "{$base}/{$base}.php" ) && is_plugin_active( "{$plugin}/{$plugin}.php" ) ) {
@@ -75,24 +76,27 @@ if ( ! class_exists( 'MPC_Installer' ) ) {
 			<?php
 		}
 
-        private static function display_missing_wc_notice(){
-            $plugin = sprintf(
+		/**
+		 * Display WooCommerce missing notice
+		 */
+		private static function display_missing_wc_notice() {
+			$plugin = sprintf(
 				'<a href="%s" target="_blank">%s</a>',
-				esc_url( self::$plugin_data[ 'plugin_url' ] ),
+				esc_url( self::$plugin_data['plugin_url'] ),
 				__( 'Multiple Products to Cart – WooCommerce Product Table', 'multiple-products-to-cart-for-woocommerce' )
 			);
 			$base   = sprintf(
 				'<a href="%s" target="_blank">%s</a>',
-				esc_url( self::$plugin_data[ 'wc_plugin_url' ] ),
+				esc_url( self::$plugin_data['wc_plugin_url'] ),
 				esc_html__( 'WooCommerce', 'multiple-products-to-cart-for-woocommerce' )
 			);
-            printf(
-                // translators: %1$s: plugin name with url, %2$s: base plugin with url.
-                esc_html__( 'Plugin deactivated! Please activate %1$s to activate plugin %2$s', 'multiple-products-to-cart-for-woocommerce' ),
-                wp_kses_post( $base ),
-                wp_kses_post( $plugin )
-            );
-        }
+			printf(
+				// translators: %1$s: plugin name with url, %2$s: base plugin with url.
+				esc_html__( 'Plugin deactivated! Please activate %1$s to activate plugin %2$s', 'multiple-products-to-cart-for-woocommerce' ),
+				wp_kses_post( $base ),
+				wp_kses_post( $plugin )
+			);
+		}
 
 		/**
 		 * Activate plugin functionality

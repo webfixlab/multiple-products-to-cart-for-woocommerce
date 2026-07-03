@@ -35,7 +35,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		/**
 		 * Include plugin loader files
 		 */
-		private static function include_loader(){
+		private static function include_loader() {
 			include MPC_PATH . 'includes__/loader/class-mpc-core-data.php';
 			include MPC_PATH . 'includes__/loader/class-mpc-installer.php';
 		}
@@ -84,7 +84,7 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 			MPC_Asset_Loader::init( $pro_state );
 
 			MPC_Admin_Ajax::init();
-			
+
 			// load admin navigations and pages.
 			MPC_Admin_Loader::init( $pro_state );
 

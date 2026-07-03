@@ -16,27 +16,21 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 	 */
 	class MPC_Add_To_Cart {
 
-        /**
-         * Current admin state notice
-         * @var array
-         */
-        // private static $notice;
-
 		/**
 		 * Class initialization function
 		 */
 		public static function init() {
-            add_action( 'wp_loaded', array( __CLASS__, 'table_form_submit' ), 15 );
+			add_action( 'wp_loaded', array( __CLASS__, 'table_form_submit' ), 15 );
 
 			add_action( 'wp_ajax_mpc_ajax_add_to_cart', array( __CLASS__, 'add_to_cart_ajax' ) );
 			add_action( 'wp_ajax_nopriv_mpc_ajax_add_to_cart', array( __CLASS__, 'add_to_cart_ajax' ) );
 		}
 
-        /**
+		/**
 		 * Add to cart handler
 		 */
 		public static function table_form_submit() {
-            if ( ! isset( $_REQUEST['mpc_cart_data'] ) || ! class_exists( 'WC_Form_Handler' ) || ! isset( $_POST['cart_nonce'] ) ) {
+			if ( ! isset( $_REQUEST['mpc_cart_data'] ) || ! class_exists( 'WC_Form_Handler' ) || ! isset( $_POST['cart_nonce'] ) ) {
 				return;
 			}
 
@@ -51,20 +45,20 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 
 			$added = self::add_products_to_cart( $cart_data );
 
-            wc_add_to_cart_message( $added, true, false );
+			wc_add_to_cart_message( $added, true, false );
 
-            $url = 'cart' === get_option( 'wmc_redirect' ) ? wc_get_cart_url() : '';
-            $url = apply_filters( 'mpc_add_to_cart_redirect_url', $url );
-            if( ! empty( $url ) ){
-                wp_safe_redirect( $url );
-                exit;
-            }
+			$url = 'cart' === get_option( 'wmc_redirect' ) ? wc_get_cart_url() : '';
+			$url = apply_filters( 'mpc_add_to_cart_redirect_url', $url );
+			if ( ! empty( $url ) ) {
+				wp_safe_redirect( $url );
+				exit;
+			}
 		}
- 
-        /**
+
+		/**
 		 * Add to cart process
 		 *
-		 * @param array  $data product data for adding then to cart.
+		 * @param array $data product data for adding then to cart.
 		 */
 		private static function add_products_to_cart( $data ) {
 			if ( empty( $data ) ) {
@@ -73,7 +67,7 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 
 			$added = array(); // array of product id => quantity.
 			foreach ( $data as $product_id => $product ) {
-				
+
 				if ( 'grouped' === $product['type'] ) {
 					continue;
 				}
@@ -95,7 +89,7 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 				do_action( 'mpc_after_add_to_cart', $product_id, $key );
 			}
 
-            return $added;
+			return $added;
 		}
 
 		/**
@@ -111,19 +105,19 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 				return;
 			}
 
-            $cart_data = wp_unslash( $_POST['mpca_cart_data'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$cart_data = wp_unslash( $_POST['mpca_cart_data'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			// unslash and sanitize array data.
 			$added = self::add_products_to_cart( $cart_data );
-            
-            $resonse = self::cart_refreshed_fragments();
-            $resonse['req']          = $cart_data;
-            $resonse['cart_message'] = wc_add_to_cart_message( $added, true, true );
-            if ( count( $added ) !== count( array_keys( $cart_data ) ) ) { // check for any errors.
-                $resonse['error_message'] = self::cart_format_error();
-            }
 
-            wp_send_json( $resonse );
+			$resonse                 = self::cart_refreshed_fragments();
+			$resonse['req']          = $cart_data;
+			$resonse['cart_message'] = wc_add_to_cart_message( $added, true, true );
+			if ( count( $added ) !== count( array_keys( $cart_data ) ) ) { // check for any errors.
+				$resonse['error_message'] = self::cart_format_error();
+			}
+
+			wp_send_json( $resonse );
 		}
 
 		/**
@@ -154,14 +148,14 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 				$notices = array( __( 'There was an error adding to the cart. Please try again.', 'multiple-products-to-cart-for-woocommerce' ) );
 			}
 
-            wc_clear_notices();
+			wc_clear_notices();
 			$error_fmt = apply_filters( 'wc_product_table_cart_error_format', '<span class="cart-error">%s</span>' );
-            
+
 			$result = '';
 			foreach ( $notices as $notice ) {
-				$result .= isset( $notice['notice'] ) ? sprintf( $error_fmt, $notice['notice'] ) : $notice; 
+				$result .= isset( $notice['notice'] ) ? sprintf( $error_fmt, $notice['notice'] ) : $notice;
 			}
-            
+
 			return $result;
 		}
 	}

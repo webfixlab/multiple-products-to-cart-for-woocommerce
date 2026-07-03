@@ -18,6 +18,7 @@ if ( ! class_exists( 'MPC_Admin_Ajax' ) ) {
 
 		/**
 		 * Results limit
+		 *
 		 * @var int
 		 */
 		private static $limit = 50;
@@ -42,17 +43,24 @@ if ( ! class_exists( 'MPC_Admin_Ajax' ) ) {
 
 			wp_send_json( 'cats' === $type ? self::get_taxonomies( $search ) : self::get_products( $search ) );
 		}
-		private static function get_taxonomies( $search ){
+
+		/**
+		 * Find all taxonomies by given search string
+		 *
+		 * @param string $search Search string.
+		 * @return array{id: int, name: string[]} Found taxonomies.
+		 */
+		private static function get_taxonomies( $search ) {
 			$args = array(
 				'taxonomy'   => 'product_cat',
 				'hide_empty' => false,  // Set this to true if you only want categories with products.
 				// 'name__like' => $search,  // Search by category name.
-				'search' => $search,  // Search by category name.
+				'search'     => $search,  // Search by category name.
 				'number'     => self::$limit,  // Limit the number of categories.
 			);
 
 			$results = get_terms( $args );
-			if( empty( $results ) || is_wp_error( $results ) ){
+			if ( empty( $results ) || is_wp_error( $results ) ) {
 				return array();
 			}
 
@@ -64,37 +72,44 @@ if ( ! class_exists( 'MPC_Admin_Ajax' ) ) {
 					'name' => $tax->name,
 				);
 			}
-			
+
 			return $all_tax;
 		}
-		private static function get_products( $search ){
+
+		/**
+		 * Find all products by given search string
+		 *
+		 * @param string $search Search string.
+		 * @return array{id: int|mixed, name: mixed|string[]} Found products.
+		 */
+		private static function get_products( $search ) {
 			$args = array(
 				's'              => $search,
 				'post_type'      => 'product',
 				'posts_per_page' => self::$limit,
-				'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 					'relation' => 'AND',
 					array(
 						'taxonomy' => 'product_type',
 						'field'    => 'slug',
-						'terms'    =>  array( 'simple', 'variable' ),
-					)
-				)
+						'terms'    => array( 'simple', 'variable' ),
+					),
+				),
 			);
 
 			$args = apply_filters( 'mpc_admin_ajax_search_products', $args );
 
 			$results = new WP_Query( $args );
-			if( empty( $results ) || is_wp_error( $results ) ){
+			if ( empty( $results ) || is_wp_error( $results ) ) {
 				return array();
 			}
 
 			$products = array();
-			
-			foreach( $results->posts as $post ){
+
+			foreach ( $results->posts as $post ) {
 				$products[] = array(
 					'id'   => $post->ID,
-					'name' => $post->post_title
+					'name' => $post->post_title,
 				);
 			}
 

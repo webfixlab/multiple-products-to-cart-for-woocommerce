@@ -32,14 +32,17 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$result = new WP_Query( $args );
 			wp_reset_postdata();
 
-			return apply_filters( 'mpc_modify_get_products', array(
-				'paged'    => $paged,
-				'atts'     => $atts,
-				'args'     => $args,
-				'products' => $result->posts,
-				'total'    => $result->found_posts,
-				'max_page' => $result->max_num_pages
-			) );
+			return apply_filters(
+				'mpc_modify_get_products',
+				array(
+					'paged'    => $paged,
+					'atts'     => $atts,
+					'args'     => $args,
+					'products' => $result->posts,
+					'total'    => $result->found_posts,
+					'max_page' => $result->max_num_pages,
+				)
+			);
 		}
 
 		/**
@@ -58,7 +61,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 				'fields'         => 'ids',
 				'posts_per_page' => isset( $atts['pagination'] ) && 'false' === $atts['pagination'] ? 100 : $limit,
 				'paged'          => $paged,
-				'orderby'        => empty( $orderby ) || ! in_array( $orderby, array( 'price', 'title', 'date' ) ) ? 'date' : $orderby,
+				'orderby'        => empty( $orderby ) || ! in_array( $orderby, array( 'price', 'title', 'date' ), true ) ? 'date' : $orderby,
 				'order'          => isset( $atts['order'] ) && ! empty( $atts['order'] ) ? strtoupper( $atts['order'] ) : 'DESC',
 				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
@@ -71,26 +74,26 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 						'compare' => 'EXISTS',
 					),
 				),
-				'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-					'relation' => 'AND', 
-				)
+				'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					'relation' => 'AND',
+				),
 			);
 
-			if( 'price' === $args['orderby'] ){
+			if ( 'price' === $args['orderby'] ) {
 				$args['meta_key'] = '_price'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 				$args['orderby']  = 'meta_value_num';
 			}
 
 			if ( isset( $atts['ids'] ) && '' !== $atts['ids'] ) {
-				$args['post__in'] = explode( ',',  str_replace( ' ', '', $atts['ids'] ) );
+				$args['post__in'] = explode( ',', str_replace( ' ', '', $atts['ids'] ) );
 			}
 
 			if ( isset( $atts['skip_products'] ) && ! empty( $atts['skip_products'] ) ) {
-				$args['post__not_in'] = explode( ',',  str_replace( ' ', '', $atts['skip_products'] ) );
+				$args['post__not_in'] = explode( ',', str_replace( ' ', '', $atts['skip_products'] ) );
 			}
 
-			$product_types = isset( $atts['type'] ) && ! empty( $atts['type'] ) ? $atts['type'] : '';
-			$product_types = ! empty( $product_types ) ? explode( ',', str_replace( ' ', '', $product_types ) ) : array();
+			$product_types       = isset( $atts['type'] ) && ! empty( $atts['type'] ) ? $atts['type'] : '';
+			$product_types       = ! empty( $product_types ) ? explode( ',', str_replace( ' ', '', $product_types ) ) : array();
 			$args['tax_query'][] = array(
 				'taxonomy' => 'product_type',
 				'field'    => 'slug',
@@ -101,7 +104,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 				$args['tax_query'][] = array(
 					'taxonomy' => 'product_cat',
 					'field'    => 'term_id',
-					'terms'    => array_map( 'intval', explode( ',',  str_replace( ' ', '', $atts['cats'] ) ) ),
+					'terms'    => array_map( 'intval', explode( ',', str_replace( ' ', '', $atts['cats'] ) ) ),
 				);
 			}
 
@@ -109,7 +112,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 				$args['tax_query'][] = array(
 					'taxonomy' => 'product_tag',
 					'field'    => 'term_id',
-					'terms'    => array_map( 'intval', explode( ',',  str_replace( ' ', '', $atts['tags'] ) ) ),
+					'terms'    => array_map( 'intval', explode( ',', str_replace( ' ', '', $atts['tags'] ) ) ),
 				);
 			}
 
@@ -122,7 +125,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 		 * @param object $product Product object.
 		 * @return float
 		 */
-		public static function get_price_amount( $product ){
+		public static function get_price_amount( $product ) {
 			return self::extract_price_from_html( $product->get_price_html() );
 		}
 
@@ -170,7 +173,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$available_variations = array();
 			foreach ( $variation_ids as $variation_id ) {
 				$variation_data = self::get_variation_data( $variation_id, $options );
-				if( ! empty( $variation_data ) ){
+				if ( ! empty( $variation_data ) ) {
 					$available_variations[] = $variation_data;
 				}
 			}
@@ -185,7 +188,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 		 * @param array $options      Admin settings options.
 		 * @return array
 		 */
-		private static function get_variation_data( $variation_id, $options ){
+		private static function get_variation_data( $variation_id, $options ) {
 			$variation = wc_get_product( $variation_id );
 
 			$price   = self::extract_price_from_html( $variation->get_price_html() );
@@ -202,14 +205,14 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			);
 
 			$image_id = get_post_meta( $variation_id, '_thumbnail_id', true );
-			if( ! empty( $image_id ) ){
+			if ( ! empty( $image_id ) ) {
 				$data['image'] = array(
 					'thumb' => wp_get_attachment_image_src( $image_id, 'thumbnail' )[0],
-					'full'  => wp_get_attachment_image_src( $image_id, 'large' )[0]
+					'full'  => wp_get_attachment_image_src( $image_id, 'large' )[0],
 				);
 			}
 
-			if( empty( $options['desc'] ) || 'on' === $options['desc'] ){
+			if ( empty( $options['desc'] ) || 'on' === $options['desc'] ) {
 				$desc = $variation->get_description();
 				if ( ! empty( $desc ) ) {
 					$data['desc'] = strlen( $desc ) > 70 ? substr( $desc, 0, 70 ) . '...' : $desc;
