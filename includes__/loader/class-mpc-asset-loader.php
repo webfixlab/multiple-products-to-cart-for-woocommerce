@@ -44,7 +44,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 		 */
 		public static function init( $pro_state ) {
 			self::$pro_state = $pro_state;
-			self::$suffix    = '';
+			self::$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			self::$plugin_data = MPC_Core_Data::get_plugin();
 
