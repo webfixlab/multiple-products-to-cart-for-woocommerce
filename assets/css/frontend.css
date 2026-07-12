@@ -542,9 +542,6 @@ span.mpc-empty-var {
 	margin: 0;
 	font-size: 15px;
 }
-span.mpc-mobile-only{
-	display: none;
-}
 /* Mobile CSS */
 @media screen and (max-width: 767px) {
 	.mpc-table-header{
@@ -598,11 +595,6 @@ span.mpc-mobile-only{
         background-color: #8a8a8a;
         border-radius: 50%;
         box-shadow: 2px 1px 6px 5px #8a8a8a;
-	}
-	span.mpc-mobile-only {
-		display: flex;
-		margin-right: 5px;
-		font-size: 14px;
 	}
 	#brx-content .mpc-container{
 		padding: 0 10px;
