@@ -52,7 +52,7 @@
         }
         renderImagePopup( e ){
             const imgSrc = $( e.currentTarget ).attr( 'data-fullimage' );
-            $( '#mpcpop' ).find( 'img' ).attr( 'src', imgSrc );
+            $( '#mpcpop .image-wrap img' ).attr( 'src', imgSrc );
             $( '#mpcpop' ).toggle( imgSrc && imgSrc.length > 0 );
         }
         hidePopup( e ){
