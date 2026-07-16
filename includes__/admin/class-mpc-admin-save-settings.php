@@ -51,25 +51,22 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
 				return;
 			}
 
-			$type = '';
 			if ( 'new-table' === $tab ) {
 				self::add_new_table();
-				$type = 'new-table';
 			} elseif ( 'general-settings' === $tab ) {
 				self::save_fields( MPC_Core_Data::get_general_settings() );
-				$type = 'settings';
 			} elseif ( 'labels' === $tab ) {
 				self::save_fields( MPC_Core_Data::get_labels() );
-				$type = 'labels';
 			} elseif ( 'appearence' === $tab ) {
 				self::save_fields( MPC_Core_Data::get_appearence() );
-				$type = 'appearence';
 			} elseif ( 'column-sorting' === $tab ) {
 				self::save_columns_order();
-				$type = 'column-sorting';
 			}
-
-			do_action( 'mpc_settings_saved', $type );
+			
+			// trigger hook only when any settings is saved.
+			if( isset( $_POST['mpc_opt_sc'] ) || isset( $_GET['mpcscdlt'] ) || isset( $_POST['mpc_admin_settings'] ) ){
+				do_action( 'mpc_settings_saved', $tab );
+			}
 
 			return self::$notice;
 		}
