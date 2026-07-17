@@ -651,7 +651,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			$limit = self::$data['atts']['limit'] ?? '';
 			$limit = empty( $limit ) ? 10 : (int) $limit;
 
-			if ( self::$data['total'] < $limit ) {
+			if ( self::$data['total'] <= $limit ) {
 				return;
 			}
 
