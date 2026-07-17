@@ -120,18 +120,22 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 		private static function has_variable_products( $product_ids ) {
 			global $wpdb;
 
-			return (bool) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT tr.object_id
-					FROM {$wpdb->term_relationships} tr
-					JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-					JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-					WHERE t.slug = 'variable'
-					AND tr.object_id IN (%s)
-					LIMIT 1",
-					implode( ',', $product_ids )
-				)
+			$query = $wpdb->prepare(
+				"SELECT tr.object_id
+				FROM {$wpdb->term_relationships} tr
+				JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
+				WHERE t.slug = 'variable'
+				AND tr.object_id IN (%s)
+				LIMIT 1",
+				implode( ',', $product_ids )
 			);
+
+			// since IDs are integers, wrapping it single quotes returns false.
+			$query = str_replace( '(\'', '(', $query );
+			$query = str_replace( '\')', ')', $query );
+
+			return (bool) $wpdb->get_var( $query );
 		}
 	}
 }
