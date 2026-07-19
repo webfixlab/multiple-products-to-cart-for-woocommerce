@@ -779,6 +779,7 @@ a .mpcasc-reset .button-secondary{
 .mpcdp_settings_option_field input.choices__input.choices__input--cloned {
 	border: 0 !important;
 	box-shadow: none !important;
+	width: auto !important;
 }
 .mpcdp_settings_option_field .choices__inner {
 	background-color: #fff;

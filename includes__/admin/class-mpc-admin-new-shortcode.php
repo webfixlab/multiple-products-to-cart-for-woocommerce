@@ -312,7 +312,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 				$classes .= 'static' !== $field['content_type'] || in_array( $slug, $saved, true ) ? ( empty( $classes ) ? 'selected' : ' selected' ) : '';
 				?>
 				<option
-					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $slug ) : esc_attr( $slug ); ?>"
+					value="<?php echo 'static' === $field['content_type'] ? esc_attr( $slug ) : esc_attr( $label ); ?>"
 					<?php echo esc_html( $classes ); ?>><?php echo 'static' === $field['content_type'] ? esc_html( $label ) : esc_html( self::get_selectbox_option_label( $field, $label ) ); ?></option>
 				<?php
 			}

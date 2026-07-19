@@ -38,33 +38,25 @@
 				return;
 			}
 
-			const choiceItem = new Choices(
-				document.querySelector( `#${key}` ),
-				this.getQueryArgs( key )
-			);
+			const choiceItem = new Choices( document.querySelector( `#${key}` ), this.getQueryArgs( key ) );
 
 			let debounceTimeout;
-			$( `#${key}` ).on( 'search', ( event ) => {
+			$( `#${key}` ).on( 'search', ( e ) => {
 				clearTimeout( debounceTimeout );
 				choiceItem.setChoices( [ { value: '', label: 'Loading...' } ], 'value', 'label', true );
 				debounceTimeout = setTimeout( () => {
 					var data = new FormData();
 					data.append( 'action', 'mpc_admin_search_box' );
-					data.append( 'search', event.detail.value );
+					data.append( 'search', e.detail.value );
 					data.append( 'type_name', key );
 					data.append( 'nonce', mpc_admin.nonce );
 
 					this.sendSearchRequest( data, choiceItem, key );
 				}, 1000 );
 			} );
-			choiceItem.passedElement.element.addEventListener( 'addItem', ( e ) => this.setChoiceFieldValue(
-				$( e.currentTarget ).closest( '.choicesdp' ),
-				choiceItem.getValue( true )
-			) );
-			choiceItem.passedElement.element.addEventListener( 'removeItem', ( e ) => this.setChoiceFieldValue(
-				$( e.currentTarget ).closest( '.choicesdp' ),
-				choiceItem.getValue( true )
-			) );
+
+			choiceItem.passedElement.element.addEventListener( 'addItem', ( e ) => this.setChoiceFieldValue( e, choiceItem.getValue( true ) ) );
+			choiceItem.passedElement.element.addEventListener( 'removeItem', ( e ) => this.setChoiceFieldValue( e, choiceItem.getValue( true ) ) );
 		}
 		getQueryArgs( key ){
 			const single = 'cats' === key ? 'category' : 'product';
@@ -92,14 +84,20 @@
 		}
 		sendSearchRequest( data, choiceItem, key ){
 			const single = 'cats' === key ? 'category' : 'product';
+			const values = this.convertToInt( choiceItem.getValue( true ) );
+
 			$.ajax( {
-				url: mpc_admin.ajaxurl,
-				method: 'POST',
-				data: data,
-				dataType: 'json',
+				url:         mpc_admin.ajaxurl,
+				method:      'POST',
+				data:        data,
+				dataType:    'json',
 				processData: false,
 				contentType: false,
-				success: function ( response ) {
+				success:     function ( response ) {
+					for( let i = 0; i < response.length; i++ ){
+						response[i]['disabled'] = -1 !== values.indexOf( response[i].id );
+					}
+					
 					choiceItem.clearChoices();
 					choiceItem.setChoices( response, 'id', 'name', false );
 					if ( 0 === response.length ) {
@@ -111,8 +109,24 @@
 				}
 			} );
 		}
-		setChoiceFieldValue( wrap, value ) {
-			wrap.find( '.choicesdp-field' ).val( 'string' === typeof value ? value : value.join( ',' ) );
+		setChoiceFieldValue( e, values ) {
+			const uIds  = this.convertToInt( values );
+			const input = $( e.currentTarget ).closest( '.choicesdp' ).find( '.choicesdp-field' );
+			if( input && input.length > 0 ){
+				input.val( 'string' === typeof values ? values : uIds.join( ',' ) );
+			}
+		}
+		convertToInt( values ){
+			const items = [];
+			if( ! $.isEmptyObject( values ) ){
+				values.forEach( i => {
+					const item = parseInt( i );
+					if( -1 === items.indexOf( item ) ){
+						items.push( parseInt( item ) );
+					}
+				});
+			}
+			return items;
 		}
 	}
 	new MPCAdminTable();
