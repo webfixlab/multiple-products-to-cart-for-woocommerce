@@ -243,9 +243,10 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			return apply_filters(
 				'mpca_local_var',
 				array(
-					'nonce'   => wp_create_nonce( 'search_box_nonce' ),
-					'ajaxurl' => admin_url( 'admin-ajax.php' ),
-					'has_pro' => empty( self::$pro_state ),
+					'nonce'         => wp_create_nonce( 'search_box_nonce' ),
+					'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+					'has_pro'       => empty( self::$pro_state ),
+					'confirm_reset' => __( 'Are you sure?', 'multiple-products-to-cart-for-woocommerce' )
 				)
 			);
 		}

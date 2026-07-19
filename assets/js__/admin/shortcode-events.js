@@ -28,7 +28,7 @@
 			setTimeout( () => copyBtn.find( '.dashicons' ).toggleClass( 'dashicons-admin-page dashicons-saved' ), 2000 );
 		}
 		resetEventHandler( e ){
-			if ( ! confirm( 'Are you sure?' ) ) {
+			if ( ! confirm( mpc_admin.confirm_reset ) ) {
 				e.preventDefault();
 			}
 		}
