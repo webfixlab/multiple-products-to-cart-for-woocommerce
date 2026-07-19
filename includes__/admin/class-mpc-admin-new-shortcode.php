@@ -297,7 +297,9 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		 */
 		private static function render_selectbox_options( $field ) {
 			$key   = $field['key'];
-			$saved = isset( self::$atts[ $key ] ) ? self::$atts[ $key ] : '';
+			$saved = isset( self::$atts[ $key ] ) && ! empty( self::$atts[ $key ] ) ? self::$atts[ $key ] : (
+				isset( $field['default'] ) && ! empty( $field['default'] ) ? $field['default'] : ''
+			);
 			$saved = is_array( $saved ) ? $saved : ( ! empty( $saved ) ? explode( ',', str_replace( ' ', '', $saved ) ) : array() );
 
 			$pro_options = 'static' === $field['content_type'] && empty( self::$pro_state ) && isset( $field['pro_options'] ) ? $field['pro_options'] : array(); // pro options, which aren't allowed in free.

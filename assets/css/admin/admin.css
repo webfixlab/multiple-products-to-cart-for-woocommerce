@@ -772,7 +772,7 @@ a .mpcasc-reset .button-secondary{
 }
 .mpcdp_settings_option_field .choices__inner {
 	padding: 8.5px 7.5px 3.75px;
-	min-height: auto;
+	min-height: 30px;
 	width: calc(100% - 15px);
 	box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
