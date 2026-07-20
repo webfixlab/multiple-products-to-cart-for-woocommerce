@@ -120,9 +120,9 @@
 			const items = [];
 			if( ! $.isEmptyObject( values ) ){
 				values.forEach( i => {
-					const item = parseInt( i );
+					const item = isNaN( parseInt( i ) ) ? i : parseInt( i );
 					if( -1 === items.indexOf( item ) ){
-						items.push( parseInt( item ) );
+						items.push( item );
 					}
 				});
 			}
