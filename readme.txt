@@ -111,13 +111,15 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 == Screenshots ==
 
-1. Product table
-2. Product table with variation selected
-3. Mobile view
-4. Edit product table complete view
-5. Cart section with proceed to checkout (PRO)
-6. Grouped products - Desktop and mobile view (PRO)
-7. Export settings and tables with Import (PRO)
+1. Available variations and Out-of-stock variation
+2. Cart confirmation message
+3. Add to cart error message and marked error fields
+4. Mobile view comparisons
+5. SKU search and category filter (PRO)
+6. Groupd product with it's children (PRO)
+7. Section by categories with settings (PRO)
+8. Table cart for quick checkout (PRO)
+9. Admin settings
 
 == Changelog ==
 

@@ -36,39 +36,39 @@ if ( ! class_exists( 'MPC_Loader' ) ) {
 		 * Include plugin loader files
 		 */
 		private static function include_loader() {
-			include MPC_PATH . 'includes__/loader/class-mpc-core-data.php';
-			include MPC_PATH . 'includes__/loader/class-mpc-installer.php';
+			include MPC_PATH . 'includes/loader/class-mpc-core-data.php';
+			include MPC_PATH . 'includes/loader/class-mpc-installer.php';
 		}
 
 		/**
 		 * Include necessary plugin files.
 		 */
 		public static function includes() {
-			include MPC_PATH . 'includes__/loader/class-mpc-admin-ajax.php';
+			include MPC_PATH . 'includes/loader/class-mpc-admin-ajax.php';
 
 			// admin files.
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-save-settings.php';
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-field.php';
+			include MPC_PATH . 'includes/admin/class-mpc-admin-save-settings.php';
+			include MPC_PATH . 'includes/admin/class-mpc-admin-field.php';
 
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-template.php';
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-migration-template.php';
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-new-shortcode.php';
+			include MPC_PATH . 'includes/admin/class-mpc-admin-template.php';
+			include MPC_PATH . 'includes/admin/class-mpc-admin-migration-template.php';
+			include MPC_PATH . 'includes/admin/class-mpc-admin-new-shortcode.php';
 
-			include MPC_PATH . 'includes__/admin/class-mpc-admin-page.php';
+			include MPC_PATH . 'includes/admin/class-mpc-admin-page.php';
 
-			include MPC_PATH . 'includes__/loader/class-mpc-asset-loader.php';
-			include MPC_PATH . 'includes__/loader/class-mpc-admin-loader.php';
+			include MPC_PATH . 'includes/loader/class-mpc-asset-loader.php';
+			include MPC_PATH . 'includes/loader/class-mpc-admin-loader.php';
 
 			// frontend files.
-			include MPC_PATH . 'includes__/class-mpc-front-data.php';
-			include MPC_PATH . 'includes__/class-mpc-product-data.php';
-			include MPC_PATH . 'includes__/class-mpc-table-template.php';
+			include MPC_PATH . 'includes/class-mpc-front-data.php';
+			include MPC_PATH . 'includes/class-mpc-product-data.php';
+			include MPC_PATH . 'includes/class-mpc-table-template.php';
 
-			include MPC_PATH . 'includes__/functions.php';
+			include MPC_PATH . 'includes/functions.php';
 
-			include MPC_PATH . 'includes__/class-mpc-ajax-table-loader.php';
-			include MPC_PATH . 'includes__/class-mpc-add-to-cart.php';
-			include MPC_PATH . 'includes__/class-mpc-shortcode.php';
+			include MPC_PATH . 'includes/class-mpc-ajax-table-loader.php';
+			include MPC_PATH . 'includes/class-mpc-add-to-cart.php';
+			include MPC_PATH . 'includes/class-mpc-shortcode.php';
 		}
 
 		/**

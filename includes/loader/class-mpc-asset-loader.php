@@ -62,15 +62,15 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			self::add_inline_css();
 
 			// hooks and filters script.
-			wp_register_script( 'mpc-hooks', MPC_URL . 'assets/js__/mpc-hooks' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-hooks', MPC_URL . 'assets/js/mpc-hooks' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
 			wp_enqueue_script( 'mpc-hooks' );
 
-			wp_register_script( 'mpc-table-loader', MPC_URL . 'assets/js__/table-loader' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
-			wp_register_script( 'mpc-product-events', MPC_URL . 'assets/js__/product-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
-			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js__/page-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
-			wp_register_script( 'mpc-add-to-cart', MPC_URL . 'assets/js__/add-to-cart' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
+			wp_register_script( 'mpc-table-loader', MPC_URL . 'assets/js/table-loader' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
+			wp_register_script( 'mpc-product-events', MPC_URL . 'assets/js/product-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
+			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js/page-events' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
+			wp_register_script( 'mpc-add-to-cart', MPC_URL . 'assets/js/add-to-cart' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks' ), MPC_VER, true );
 
-			wp_register_script( 'mpc-available', MPC_URL . 'assets/js__/available-variations' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks', 'mpc-product-events' ), MPC_VER, true );
+			wp_register_script( 'mpc-available', MPC_URL . 'assets/js/available-variations' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks', 'mpc-product-events' ), MPC_VER, true );
 
 			wp_enqueue_script( 'mpc-table-loader' );
 			wp_enqueue_script( 'mpc-product-events' );
@@ -212,9 +212,9 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			wp_register_style( 'mpc-admin', MPC_URL . 'assets/css/admin/admin' . self::$suffix . '.css', array(), MPC_VER );
 			wp_enqueue_style( 'mpc-admin' );
 
-			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js__/admin/page-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
-			wp_register_script( 'mpc-settings-events', MPC_URL . 'assets/js__/admin/settings-events' . self::$suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
-			wp_register_script( 'mpc-shortcode-events', MPC_URL . 'assets/js__/admin/shortcode-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-page-events', MPC_URL . 'assets/js/admin/page-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
+			wp_register_script( 'mpc-settings-events', MPC_URL . 'assets/js/admin/settings-events' . self::$suffix . '.js', array( 'jquery', 'jquery-ui-slider', 'jquery-ui-sortable' ), MPC_VER, true );
+			wp_register_script( 'mpc-shortcode-events', MPC_URL . 'assets/js/admin/shortcode-events' . self::$suffix . '.js', array( 'jquery' ), MPC_VER, true );
 
 			wp_enqueue_script( 'mpc-page-events' );
 			wp_enqueue_script( 'mpc-settings-events' );
