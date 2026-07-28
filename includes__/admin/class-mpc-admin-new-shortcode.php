@@ -31,12 +31,28 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		private static $atts = array();
 
 		/**
+		 * Current CPT post id
+		 *
+		 * @var int
+		 */
+		private static $cpt_id;
+
+		/**
+		 * Admin notice available right now.
+		 *
+		 * @var array
+		 */
+		private static $notice = array();
+
+		/**
 		 * Initialize shortcode form
 		 *
 		 * @param string $pro_state Pro state.
+		 * @param string $notice    Current notice.
 		 */
-		public static function init_new_table( $pro_state ) {
+		public static function init_new_table( $pro_state, $notice ) {
 			self::$pro_state = $pro_state;
+			self::$notice    = $notice;
 
 			self::setup_table();
 
@@ -46,7 +62,50 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 				<div class="mpcdp_settings_section_title">
 					<?php echo ! empty( $title ) ? esc_html( $title ) : esc_html__( 'Edit Product Table', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				</div>
+				<?php self::display_shotcode_section(); ?>
 				<?php self::render_fields(); ?>
+			</div>
+			<?php
+		}
+
+		/**
+		 * Display shortcode with action buttons inside of the edit table page
+		 */
+		private static function display_shotcode_section(){
+			$table_id = isset( self::$notice['table_id'] ) && ! empty( self::$notice['table_id'] ) ? self::$notice['table_id'] : self::$cpt_id;
+			if( empty( $table_id ) ){
+				return;
+			}
+			
+			$table_id = get_post_meta( $table_id, 'table_id', true );
+			$table    = empty( $table_id ) ? '' : " table=\"{$table_id}\"";
+
+			$delete   = admin_url( 'admin.php?page=mpc-shortcodes' );
+			$nonce    = wp_create_nonce( 'mpc_option_tab' );
+			?>
+			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode">
+				<div class="mpcdp_settings_option visible">
+					<div class="mpcdp_row">
+						<div class="mpcdp_settings_option_description col-md-12">
+							<div class="mpcdp_option_label"><?php echo esc_html__( 'Shortcode', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
+						</div>
+					</div>
+					<div class="mpcdp_row">
+						<div class="mpcdp_settings_option_description col-md-12">
+							<textarea class="mpc-opt-sc" readonly >[woo-multi-cart<?php echo esc_html( $table ); ?>]</textarea>
+						</div>
+						<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-4 mpc-sc-btns">
+							<span class="mpc-opt-sc-btn copy">
+								<span class="dashicons dashicons-admin-page"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Copy', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+							</span>
+							<a class="mpc-opt-sc-btn delete" href="<?php echo esc_url( $delete . '&tab=all-tables&mpcscdlt=' . esc_attr( self::$cpt_id ) . '&nonce=' . $nonce ); ?>">
+								<span class="dashicons dashicons-trash"></span>
+								<span class="mpc-sc-label"><?php echo esc_html__( 'Delete', 'multiple-products-to-cart-for-woocommerce' ); ?></span>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
 			<?php
 		}
@@ -55,14 +114,14 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		 * Prepare shortcode ready for displaying all fields
 		 */
 		private static function setup_table() {
-			$table_id = isset( $_GET['mpctable'] ) && isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ? sanitize_key( wp_unslash( $_GET['mpctable'] ) ) : '';
+			self::$cpt_id = isset( $_GET['mpctable'] ) && isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'mpc_option_tab' ) ? sanitize_key( wp_unslash( $_GET['mpctable'] ) ) : '';
 
-			if ( empty( $table_id ) ) {
+			if ( empty( self::$cpt_id ) ) {
 				return;
 			}
 
 			// support for legacy code added here too.
-			$shortcode = get_post_status( (int) $table_id ) ? get_post_meta( (int) $table_id, 'shortcode', true ) : get_option( "mpcasc_code{$table_id}" );
+			$shortcode = get_post_status( (int) self::$cpt_id ) ? get_post_meta( (int) self::$cpt_id, 'shortcode', true ) : get_option( "mpcasc_code" . self::$cpt_id );
 			if ( empty( $shortcode ) ) {
 				return;
 			}

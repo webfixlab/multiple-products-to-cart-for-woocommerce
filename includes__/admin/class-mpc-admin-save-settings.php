@@ -28,10 +28,7 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
 		 *
 		 * @var array
 		 */
-		private static $notice = array(
-			'status' => '',
-			'msg'    => '',
-		);
+		private static $notice = array();
 
 		/**
 		 * Plugin installation handler
@@ -100,8 +97,9 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
 				);
 
 				self::$notice = array(
-					'status' => 'success',
-					'msg'    => __( 'Shortcode created.', 'multiple-products-to-cart-for-woocommerce' ),
+					'status'   => 'success',
+					'table_id' => $table_id,
+					'msg'      => __( 'Shortcode created.', 'multiple-products-to-cart-for-woocommerce' ),
 				);
 			} else {
 				$args = array( 'ID' => (int) $table_id );
@@ -120,6 +118,7 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
 			}
 
 			$shortcode = self::get_shortcode_string( $form_data );
+			update_post_meta( $table_id, 'table_id', $table_id );
 			update_post_meta( $table_id, 'shortcode', "[woo-multi-cart {$shortcode}]" );
 		}
 

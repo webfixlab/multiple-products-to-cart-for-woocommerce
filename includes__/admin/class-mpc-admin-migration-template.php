@@ -40,8 +40,8 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 			self::$settings_tab = $tab;
 			self::$pro_state    = $pro_state;
 
-			if ( 'import' === $tab ) {
-				do_action( 'mpc_pro_import' );
+			if ( isset( $_POST[ "mpc_{$tab}" ] ) ) {
+				do_action( 'mpc_migration_submit' );
 			}
 			?>
 			<div class="mpcdp_settings_section">
@@ -136,6 +136,7 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 				<br><br>
 				<?php echo esc_html__( 'Choose the .json file and click on `Import`. This will import `Multiple products to cart for WooCommerce` tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				<br><br>
+				<?php echo esc_html__( 'Please note: any existing table with same id will be replaced.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				<?php
 			}
 		}
@@ -174,6 +175,9 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 							)
 						);
 					?>
+					<?php if( 'import' === self::$settings_tab ) : ?>
+						<input name="mpc_import_file" type="file" class="mpc-file-uploader <?php echo empty( self::$pro_state ) ? 'mpcex-disabled' : ''; ?>" accept=".json">
+					<?php endif; ?>
 				</div>
 			</div>
 			<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-6">

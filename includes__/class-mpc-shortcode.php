@@ -65,25 +65,7 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 				return $atts;
 			}
 
-			return self::extract_saved_shortcode( $atts );
-		}
-
-		/**
-		 * Get saved shortcode
-		 *
-		 * @param array $atts Shortcode attributes.
-		 * @return array
-		 */
-		private static function extract_saved_shortcode( $atts ) {
-			$table_id  = (int) $atts['table'];
-			$cpt_id    = get_post_meta( $table_id, 'table_id', true );
-			$shortcode = get_post_meta( $cpt_id, 'shortcode', true );
-
-			$shortcode = str_replace( '[', '', $shortcode );
-			$shortcode = str_replace( ']', '', $shortcode );
-			$shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
-
-			$shortcode_atts = ! empty( $shortcode ) ? shortcode_parse_atts( $shortcode ) : array(); // shortcode attributes.
+			$shortcode = self::get_shortcode_meta( $atts );
 
 			$reference_atts = apply_filters(
 				'mpc_filter_attributes',
@@ -105,7 +87,48 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 				)
 			);
 
-			return shortcode_atts( $reference_atts, $shortcode_atts, 'woo-multi-cart' );
+			return shortcode_atts( $reference_atts, $shortcode, 'woo-multi-cart' );
+		}
+
+		/**
+		 * Get shortcode meta
+		 *
+		 * @param array $atts Shortcode attributes.
+		 * @return array
+		 */
+		private static function get_shortcode_meta( $atts ){
+			global $wpdb;
+
+			$table_id = isset( $atts['table'] ) && ! empty( $atts['table'] ) ? $atts['table'] : '';
+			if( empty( $table_id ) ){
+				return '';
+			}
+
+			$cpt_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT post_id
+					FROM {$wpdb->postmeta}
+					WHERE meta_key = %s
+					AND meta_value = %s",
+					'table_id',
+					$table_id
+				)
+			);
+
+			if( ! $cpt_id ){
+				return '';
+			}
+
+			$shortcode = get_post_meta( (int) $cpt_id, 'shortcode', true );
+			if( empty( $shortcode ) ){
+				return '';
+			}
+
+			$shortcode = str_replace( '[', '', $shortcode );
+			$shortcode = str_replace( ']', '', $shortcode );
+			$shortcode = str_replace( 'woo-multi-cart', '', $shortcode );
+
+			return empty( $shortcode ) ? array() : shortcode_parse_atts( $shortcode );
 		}
 
 		/**

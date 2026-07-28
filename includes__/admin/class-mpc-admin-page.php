@@ -42,10 +42,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 		 *
 		 * @var array
 		 */
-		private static $notice = array(
-			'status' => '',
-			'msg'    => '',
-		);
+		private static $notice = array();
 
 		/**
 		 * Plugin installation handler
@@ -291,7 +288,7 @@ if ( ! class_exists( 'MPC_Admin_Page' ) ) {
 		private static function display_new_table() {
 			?>
 			<div class="mpcdp_settings_section">
-				<?php MPC_Admin_New_Shortcode::init_new_table( self::$pro_state ); ?>
+				<?php MPC_Admin_New_Shortcode::init_new_table( self::$pro_state, self::$notice ); ?>
 			</div>
 			<div class="mpca-content new-table">
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=mpc-shortcode' ) ); ?>" class="mpcasc-reset">

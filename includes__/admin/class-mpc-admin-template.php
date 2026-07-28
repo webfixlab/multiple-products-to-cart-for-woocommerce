@@ -107,7 +107,7 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 		 */
 		public static function display_shortcode( $id, $title, $desc ) {
 			?>
-			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode">
+			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode" data-cpt="<?php echo esc_attr( $id ); ?>">
 				<div class="mpcdp_settings_option visible">
 					<div class="mpcdp_row">
 						<?php self::display_shortcode_title( $title, $desc ); ?>
@@ -145,9 +145,12 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			$edit   = admin_url( 'admin.php?page=mpc-shortcode' );
 			$delete = admin_url( 'admin.php?page=mpc-shortcodes' );
 			$nonce  = wp_create_nonce( 'mpc_option_tab' );
+
+			$table_id = get_post_meta( $id, 'table_id', true );
+			$table = empty( $table_id ) ? '' : " table=\"{$table_id}\"";
 			?>
-			<div class="mpcdp_settings_option_description col-md-12">
-				<textarea class="mpc-opt-sc" readonly >[woo-multi-cart table="<?php echo esc_attr( $id ); ?>"]</textarea>
+			<div class="mpcdp_settings_option_description col-md-12" data-table="<?php echo esc_attr( $table_id ); ?>">
+				<textarea class="mpc-opt-sc" readonly >[woo-multi-cart<?php echo esc_html( $table ); ?>]</textarea>
 			</div>
 			<div class="mpcdp_settings_option_field mpcdp_settings_option_field_text col-md-4 mpc-sc-btns">
 				<span class="mpc-opt-sc-btn copy">
@@ -175,13 +178,13 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			<div class="mpcdp_settings_toggle mpcdp_container" style="margin-top: 30px;">
 				<div class="mpcdp_settings_option visible">
 					<div class="mpcdp_row">
-						<div class="mpcdp_settings_option_description col-md-6">
+						<div class="mpcdp_settings_option_description col-md-12">
 							<div class="mpcdp_option_label"><?php echo esc_html__( 'No shortcodes found.', 'multiple-products-to-cart-for-woocommerce' ); ?></div>
 							<div class="mpcdp_option_description">
 							<?php
 							printf(
 								// translators: %s: new product table crate link.
-								esc_html__( 'Create a product table shortcode %s.', 'multiple-products-to-cart-for-woocommerce' ),
+								esc_html__( 'Create a product table shortcode %s or use [woo-multi-cart].', 'multiple-products-to-cart-for-woocommerce' ),
 								wp_kses_post( $link )
 							);
 							?>

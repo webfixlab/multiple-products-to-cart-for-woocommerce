@@ -842,6 +842,24 @@ a .mpcasc-reset .button-secondary{
 #export-success{
 	display: none;
 }
+.mpc-file-uploader::file-selector-button {
+	color: white;
+	padding: 5px 15px;
+	margin-top: 10px;
+	background: #2283ff;
+	border-radius: 5px;
+	outline: none;
+	border: none;
+}
+.mpc-migration-notice {
+	color: white;
+	font-size: 16px;
+	margin-top: 20px;
+	display: block;
+	background: #175880;
+	padding: 20px;
+	border-radius: 5px;
+}
 @media screen and (max-width: 1600px){
 	.switch-field label{
 		width: 82px;
