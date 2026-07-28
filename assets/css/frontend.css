@@ -674,7 +674,7 @@ span.mpc-empty-var {
 	#content table.mpc-wrap tbody tr td.mpc-product-image, #main-content table.mpc-wrap tbody tr td.mpc-product-image, #brx-content table.mpc-wrap tbody tr td.mpc-product-image, #main table.mpc-wrap tbody tr td.mpc-product-image, main table.mpc-wrap tbody tr td.mpc-product-image {
 		padding-left: 0;
 		position: absolute;
-		top: 0;
+		top: 10px;
 		left: 10px;
 	}
 	#content table.mpc-wrap tbody tr:not(:has(.mpc-product-image)) td, #main-content table.mpc-wrap tbody tr:not(:has(.mpc-product-image)) td, #brx-content table.mpc-wrap tbody tr:not(:has(.mpc-product-image)) td, #main table.mpc-wrap tbody tr:not(:has(.mpc-product-image)) td, main table.mpc-wrap tbody tr:not(:has(.mpc-product-image)) td{
