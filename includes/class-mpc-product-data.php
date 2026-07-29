@@ -136,7 +136,7 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 		 * @param string $price_html Product price html.
 		 * @return float
 		 */
-		private static function extract_price_from_html( $price_html ) {
+		public static function extract_price_from_html( $price_html ) {
 			if ( empty( $price_html ) ) {
 				return 0.0;
 			}
