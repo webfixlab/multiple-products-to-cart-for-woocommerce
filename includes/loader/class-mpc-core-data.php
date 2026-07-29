@@ -30,7 +30,6 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 				'notice_interval' => 15, // days.
 				'notice'          => array(),
 				'pro_plugin_url'  => 'https://webfixlab.com/plugins/multiple-products-to-cart-woocommerce-product-table/',
-				'activate_link'   => 'admin.php?page=mpc-shortcodes-pricing',
 				'admin_scopes'    => array(
 					'toplevel_page_mpc-shortcodes',
 					'multiple-products_page_mpc-shortcode',

@@ -40,8 +40,8 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 			self::$settings_tab = $tab;
 			self::$pro_state    = $pro_state;
 
-			if ( isset( $_POST[ "mpc_{$tab}" ] ) ) {
-				do_action( 'mpc_migration_submit' );
+			if ( isset( $_POST['mpc_import'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_import'] ) ), 'mpc_import_nonce' ) ) {
+				do_action( 'mpc_import_submit' );
 			}
 			?>
 			<div class="mpcdp_settings_section">
@@ -175,7 +175,7 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 							)
 						);
 					?>
-					<?php if( 'import' === self::$settings_tab ) : ?>
+					<?php if ( 'import' === self::$settings_tab ) : ?>
 						<input name="mpc_import_file" type="file" class="mpc-file-uploader <?php echo empty( self::$pro_state ) ? 'mpcex-disabled' : ''; ?>" accept=".json">
 					<?php endif; ?>
 				</div>

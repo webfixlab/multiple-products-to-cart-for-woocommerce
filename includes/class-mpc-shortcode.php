@@ -96,12 +96,12 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 		 * @param array $atts Shortcode attributes.
 		 * @return array
 		 */
-		private static function get_shortcode_meta( $atts ){
+		private static function get_shortcode_meta( $atts ) {
 			global $wpdb;
 
 			$table_id = isset( $atts['table'] ) && ! empty( $atts['table'] ) ? $atts['table'] : '';
-			if( empty( $table_id ) ){
-				return '';
+			if ( empty( $table_id ) ) {
+				return array();
 			}
 
 			$cpt_id = $wpdb->get_var(
@@ -115,13 +115,13 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 				)
 			);
 
-			if( ! $cpt_id ){
-				return '';
+			if ( ! $cpt_id ) {
+				return array();
 			}
 
 			$shortcode = get_post_meta( (int) $cpt_id, 'shortcode', true );
-			if( empty( $shortcode ) ){
-				return '';
+			if ( empty( $shortcode ) ) {
+				return array();
 			}
 
 			$shortcode = str_replace( '[', '', $shortcode );

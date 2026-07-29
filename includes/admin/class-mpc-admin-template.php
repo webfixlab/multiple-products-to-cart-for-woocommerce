@@ -147,7 +147,7 @@ if ( ! class_exists( 'MPC_Admin_Template' ) ) {
 			$nonce  = wp_create_nonce( 'mpc_option_tab' );
 
 			$table_id = get_post_meta( $id, 'table_id', true );
-			$table = empty( $table_id ) ? '' : " table=\"{$table_id}\"";
+			$table    = empty( $table_id ) ? '' : " table=\"{$table_id}\"";
 			?>
 			<div class="mpcdp_settings_option_description col-md-12" data-table="<?php echo esc_attr( $table_id ); ?>">
 				<textarea class="mpc-opt-sc" readonly >[woo-multi-cart<?php echo esc_html( $table ); ?>]</textarea>

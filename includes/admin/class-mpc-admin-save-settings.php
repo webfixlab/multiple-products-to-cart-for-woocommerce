@@ -59,9 +59,10 @@ if ( ! class_exists( 'MPC_Admin_Save_Settings' ) ) {
 			} elseif ( 'column-sorting' === $tab ) {
 				self::save_columns_order();
 			}
-			
+
 			// trigger hook only when any settings is saved.
-			if( isset( $_POST['mpc_opt_sc'] ) || isset( $_GET['mpcscdlt'] ) || isset( $_POST['mpc_admin_settings'] ) ){
+			if ( isset( $_POST['mpc_opt_sc'] ) || isset( $_GET['mpcscdlt'] ) || (
+				isset( $_POST['mpc_admin_settings'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['mpc_admin_settings'] ) ), 'mpc_admin_settings_save' ) ) ) {
 				do_action( 'mpc_settings_saved', $tab );
 			}
 

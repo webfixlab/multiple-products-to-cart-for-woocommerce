@@ -71,17 +71,17 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		/**
 		 * Display shortcode with action buttons inside of the edit table page
 		 */
-		private static function display_shotcode_section(){
+		private static function display_shotcode_section() {
 			$table_id = isset( self::$notice['table_id'] ) && ! empty( self::$notice['table_id'] ) ? self::$notice['table_id'] : self::$cpt_id;
-			if( empty( $table_id ) ){
+			if ( empty( $table_id ) ) {
 				return;
 			}
-			
+
 			$table_id = get_post_meta( $table_id, 'table_id', true );
 			$table    = empty( $table_id ) ? '' : " table=\"{$table_id}\"";
 
-			$delete   = admin_url( 'admin.php?page=mpc-shortcodes' );
-			$nonce    = wp_create_nonce( 'mpc_option_tab' );
+			$delete = admin_url( 'admin.php?page=mpc-shortcodes' );
+			$nonce  = wp_create_nonce( 'mpc_option_tab' );
 			?>
 			<div class="mpcdp_settings_toggle mpcdp_container mpc-shortcode">
 				<div class="mpcdp_settings_option visible">
@@ -121,7 +121,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 			}
 
 			// support for legacy code added here too.
-			$shortcode = get_post_status( (int) self::$cpt_id ) ? get_post_meta( (int) self::$cpt_id, 'shortcode', true ) : get_option( "mpcasc_code" . self::$cpt_id );
+			$shortcode = get_post_status( (int) self::$cpt_id ) ? get_post_meta( (int) self::$cpt_id, 'shortcode', true ) : get_option( 'mpcasc_code' . self::$cpt_id );
 			if ( empty( $shortcode ) ) {
 				return;
 			}

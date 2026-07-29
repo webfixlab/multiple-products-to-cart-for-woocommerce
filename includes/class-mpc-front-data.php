@@ -135,6 +135,7 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 			$query = str_replace( '(\'', '(', $query );
 			$query = str_replace( '\')', ')', $query );
 
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it's already handled before.
 			return (bool) $wpdb->get_var( $query );
 		}
 	}
