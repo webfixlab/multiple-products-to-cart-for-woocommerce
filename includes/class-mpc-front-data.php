@@ -43,9 +43,10 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 					'empty'            => get_option( 'wmc_empty_value_text', __( 'N/A', 'multiple-products-to-cart-for-woocommerce' ) ),
 				),
 				'settings' => array(
-					'stock' => get_option( 'mpc_show_stock_out' ),
-					'desc'  => get_option( 'mpc_show_variation_desc' ),
-					'qty'   => get_option( 'wmca_default_quantity' ),
+					'stock'    => get_option( 'mpc_show_stock_out' ),
+					'desc'     => get_option( 'mpc_show_variation_desc' ),
+					'qty'      => get_option( 'wmca_default_quantity' ),
+					'checkbox' => get_option( 'mpc_add_to_cart_checkbox', 'on' ),
 				),
 			);
 

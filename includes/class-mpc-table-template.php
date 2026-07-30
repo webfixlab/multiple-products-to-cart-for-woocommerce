@@ -121,8 +121,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				return; // option hidden.
 			}
 
-			$show_product_check = get_option( 'mpc_add_to_cart_checkbox' );
-			if ( ! empty( $show_product_check ) && 'on' !== $show_product_check ) {
+			if ( isset( self::$data['settings']['checkbox'] ) && 'on' !== self::$data['settings']['checkbox'] ) {
 				return;
 			}
 
@@ -442,6 +441,14 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 				return;
 			}
 
+			if( 'variable' === $product->get_type() && empty( $product->get_variation_attributes() ) ){
+				return;
+			}
+
+			if( 'outofstock' === $product->get_stock_status() ){
+				return;
+			}
+
 			$stock = 'instock' === $product->get_stock_status() ? $product->get_stock_quantity() : '';
 			$stock = $product->is_sold_individually() ? 0 : $stock;
 
@@ -472,6 +479,19 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 
 			// skip for grouped product.
 			if ( 'grouped' === $product->get_type() ) {
+				return;
+			}
+
+			$no_check = isset( self::$data['settings']['checkbox'] ) && 'on' !== self::$data['settings']['checkbox'];
+			if( $no_check ){
+				return;
+			}
+
+			if( 'variable' === $product->get_type() && empty( $product->get_variation_attributes() ) ){
+				return;
+			}
+
+			if( 'outofstock' === $product->get_stock_status() ){
 				return;
 			}
 

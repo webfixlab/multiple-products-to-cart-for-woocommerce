@@ -81,6 +81,10 @@
         }
         getCurrentVariation( row ){
             const variations = row.find( '.row-variation-data' ).data( 'variation_data' );
+            if( $.isEmptyObject( variations ) ){
+                return null;
+            }
+            
             const variation = Object.values( variations ).find( variation => {
                 let hasNoIssue = true; // if any attribute value is missed.
 
