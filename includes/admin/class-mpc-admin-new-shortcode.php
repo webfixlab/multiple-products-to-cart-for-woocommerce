@@ -56,11 +56,11 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 
 			self::setup_table();
 
-			$title = MPC_Core_Data::get_new_table()[0]['section'];
+			$title = empty( self::$cpt_id ) ? MPC_Core_Data::get_new_table()[0]['section'] : __( 'Edit Product Table', 'multiple-products-to-cart-for-woocommerce' );
 			?>
 			<div class="mpcdp_settings_section">
 				<div class="mpcdp_settings_section_title">
-					<?php echo ! empty( $title ) ? esc_html( $title ) : esc_html__( 'Edit Product Table', 'multiple-products-to-cart-for-woocommerce' ); ?>
+					<?php echo esc_html( $title ); ?>
 				</div>
 				<?php self::display_shotcode_section(); ?>
 				<?php self::render_fields(); ?>
