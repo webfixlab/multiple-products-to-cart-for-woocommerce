@@ -2,8 +2,8 @@
 Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
-Tested up to: 7.0.2
-Stable tag: 9.0.0
+Tested up to: 7.0.3
+Stable tag: 9.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,7 +123,19 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 
 == Changelog ==
 
-= 9.0.0 2026-07-28 =
+= 9.0.1 2026-08-11 =
+
+**Multiple Products to Cart for WooCommerce**
+
+* Fix - Product types not in scope showing empty table.
+
+= 5.0.1 2026-07-30 =
+
+**Multiple Products to Cart for WooCommerce PRO**
+
+* Fix - 
+
+= 9.0.0 2026-07-30 =
 
 **Multiple Products to Cart for WooCommerce**
 
@@ -136,9 +148,10 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 * Fix - Quantity field min-max value validation.
 * Fix - Sticky header and footer issues.
 
-= 9.0.0 2026-07-28 =
+= 9.0.0 2026-07-30 =
 
 **Multiple Products to Cart for WooCommerce PRO**
+
 * Update - Section by categories now works without explicit table categories.
 * Update - SKU search feature on AJAX product search.
 * Update - Auto remove category dropdown for empty categories with conditional "All categories".
