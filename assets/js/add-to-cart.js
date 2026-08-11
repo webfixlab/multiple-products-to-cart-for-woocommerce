@@ -12,12 +12,13 @@
 			$( document ).ready( () => this.initEvents() );
 		}
 		initEvents(){
+            window.mpcHooks.addAction( 'mpc_add_to_cart', ( cartData, wrap ) => this.handleAddToCart( cartData, wrap ) );
+            window.mpcHooks.addAction( 'mpc_update_wc_mini_cart', ( response ) => this.updateWCMiniCart( response ) );
+
             $( 'body' ).on( 'click', '.mpc-cart-messege', () => $( 'body' ).find('.mpc-cart-messege').remove() );
 
             $( 'form.mpc-cart .mpc-add-to-cart' ).on( 'click', ( e ) => this.addCartHook( e ) );
             $( '.mpc-fixed-cart' ).on( 'click', ( e ) => this.addCartHook( e ) );
-            
-            window.mpcHooks.addAction( 'mpc_add_to_cart', ( cartData, wrap ) => this.handleAddToCart( cartData, wrap ) );
         }
         addCartHook( e ){
             e.preventDefault();
@@ -90,9 +91,16 @@
             window.mpcHooks.addAction( 'updated_cart_totals' );
             window.mpcHooks.doAction( 'mpc_spinner', 'close', wrap );
 
-            if ( response.fragments ) {
-                $.each( response.fragments, ( key, value ) => $( key ).replaceWith( value ) );
+            window.mpcHooks.doAction( 'mpc_update_wc_mini_cart', response );
+
+            this.handleCartNotice( response, wrap );
+        }
+        updateWCMiniCart( response ){
+            if ( ! response.fragments ) {
+                return;
             }
+
+            $.each( response.fragments, ( key, value ) => $( key ).replaceWith( value ) );
 
             const blockThemeEvent = new CustomEvent( 'wc-blocks_added_to_cart', {
                 bubbles:    true,
@@ -103,8 +111,6 @@
                 }
             } );
             document.body.dispatchEvent( blockThemeEvent );
-
-            this.handleCartNotice( response, wrap );
         }
         validationNotice( wrap, cartData ) {
             wrap.find( 'tbody tr.cart_item' ).each( ( _, el ) => {
