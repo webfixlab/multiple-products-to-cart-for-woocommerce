@@ -84,6 +84,7 @@ if ( ! class_exists( 'MPC_Shortcode' ) ) {
 					'selected'      => '',
 					'pagination'    => 'true',
 					'columns'       => '',
+					'variation'     => '',
 				)
 			);
 

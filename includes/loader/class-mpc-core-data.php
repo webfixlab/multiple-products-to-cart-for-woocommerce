@@ -931,6 +931,18 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'pro_options'  => array( 'grouped', 'subscription', 'variable-subscription' ),
 						),
 						array(
+							'key'         => 'variation',
+							'type'        => 'checkbox',
+							'label'       => __( 'Variations to products', 'multiple-products-to-cart-for-woocommerce' ),
+							'desc'        => __( 'Display variations separately as products inside the table.', 'multiple-products-to-cart-for-woocommerce' ),
+							'switch_text' => array(
+								'on'  => __( 'Show', 'multiple-products-to-cart-for-woocommerce' ),
+								'off' => __( 'Hide', 'multiple-products-to-cart-for-woocommerce' ),
+							),
+							'default'     => false,
+							'pro'         => true,
+						),
+						array(
 							'key'     => 'columns',
 							'type'    => 'sortable',
 							'label'   => __( 'Columns', 'multiple-products-to-cart-for-woocommerce' ),

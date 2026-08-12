@@ -126,13 +126,13 @@ if ( ! class_exists( 'MPC_Admin_Migration_Template' ) ) {
 				<br>
 				<?php echo esc_html__( 'Click on `Export` to export tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				<br><br>
-				<?php echo esc_html__( 'You will find either a `mpc_export.json` or an enumarated `mpc_export(1).json` file in your `Downloads` folder. You can use this file to import it later or to other websites.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+				<?php echo esc_html__( 'You will find either a `mpc_export.json` or an enumerated `mpc_export(1).json` file in your `Downloads` folder. You can use this file to import it later or to other websites.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				<br><br>
 				<?php
 			} else {
 				?>
 				<br>
-				<?php echo esc_html__( 'The file name will be `mpc_export.json` or enumarated `mpc_export(1).json`.', 'multiple-products-to-cart-for-woocommerce' ); ?>
+				<?php echo esc_html__( 'The file name will be `mpc_export.json` or enumerated `mpc_export(1).json`.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				<br><br>
 				<?php echo esc_html__( 'Choose the .json file and click on `Import`. This will import `Multiple products to cart for WooCommerce` tables and settings.', 'multiple-products-to-cart-for-woocommerce' ); ?>
 				<br><br>

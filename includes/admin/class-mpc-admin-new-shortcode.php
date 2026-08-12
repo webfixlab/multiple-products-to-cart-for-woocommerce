@@ -188,6 +188,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		 * @param array $field Field data.
 		 */
 		private static function render_half_width_field( $field ) {
+			self::pro_ribbon( $field );
 			?>
 			<div class="mpcdp_row row-<?php echo esc_attr( $field['key'] ); ?>">
 				<div class="mpcdp_settings_option_description col-md-6">
@@ -412,12 +413,31 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 					type="checkbox"
 					name="<?php echo esc_attr( $key ); ?>"
 					id="<?php echo esc_attr( $key ); ?>"
+					class="<?php echo isset( $field['pro'] ) && $field['pro'] && empty( self::$pro_state ) ? 'mpcex-disabled' : ''; ?>"
 					data-off-title="<?php echo esc_attr( $field['switch_text']['off'] ); ?>"
 					data-on-title="<?php echo esc_attr( $field['switch_text']['on'] ); ?>"
+					title="<?php echo isset( $field['pro_label'] ) ? esc_html( $field['pro_label'] ) : esc_html( $field['label'] ); ?>"
 					<?php echo 'true' === $value ? 'checked' : ''; ?>>
 			</div>
 			<?php
 			self::display_switch( $field, 'true' === $value );
+		}
+
+		/**
+		 * Settings field PRO ribbon
+		 *
+		 * @param array $field Field data.
+		 */
+		private static function pro_ribbon( $field ) {
+			// is pro field but has no pro plugin.
+			if ( ! isset( $field['pro'] ) || ! empty( $pro_state ) ) {
+				return;
+			}
+			?>
+			<div class="mpcdp_settings_option_ribbon mpcdp_settings_option_ribbon_new">
+				<?php echo esc_html__( 'PRO', 'multiple-products-to-cart-for-woocommerce' ); ?>
+			</div>
+			<?php
 		}
 
 		/**
