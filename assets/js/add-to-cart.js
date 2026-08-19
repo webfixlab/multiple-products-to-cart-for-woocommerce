@@ -32,7 +32,8 @@
             window.mpcHooks.doAction( 'mpc_add_to_cart', cartData, wrap );
         }
         handleAddToCart( cartData, wrap ){
-            if( 0 === Object.keys( cartData ).length ){
+            cartData = window.mpcHooks.applyFilters( 'mpc_add_to_cart_data', cartData, wrap );
+            if( $.isEmptyObject( cartData ) ){
                 this.validationNotice( wrap, cartData );
                 return;
             }
@@ -57,15 +58,16 @@
             const qtyField = row.find( '.mpc-product-quantity input[type="number"]' );
             const checkBox = row.find( '.mpc-product-buy input[type="checkbox"]' );
 
-            const missingQty = ! qtyField || 0 === qtyField.length;
-            const missingBuy = ! checkBox || 0 === checkBox.length;
+            const missingFields = window.mpcHooks.applyFilters( 'mpc_cart_confirm_fields', {
+                'qty': ! qtyField || 0 === qtyField.length,
+                'buy': ! checkBox || 0 === checkBox.length,
+            }, cartData, wrap );
 
-            // const missingField = ! qtyField || 0 === qtyField.length || ! checkBox || 0 === checkBox.length;
             const total = Object.keys( cartData ).length;
-            const msg   = missingQty || missingBuy ? (
+            const msg   = missingFields.qty || missingFields.buy ? (
                 1 === total ? mpc_frontend.cart_confirm.single : (
-                    missingQty ? `${total}x1 ${mpc_frontend.cart_confirm.plural}` : (
-                        missingBuy ? `${total} ${mpc_frontend.cart_confirm.plural}` : ''
+                    missingFields.qty ? `${total}x1 ${mpc_frontend.cart_confirm.plural}` : (
+                        missingFields.buy ? `${total} ${mpc_frontend.cart_confirm.plural}` : ''
                     )
                 )
             ) : '';

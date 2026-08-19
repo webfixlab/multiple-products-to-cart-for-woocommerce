@@ -67,23 +67,26 @@ if ( ! class_exists( 'MPC_Add_To_Cart' ) ) {
 
 			$added = array(); // array of product id => quantity.
 			foreach ( $data as $product_id => $product ) {
-
-				if ( 'grouped' === $product['type'] ) {
+				$line_item = apply_filters( 'mpc_cart_line_item_data', array_merge( $product, array( 'product_id' => $product_id ) ) );
+				if ( empty( $line_item ) ) {
 					continue;
 				}
 
-				$key = '';
+				$product_id   = $line_item['product_id'];
+				$quantity     = isset( $line_item['qty'] ) && ! empty( $line_item['qty'] ) ? (int) $line_item['qty'] : 1;
+				$variation_id = isset( $line_item['variation_id'] ) && ! empty( $line_item['variation_id'] ) ? (int) $line_item['variation_id'] : 0;
+				$variation    = $line_item['attributes'] ?? array();
 
-				$quantity     = isset( $product['qty'] ) && ! empty( $product['qty'] ) ? (int) $product['qty'] : 1;
-				$variation_id = isset( $product['variation_id'] ) && ! empty( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
-				$variation    = $product['attributes'] ?? array();
-
-				$cart_data = array( 'mpc_data' => $product );
+				$cart_data = array( 'mpc_data' => $line_item );
 
 				$key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation, $cart_data );
 				if ( false !== $key ) {
 					do_action( 'woocommerce_ajax_added_to_cart', $product_id );
-					$added[ $product_id ] = $quantity;
+					if( 'variation' === $line_item['type'] ){
+						$added[ $variation_id ] = $quantity;
+					}else{
+						$added[ $product_id ] = $quantity;
+					}
 				}
 
 				do_action( 'mpc_after_add_to_cart', $product_id, $key );

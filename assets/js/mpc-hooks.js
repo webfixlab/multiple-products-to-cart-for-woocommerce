@@ -52,6 +52,9 @@
                 updateProductMeta: function( target, key, value ){
                     this.state[ target.tableId ][ target.productId ][ key ] = value;
                 },
+                getRowData: function( target ){
+                    return this.state[ target.tableId ][ target.productId ];
+                },
                 getProductMeta: function( target, key ){
                     return this.state[ target.tableId ][ target.productId ][ key ];
                 },
@@ -91,8 +94,8 @@
                         disabled:    0 === valid
                     };
                 },
-                getTableTotal: function( target ) {
-                    const tableData = this.state[ target.tableId ];
+                getTableTotal: function( tableId ) {
+                    const tableData = this.state[ tableId ];
                     return tableData && tableData.length > 0 ? Object.values( tableData ).reduce( ( sum, item ) => {
                         const price = item.checked ? item.price : 0;
                         return sum + ( price * item.qty );

@@ -15,6 +15,7 @@
 		initEvents(){
             // trigger new custom events from this free version with arguments and use it on pro.
             window.mpcHooks.addAction( 'mpc_table_loaded', ( response, wrap ) => this.tableEvents( wrap ) );
+            window.mpcHooks.addAction( 'mpc_calculate_total', ( field ) => this.setTableTotal( field ) );
             window.mpcHooks.addAction( 'mpc_clear_variations', ( e ) => this.clearVariations( e ) );
 
             $( 'body' ).on( 'click', '.mpc-check-all', ( e ) => this.allCheckEventHandler( $( e.currentTarget ) ) );
@@ -41,7 +42,7 @@
             // update total price.
             const tableTotal = wrap.find( '.mpc-total span.total-price' );
             if( tableTotal && tableTotal.length > 0 ){
-                tableTotal.text( this.priceFormat( window.mpcTables.getTableTotal( { tableId: this.tableCounter } ) ) );
+                tableTotal.text( this.priceFormat( window.mpcTables.getTableTotal( this.tableCounter ) ) );
             }
 
             this.tableCounter++;
@@ -74,10 +75,12 @@
                 productData['stock'] = this.sanitizeStock( row.attr( 'stock' ), row.attr( 'stock_status' ) );
             }
 
+            productData['checked'] = 0 === productData['stock'] ? false : productData['checked'];
+
             window.mpcTables.updateProductState( {
                 tableId:   this.tableCounter,
                 productId: parseInt( row.attr( 'data-id' ) )
-            }, productData );
+            }, window.mpcHooks.applyFilters( 'mpc_table_row_data', productData, row ) );
         }
         getCurrentVariation( row ){
             const variations = row.find( '.row-variation-data' ).data( 'variation_data' );
@@ -169,7 +172,7 @@
             window.mpcTables.updateProductMeta( target, 'qty', qty );
 
             this.validateStock( qtyField, target );
-            this.setTableTotal( qtyField, target );
+            window.mpcHooks.doAction( 'mpc_calculate_total', qtyField );
         }   
         validateStock( field, target ){
             const row      = field.closest( 'tr.cart_item' );
@@ -217,14 +220,16 @@
                 row.find( 'td.mpc-product-variation' ).prepend( `<span class="mpc-stock-out">${mpc_frontend.stock_out}</span>` );
             }
         }
-        setTableTotal( field, target ){
+        setTableTotal( field ){
             // I could use wc_price here.
             const tableTotal = field.closest( '.mpc-container' ).find( '.mpc-total span.total-price' );
             if( ! tableTotal || 0 === tableTotal.length ){
                 return;
             }
-
-            const total = window.mpcTables.getTableTotal( target );
+            
+            const tableId = parseInt( field.closest( 'table.mpc-wrap' ).attr( 'data-table_id' ) );
+            const total   = window.mpcTables.getTableTotal( tableId );
+            console.log( 'table id', tableId, 'total', total );
             tableTotal.text( this.priceFormat( total ) );
         }
         priceFormat( price ){
@@ -256,7 +261,7 @@
 
             window.mpcHooks.doAction( 'mpc_variation_changed', row, variation, attDropDown );
 
-            this.setTableTotal( attDropDown, target );
+            window.mpcHooks.doAction( 'mpc_calculate_total', attDropDown );
 
             const attVal = attDropDown.find( 'option:selected' ).val();
             if( attVal && attVal.length > 0 ){
@@ -355,7 +360,8 @@
         productCheckEventHandler( checkBox ){
             const target = window.mpcTables.identifyTable( checkBox );
             window.mpcTables.updateProductMeta( target, 'checked', checkBox.is( ':checked' ) );
-            this.setTableTotal( checkBox, target );
+            
+            window.mpcHooks.doAction( 'mpc_calculate_total', checkBox );
 
             if( checkBox.is( ':checked' ) ){
                 checkBox.removeClass( 'mpc-faulty' );

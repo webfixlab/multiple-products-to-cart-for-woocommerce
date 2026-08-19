@@ -36,6 +36,8 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			add_action( 'mpc_table_title_columns', array( __CLASS__, 'display_table_header' ), 10 );
 			add_action( 'mpc_table_body', array( __CLASS__, 'display_table_body' ), 10 );
 
+			add_action( 'mpc_table_row', array( __CLASS__, 'display_table_row' ), 10, 1 );
+
 			// table columns.
 			add_action( 'mpc_table_column_image', array( __CLASS__, 'display_product_image' ), 10, 1 );
 			add_action( 'mpc_table_column_product', array( __CLASS__, 'display_product_details' ), 10, 1 );
@@ -174,29 +176,28 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 			self::setup_frontend_data();
 
 			foreach ( self::$data['products'] as $product_id ) {
-				self::display_table_row( $product_id );
+				$product = wc_get_product( (int) $product_id );
+				do_action( 'mpc_table_row', $product );
 			}
 		}
 
 		/**
 		 * Display product table row
 		 *
-		 * @param int $product_id Product id.
+		 * @param object $product Product object.
 		 */
-		private static function display_table_row( $product_id ) {
-			$product = wc_get_product( (int) $product_id );
+		public static function display_table_row( $product ) {
 			?>
 			<tr
 				class="cart_item <?php echo esc_attr( $product->get_type() ); ?>"
 				data-type="<?php echo esc_attr( $product->get_type() ); ?>"
-				data-id="<?php echo esc_attr( $product_id ); ?>"
+				data-id="<?php echo esc_attr( $product->get_id() ); ?>"
 				stock="<?php echo esc_attr( $product->get_stock_quantity() ); ?>"
 				stock_status="<?php echo esc_attr( $product->get_stock_status() ); ?>"
 				data-price="<?php echo esc_attr( MPC_Product_Data::get_price_amount( $product ) ); ?>">
 				<?php self::display_table_row_columns( $product ); ?>
 			</tr>
 			<?php
-			do_action( 'mpc_table_row', $product );
 		}
 
 		/**
@@ -422,7 +423,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		private static function no_variation_text() {
 			?>
-			<span class="mpc-empty-var"><?php echo esc_html( get_option( 'wmc_empty_value_text', __( 'N/A', 'multiple-products-to-cart-for-woocommerce' ) ) ); ?></span>
+			<span class="mpc-empty-var"><?php echo esc_html( self::$data['labels']['empty'] ); ?></span>
 			<?php
 		}
 
