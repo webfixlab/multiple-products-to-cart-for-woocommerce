@@ -7,7 +7,7 @@
  * Author URI:           https://webfixlab.com/
  * Version:              9.0.1
  * Requires at least:    4.9
- * Tested up to:         7.0.4
+ * Tested up to:         7.1.0
  * Requires PHP:         7.0
  * Tags:                 product table, woocommerce product table,wc product table,products table,woocommerce table
  * Requires Plugins:     woocommerce

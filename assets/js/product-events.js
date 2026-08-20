@@ -75,7 +75,8 @@
                 productData['stock'] = this.sanitizeStock( row.attr( 'stock' ), row.attr( 'stock_status' ) );
             }
 
-            productData['checked'] = 0 === productData['stock'] ? false : productData['checked'];
+            productData.checked = 0 === productData.stock ? false : productData.checked;
+            productData.checked = '0' === productData.price || 0 === productData.price.length ? false : productData.checked;
 
             window.mpcTables.updateProductState( {
                 tableId:   this.tableCounter,
@@ -229,7 +230,6 @@
             
             const tableId = parseInt( field.closest( 'table.mpc-wrap' ).attr( 'data-table_id' ) );
             const total   = window.mpcTables.getTableTotal( tableId );
-            console.log( 'table id', tableId, 'total', total );
             tableTotal.text( this.priceFormat( total ) );
         }
         priceFormat( price ){
