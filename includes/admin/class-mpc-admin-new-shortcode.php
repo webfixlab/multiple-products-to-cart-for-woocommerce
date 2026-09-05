@@ -430,7 +430,7 @@ if ( ! class_exists( 'MPC_Admin_New_Shortcode' ) ) {
 		 */
 		private static function pro_ribbon( $field ) {
 			// is pro field but has no pro plugin.
-			if ( ! isset( $field['pro'] ) || ! empty( $pro_state ) ) {
+			if ( ! isset( $field['pro'] ) || ! empty( self::$pro_state ) ) {
 				return;
 			}
 			?>

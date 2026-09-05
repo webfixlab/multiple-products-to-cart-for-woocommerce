@@ -7,12 +7,12 @@
  * Author URI:           https://webfixlab.com/
  * Version:              9.0.1
  * Requires at least:    4.9
- * Tested up to:         7.1.0
+ * Tested up to:         7.1
  * Requires PHP:         7.0
  * Tags:                 product table, woocommerce product table,wc product table,products table,woocommerce table
  * Requires Plugins:     woocommerce
  * WC requires at least: 3.6
- * WC tested up to:      11.0.1
+ * WC tested up to:      11.1.0
  * License:              GPL2
  * License URI:          https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:          multiple-products-to-cart-for-woocommerce

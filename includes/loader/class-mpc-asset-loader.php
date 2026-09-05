@@ -105,7 +105,8 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 					'cart_nonce'   => wp_create_nonce( 'cart_nonce_ref' ),
 					'table_nonce'  => wp_create_nonce( 'table_nonce_ref' ),
 					'redirect_url' => get_option( 'wmc_redirect', 'cart' ),
-					'blank_submit' => get_option( 'wmc_empty_form_text', __( 'Please fix the issues and try again.', 'multiple-products-to-cart-for-woocommerce' ) ),
+					'cart_error'   => get_option( 'wmc_empty_form_text', __( 'Please fix the issues and try again.', 'multiple-products-to-cart-for-woocommerce' ) ),
+					'blank_submit' => get_option( 'wmc_empty_form_text', __( 'No valid items to add to the cart.', 'multiple-products-to-cart-for-woocommerce' ) ),
 					'stock_out'    => __( 'Out of stock', 'multiple-products-to-cart-for-woocommerce' ),
 					'cart_confirm' => array(
 						'single' => __( '1 product', 'multiple-products-to-cart-for-woocommerce' ),
