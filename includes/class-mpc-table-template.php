@@ -423,7 +423,7 @@ if ( ! class_exists( 'MPC_Table_Template' ) ) {
 		 */
 		private static function no_variation_text() {
 			?>
-			<span class="mpc-empty-var"><?php echo esc_html( self::$data['labels']['empty'] ); ?></span>
+			<span class="mpc-blank"><?php echo esc_html( self::$data['labels']['empty'] ); ?></span>
 			<?php
 		}
 

@@ -106,7 +106,7 @@ if ( ! class_exists( 'MPC_Front_Data' ) ) {
 
 			$cols = array();
 			foreach ( $columns as $col ) {
-				$cols[ $col ] = $labels[ $col ];
+				$cols[ $col ] = get_option( $col, $labels[ $col ] );
 			}
 
 			return $cols;
