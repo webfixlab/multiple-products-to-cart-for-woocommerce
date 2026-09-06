@@ -65,9 +65,9 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 				'order'          => isset( $atts['order'] ) && ! empty( $atts['order'] ) ? strtoupper( $atts['order'] ) : 'DESC',
 				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
-						'key'      => '_stock_status',
-						'value'    => 'instock',
-						'complare' => '=',
+						'key'     => '_stock_status',
+						'value'   => 'instock',
+						'compare' => '=',
 					),
 					array(
 						'key'     => '_price',
