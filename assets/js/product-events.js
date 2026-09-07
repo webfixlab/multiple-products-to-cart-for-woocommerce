@@ -303,7 +303,7 @@
             table.find( 'tr.cart_item' ).each( ( _, row ) => {
                 const args = this.getRowArgs( data, $( row ) );
                 if( ! $.isEmptyObject( args.data ) && args.checkbox && -1 !== [ 'simple', 'variable' ].indexOf( args.data.type ) ){
-                    const state = 'variable' === args.data.type && ! $.isEmptyObject( args.data.variation ) ? false : ( getAll && -1 !== args.data.stock && args.data.qty > 0 );
+                    const state = 'variable' === args.data.type && $.isEmptyObject( args.data.variation ) ? false : ( getAll && 0 !== args.data.stock && args.data.qty > 0 );
                     
                     args.checkbox.prop( 'checked', state );
                     data[ args.pid ].checked = state;
