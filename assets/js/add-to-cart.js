@@ -162,11 +162,14 @@
         handleCartNotice( response, wrap ){
             $( 'body' ).find( '.mpc-cart-messege' ).remove();
 
-            const msg    = response.error_message ? response.error_message : response.cart_message;
-            const notice = response.error_message ? `<ul class="woocommerce-error" role="alert"><li>${msg}</li></ul>` : `<div class="woocommerce-message" role="alert">${ msg }</div>`;
+            const msg  = response.error_message ? response.error_message : response.cart_message;
+            const icon = response.error_message ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M16.7 7.1l-6.3 8.5-3.3-2.5-.9 1.2 4.5 3.4L17.9 8z"></path></svg>';
 
-            wrap.prepend( `<div class="woocommerce-notices-wrapper mpc-cart-messege">${notice}</div>` );
-            $( 'body' ).append( `<div class="mpc-popup mpc-popify mpc-cart-messege"><div class="woocommerce"><div class="woocommerce-message" role="alert">${ msg }</div></div></div>` );
+            const status = response.error_message ? 'error' : 'success';
+            const notice = `<div class="wc-block-components-notice-banner is-${status}" role="alert" tabindex="-1">${icon}<div class="wc-block-components-notice-banner__content">${msg}</div></div>`;
+
+            wrap.prepend( notice );
+            $( 'body' ).append( `<div class="mpc-popup mpc-popify mpc-cart-messege">${notice}</div>` );
             
             setTimeout( () => $( 'body' ).find( '.mpc-popify' ).remove(), 2000 );
         }
