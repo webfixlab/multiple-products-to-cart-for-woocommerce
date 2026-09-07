@@ -37,8 +37,6 @@
 
             this.renderAllTablesStickyElements();
             this.getAdminBarHeight();
-
-            this.setupSelectAllHideLabel();
         }
         tableLoadingSpinner( way, wrap ) {
             if( 'load' === way ){
@@ -220,15 +218,6 @@
                     this.state.adminBar = ! $( el ).is( ':hidden' ) || ! $( el ).hasClass( `elementor-hidden-${device}` ) ? this.state.adminBar + $( el ).height() : this.state.adminBar;
                 });
             }
-        }
-
-        setupSelectAllHideLabel(){
-            $( '.mpc-container' ).each( ( _, el ) => {
-                const selectAll = $( el ).find( '.mpc-all-select' );
-                if( selectAll && selectAll.length > 0 ){
-                    selectAll.find( 'span') .toggle( $( el ).width() > 768 );
-                }
-            } );
         }
 	}
 	new MPCFrontPageEvents();
