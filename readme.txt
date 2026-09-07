@@ -3,7 +3,7 @@ Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
 Tested up to: 7.1
-Stable tag: 9.0.1
+Stable tag: 9.1.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -50,6 +50,7 @@ https://www.youtube.com/watch?v=bZr8LOo2-q0
 
 **PRO FEATURES**
 
+* New! **Variations as Product Rows** feature added.
 * Extend tables with Category, Tag, SKU, Stock and Rating columns
 * **AJAX search box with SKU search**
 * Add to cart button for each product
@@ -117,44 +118,29 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 4. Mobile view comparisons
 5. SKU search and category filter (PRO)
 6. Groupd product with it's children (PRO)
-7. Section by categories with settings (PRO)
+7. Variations as product rows (PRO)
 8. Table cart for quick checkout (PRO)
 9. Admin settings
 
 == Changelog ==
 
-= 9.0.1 2026-08-11 =
+= 9.1.0 2026-09-08 =
 
 **Multiple Products to Cart for WooCommerce**
 
-* Fix - Product types not in scope showing empty table.
+* Update - New frontend JS code update for ease of hooks use.
+* Update - More robust and optimized frontend product data applications.
+* Update - Add to cart notice design to new block design.
+* Update - New loading animation and removed auto remove notice and auto scroll to top.
+* Update - New and improved available variations filtering.
+* Fix - Auto check products and disable fields only for out-of-stock products.
+* Fix - Quantity recovery from out-of-stock to instock variation.
 
-= 5.0.1 2026-07-30 =
-
-**Multiple Products to Cart for WooCommerce PRO**
-
-* Fix - 
-
-= 9.0.0 2026-07-30 =
-
-**Multiple Products to Cart for WooCommerce**
-
-* Update - Available product variation feature.
-* Update - Cart confirmation message with marked error fields.
-* Update - Completely redesigned and optimized new codebase.
-* Update - Shortcode now works without explicit table id.
-* Update - Missing shortcode section added to single shortcode table edit page.
-* Fix - Minicart not updating after add to cart.
-* Fix - Quantity field min-max value validation.
-* Fix - Sticky header and footer issues.
-
-= 9.0.0 2026-07-30 =
+= 5.1.0 2026-09-08 =
 
 **Multiple Products to Cart for WooCommerce PRO**
 
-* Update - Section by categories now works without explicit table categories.
-* Update - SKU search feature on AJAX product search.
-* Update - Auto remove category dropdown for empty categories with conditional "All categories".
-* Update - Auto remove "All categories" text on single parent category.
-* Update - Import function now checks and replaces existing tables.
-* Update - New grouped product layout.
+* Update - Variations as product rows feature added.
+* Update - Automatic dropdown added for empty attribute when converting variable to variations.
+* Fix - Import not preserving table id.
+* Fix - Auto update of table id on saving shortcode issue.

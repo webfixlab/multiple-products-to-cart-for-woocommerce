@@ -5,7 +5,7 @@
  * Description:          A truly lightweight EASY to use and super FAST WooCommerce product table solution to add multiple products to cart at once.
  * Author:               WebFix Lab
  * Author URI:           https://webfixlab.com/
- * Version:              9.0.1
+ * Version:              9.1.0
  * Requires at least:    4.9
  * Tested up to:         7.1
  * Requires PHP:         7.0
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 
 // plugin path.
 define( 'MPC', __FILE__ );
-define( 'MPC_VER', '9.0.1' );
+define( 'MPC_VER', '9.1.0' );
 define( 'MPC_PATH', plugin_dir_path( MPC ) );
 define( 'MPC_URL', plugin_dir_url( MPC ) );
 
