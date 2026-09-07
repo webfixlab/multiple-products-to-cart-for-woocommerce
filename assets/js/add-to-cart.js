@@ -168,11 +168,7 @@
             wrap.prepend( `<div class="woocommerce-notices-wrapper mpc-cart-messege">${notice}</div>` );
             $( 'body' ).append( `<div class="mpc-popup mpc-popify mpc-cart-messege"><div class="woocommerce"><div class="woocommerce-message" role="alert">${ msg }</div></div></div>` );
             
-            this.removeCartNotices( wrap );
-        }
-        removeCartNotices( wrap ){
             setTimeout( () => $( 'body' ).find( '.mpc-popify' ).remove(), 2000 );
-            setTimeout( () => wrap.find( '.mpc-cart-messege' ).remove(), 7000 );
         }
 
         triggerAddToCart( e ){
