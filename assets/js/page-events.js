@@ -42,9 +42,9 @@
         }
         tableLoadingSpinner( way, wrap ) {
             if( 'load' === way ){
-                wrap.find( 'table.mpc-wrap' ).before( `<span class="mpc-loader"><img src="${ mpc_frontend.imgassets }loader.gif"></span>` );
+                wrap.find( 'table.mpc-wrap' ).before( `<div class="mpc-spinner-wrap"><div class="mpc-spinner"></div></div>` );
             }else{
-                wrap.find( '.mpc-loader' ).remove();
+                wrap.find( '.mpc-spinner-wrap' ).remove();
             }
         }
         handleImagePopup( e ) {
@@ -68,11 +68,16 @@
 
         tableLoadedEventHandler( wrap ){
             this.renderStickyElements( wrap );
+
             wrap.find( '.mpc-fixed-header' ).remove();
 
+            $.easing.naturalEaseInOut = function( x ){ // x is animation progress.
+                // x pow 2 is smooth speed.
+                return x < 0.5 ? 2 * x * x: 1 - Math.pow( -2 * x + 2, 2 ) / 2;
+            };
             $( 'html, body' ).animate( {
-                scrollTop: wrap.offset().top - 80
-            }, 'slow' );
+                scrollTop: wrap.offset().top - 80,
+            }, 2000, 'naturalEaseInOut' );
         }
 
 

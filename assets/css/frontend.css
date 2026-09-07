@@ -371,7 +371,35 @@ span.mpc-single-add:hover {
 	to {transform:scale(1)}
 }
 /* loader */
-.mpc-loading{
+.mpc-spinner-wrap{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba( 0, 0, 0, 0.55 );
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+}
+.mpc-spinner{
+	width: 50px;
+	height: 50px;
+	border: 5px solid rgba(255, 255, 255, 0);
+	border-top-color: rgba(255, 255, 255, 0);
+	border-right-color: rgba(255, 255, 255, 0);
+	border-radius: 50%;
+	border-top-color: #fff;
+	animation: mpc-spin 1s linear infinite;
+	border-right-color: #fff;
+}
+@keyframes mpc-spin{
+	to{
+		transform: rotate( 360deg );
+	}
+}
+/* .mpc-loading{
 	color: #eeeeee;
 	position: relative;
 	opacity: .5;
@@ -421,7 +449,8 @@ span.mpc-loader img {
 	top: 38%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-}
+} */
+
 .mpc-popup ins {
 	background: none;
 }

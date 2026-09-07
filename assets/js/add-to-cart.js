@@ -168,7 +168,6 @@
             wrap.prepend( `<div class="woocommerce-notices-wrapper mpc-cart-messege">${notice}</div>` );
             $( 'body' ).append( `<div class="mpc-popup mpc-popify mpc-cart-messege"><div class="woocommerce"><div class="woocommerce-message" role="alert">${ msg }</div></div></div>` );
             
-            $( 'html, body' ).animate( { scrollTop: wrap.offset().top - 60 }, 'slow' );
             this.removeCartNotices( wrap );
         }
         removeCartNotices( wrap ){
