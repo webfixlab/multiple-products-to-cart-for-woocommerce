@@ -2,7 +2,7 @@
 Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
-Tested up to: 7.1
+Tested up to: 7.1.2
 Stable tag: 9.1.0
 Requires PHP: 7.0
 License: GPLv2 or later
