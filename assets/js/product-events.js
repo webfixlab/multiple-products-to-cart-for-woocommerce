@@ -190,7 +190,7 @@
             }
 
             // variation price.
-            const price = 'undefined' !== typeof data.variation.price ? data.variation.price : '';
+            const price = 'undefined' !== typeof data.variation.price ? parseFloat( data.variation.price ) : '';
             priceWrap.find( 'span.total-price' ).text( 'number' === typeof price ? this.priceFormat( price ) : '' );
             priceWrap.toggle( 'number' === typeof price );
             row.attr( 'data-price', price );
