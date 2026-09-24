@@ -138,26 +138,87 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 		 *
 		 * @param string $price_html Product price html.
 		 * @return float
-		 */
+		*/
 		public static function extract_price_from_html( $price_html ) {
 			if ( empty( $price_html ) ) {
 				return 0.0;
 			}
 
-			$price_text = '';
-			if ( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $m ) ) {
-				$price_text = $m[1];
-			} elseif ( preg_match( '/<bdi[^>]*>(.*?)<\/bdi>/is', $price_html, $m ) ) {
-				$price_text = $m[1];
+			$price_html = html_entity_decode( $price_html );
+			
+			$ds = preg_quote( wc_get_price_decimal_separator(), '/' ); // decimal separator.
+			$ts = preg_quote( wc_get_price_thousand_separator(), '/' ); // thousand separator.
+			if ( preg_match_all( '/[\d' . $ts . $ds . ']+/', $price_html, $matches ) ) {
+				return min( array_filter(
+					$matches[0],
+					function( $item ) {
+						return '.' !== $item && $item > 0;
+					}
+				) );
 			}
-			if ( empty( $price_text ) ) {
-				return 0.0;
-			}
+			return 0.0;
 
-			$price_text = wp_strip_all_tags( $price_text );
-			$price_text = html_entity_decode( $price_text );
-			return (float) wc_format_decimal( $price_text, wc_get_price_decimals() );
+			// $price_text = '';
+			// if ( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $m ) ) {
+			// 	$price_text = $m[1];
+			// } elseif ( preg_match( '/<bdi[^>]*>(.*?)<\/bdi>/is', $price_html, $m ) ) {
+			// 	$price_text = $m[1];
+			// }
+			// if ( empty( $price_text ) ) {
+			// 	return 0.0;
+			// }
+
+			// $price_text = self::strip_tags( wp_strip_all_tags( $price_text ) );
+			// // error_log( 'l4 price ' . $price_html );
+			// $price_text = html_entity_decode( $price_text );
+			// // error_log( 'l5 price ' . $price_html );
+			
+
+			// if ( preg_match( '/[\d' . $ts . $ds . ']+/', $price_text, $num_matches ) ) {
+			// 	// error_log( 'final l1 ' . wc_format_decimal( $num_matches[0], wc_get_price_decimals() ) );
+			// 	return (float) wc_format_decimal( $num_matches[0], wc_get_price_decimals() );
+			// }
+
+			// return 0.0;
 		}
+
+		// public static function strip_tags( $price_html ) {
+		// 	$dom = new DOMDocument();
+		// 	libxml_use_internal_errors( true );
+		// 	$dom->loadHTML( '<?xml encoding="UTF-8">' . $price_html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		// 	libxml_clear_errors();
+
+		// 	$stripped = $dom->textContent;
+		// 	return html_entity_decode( $stripped, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		// }
+		// public static function extract_price_from_html_2( $price_html ) {
+		// 	if ( empty( $price_html ) ) {
+		// 		return 0.0;
+		// 	}
+
+		// 	$target_html = $price_html;
+		// 	if ( preg_match( '/<ins[^>]*>(.*?)<\/ins>/is', $price_html, $matches ) ) {
+		// 		$target_html = $matches[1];
+		// 	}
+
+		// 	$dom = new DOMDocument();
+		// 	libxml_use_internal_errors( true );
+		// 	$dom->loadHTML( '<?xml encoding="UTF-8">' . $target_html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		// 	libxml_clear_errors();
+
+		// 	$clean_text = $dom->textContent;
+		// 	$clean_text = html_entity_decode( $clean_text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
+		// 	$ds = preg_quote( wc_get_price_decimal_separator(), '/' ); // decimal separator.
+		// 	$ts = preg_quote( wc_get_price_thousand_separator(), '/' ); // thousand separator.
+
+		// 	if ( preg_match( '/[\d' . $ts . $ds . ']+/', $clean_text, $num_matches ) ) {
+		// 		$raw_number = $num_matches[0];
+		// 		return (float) wc_format_decimal( $raw_number, wc_get_price_decimals() );
+		// 	}
+
+		// 	return 0.0;
+		// }
 
 		/**
 		 * Get available product variations data

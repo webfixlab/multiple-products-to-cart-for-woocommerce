@@ -344,7 +344,7 @@
                 minimumFractionDigits: mpc_frontend.dp,
                 maximumFractionDigits: mpc_frontend.dp,
                 useGrouping: true
-            } );
+            } ).replace( ',', '%1$s' ).replace( '.', mpc_frontend.ds ).replace( '%1$s', mpc_frontend.ts );
         }
 	}
 	new MPCFrontProductEvents();
