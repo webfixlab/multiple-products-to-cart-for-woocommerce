@@ -3,7 +3,7 @@ Contributors: aikya, smshahriar, webfixlab
 Tags: product table, woocommerce product table, wc product table, products table, woocommerce table
 Requires at least: 4.9
 Tested up to: 7.1.2
-Stable tag: 9.1.0
+Stable tag: 9.1.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -121,6 +121,21 @@ Yes, just send your [request here](https://webfixlab.com/contact/).
 7. Variations as product rows (PRO)
 8. Table cart for quick checkout (PRO)
 9. Admin settings
+
+== Changelog ==
+
+= 9.1.1 2026-09-28 =
+
+**Multiple Products to Cart for WooCommerce**
+
+* Fix - Price and currency formatting issue on the table.
+
+= 5.1.1 2026-09-28 =
+
+**Multiple Products to Cart for WooCommerce PRO**
+
+* Update - Removed WooCommerce all products for subscriptions support since it's retired.
+* Fix - Price and currency formatting issue on quick checkbout section.
 
 == Changelog ==
 

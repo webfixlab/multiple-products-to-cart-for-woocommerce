@@ -54,7 +54,7 @@
             data.qty     = qtyField && qtyField.length > 0 && qtyField.val().length > 0 ? parseInt( qtyField.val() ) : 1;
             data.checked = checkBox && checkBox.length > 0 ? checkBox.is( ':checked' ) : true;
 
-            data.price = data.variation && 'undefined' !== typeof data.variation.price ? parseFloat( data.variation.price ) : ( 'undefined' !== typeof price ? parseFloat( price ) : 0 );
+            data.price = data.variation && 'undefined' !== typeof data.variation.price ? window.mpcExt.getPrice( data.variation.price ) : ( 'undefined' !== typeof price ? window.mpcExt.getPrice( price ) : 0 );
             data.stock = data.variation && 'undefined' !== typeof data.variation.stock_status ? this.sanitizeStock( data.variation.stock, data.variation.stock_status ) : this.sanitizeStock( row.attr( 'stock' ), row.attr( 'stock_status' ) );
 
             data.checked = 0 === data.stock || '0' === data.price || 0 === data.price.length ? false : data.checked;
@@ -146,7 +146,7 @@
             const variation = this.getCurrentVariation( row );
 
             data.variation = variation ? variation : {};
-            data.price     = variation && variation.price ? parseFloat( variation.price ) : 0;
+            data.price     = variation && variation.price ? window.mpcExt.getPrice( variation.price ) : 0;
             data.stock     = variation ? this.sanitizeStock( variation.stock, variation.stock_status ) : -1;
             
             data = this.applyStock( data, 'att', attDropDown );
@@ -185,13 +185,13 @@
             const desc = 'undefined' !== typeof data.variation.desc ? data.variation.desc : '';
             if( ( ! descWrap || 0 === descWrap.length ) && desc.length > 0 ){
                 row.find( '.mpc-product-title' ).append( `<div class="mpc-var-desc">${desc}</div>` );
-            }else if( descWrap && descWrap.length > 0 && ( ! desc || 0 === desc.length )  ){
+            }else if( descWrap && descWrap.length > 0 && ( ! desc || 0 === desc.length ) ){
                 descWrap.remove();
             }
 
             // variation price.
-            const price = 'undefined' !== typeof data.variation.price ? parseFloat( data.variation.price ) : '';
-            priceWrap.find( 'span.total-price' ).text( 'number' === typeof price ? this.priceFormat( price ) : '' );
+            const price = 'undefined' !== typeof data.variation.price ? window.mpcExt.getPrice( data.variation.price ) : '';
+            priceWrap.find( 'span.total-price' ).text( 'number' === typeof price ? window.mpcExt.setPrice( price ) : '' );
             priceWrap.toggle( 'number' === typeof price );
             row.attr( 'data-price', price );
 
@@ -318,7 +318,7 @@
         setTableTotal( tableId ){
             const data = window.mpcTables.getTableData( tableId );
             if( $.isEmptyObject( data ) ){
-                return total;
+                return;
             }
 
             const wrap = $( document.body ).find( '.mpc-container' ).filter( function(){
@@ -336,15 +336,7 @@
             }, 0 ) : 0;
             total = window.mpcHooks.applyFilters( 'mpc_table_total', total, tableId );
             
-            tableTotal.text( this.priceFormat( total ) );
-        }
-
-        priceFormat( price ){
-            return parseFloat( price ).toLocaleString( mpc_frontend.locale, {
-                minimumFractionDigits: mpc_frontend.dp,
-                maximumFractionDigits: mpc_frontend.dp,
-                useGrouping: true
-            } ).replace( ',', '%1$s' ).replace( '.', mpc_frontend.ds ).replace( '%1$s', mpc_frontend.ts );
+            tableTotal.text( window.mpcExt.setPrice( total ) );
         }
 	}
 	new MPCFrontProductEvents();

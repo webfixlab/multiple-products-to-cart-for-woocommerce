@@ -72,6 +72,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 
 			wp_register_script( 'mpc-available', MPC_URL . 'assets/js/available-variations' . self::$suffix . '.js', array( 'jquery', 'mpc-hooks', 'mpc-product-events' ), MPC_VER, true );
 
+			wp_enqueue_script( 'mpc-hooks' );
 			wp_enqueue_script( 'mpc-table-loader' );
 			wp_enqueue_script( 'mpc-product-events' );
 			wp_enqueue_script( 'mpc-page-events' );

@@ -5,14 +5,14 @@
  * Description:          A truly lightweight EASY to use and super FAST WooCommerce product table solution to add multiple products to cart at once.
  * Author:               WebFix Lab
  * Author URI:           https://webfixlab.com/
- * Version:              9.1.0
+ * Version:              9.1.1
  * Requires at least:    4.9
- * Tested up to:         7.1
+ * Tested up to:         7.1.2
  * Requires PHP:         7.0
  * Tags:                 product table, woocommerce product table,wc product table,products table,woocommerce table
  * Requires Plugins:     woocommerce
  * WC requires at least: 3.6
- * WC tested up to:      11.1.0
+ * WC tested up to:      11.1.2
  * License:              GPL2
  * License URI:          https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:          multiple-products-to-cart-for-woocommerce
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 
 // plugin path.
 define( 'MPC', __FILE__ );
-define( 'MPC_VER', '9.1.0' );
+define( 'MPC_VER', '9.1.1' );
 define( 'MPC_PATH', plugin_dir_path( MPC ) );
 define( 'MPC_URL', plugin_dir_url( MPC ) );
 

@@ -40,7 +40,7 @@
                 }
             };
 
-            // common event handlers.
+            // common table object.
             window.mpcTables = {
                 state:  {}, // complete table state with all necessary data.
                 updateProduct: function( target, productData ){
@@ -69,6 +69,21 @@
                         tableId:   parseInt( target.closest( 'table.mpc-wrap' ).attr( 'data-table_id' ) ),
                         productId: parseInt( target.closest( 'tr.cart_item' ).attr( 'data-id' ) )
                     };
+                },
+            };
+
+            // table object of common methods.
+            window.mpcExt = {
+                getPrice: function( txt ){ // convert price text to number.
+                    txt = txt.replace( mpc_frontend.ts, '%1$s' ).replace( mpc_frontend.ds, '.' ).replace( '%1$s', '' );
+                    return 'undefined' === typeof txt || 0 === txt.length || isNaN( parseFloat( txt ) ) ? 0.0 : parseFloat( txt );
+                },
+                setPrice: function( price ){ // convert number to text.
+                    return parseFloat( price ).toLocaleString( mpc_frontend.locale, {
+                        minimumFractionDigits: mpc_frontend.dp,
+                        maximumFractionDigits: mpc_frontend.dp,
+                        useGrouping: true
+                    } ).replace( ',', '%1$s' ).replace( '.', mpc_frontend.ds ).replace( '%1$s', mpc_frontend.ts );
                 },
             };
         }
