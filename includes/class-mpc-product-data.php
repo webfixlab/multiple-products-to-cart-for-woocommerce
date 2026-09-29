@@ -149,12 +149,13 @@ if ( ! class_exists( 'MPC_Product_Data' ) ) {
 			$ds = preg_quote( wc_get_price_decimal_separator(), '/' ); // decimal separator.
 			$ts = preg_quote( wc_get_price_thousand_separator(), '/' ); // thousand separator.
 			if ( preg_match_all( '/[\d' . $ts . $ds . ']+/', $price_html, $matches ) ) {
-				return min( array_filter(
+				$matches[0] = count( $matches[0] ) > 1 ? array_filter(
 					$matches[0],
 					function( $item ) {
 						return '.' !== $item && $item > 0;
 					}
-				) );
+				) : array();
+				return count( $matches[0] ) > 0 ? min( $matches[0] ) : 0.0;
 			}
 			return 0.0;
 		}
