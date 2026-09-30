@@ -75,7 +75,7 @@
             // table object of common methods.
             window.mpcExt = {
                 getPrice: function( txt ){ // convert price text to number.
-                    txt = txt.replace( mpc_frontend.ts, '%1$s' ).replace( mpc_frontend.ds, '.' ).replace( '%1$s', '' );
+                    txt = txt.replaceAll( mpc_frontend.ts, '%1$s' ).replaceAll( mpc_frontend.ds, '.' ).replaceAll( '%1$s', '' );
                     return 'undefined' === typeof txt || 0 === txt.length || isNaN( parseFloat( txt ) ) ? 0.0 : parseFloat( txt );
                 },
                 setPrice: function( price ){ // convert number to text.
@@ -83,7 +83,7 @@
                         minimumFractionDigits: mpc_frontend.dp,
                         maximumFractionDigits: mpc_frontend.dp,
                         useGrouping: true
-                    } ).replace( ',', '%1$s' ).replace( '.', mpc_frontend.ds ).replace( '%1$s', mpc_frontend.ts );
+                    } ).replaceAll( ',', '%1$s' ).replaceAll( '.', mpc_frontend.ds ).replaceAll( '%1$s', mpc_frontend.ts );
                 },
             };
         }
