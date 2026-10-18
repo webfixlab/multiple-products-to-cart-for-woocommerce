@@ -684,7 +684,7 @@ if ( ! class_exists( 'MPC_Core_Data' ) ) {
 							'default'     => '',
 							'label'       => __( 'Product Image Size (px)', 'multiple-products-to-cart-for-woocommerce' ),
 							'desc'        => '',
-							'placeholder' => '72',
+							'placeholder' => '120',
 							'min'         => 50,
 							'max'         => 152,
 						),

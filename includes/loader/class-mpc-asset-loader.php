@@ -140,7 +140,7 @@ if ( ! class_exists( 'MPC_Asset_Loader' ) ) {
 			$title_underline = get_option( 'mpc_protitle_underline' );
 
 			// product image size.
-			$image_size = get_option( 'mpc_image_size', '90' );
+			$image_size = get_option( 'mpc_image_size', '120' );
 
 			$css = "
 				.mpc-wrap thead tr th, .mpc-pagenumbers span.current, .mpc-fixed-header table thead tr th{
